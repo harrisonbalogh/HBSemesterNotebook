@@ -1,0 +1,618 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		C00367021EA5756C00C4DE0C /* CourseAddBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00367011EA5756C00C4DE0C /* CourseAddBox.swift */; };
+		C00367041EA5825600C4DE0C /* CourseTemplate.xib in Resources */ = {isa = PBXBuildFile; fileRef = C00367031EA5825600C4DE0C /* CourseTemplate.xib */; };
+		C00367061EA582D600C4DE0C /* CourseAddTemplate.xib in Resources */ = {isa = PBXBuildFile; fileRef = C00367051EA582D600C4DE0C /* CourseAddTemplate.xib */; };
+		C00367081EA5851500C4DE0C /* CourseBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00367071EA5851500C4DE0C /* CourseBox.swift */; };
+		C0150EE81EA5AD6800BBBFA6 /* CourseLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0150EE71EA5AD6800BBBFA6 /* CourseLabel.swift */; };
+		C0AAE1361EA2BD12002939B6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0AAE1351EA2BD12002939B6 /* AppDelegate.swift */; };
+		C0AAE1381EA2BD12002939B6 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0AAE1371EA2BD12002939B6 /* ViewController.swift */; };
+		C0AAE13B1EA2BD12002939B6 /* HXNotes.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C0AAE1391EA2BD12002939B6 /* HXNotes.xcdatamodeld */; };
+		C0AAE13D1EA2BD12002939B6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C0AAE13C1EA2BD12002939B6 /* Assets.xcassets */; };
+		C0AAE1401EA2BD12002939B6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C0AAE13E1EA2BD12002939B6 /* Main.storyboard */; };
+		C0AAE14B1EA2BD13002939B6 /* HXNotesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0AAE14A1EA2BD13002939B6 /* HXNotesTests.swift */; };
+		C0AAE1561EA2BD13002939B6 /* HXNotesUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0AAE1551EA2BD13002939B6 /* HXNotesUITests.swift */; };
+		C0B697271EA5A326006AA618 /* colorWheel@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C0B697261EA5A326006AA618 /* colorWheel@2x.png */; };
+		C0D235EE1EA5369B00AB039A /* CalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D235ED1EA5369B00AB039A /* CalendarViewController.swift */; };
+		C0D687BD1EA4948400BF1D05 /* CalendarGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D687BC1EA4948400BF1D05 /* CalendarGrid.swift */; };
+		C0D68CFA1EA691B5009B06E3 /* trash_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C0D68CF81EA691B5009B06E3 /* trash_icon@2x.png */; };
+		C0D68CFB1EA691B5009B06E3 /* fill_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C0D68CF91EA691B5009B06E3 /* fill_icon@2x.png */; };
+		C0D68CFD1EA6943F009B06E3 /* CourseDragged.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0D68CFC1EA6943F009B06E3 /* CourseDragged.xib */; };
+		C0D68CFF1EA6C8CF009B06E3 /* DragBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D68CFE1EA6C8CF009B06E3 /* DragBox.swift */; };
+		C0D68D011EA6EA23009B06E3 /* CalendarGrid.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0D68D001EA6EA23009B06E3 /* CalendarGrid.xib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		C0AAE1471EA2BD13002939B6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C0AAE12A1EA2BD12002939B6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C0AAE1311EA2BD12002939B6;
+			remoteInfo = HXNotes;
+		};
+		C0AAE1521EA2BD13002939B6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C0AAE12A1EA2BD12002939B6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C0AAE1311EA2BD12002939B6;
+			remoteInfo = HXNotes;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		C00367011EA5756C00C4DE0C /* CourseAddBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CourseAddBox.swift; sourceTree = "<group>"; };
+		C00367031EA5825600C4DE0C /* CourseTemplate.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CourseTemplate.xib; sourceTree = "<group>"; };
+		C00367051EA582D600C4DE0C /* CourseAddTemplate.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CourseAddTemplate.xib; sourceTree = "<group>"; };
+		C00367071EA5851500C4DE0C /* CourseBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CourseBox.swift; sourceTree = "<group>"; };
+		C0150EE71EA5AD6800BBBFA6 /* CourseLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CourseLabel.swift; sourceTree = "<group>"; };
+		C0AAE1321EA2BD12002939B6 /* HXNotes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HXNotes.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C0AAE1351EA2BD12002939B6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		C0AAE1371EA2BD12002939B6 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		C0AAE13A1EA2BD12002939B6 /* HXNotes.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = HXNotes.xcdatamodel; sourceTree = "<group>"; };
+		C0AAE13C1EA2BD12002939B6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		C0AAE13F1EA2BD12002939B6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		C0AAE1411EA2BD12002939B6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C0AAE1461EA2BD13002939B6 /* HXNotesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HXNotesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C0AAE14A1EA2BD13002939B6 /* HXNotesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HXNotesTests.swift; sourceTree = "<group>"; };
+		C0AAE14C1EA2BD13002939B6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C0AAE1511EA2BD13002939B6 /* HXNotesUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HXNotesUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C0AAE1551EA2BD13002939B6 /* HXNotesUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HXNotesUITests.swift; sourceTree = "<group>"; };
+		C0AAE1571EA2BD13002939B6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C0B697261EA5A326006AA618 /* colorWheel@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "colorWheel@2x.png"; sourceTree = "<group>"; };
+		C0D235ED1EA5369B00AB039A /* CalendarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarViewController.swift; sourceTree = "<group>"; };
+		C0D687BC1EA4948400BF1D05 /* CalendarGrid.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarGrid.swift; sourceTree = "<group>"; };
+		C0D68CF81EA691B5009B06E3 /* trash_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "trash_icon@2x.png"; sourceTree = "<group>"; };
+		C0D68CF91EA691B5009B06E3 /* fill_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "fill_icon@2x.png"; sourceTree = "<group>"; };
+		C0D68CFC1EA6943F009B06E3 /* CourseDragged.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CourseDragged.xib; sourceTree = "<group>"; };
+		C0D68CFE1EA6C8CF009B06E3 /* DragBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DragBox.swift; sourceTree = "<group>"; };
+		C0D68D001EA6EA23009B06E3 /* CalendarGrid.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CalendarGrid.xib; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		C0AAE12F1EA2BD12002939B6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0AAE1431EA2BD13002939B6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0AAE14E1EA2BD13002939B6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		C0AAE1291EA2BD12002939B6 = {
+			isa = PBXGroup;
+			children = (
+				C0AAE1341EA2BD12002939B6 /* HXNotes */,
+				C0AAE1491EA2BD13002939B6 /* HXNotesTests */,
+				C0AAE1541EA2BD13002939B6 /* HXNotesUITests */,
+				C0AAE1331EA2BD12002939B6 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		C0AAE1331EA2BD12002939B6 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C0AAE1321EA2BD12002939B6 /* HXNotes.app */,
+				C0AAE1461EA2BD13002939B6 /* HXNotesTests.xctest */,
+				C0AAE1511EA2BD13002939B6 /* HXNotesUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C0AAE1341EA2BD12002939B6 /* HXNotes */ = {
+			isa = PBXGroup;
+			children = (
+				C0B697231EA5A2D2006AA618 /* Images */,
+				C0AAE1351EA2BD12002939B6 /* AppDelegate.swift */,
+				C0AAE1371EA2BD12002939B6 /* ViewController.swift */,
+				C0D235ED1EA5369B00AB039A /* CalendarViewController.swift */,
+				C0AAE13C1EA2BD12002939B6 /* Assets.xcassets */,
+				C0AAE13E1EA2BD12002939B6 /* Main.storyboard */,
+				C0AAE1411EA2BD12002939B6 /* Info.plist */,
+				C0AAE1391EA2BD12002939B6 /* HXNotes.xcdatamodeld */,
+				C0D687BE1EA4948A00BF1D05 /* Calendar Functionality */,
+			);
+			path = HXNotes;
+			sourceTree = "<group>";
+		};
+		C0AAE1491EA2BD13002939B6 /* HXNotesTests */ = {
+			isa = PBXGroup;
+			children = (
+				C0AAE14A1EA2BD13002939B6 /* HXNotesTests.swift */,
+				C0AAE14C1EA2BD13002939B6 /* Info.plist */,
+			);
+			path = HXNotesTests;
+			sourceTree = "<group>";
+		};
+		C0AAE1541EA2BD13002939B6 /* HXNotesUITests */ = {
+			isa = PBXGroup;
+			children = (
+				C0AAE1551EA2BD13002939B6 /* HXNotesUITests.swift */,
+				C0AAE1571EA2BD13002939B6 /* Info.plist */,
+			);
+			path = HXNotesUITests;
+			sourceTree = "<group>";
+		};
+		C0B697231EA5A2D2006AA618 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				C0D68CF81EA691B5009B06E3 /* trash_icon@2x.png */,
+				C0D68CF91EA691B5009B06E3 /* fill_icon@2x.png */,
+				C0B697261EA5A326006AA618 /* colorWheel@2x.png */,
+			);
+			name = Images;
+			sourceTree = "<group>";
+		};
+		C0D687BE1EA4948A00BF1D05 /* Calendar Functionality */ = {
+			isa = PBXGroup;
+			children = (
+				C0D687BC1EA4948400BF1D05 /* CalendarGrid.swift */,
+				C00367011EA5756C00C4DE0C /* CourseAddBox.swift */,
+				C00367071EA5851500C4DE0C /* CourseBox.swift */,
+				C0150EE71EA5AD6800BBBFA6 /* CourseLabel.swift */,
+				C0D68CFE1EA6C8CF009B06E3 /* DragBox.swift */,
+				C00367051EA582D600C4DE0C /* CourseAddTemplate.xib */,
+				C00367031EA5825600C4DE0C /* CourseTemplate.xib */,
+				C0D68CFC1EA6943F009B06E3 /* CourseDragged.xib */,
+				C0D68D001EA6EA23009B06E3 /* CalendarGrid.xib */,
+			);
+			name = "Calendar Functionality";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		C0AAE1311EA2BD12002939B6 /* HXNotes */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C0AAE15A1EA2BD13002939B6 /* Build configuration list for PBXNativeTarget "HXNotes" */;
+			buildPhases = (
+				C0AAE12E1EA2BD12002939B6 /* Sources */,
+				C0AAE12F1EA2BD12002939B6 /* Frameworks */,
+				C0AAE1301EA2BD12002939B6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = HXNotes;
+			productName = HXNotes;
+			productReference = C0AAE1321EA2BD12002939B6 /* HXNotes.app */;
+			productType = "com.apple.product-type.application";
+		};
+		C0AAE1451EA2BD13002939B6 /* HXNotesTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C0AAE15D1EA2BD13002939B6 /* Build configuration list for PBXNativeTarget "HXNotesTests" */;
+			buildPhases = (
+				C0AAE1421EA2BD13002939B6 /* Sources */,
+				C0AAE1431EA2BD13002939B6 /* Frameworks */,
+				C0AAE1441EA2BD13002939B6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C0AAE1481EA2BD13002939B6 /* PBXTargetDependency */,
+			);
+			name = HXNotesTests;
+			productName = HXNotesTests;
+			productReference = C0AAE1461EA2BD13002939B6 /* HXNotesTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		C0AAE1501EA2BD13002939B6 /* HXNotesUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C0AAE1601EA2BD13002939B6 /* Build configuration list for PBXNativeTarget "HXNotesUITests" */;
+			buildPhases = (
+				C0AAE14D1EA2BD13002939B6 /* Sources */,
+				C0AAE14E1EA2BD13002939B6 /* Frameworks */,
+				C0AAE14F1EA2BD13002939B6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C0AAE1531EA2BD13002939B6 /* PBXTargetDependency */,
+			);
+			name = HXNotesUITests;
+			productName = HXNotesUITests;
+			productReference = C0AAE1511EA2BD13002939B6 /* HXNotesUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		C0AAE12A1EA2BD12002939B6 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0820;
+				LastUpgradeCheck = 0820;
+				ORGANIZATIONNAME = Harxer;
+				TargetAttributes = {
+					C0AAE1311EA2BD12002939B6 = {
+						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = BY29N4YX97;
+						ProvisioningStyle = Automatic;
+					};
+					C0AAE1451EA2BD13002939B6 = {
+						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = BY29N4YX97;
+						ProvisioningStyle = Automatic;
+						TestTargetID = C0AAE1311EA2BD12002939B6;
+					};
+					C0AAE1501EA2BD13002939B6 = {
+						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = BY29N4YX97;
+						ProvisioningStyle = Automatic;
+						TestTargetID = C0AAE1311EA2BD12002939B6;
+					};
+				};
+			};
+			buildConfigurationList = C0AAE12D1EA2BD12002939B6 /* Build configuration list for PBXProject "HXNotes" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = C0AAE1291EA2BD12002939B6;
+			productRefGroup = C0AAE1331EA2BD12002939B6 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				C0AAE1311EA2BD12002939B6 /* HXNotes */,
+				C0AAE1451EA2BD13002939B6 /* HXNotesTests */,
+				C0AAE1501EA2BD13002939B6 /* HXNotesUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		C0AAE1301EA2BD12002939B6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C0D68CFA1EA691B5009B06E3 /* trash_icon@2x.png in Resources */,
+				C0D68CFD1EA6943F009B06E3 /* CourseDragged.xib in Resources */,
+				C00367041EA5825600C4DE0C /* CourseTemplate.xib in Resources */,
+				C0B697271EA5A326006AA618 /* colorWheel@2x.png in Resources */,
+				C0D68CFB1EA691B5009B06E3 /* fill_icon@2x.png in Resources */,
+				C0AAE13D1EA2BD12002939B6 /* Assets.xcassets in Resources */,
+				C00367061EA582D600C4DE0C /* CourseAddTemplate.xib in Resources */,
+				C0D68D011EA6EA23009B06E3 /* CalendarGrid.xib in Resources */,
+				C0AAE1401EA2BD12002939B6 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0AAE1441EA2BD13002939B6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0AAE14F1EA2BD13002939B6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		C0AAE12E1EA2BD12002939B6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C0D235EE1EA5369B00AB039A /* CalendarViewController.swift in Sources */,
+				C00367081EA5851500C4DE0C /* CourseBox.swift in Sources */,
+				C00367021EA5756C00C4DE0C /* CourseAddBox.swift in Sources */,
+				C0AAE1381EA2BD12002939B6 /* ViewController.swift in Sources */,
+				C0AAE13B1EA2BD12002939B6 /* HXNotes.xcdatamodeld in Sources */,
+				C0150EE81EA5AD6800BBBFA6 /* CourseLabel.swift in Sources */,
+				C0AAE1361EA2BD12002939B6 /* AppDelegate.swift in Sources */,
+				C0D687BD1EA4948400BF1D05 /* CalendarGrid.swift in Sources */,
+				C0D68CFF1EA6C8CF009B06E3 /* DragBox.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0AAE1421EA2BD13002939B6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C0AAE14B1EA2BD13002939B6 /* HXNotesTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0AAE14D1EA2BD13002939B6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C0AAE1561EA2BD13002939B6 /* HXNotesUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		C0AAE1481EA2BD13002939B6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C0AAE1311EA2BD12002939B6 /* HXNotes */;
+			targetProxy = C0AAE1471EA2BD13002939B6 /* PBXContainerItemProxy */;
+		};
+		C0AAE1531EA2BD13002939B6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C0AAE1311EA2BD12002939B6 /* HXNotes */;
+			targetProxy = C0AAE1521EA2BD13002939B6 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		C0AAE13E1EA2BD12002939B6 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C0AAE13F1EA2BD12002939B6 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		C0AAE1581EA2BD13002939B6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		C0AAE1591EA2BD13002939B6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+			};
+			name = Release;
+		};
+		C0AAE15B1EA2BD13002939B6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = BY29N4YX97;
+				INFOPLIST_FILE = HXNotes/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = HB.HXNotes;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		C0AAE15C1EA2BD13002939B6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = BY29N4YX97;
+				INFOPLIST_FILE = HXNotes/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = HB.HXNotes;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
+		C0AAE15E1EA2BD13002939B6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = BY29N4YX97;
+				INFOPLIST_FILE = HXNotesTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = HB.HXNotesTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HXNotes.app/Contents/MacOS/HXNotes";
+			};
+			name = Debug;
+		};
+		C0AAE15F1EA2BD13002939B6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = BY29N4YX97;
+				INFOPLIST_FILE = HXNotesTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = HB.HXNotesTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HXNotes.app/Contents/MacOS/HXNotes";
+			};
+			name = Release;
+		};
+		C0AAE1611EA2BD13002939B6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = BY29N4YX97;
+				INFOPLIST_FILE = HXNotesUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = HB.HXNotesUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+				TEST_TARGET_NAME = HXNotes;
+			};
+			name = Debug;
+		};
+		C0AAE1621EA2BD13002939B6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = BY29N4YX97;
+				INFOPLIST_FILE = HXNotesUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = HB.HXNotesUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+				TEST_TARGET_NAME = HXNotes;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		C0AAE12D1EA2BD12002939B6 /* Build configuration list for PBXProject "HXNotes" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C0AAE1581EA2BD13002939B6 /* Debug */,
+				C0AAE1591EA2BD13002939B6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C0AAE15A1EA2BD13002939B6 /* Build configuration list for PBXNativeTarget "HXNotes" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C0AAE15B1EA2BD13002939B6 /* Debug */,
+				C0AAE15C1EA2BD13002939B6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C0AAE15D1EA2BD13002939B6 /* Build configuration list for PBXNativeTarget "HXNotesTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C0AAE15E1EA2BD13002939B6 /* Debug */,
+				C0AAE15F1EA2BD13002939B6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C0AAE1601EA2BD13002939B6 /* Build configuration list for PBXNativeTarget "HXNotesUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C0AAE1611EA2BD13002939B6 /* Debug */,
+				C0AAE1621EA2BD13002939B6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		C0AAE1391EA2BD12002939B6 /* HXNotes.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				C0AAE13A1EA2BD12002939B6 /* HXNotes.xcdatamodel */,
+			);
+			currentVersion = C0AAE13A1EA2BD12002939B6 /* HXNotes.xcdatamodel */;
+			path = HXNotes.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = C0AAE12A1EA2BD12002939B6 /* Project object */;
+}
