@@ -89,39 +89,6 @@ class CalendarViewController: NSViewController {
         
         gridStack = [self.gridMonday, self.gridTuesday, self.gridWednesday, self.gridThursday, self.gridFriday]
         
-        // Initialize references to all CalendarGrid objects
-        timeSlots.append([CalendarGrid]())
-        for slot in gridMonday.views {
-            timeSlots[0].append(slot as! CalendarGrid)
-        }
-        timeSlots.append([CalendarGrid]())
-        for slot in gridTuesday.views {
-            timeSlots[1].append(slot as! CalendarGrid)
-        }
-        timeSlots.append([CalendarGrid]())
-        for slot in gridWednesday.views {
-            timeSlots[2].append(slot as! CalendarGrid)
-        }
-        timeSlots.append([CalendarGrid]())
-        for slot in gridThursday.views {
-            timeSlots[3].append(slot as! CalendarGrid)
-        }
-        timeSlots.append([CalendarGrid]())
-        for slot in gridFriday.views {
-            timeSlots[4].append(slot as! CalendarGrid)
-        }
-
-        // Initialize all grid tracking areas
-        var xDim = 0
-        for day in timeSlots {
-            var yDim = 0
-            for slot in day {
-                slot.initializeTrackingArea(with: self, atX: xDim, atY: yDim)
-                yDim += 1
-            }
-            xDim += 1
-        }
-        
         // Load course dragged box
         var theObjects: NSArray = []
         Bundle.main.loadNibNamed("CourseDragged", owner: nil, topLevelObjects: &theObjects)
@@ -136,6 +103,28 @@ class CalendarViewController: NSViewController {
         // Clear template IB nsbox and add template from Nib
         courseStack.subviews.forEach {$0.removeFromSuperview()}
         addNewCourseToStack()
+        
+        // Remove all grid views and generate them from nib template
+        gridMonday.subviews.forEach {$0.removeFromSuperview()}
+        gridTuesday.subviews.forEach {$0.removeFromSuperview()}
+        gridWednesday.subviews.forEach {$0.removeFromSuperview()}
+        gridThursday.subviews.forEach {$0.removeFromSuperview()}
+        gridFriday.subviews.forEach {$0.removeFromSuperview()}
+        for d in 0..<gridStack.count {
+            timeSlots.append([CalendarGrid]())
+            for t in 0..<TIME_SLOT_COUNT {
+                // Load Grid template from nib
+                theObjects = []
+                Bundle.main.loadNibNamed("CalendarGrid", owner: nil, topLevelObjects: &theObjects)
+                // Get NSView from top level objects returned from nib load
+                if let getView = theObjects.filter({$0 is CalendarGrid}).first {
+                    let getBox = getView as! CalendarGrid
+                    timeSlots[0].append(getBox)
+                    getBox.initializeTrackingArea(with: self, atX: d, atY: t)
+                    gridStack[0].addArrangedSubview(getBox)
+                }
+            }
+        }
     }
     
     override func viewDidLayout() {

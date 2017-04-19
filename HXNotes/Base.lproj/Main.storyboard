@@ -704,17 +704,17 @@
             <objects>
                 <viewController id="X89-9z-lul" customClass="CalendarViewController" customModule="HXNotes" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="EIr-db-iHV">
-                        <rect key="frame" x="0.0" y="0.0" width="900" height="1141"/>
+                        <rect key="frame" x="0.0" y="0.0" width="900" height="1192"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <box boxType="custom" borderType="none" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="TXN-FR-qpn" userLabel="Container View">
-                                <rect key="frame" x="0.0" y="0.0" width="900" height="1159"/>
+                                <rect key="frame" x="0.0" y="0.0" width="900" height="1201"/>
                                 <view key="contentView" id="ax3-x8-t9L">
-                                    <rect key="frame" x="0.0" y="0.0" width="900" height="1159"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="900" height="1201"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="b6E-s3-bh7">
-                                            <rect key="frame" x="372" y="1118" width="156" height="21"/>
+                                            <rect key="frame" x="372" y="1160" width="156" height="21"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="21" id="Sv0-fu-g7q"/>
                                             </constraints>
@@ -725,13 +725,13 @@
                                             </textFieldCell>
                                         </textField>
                                         <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="8js-LE-BeQ">
-                                            <rect key="frame" x="0.0" y="1107" width="900" height="5"/>
+                                            <rect key="frame" x="0.0" y="1149" width="900" height="5"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="1" id="ZFn-Zl-Ld5"/>
                                             </constraints>
                                         </box>
                                         <stackView distribution="equalSpacing" orientation="horizontal" alignment="top" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5au-2a-YE6" userLabel="Course Stack">
-                                            <rect key="frame" x="410" y="1023" width="80" height="70"/>
+                                            <rect key="frame" x="410" y="1065" width="80" height="70"/>
                                             <subviews>
                                                 <box boxType="custom" title="Box" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="XQi-zw-FJ7" userLabel="Add Template">
                                                     <rect key="frame" x="0.0" y="0.0" width="80" height="70"/>
@@ -780,19 +780,19 @@
                                             </customSpacing>
                                         </stackView>
                                         <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="jKn-A5-oKz">
-                                            <rect key="frame" x="0.0" y="1004" width="900" height="5"/>
+                                            <rect key="frame" x="0.0" y="1046" width="900" height="5"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="1" id="RcR-VA-Mt4"/>
                                             </constraints>
                                         </box>
                                         <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="z1e-UI-PkT" userLabel="Calendar Container">
-                                            <rect key="frame" x="10" y="49" width="841" height="908"/>
+                                            <rect key="frame" x="10" y="49" width="841" height="950"/>
                                             <view key="contentView" id="DA5-6u-RNE">
-                                                <rect key="frame" x="0.0" y="0.0" width="841" height="908"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="841" height="950"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <stackView distribution="fillEqually" orientation="horizontal" alignment="top" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8C5-Sn-CqZ" userLabel="Day Stack">
-                                                        <rect key="frame" x="38" y="894" width="803" height="14"/>
+                                                        <rect key="frame" x="38" y="936" width="803" height="14"/>
                                                         <subviews>
                                                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="V8h-XX-wdJ">
                                                                 <rect key="frame" x="0.0" y="0.0" width="160.5" height="14"/>
@@ -858,16 +858,16 @@
                                                         </customSpacing>
                                                     </stackView>
                                                     <stackView distribution="fillEqually" orientation="vertical" alignment="trailing" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8YC-7H-4GL" userLabel="Time Stack">
-                                                        <rect key="frame" x="0.0" y="0.0" width="37" height="894"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="37" height="936"/>
                                                         <subviews>
                                                             <box boxType="custom" borderWidth="0.0" title="Box" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="Q6x-6J-EiG" userLabel="Time">
-                                                                <rect key="frame" x="0.0" y="834.5" width="37" height="59.5"/>
+                                                                <rect key="frame" x="0.0" y="873.5" width="37" height="62.5"/>
                                                                 <view key="contentView" id="DGj-CT-BLM">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="37" height="59.5"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="37" height="62.5"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <subviews>
                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oSW-3T-23E">
-                                                                            <rect key="frame" x="12" y="45.5" width="27" height="13"/>
+                                                                            <rect key="frame" x="12" y="49" width="27" height="13"/>
                                                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="8:00" id="IIY-fN-S10">
                                                                                 <font key="font" metaFont="system" size="10"/>
                                                                                 <color key="textColor" name="scrollBarColor" catalog="System" colorSpace="catalog"/>
@@ -885,13 +885,13 @@
                                                                 </constraints>
                                                             </box>
                                                             <box boxType="custom" borderWidth="0.0" title="Box" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="VEN-XY-TRH" userLabel="Time">
-                                                                <rect key="frame" x="0.0" y="774.5" width="37" height="60"/>
+                                                                <rect key="frame" x="0.0" y="811.5" width="37" height="62"/>
                                                                 <view key="contentView" id="kVM-2n-iCx">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="37" height="60"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="37" height="62"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <subviews>
                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="urZ-NJ-uJU">
-                                                                            <rect key="frame" x="12" y="47" width="27" height="13"/>
+                                                                            <rect key="frame" x="12" y="49" width="27" height="13"/>
                                                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="9:00" id="NNC-u5-veX">
                                                                                 <font key="font" metaFont="system" size="10"/>
                                                                                 <color key="textColor" name="scrollBarColor" catalog="System" colorSpace="catalog"/>
@@ -906,13 +906,13 @@
                                                                 </view>
                                                             </box>
                                                             <box boxType="custom" borderWidth="0.0" title="Box" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="ecY-fD-iWz" userLabel="Time">
-                                                                <rect key="frame" x="0.0" y="715.5" width="37" height="59"/>
+                                                                <rect key="frame" x="0.0" y="748.5" width="37" height="63"/>
                                                                 <view key="contentView" id="41C-SM-ugX">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="37" height="59"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="37" height="63"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <subviews>
                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="84J-oO-hTl">
-                                                                            <rect key="frame" x="7" y="46" width="32" height="13"/>
+                                                                            <rect key="frame" x="7" y="50" width="32" height="13"/>
                                                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="10:00" id="3HI-j2-FeS">
                                                                                 <font key="font" metaFont="system" size="10"/>
                                                                                 <color key="textColor" name="scrollBarColor" catalog="System" colorSpace="catalog"/>
@@ -927,13 +927,13 @@
                                                                 </view>
                                                             </box>
                                                             <box boxType="custom" borderWidth="0.0" title="Box" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="eSH-Aa-qLP" userLabel="Time">
-                                                                <rect key="frame" x="0.0" y="655.5" width="37" height="60"/>
+                                                                <rect key="frame" x="0.0" y="686.5" width="37" height="62"/>
                                                                 <view key="contentView" id="7ZE-L9-buG">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="37" height="60"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="37" height="62"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <subviews>
                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qhs-ln-cgc">
-                                                                            <rect key="frame" x="9" y="47" width="30" height="13"/>
+                                                                            <rect key="frame" x="9" y="49" width="30" height="13"/>
                                                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="11:00" id="hSC-bg-iL9">
                                                                                 <font key="font" metaFont="system" size="10"/>
                                                                                 <color key="textColor" name="scrollBarColor" catalog="System" colorSpace="catalog"/>
@@ -948,13 +948,13 @@
                                                                 </view>
                                                             </box>
                                                             <box boxType="custom" borderWidth="0.0" title="Box" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="fST-LS-FMh" userLabel="Time">
-                                                                <rect key="frame" x="0.0" y="596" width="37" height="59.5"/>
+                                                                <rect key="frame" x="0.0" y="624" width="37" height="62.5"/>
                                                                 <view key="contentView" id="kcs-gi-U5P">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="37" height="59.5"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="37" height="62.5"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <subviews>
                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3L3-t6-JES">
-                                                                            <rect key="frame" x="8" y="46" width="31" height="13"/>
+                                                                            <rect key="frame" x="8" y="49.5" width="31" height="13"/>
                                                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="12:00" id="fbl-F8-pXm">
                                                                                 <font key="font" metaFont="system" size="10"/>
                                                                                 <color key="textColor" name="scrollBarColor" catalog="System" colorSpace="catalog"/>
@@ -969,13 +969,13 @@
                                                                 </view>
                                                             </box>
                                                             <box boxType="custom" borderWidth="0.0" title="Box" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="DvX-ap-iYC" userLabel="Time">
-                                                                <rect key="frame" x="0.0" y="536" width="37" height="60"/>
+                                                                <rect key="frame" x="0.0" y="562" width="37" height="62"/>
                                                                 <view key="contentView" id="JnW-Hl-A9x">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="37" height="60"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="37" height="62"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <subviews>
                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3ab-p4-m72">
-                                                                            <rect key="frame" x="14" y="47" width="25" height="13"/>
+                                                                            <rect key="frame" x="14" y="49" width="25" height="13"/>
                                                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="1:00" id="BHm-Ws-wzf">
                                                                                 <font key="font" metaFont="system" size="10"/>
                                                                                 <color key="textColor" name="scrollBarColor" catalog="System" colorSpace="catalog"/>
@@ -990,13 +990,13 @@
                                                                 </view>
                                                             </box>
                                                             <box boxType="custom" borderWidth="0.0" title="Box" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="V4M-Is-3tg" userLabel="Time">
-                                                                <rect key="frame" x="0.0" y="476.5" width="37" height="59.5"/>
+                                                                <rect key="frame" x="0.0" y="499.5" width="37" height="62.5"/>
                                                                 <view key="contentView" id="fjZ-4r-hzq">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="37" height="59.5"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="37" height="62.5"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <subviews>
                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zln-Pf-cnV">
-                                                                            <rect key="frame" x="12" y="46" width="27" height="13"/>
+                                                                            <rect key="frame" x="12" y="49.5" width="27" height="13"/>
                                                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="2:00" id="ldD-zU-XvK">
                                                                                 <font key="font" metaFont="system" size="10"/>
                                                                                 <color key="textColor" name="scrollBarColor" catalog="System" colorSpace="catalog"/>
@@ -1011,13 +1011,13 @@
                                                                 </view>
                                                             </box>
                                                             <box boxType="custom" borderWidth="0.0" title="Box" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="72u-8S-3kY" userLabel="Time">
-                                                                <rect key="frame" x="0.0" y="417.5" width="37" height="59"/>
+                                                                <rect key="frame" x="0.0" y="436.5" width="37" height="63"/>
                                                                 <view key="contentView" id="qAt-9d-H1E">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="37" height="59"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="37" height="63"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <subviews>
                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="P05-Ei-gvf">
-                                                                            <rect key="frame" x="12" y="46" width="27" height="13"/>
+                                                                            <rect key="frame" x="12" y="50" width="27" height="13"/>
                                                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="3:00" id="Jc4-B6-Xly">
                                                                                 <font key="font" metaFont="system" size="10"/>
                                                                                 <color key="textColor" name="scrollBarColor" catalog="System" colorSpace="catalog"/>
@@ -1032,13 +1032,13 @@
                                                                 </view>
                                                             </box>
                                                             <box boxType="custom" borderWidth="0.0" title="Box" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="JYO-zo-Ajx" userLabel="Time">
-                                                                <rect key="frame" x="0.0" y="358" width="37" height="59.5"/>
+                                                                <rect key="frame" x="0.0" y="374" width="37" height="62.5"/>
                                                                 <view key="contentView" id="WMN-g5-ee9">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="37" height="59.5"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="37" height="62.5"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <subviews>
                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OS3-qb-adQ">
-                                                                            <rect key="frame" x="12" y="45.5" width="27" height="13"/>
+                                                                            <rect key="frame" x="12" y="49.5" width="27" height="13"/>
                                                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="4:00" id="j5u-gQ-gox">
                                                                                 <font key="font" metaFont="system" size="10"/>
                                                                                 <color key="textColor" name="scrollBarColor" catalog="System" colorSpace="catalog"/>
@@ -1053,13 +1053,13 @@
                                                                 </view>
                                                             </box>
                                                             <box boxType="custom" borderWidth="0.0" title="Box" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="WFI-hQ-449" userLabel="Time">
-                                                                <rect key="frame" x="0.0" y="298" width="37" height="60"/>
+                                                                <rect key="frame" x="0.0" y="312" width="37" height="62"/>
                                                                 <view key="contentView" id="J7Z-Ee-cBJ">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="37" height="60"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="37" height="62"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <subviews>
                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lnP-l1-boM">
-                                                                            <rect key="frame" x="12" y="47" width="27" height="13"/>
+                                                                            <rect key="frame" x="12" y="49" width="27" height="13"/>
                                                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="5:00" id="eFd-oD-mjW">
                                                                                 <font key="font" metaFont="system" size="10"/>
                                                                                 <color key="textColor" name="scrollBarColor" catalog="System" colorSpace="catalog"/>
@@ -1074,13 +1074,13 @@
                                                                 </view>
                                                             </box>
                                                             <box boxType="custom" borderWidth="0.0" title="Box" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="JAW-3q-Bbu" userLabel="Time">
-                                                                <rect key="frame" x="0.0" y="238.5" width="37" height="59.5"/>
+                                                                <rect key="frame" x="0.0" y="249.5" width="37" height="62.5"/>
                                                                 <view key="contentView" id="Zge-nY-ypx">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="37" height="59.5"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="37" height="62.5"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <subviews>
                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hEA-5l-hst">
-                                                                            <rect key="frame" x="12" y="45.5" width="27" height="13"/>
+                                                                            <rect key="frame" x="12" y="49" width="27" height="13"/>
                                                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="6:00" id="gPX-7B-uBl">
                                                                                 <font key="font" metaFont="system" size="10"/>
                                                                                 <color key="textColor" name="scrollBarColor" catalog="System" colorSpace="catalog"/>
@@ -1095,13 +1095,13 @@
                                                                 </view>
                                                             </box>
                                                             <box boxType="custom" borderWidth="0.0" title="Box" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="tIX-j8-f3Z" userLabel="Time">
-                                                                <rect key="frame" x="0.0" y="178.5" width="37" height="60"/>
+                                                                <rect key="frame" x="0.0" y="187.5" width="37" height="62"/>
                                                                 <view key="contentView" id="9ho-zp-pM7">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="37" height="60"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="37" height="62"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <subviews>
                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FHe-GB-Ejy">
-                                                                            <rect key="frame" x="13" y="47" width="26" height="13"/>
+                                                                            <rect key="frame" x="13" y="49" width="26" height="13"/>
                                                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="7:00" id="l8n-Gb-DbU">
                                                                                 <font key="font" metaFont="system" size="10"/>
                                                                                 <color key="textColor" name="scrollBarColor" catalog="System" colorSpace="catalog"/>
@@ -1116,13 +1116,13 @@
                                                                 </view>
                                                             </box>
                                                             <box boxType="custom" borderWidth="0.0" title="Box" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="BR8-bg-UqV" userLabel="Time">
-                                                                <rect key="frame" x="0.0" y="119.5" width="37" height="59"/>
+                                                                <rect key="frame" x="0.0" y="124.5" width="37" height="63"/>
                                                                 <view key="contentView" id="85N-fG-uyO">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="37" height="59"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="37" height="63"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <subviews>
                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Chp-fU-1Zx">
-                                                                            <rect key="frame" x="12" y="46" width="27" height="13"/>
+                                                                            <rect key="frame" x="12" y="50" width="27" height="13"/>
                                                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="8:00" id="WCG-LZ-8zA">
                                                                                 <font key="font" metaFont="system" size="10"/>
                                                                                 <color key="textColor" name="scrollBarColor" catalog="System" colorSpace="catalog"/>
@@ -1137,13 +1137,13 @@
                                                                 </view>
                                                             </box>
                                                             <box boxType="custom" borderWidth="0.0" title="Box" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="7Fo-6n-cmU" userLabel="Time">
-                                                                <rect key="frame" x="0.0" y="59.5" width="37" height="60"/>
+                                                                <rect key="frame" x="0.0" y="62.5" width="37" height="62"/>
                                                                 <view key="contentView" id="L3S-bZ-GXN">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="37" height="60"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="37" height="62"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <subviews>
                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hGk-Rl-KCi">
-                                                                            <rect key="frame" x="12" y="47" width="27" height="13"/>
+                                                                            <rect key="frame" x="12" y="49" width="27" height="13"/>
                                                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="9:00" id="c8A-Uy-brE">
                                                                                 <font key="font" metaFont="system" size="10"/>
                                                                                 <color key="textColor" name="scrollBarColor" catalog="System" colorSpace="catalog"/>
@@ -1158,13 +1158,13 @@
                                                                 </view>
                                                             </box>
                                                             <box boxType="custom" borderWidth="0.0" title="Box" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="Fgu-82-auw" userLabel="Time">
-                                                                <rect key="frame" x="0.0" y="0.0" width="37" height="59.5"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="37" height="62.5"/>
                                                                 <view key="contentView" id="uzf-OZ-FQi">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="37" height="59.5"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="37" height="62.5"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <subviews>
                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TBA-FA-X2F">
-                                                                            <rect key="frame" x="7" y="46" width="32" height="13"/>
+                                                                            <rect key="frame" x="7" y="49" width="32" height="13"/>
                                                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="10:00" id="1UN-XC-qEn">
                                                                                 <font key="font" metaFont="system" size="10"/>
                                                                                 <color key="textColor" name="scrollBarColor" catalog="System" colorSpace="catalog"/>
@@ -1231,725 +1231,95 @@
                                                         </customSpacing>
                                                     </stackView>
                                                     <stackView distribution="fillEqually" orientation="horizontal" alignment="top" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uXo-QW-4xa" userLabel="Grid">
-                                                        <rect key="frame" x="38" y="0.0" width="803" height="894"/>
+                                                        <rect key="frame" x="38" y="0.0" width="803" height="936"/>
                                                         <subviews>
                                                             <stackView distribution="fillEqually" orientation="vertical" alignment="leading" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="AgF-UU-VPt" userLabel="Monday">
-                                                                <rect key="frame" x="0.0" y="16.5" width="160.5" height="877.5"/>
+                                                                <rect key="frame" x="0.0" y="877.5" width="160.5" height="58.5"/>
                                                                 <subviews>
                                                                     <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="VDm-Oq-4EX" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="819" width="160.5" height="58.5"/>
+                                                                        <rect key="frame" x="0.0" y="-0.5" width="160.5" height="58.5"/>
                                                                         <view key="contentView" id="2Rp-lO-GcW">
                                                                             <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
                                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                         </view>
                                                                     </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="hyU-AI-zk4" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="760" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="9gM-40-A6s">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="wgQ-aV-0ZY" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="701.5" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="Enj-fJ-rw9">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="B8p-iN-1Tu" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="643" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="PxL-13-hLW">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="PzL-cB-6z2" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="585" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="lZH-P6-ngE">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="Zdo-nh-ws5" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="526" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="wJM-Q2-U1v">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="C04-fA-fMw" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="467.5" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="e0m-sv-lJg">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="4wp-Iq-RNq" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="409.5" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="Fsq-1j-TxY">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="0cE-E8-Lic" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="351" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="P27-nw-HQo">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="vQy-OC-1QT" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="292" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="x7s-ps-K3y">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="6lk-YN-dzi" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="233.5" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="Wra-zE-qJY">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="x1p-DD-Dtg" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="175.5" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="69a-rd-mue">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="HMw-B0-lvK" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="117" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="p6F-2W-Bpg">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="Lwz-Z9-gFM" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="58.5" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="fzF-4Y-xad">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="9NG-NO-sgN" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="d1g-xL-wT4">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
                                                                 </subviews>
                                                                 <visibilityPriorities>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
                                                                     <integer value="1000"/>
                                                                 </visibilityPriorities>
                                                                 <customSpacing>
                                                                     <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
                                                                 </customSpacing>
                                                             </stackView>
                                                             <stackView distribution="fillEqually" orientation="vertical" alignment="leading" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2I7-0s-IlI" userLabel="Tuesday">
-                                                                <rect key="frame" x="160.5" y="16.5" width="160.5" height="877.5"/>
+                                                                <rect key="frame" x="160.5" y="877.5" width="160.5" height="58.5"/>
                                                                 <subviews>
                                                                     <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="l66-By-c0U" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="818.5" width="160.5" height="58.5"/>
+                                                                        <rect key="frame" x="0.0" y="-0.5" width="160.5" height="58.5"/>
                                                                         <view key="contentView" id="9V4-DC-Hht">
                                                                             <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
                                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                         </view>
                                                                     </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="Yve-CS-DkZ" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="760.5" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="WoQ-pv-WIg">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="QCX-Wn-ddt" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="701.5" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="gKW-2p-M2x">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="Q5v-8I-vkG" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="643.5" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="z91-yn-TVU">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="tbq-dZ-dG1" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="584.5" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="UBE-OK-X3m">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="yTT-cq-qN7" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="526.5" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="90E-Py-bUl">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="nnN-xC-77j" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="468" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="8dh-wK-RHM">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="vjK-LY-NPP" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="409" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="Ed1-yN-ab9">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="LOL-Ht-xc2" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="350.5" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="5ab-2E-1Nv">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="GtB-UN-B5s" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="292.5" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="SpL-me-LX4">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="Bgj-H1-Svd" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="234" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="fBC-Qb-RHP">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="tae-yV-Nls" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="175" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="o5h-6G-1qf">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="Bbl-jf-Lmk" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="116.5" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="Ud7-Kc-sVe">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="YcT-tH-gV6" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="58" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="oWy-IL-sQ2">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="Uof-iK-xCW" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="-0.5" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="bMa-2M-ZSy">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
                                                                 </subviews>
                                                                 <visibilityPriorities>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
                                                                     <integer value="1000"/>
                                                                 </visibilityPriorities>
                                                                 <customSpacing>
                                                                     <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
                                                                 </customSpacing>
                                                             </stackView>
                                                             <stackView distribution="fillEqually" orientation="vertical" alignment="leading" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fam-kR-kQP" userLabel="Wednesday">
-                                                                <rect key="frame" x="321" y="16.5" width="161" height="877.5"/>
+                                                                <rect key="frame" x="321" y="877.5" width="161" height="58.5"/>
                                                                 <subviews>
                                                                     <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="iox-Vy-XIv" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="818.5" width="161" height="58.5"/>
+                                                                        <rect key="frame" x="0.0" y="0.0" width="161" height="58.5"/>
                                                                         <view key="contentView" id="Y8E-tc-Y21">
                                                                             <rect key="frame" x="0.0" y="0.0" width="161" height="58.5"/>
                                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                         </view>
                                                                     </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="hw6-On-OK8" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="760.5" width="161" height="58.5"/>
-                                                                        <view key="contentView" id="fKf-cs-qjK">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="161" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="Y66-KL-9Ss" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="702" width="161" height="58.5"/>
-                                                                        <view key="contentView" id="EcI-IB-33Z">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="161" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="e3c-cW-WlM" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="643.5" width="161" height="58.5"/>
-                                                                        <view key="contentView" id="qZr-ql-yAc">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="161" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="hOu-A0-fyo" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="585" width="161" height="58.5"/>
-                                                                        <view key="contentView" id="v9y-GC-oII">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="161" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="iaS-1x-oyt" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="526" width="161" height="58.5"/>
-                                                                        <view key="contentView" id="rQY-Y0-g61">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="161" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="Hcg-Nx-d7U" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="467.5" width="161" height="58.5"/>
-                                                                        <view key="contentView" id="r18-gH-3g0">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="161" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="pS8-rn-sz6" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="409.5" width="161" height="58.5"/>
-                                                                        <view key="contentView" id="rTt-sS-FAm">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="161" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="S0X-QS-rLb" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="351" width="161" height="58.5"/>
-                                                                        <view key="contentView" id="NB4-AT-rNJ">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="161" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="yc5-Dm-dqG" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="292.5" width="161" height="58.5"/>
-                                                                        <view key="contentView" id="E51-o6-FvN">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="161" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="qTt-5q-QDW" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="233.5" width="161" height="58.5"/>
-                                                                        <view key="contentView" id="DPx-mO-fDM">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="161" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="lyc-cy-FSH" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="175" width="161" height="58.5"/>
-                                                                        <view key="contentView" id="wYA-SD-u91">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="161" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="52P-rr-Pcm" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="116.5" width="161" height="58.5"/>
-                                                                        <view key="contentView" id="DOD-N1-uVL">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="161" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="2kI-xf-nuJ" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="58" width="161" height="58.5"/>
-                                                                        <view key="contentView" id="OsU-Q7-0aR">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="161" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="fal-t2-va1" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="161" height="58.5"/>
-                                                                        <view key="contentView" id="a03-DA-acr">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="161" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
                                                                 </subviews>
                                                                 <visibilityPriorities>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
                                                                     <integer value="1000"/>
                                                                 </visibilityPriorities>
                                                                 <customSpacing>
                                                                     <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
                                                                 </customSpacing>
                                                             </stackView>
                                                             <stackView distribution="fillEqually" orientation="vertical" alignment="leading" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PJu-Ib-rop" userLabel="Thursday">
-                                                                <rect key="frame" x="482" y="16.5" width="160.5" height="877.5"/>
+                                                                <rect key="frame" x="482" y="877.5" width="160.5" height="58.5"/>
                                                                 <subviews>
                                                                     <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="5zz-6M-lxs" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="818.5" width="160.5" height="58.5"/>
+                                                                        <rect key="frame" x="0.0" y="-0.5" width="160.5" height="58.5"/>
                                                                         <view key="contentView" id="02k-A8-ZKr">
                                                                             <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
                                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                         </view>
                                                                     </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="7Iq-XU-XbK" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="760" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="ahl-Vl-pzP">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="NU4-MX-Mpp" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="701.5" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="g8G-Kj-1Vl">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="vDw-2j-wde" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="643" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="4uV-ID-C5y">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="UOj-73-hmk" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="584.5" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="X4X-W6-Mbw">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="t20-fg-SvS" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="526" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="8Zn-Uu-xgD">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="nBd-Ql-hRB" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="467.5" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="js2-FG-Jla">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="mzw-cL-Vu7" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="409" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="sJk-zf-J94">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="eRG-eJ-pMr" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="351" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="d4A-ay-zLw">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="Fto-i3-atr" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="292.5" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="LeC-0U-LCf">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="zoQ-Kb-q3w" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="233.5" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="s83-Ry-Zul">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="CZ0-lV-Xpu" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="175" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="quI-2U-x9Y">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="QeV-wS-2ox" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="116.5" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="6AN-O9-faH">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="wgM-cy-zsV" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="58" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="XGk-zP-fHn">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="HxU-xD-eqk" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="-0.5" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="vY6-Vu-Q7d">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
                                                                 </subviews>
                                                                 <visibilityPriorities>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
                                                                     <integer value="1000"/>
                                                                 </visibilityPriorities>
                                                                 <customSpacing>
                                                                     <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
                                                                 </customSpacing>
                                                             </stackView>
                                                             <stackView distribution="fillEqually" orientation="vertical" alignment="leading" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gA5-dr-bHd" userLabel="Friday">
-                                                                <rect key="frame" x="642.5" y="16.5" width="160.5" height="877.5"/>
+                                                                <rect key="frame" x="642.5" y="877.5" width="160.5" height="58.5"/>
                                                                 <subviews>
                                                                     <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="2PW-8U-aRG" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="819" width="160.5" height="58.5"/>
+                                                                        <rect key="frame" x="0.0" y="-0.5" width="160.5" height="58.5"/>
                                                                         <view key="contentView" id="gc2-lV-qUV">
                                                                             <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
                                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                         </view>
                                                                     </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="M4I-DP-a5E" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="760" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="GEF-MV-WxO">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="HFE-R6-7OJ" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="701.5" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="3yu-qE-uaU">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="bvw-eZ-Gyg" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="643.5" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="fB9-nv-4vX">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="2v5-Lf-dLr" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="585" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="QpN-IE-D8b">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="OAI-a9-P4m" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="526.5" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="eY5-O4-Kf5">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="Gza-kH-uOz" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="468" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="tgq-FV-0F9">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="AM4-l9-GSA" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="409" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="jb1-r7-qhs">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="p1D-oR-KyI" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="351" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="7Ie-uS-Q5n">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="9Wt-ck-j2t" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="292.5" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="R9g-FO-l2S">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="dB8-nY-6yP" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="234" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="Lhs-hg-xZ7">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="OTZ-8v-PLA" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="175.5" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="ung-Xk-tcT">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="8a7-Qh-xMB" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="117" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="AUj-VO-PwC">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="B3w-Nq-mdp" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="58.5" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="2Cj-ft-nHk">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
-                                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="ayM-AK-qgG" customClass="CalendarGrid" customModule="HXNotes" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                        <view key="contentView" id="p5H-Mv-Kv2">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="160.5" height="58.5"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                        </view>
-                                                                    </box>
                                                                 </subviews>
                                                                 <visibilityPriorities>
                                                                     <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
                                                                 </visibilityPriorities>
                                                                 <customSpacing>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
                                                                     <real value="3.4028234663852886e+38"/>
                                                                 </customSpacing>
                                                             </stackView>
@@ -2029,7 +1399,7 @@
                 </viewController>
                 <customObject id="zlT-aG-pL1" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-704" y="548.5"/>
+            <point key="canvasLocation" x="-704" y="574"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="GcW-YE-LQk">
