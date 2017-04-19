@@ -63,7 +63,7 @@ class CourseBox: NSBox {
         
         self.trackingArea = NSTrackingArea(
             rect: bounds,
-            options: [NSTrackingAreaOptions.activeInKeyWindow, NSTrackingAreaOptions.mouseEnteredAndExited, NSTrackingAreaOptions.enabledDuringMouseDrag],
+            options: [NSTrackingAreaOptions.activeInKeyWindow, NSTrackingAreaOptions.mouseEnteredAndExited],
             owner: self,
             userInfo: ["index":index])
         
@@ -79,6 +79,7 @@ class CourseBox: NSBox {
     func endEditingCourseLabel() {
         labelCourse.isEditable = false
         labelCourse.isSelectable = false
+        parentCalendar.updateCourseName(atIndex: courseIndex, withName: labelCourse.stringValue)
     }
     
     func updateIndex(index: Int) {
@@ -105,7 +106,7 @@ class CourseBox: NSBox {
         buttonTrash.isHidden = false
         labelDragHere.alphaValue = 1
         labelCourse.alphaValue = 1
-        parentCalendar.receiveMouseDragStopFromCourse()
+        parentCalendar.receiveMouseDragStopFromCourse(atLocation: event.locationInWindow)
     }
     
     override func mouseEntered(with event: NSEvent) {

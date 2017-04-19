@@ -12,6 +12,7 @@
 		C00367061EA582D600C4DE0C /* CourseAddTemplate.xib in Resources */ = {isa = PBXBuildFile; fileRef = C00367051EA582D600C4DE0C /* CourseAddTemplate.xib */; };
 		C00367081EA5851500C4DE0C /* CourseBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00367071EA5851500C4DE0C /* CourseBox.swift */; };
 		C0150EE81EA5AD6800BBBFA6 /* CourseLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0150EE71EA5AD6800BBBFA6 /* CourseLabel.swift */; };
+		C07953841EA721B90022BFCF /* CalendarGrid.xib in Resources */ = {isa = PBXBuildFile; fileRef = C07953831EA721B90022BFCF /* CalendarGrid.xib */; };
 		C0AAE1361EA2BD12002939B6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0AAE1351EA2BD12002939B6 /* AppDelegate.swift */; };
 		C0AAE1381EA2BD12002939B6 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0AAE1371EA2BD12002939B6 /* ViewController.swift */; };
 		C0AAE13B1EA2BD12002939B6 /* HXNotes.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C0AAE1391EA2BD12002939B6 /* HXNotes.xcdatamodeld */; };
@@ -26,7 +27,8 @@
 		C0D68CFB1EA691B5009B06E3 /* fill_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C0D68CF91EA691B5009B06E3 /* fill_icon@2x.png */; };
 		C0D68CFD1EA6943F009B06E3 /* CourseDragged.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0D68CFC1EA6943F009B06E3 /* CourseDragged.xib */; };
 		C0D68CFF1EA6C8CF009B06E3 /* DragBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D68CFE1EA6C8CF009B06E3 /* DragBox.swift */; };
-		C0D68D011EA6EA23009B06E3 /* CalendarGrid.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0D68D001EA6EA23009B06E3 /* CalendarGrid.xib */; };
+		C0E6797F1EA7ECB200B3DC3B /* Course.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0E6797E1EA7ECB200B3DC3B /* Course.swift */; };
+		C0E679811EA7ECC300B3DC3B /* TimeSlot.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0E679801EA7ECC300B3DC3B /* TimeSlot.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +54,7 @@
 		C00367051EA582D600C4DE0C /* CourseAddTemplate.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CourseAddTemplate.xib; sourceTree = "<group>"; };
 		C00367071EA5851500C4DE0C /* CourseBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CourseBox.swift; sourceTree = "<group>"; };
 		C0150EE71EA5AD6800BBBFA6 /* CourseLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CourseLabel.swift; sourceTree = "<group>"; };
+		C07953831EA721B90022BFCF /* CalendarGrid.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CalendarGrid.xib; sourceTree = "<group>"; };
 		C0AAE1321EA2BD12002939B6 /* HXNotes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HXNotes.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0AAE1351EA2BD12002939B6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C0AAE1371EA2BD12002939B6 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -72,7 +75,8 @@
 		C0D68CF91EA691B5009B06E3 /* fill_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "fill_icon@2x.png"; sourceTree = "<group>"; };
 		C0D68CFC1EA6943F009B06E3 /* CourseDragged.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CourseDragged.xib; sourceTree = "<group>"; };
 		C0D68CFE1EA6C8CF009B06E3 /* DragBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DragBox.swift; sourceTree = "<group>"; };
-		C0D68D001EA6EA23009B06E3 /* CalendarGrid.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CalendarGrid.xib; sourceTree = "<group>"; };
+		C0E6797E1EA7ECB200B3DC3B /* Course.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Course.swift; sourceTree = "<group>"; };
+		C0E679801EA7ECC300B3DC3B /* TimeSlot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeSlot.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -175,7 +179,9 @@
 				C00367051EA582D600C4DE0C /* CourseAddTemplate.xib */,
 				C00367031EA5825600C4DE0C /* CourseTemplate.xib */,
 				C0D68CFC1EA6943F009B06E3 /* CourseDragged.xib */,
-				C0D68D001EA6EA23009B06E3 /* CalendarGrid.xib */,
+				C07953831EA721B90022BFCF /* CalendarGrid.xib */,
+				C0E6797E1EA7ECB200B3DC3B /* Course.swift */,
+				C0E679801EA7ECC300B3DC3B /* TimeSlot.swift */,
 			);
 			name = "Calendar Functionality";
 			sourceTree = "<group>";
@@ -293,11 +299,11 @@
 				C0D68CFA1EA691B5009B06E3 /* trash_icon@2x.png in Resources */,
 				C0D68CFD1EA6943F009B06E3 /* CourseDragged.xib in Resources */,
 				C00367041EA5825600C4DE0C /* CourseTemplate.xib in Resources */,
+				C07953841EA721B90022BFCF /* CalendarGrid.xib in Resources */,
 				C0B697271EA5A326006AA618 /* colorWheel@2x.png in Resources */,
 				C0D68CFB1EA691B5009B06E3 /* fill_icon@2x.png in Resources */,
 				C0AAE13D1EA2BD12002939B6 /* Assets.xcassets in Resources */,
 				C00367061EA582D600C4DE0C /* CourseAddTemplate.xib in Resources */,
-				C0D68D011EA6EA23009B06E3 /* CalendarGrid.xib in Resources */,
 				C0AAE1401EA2BD12002939B6 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -325,6 +331,8 @@
 			files = (
 				C0D235EE1EA5369B00AB039A /* CalendarViewController.swift in Sources */,
 				C00367081EA5851500C4DE0C /* CourseBox.swift in Sources */,
+				C0E6797F1EA7ECB200B3DC3B /* Course.swift in Sources */,
+				C0E679811EA7ECC300B3DC3B /* TimeSlot.swift in Sources */,
 				C00367021EA5756C00C4DE0C /* CourseAddBox.swift in Sources */,
 				C0AAE1381EA2BD12002939B6 /* ViewController.swift in Sources */,
 				C0AAE13B1EA2BD12002939B6 /* HXNotes.xcdatamodeld in Sources */,

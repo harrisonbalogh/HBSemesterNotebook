@@ -16,11 +16,37 @@ class CalendarGrid: NSBox {
     
     var trackingArea: NSTrackingArea!
     
+    
+    // Manually connect course box child elements using identifiers
+    let ID_LINE_TRAIL      = "grid_line_trailing"
+    let ID_LINE_BOTTOM     = "grid_line_bottom"
+    let ID_LABEL_TITLE     = "grid_label_title"
+    // Elements of course box
+    var labelTitle: NSTextField!
+    var lineTrailing: NSBox!
+    var lineBottom: NSBox!
+    
     /// Call once on a CalendarGrid after view first appears
-    func initializeTrackingArea(with calendar: CalendarViewController, atX: Int, atY: Int) {
+    func initialize(withCalendar calendar: CalendarViewController, atX: Int, atY: Int, trailBorder: Bool, botBorder: Bool) {
+        
         self.calendar = calendar
+        
         self.xDim = atX
+        
         self.yDim = atY
+        
+        // Initialize child elements
+        for v in self.subviews[0].subviews {
+            switch v.identifier! {
+            case ID_LINE_TRAIL:
+                lineTrailing = v as! NSBox
+            case ID_LINE_BOTTOM:
+                lineBottom = v as! NSBox
+            case ID_LABEL_TITLE:
+                labelTitle = v as! NSTextField
+            default: continue
+            }
+        }
         
         trackingArea = NSTrackingArea(
             rect: bounds,
@@ -29,6 +55,14 @@ class CalendarGrid: NSBox {
             userInfo: ["x":xDim, "y":yDim])
         
         addTrackingArea(trackingArea)
+        
+        // Allows grid to have a right and bottom border
+        if trailBorder {
+            lineTrailing.isHidden = false
+        }
+        if botBorder {
+            lineBottom.isHidden = false
+        }
     }
     
     /// Call whenever the superview is resized
@@ -46,17 +80,22 @@ class CalendarGrid: NSBox {
         }
     }
     
-    func receiveCourse(withColor color: NSColor, withTitle title: String) {
-        fillColor = color
+    /// Will do its own check if the location of the drop was actually inside grid in case the mouseDrag couldn't keep up
+    func receiveCourse(atLocation loc: NSPoint, withColor color: NSColor, withTitle title: String) {
+        // Check if the location of the dropped course is within the bounds of this grid space...
+        let gridLoc = self.superview!.convert(self.frame.origin, to: nil) as NSPoint
+        if
+            loc.x > gridLoc.x &&
+            loc.x < gridLoc.x + trackingArea.rect.width &&
+            loc.y > gridLoc.y &&
+            loc.y < gridLoc.y + trackingArea.rect.height {
+            
+            fillColor = color
+            
+            labelTitle.stringValue = title
+        }
     }
     
-//    override func mouseEntered(with event: NSEvent) {
-//        fillColor = NSColor.gray
-//    }
-//    
-//    override func mouseExited(with event: NSEvent) {
-//        fillColor = NSColor.white
-//    }
     override func viewDidEndLiveResize() {
         // When the user resizes the window, the tracking bounds have to be updated
         resizeTrackingArea()

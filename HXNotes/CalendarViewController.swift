@@ -16,18 +16,18 @@ class CalendarViewController: NSViewController {
     @IBOutlet weak var gridWednesday: NSStackView!
     @IBOutlet weak var gridThursday: NSStackView!
     @IBOutlet weak var gridFriday: NSStackView!
-    
     // Grid stack is an array of all NSStackViews above /\
     var gridStack = [NSStackView]()
-    // Tracker surrounding entire grid
-//    var gridTracker: NSTrackingArea!
+    // Array of courses
+    var courses = [Course]()
     
     // Horizontal stack view of course boxes
     @IBOutlet weak var courseStack: NSStackView!
     
     // CalendarGrid is a subclass of NXBox. 
     // First array dimension is 'day', second is 'time'
-    var timeSlots = [[CalendarGrid]]()
+    var timeSlotViews = [[CalendarGrid]]()
+    var timeSlotObjects = [[TimeSlot]]()
     
     // Number of time slots (Precision of time slots)
     let TIME_SLOT_COUNT = 15
@@ -105,30 +105,36 @@ class CalendarViewController: NSViewController {
         addNewCourseToStack()
         
         // Remove all grid views and generate them from nib template
-        gridMonday.subviews.forEach {$0.removeFromSuperview()}
-        gridTuesday.subviews.forEach {$0.removeFromSuperview()}
-        gridWednesday.subviews.forEach {$0.removeFromSuperview()}
-        gridThursday.subviews.forEach {$0.removeFromSuperview()}
-        gridFriday.subviews.forEach {$0.removeFromSuperview()}
         for d in 0..<gridStack.count {
-            timeSlots.append([CalendarGrid]())
+            timeSlotViews.append([CalendarGrid]())
+            gridStack[d].subviews.forEach {$0.removeFromSuperview()}
             for t in 0..<TIME_SLOT_COUNT {
                 // Load Grid template from nib
                 theObjects = []
                 Bundle.main.loadNibNamed("CalendarGrid", owner: nil, topLevelObjects: &theObjects)
                 // Get NSView from top level objects returned from nib load
-                if let getView = theObjects.filter({$0 is CalendarGrid}).first {
-                    let getBox = getView as! CalendarGrid
-                    timeSlots[0].append(getBox)
-                    getBox.initializeTrackingArea(with: self, atX: d, atY: t)
-                    gridStack[0].addArrangedSubview(getBox)
+                if let getView = theObjects.filter({$0 is NSView}).first {
+                    let getBox = getView as! NSView
+                    let newBox = getBox.subviews[0] as! CalendarGrid
+                    timeSlotViews[d].append(newBox)
+                    var trailing = false
+                    if d == gridStack.count - 1 {
+                        trailing = true
+                    }
+                    var bottoming = false
+                    if t == TIME_SLOT_COUNT-1 {
+                        bottoming = true
+                    }
+                    newBox.initialize(withCalendar: self, atX: d, atY: t, trailBorder: trailing, botBorder: bottoming)
+                    gridStack[d].addArrangedSubview(newBox)
+                    newBox.widthAnchor.constraint(equalTo: gridStack[d].widthAnchor).isActive = true
                 }
             }
         }
     }
     
     override func viewDidLayout() {
-        for day in timeSlots {
+        for day in timeSlotViews {
             for slot in day {
                 slot.resizeTrackingArea()
             }
@@ -161,6 +167,8 @@ class CalendarViewController: NSViewController {
             newCourseBox.initialize(withCourseIndex: courseStack.subviews.count, withColor: nextColorAvailable(), withParent: self)
             courseStack.addArrangedSubview(newCourseBox)
         }
+        // Create object model
+        courses.append(Course())
     }
     
     /// Receives mouse down event from an add course template box
@@ -169,10 +177,6 @@ class CalendarViewController: NSViewController {
         addCourseToStack()
         addNewCourseToStack()
     }
-    
-//    override func mouseDown(with event: NSEvent) {
-//        print("Mouse down event: \(event)")
-//    }
     
     func receiveMouseDragFromCourse(course: CourseBox, toLocation loc: NSPoint) {
         if !mouseDraggingBox {
@@ -196,11 +200,15 @@ class CalendarViewController: NSViewController {
         }
     }
     
-    func receiveMouseDragStopFromCourse() {
+    func receiveMouseDragStopFromCourse(atLocation loc: NSPoint) {
         if mouseDraggingBox {
             courseDragBox.removeFromSuperview()
             mouseDraggingBox = false
-            timeSlots[currentGridX][currentGridY].receiveCourse(withColor: draggedCourse.originalColor, withTitle: draggedCourse.labelCourse.stringValue)
+            
+            if currentGridX != -1 {
+                timeSlotViews[currentGridX][currentGridY].receiveCourse(atLocation: loc, withColor: draggedCourse.originalColor, withTitle: draggedCourse.labelCourse.stringValue)
+            }
+            
             self.draggedCourse = nil
         }
     }
@@ -225,12 +233,19 @@ class CalendarViewController: NSViewController {
         if let atY = event.trackingArea?.userInfo!["y"] as? Int {
             currentGridY = atY
         }
-        print("currentGrid: \(currentGridX), \(currentGridY)")
-        
+    }
+    
+    override func mouseExited(with event: NSEvent) {
+        currentGridX = -1
+        currentGridY = -1
     }
     
     override func keyDown(with event: NSEvent) {
         print("hey")
+    }
+    
+    func updateCourseName(atIndex index: Int, withName name: String) {
+        courses[index].title = name
     }
     
 }
