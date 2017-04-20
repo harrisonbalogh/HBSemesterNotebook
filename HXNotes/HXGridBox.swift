@@ -8,7 +8,7 @@
 
 import Cocoa
 
-class CalendarGrid: NSBox {
+class HXGridBox: NSBox {
     
     var xDim: Int!
     var yDim: Int!
@@ -81,7 +81,7 @@ class CalendarGrid: NSBox {
     }
     
     /// Will do its own check if the location of the drop was actually inside grid in case the mouseDrag couldn't keep up
-    func receiveCourse(atLocation loc: NSPoint, withColor color: NSColor, withTitle title: String) {
+    func update(course: Course, dropLocation loc: NSPoint) {
         // Check if the location of the dropped course is within the bounds of this grid space...
         let gridLoc = self.superview!.convert(self.frame.origin, to: nil) as NSPoint
         if
@@ -90,10 +90,16 @@ class CalendarGrid: NSBox {
             loc.y > gridLoc.y &&
             loc.y < gridLoc.y + trackingArea.rect.height {
             
-            fillColor = color
+            fillColor = course.color
             
-            labelTitle.stringValue = title
+            labelTitle.stringValue = course.title
         }
+    }
+    
+    /// Clears out the course styling
+    func removeCourse() {
+        labelTitle.stringValue = ""
+        fillColor = NSColor.white
     }
     
     override func viewDidEndLiveResize() {

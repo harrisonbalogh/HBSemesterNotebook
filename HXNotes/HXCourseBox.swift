@@ -8,7 +8,7 @@
 
 import Cocoa
 
-class CourseBox: NSBox {
+class HXCourseBox: NSBox {
     
     var trackingArea: NSTrackingArea!
     // Need to update course index when a course gets removed
@@ -72,7 +72,7 @@ class CourseBox: NSBox {
     
     /// Removes this course box from the stack view
     func removeCourseBox() {
-        parentCalendar.receiveCourseRemove(course: self)
+        parentCalendar.remove(course: self)
     }
     
     /// Clear selection of course's title field
@@ -87,7 +87,6 @@ class CourseBox: NSBox {
     }
     
     override func mouseDragged(with event: NSEvent) {
-        Swift.print("Index of drag: \(courseIndex)")
         fillColor = NSColor.white
         buttonFill.isEnabled = false
         buttonTrash.isEnabled = false
@@ -106,14 +105,6 @@ class CourseBox: NSBox {
         buttonTrash.isHidden = false
         labelDragHere.alphaValue = 1
         labelCourse.alphaValue = 1
-        parentCalendar.receiveMouseDragStopFromCourse(atLocation: event.locationInWindow)
-    }
-    
-    override func mouseEntered(with event: NSEvent) {
-        
-    }
-    
-    override func mouseExited(with event: NSEvent) {
-        
+        parentCalendar.stoppedDraggingCourse(atLocation: event.locationInWindow)
     }
 }

@@ -8,7 +8,7 @@
 
 import Cocoa
 
-class DragBox: NSBox {
+class HXCourseDragBox: NSBox {
     
     
     // Manually connect drag box child elements using identifiers

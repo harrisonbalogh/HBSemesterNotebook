@@ -10,28 +10,37 @@ import Cocoa
 
 class CalendarViewController: NSViewController {
     
+    // MARK: Interface Builder outlets and referenced Views ..............
     // Vertical stack views containing grid of times
     @IBOutlet weak var gridMonday: NSStackView!
     @IBOutlet weak var gridTuesday: NSStackView!
     @IBOutlet weak var gridWednesday: NSStackView!
     @IBOutlet weak var gridThursday: NSStackView!
     @IBOutlet weak var gridFriday: NSStackView!
-    // Grid stack is an array of all NSStackViews above /\
-    var gridStack = [NSStackView]()
-    // Array of courses
-    var courses = [Course]()
-    
     // Horizontal stack view of course boxes
     @IBOutlet weak var courseStack: NSStackView!
-    
-    // CalendarGrid is a subclass of NXBox. 
+    // Vertical stack view of time labels on left side of window
+    @IBOutlet weak var timeStack: NSStackView!
+    // Grid stack is an array of all grid'Day' NSStackViews above
+    var gridStack = [NSStackView]()
+    // Add course button
+    @IBOutlet weak var courseAddBox: HXCourseAddBox!
     // First array dimension is 'day', second is 'time'
-    var timeSlotViews = [[CalendarGrid]]()
-    var timeSlotObjects = [[TimeSlot]]()
+    var gridBoxes = [[HXGridBox]]()
     
-    // Number of time slots (Precision of time slots)
-    let TIME_SLOT_COUNT = 15
+    // MARK: References for dragging a course to calendar .................
+    // Course drag box for moving courses
+    var courseDragBox: HXCourseDragBox!
+    // These constraints control the position of courseDragBox
+    var dragBoxConstraintLead: NSLayoutConstraint!
+    var dragBoxConstraintTop: NSLayoutConstraint!
+    // Reference to index of course being dragged, nil when not dragging
+    var dragCourseIndex: Int!
+    // Note last grid box mouse dragged into
+    var lastGridX = -1
+    var lastGridY = -1
     
+    // MARK: Color vars .............///...................................
     // Colors used to give course boxes unique colors
     let COLORS_ORDERED = [
         NSColor.init(red: 88/255, green: 205/255, blue: 189/255, alpha: 1),
@@ -66,19 +75,11 @@ class CalendarViewController: NSViewController {
         }
     }
     
-    // Course drag box for moving courses
-    var courseDragBox: DragBox!
-    // Track when mouse starts dragging
-    var mouseDraggingBox = false
-    // Move these constraints to move the drag box to the mouse
-    var dragBoxConstraintLeading: NSLayoutConstraint!
-    var dragBoxConstraintTop: NSLayoutConstraint!
-    // Note the currently entered grid
-    var currentGridX = -1
-    var currentGridY = -1
-    // Track the course box being dragged
-    var draggedCourse: CourseBox!
+    // MARK: Object models ...................................................
+    var courses = [Course]()
+    var timeSlots = [[TimeSlot]]()
 
+    // MARK: Methods __________________________________________________________________________
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -86,43 +87,41 @@ class CalendarViewController: NSViewController {
         for x in 0..<COLORS_ORDERED.count {
             colorAvailability[x] = true
         }
-        
+        // Populate gridStack
         gridStack = [self.gridMonday, self.gridTuesday, self.gridWednesday, self.gridThursday, self.gridFriday]
+        
+        // Initialize grid add box button
+        courseAddBox.setParentController(controller: self)
         
         // Load course dragged box
         var theObjects: NSArray = []
-        Bundle.main.loadNibNamed("CourseDragged", owner: nil, topLevelObjects: &theObjects)
+        Bundle.main.loadNibNamed("HXCourseDragBox", owner: nil, topLevelObjects: &theObjects)
         // Get NSView from top level objects returned from nib load
-        if let getView = theObjects.filter({$0 is NSView}).first {
-            let loadedView = getView as! NSView
-            let childDragBox = loadedView.subviews[0] as! DragBox
-            childDragBox.initialize()
-            self.courseDragBox = childDragBox
+        if let newBox = theObjects.filter({$0 is HXCourseDragBox}).first as? HXCourseDragBox {
+            newBox.initialize()
+            self.courseDragBox = newBox
         }
-        
-        // Clear template IB nsbox and add template from Nib
-        courseStack.subviews.forEach {$0.removeFromSuperview()}
-        addNewCourseToStack()
         
         // Remove all grid views and generate them from nib template
         for d in 0..<gridStack.count {
-            timeSlotViews.append([CalendarGrid]())
+            gridBoxes.append([HXGridBox]())
+            timeSlots.append([TimeSlot]())
             gridStack[d].subviews.forEach {$0.removeFromSuperview()}
-            for t in 0..<TIME_SLOT_COUNT {
+            for t in 0..<timeStack.subviews.count {
                 // Load Grid template from nib
                 theObjects = []
-                Bundle.main.loadNibNamed("CalendarGrid", owner: nil, topLevelObjects: &theObjects)
+                Bundle.main.loadNibNamed("HXGridBox", owner: nil, topLevelObjects: &theObjects)
                 // Get NSView from top level objects returned from nib load
-                if let getView = theObjects.filter({$0 is NSView}).first {
-                    let getBox = getView as! NSView
-                    let newBox = getBox.subviews[0] as! CalendarGrid
-                    timeSlotViews[d].append(newBox)
+                if let newBox = theObjects.filter({$0 is HXGridBox}).first as? HXGridBox {
+                    gridBoxes[d].append(newBox)
+                    // THIS ALL UGLY, FIX IT. MAKE BETTER SYSTEM
+                    timeSlots[d].append(TimeSlot(hour: 0, minute: 0, lengthHour: 1, lengthMinute: 0, xDim: d, yDim: t))
                     var trailing = false
                     if d == gridStack.count - 1 {
                         trailing = true
                     }
                     var bottoming = false
-                    if t == TIME_SLOT_COUNT-1 {
+                    if t == timeStack.subviews.count - 1 {
                         bottoming = true
                     }
                     newBox.initialize(withCalendar: self, atX: d, atY: t, trailBorder: trailing, botBorder: bottoming)
@@ -133,115 +132,88 @@ class CalendarViewController: NSViewController {
         }
     }
     
-    override func viewDidLayout() {
-        for day in timeSlotViews {
-            for slot in day {
-                slot.resizeTrackingArea()
-            }
-        }
-    }
-    
-    /// Add a new course box template to the course stack view
-    func addNewCourseToStack() {
+    /// Add a course model and view from template
+    func addCourse() {
         // Load Course Add Template from nib
         var theObjects: NSArray = []
-        Bundle.main.loadNibNamed("CourseAddTemplate", owner: nil, topLevelObjects: &theObjects)
+        Bundle.main.loadNibNamed("HXCourseBox", owner: nil, topLevelObjects: &theObjects)
         // Get NSView from top level objects returned from nib load
-        if let getView = theObjects.filter({$0 is NSView}).first {
-            let newCourseView = getView as! NSView
-            let newCourseBox = newCourseView.subviews[0] as! CourseAddBox
-            newCourseBox.setParentController(controller: self)
-            courseStack.addArrangedSubview(newCourseBox)
+        if let newBox = theObjects.filter({$0 is HXCourseBox}).first as? HXCourseBox {
+            newBox.initialize(withCourseIndex: courses.count, withColor: nextColorAvailable(), withParent: self)
+            // Create object model
+            courses.append(Course(withColor: newBox.originalColor))
+            // Update NSStackView
+            courseStack.insertArrangedSubview(newBox, at: courses.count - 1)
         }
-    }
-    
-    /// Add a course box template to the course stack view
-    func addCourseToStack() {
-        // Load Course Add Template from nib
-        var theObjects: NSArray = []
-        Bundle.main.loadNibNamed("CourseTemplate", owner: nil, topLevelObjects: &theObjects)
-        // Get NSView from top level objects returned from nib load
-        if let getView = theObjects.filter({$0 is NSView}).first {
-            let newCourseView = getView as! NSView
-            let newCourseBox = newCourseView.subviews[0] as! CourseBox
-            newCourseBox.initialize(withCourseIndex: courseStack.subviews.count, withColor: nextColorAvailable(), withParent: self)
-            courseStack.addArrangedSubview(newCourseBox)
-        }
-        // Create object model
-        courses.append(Course())
+        
     }
     
     /// Receives mouse down event from an add course template box
     func receiveMouseDownFromAddCourse() {
-        courseStack.removeView(courseStack.subviews.last!)
-        addCourseToStack()
-        addNewCourseToStack()
+        addCourse()
     }
     
-    func receiveMouseDragFromCourse(course: CourseBox, toLocation loc: NSPoint) {
-        if !mouseDraggingBox {
-            self.draggedCourse = course
+    func receiveMouseDragFromCourse(course: HXCourseBox, toLocation loc: NSPoint) {
+        if self.dragCourseIndex == nil {
+            self.dragCourseIndex = course.courseIndex
+            // Update drag box visuals to match course being dragged
+            courseDragBox.labelCourse.stringValue = course.labelCourse.stringValue
             courseDragBox.fillColor = NSColor(
                 red: course.originalColor.redComponent,
                 green: course.originalColor.greenComponent,
                 blue: course.originalColor.blueComponent,
                 alpha: 0.5)
-            view.addSubview(courseDragBox)
-            dragBoxConstraintLeading = courseDragBox.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: -1000)
+            // Add drag box back to the superview
+            self.view.addSubview(courseDragBox)
+            // Try and move these to dragBox initialize in viewDidLoad()
+            dragBoxConstraintLead = courseDragBox.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: -1000)
             dragBoxConstraintTop = courseDragBox.topAnchor.constraint(equalTo: self.view.topAnchor, constant: -1000)
-            dragBoxConstraintLeading.isActive = true
+            dragBoxConstraintLead.isActive = true
             dragBoxConstraintTop.isActive = true
-            mouseDraggingBox = true
-            print("String value: \(title)")
-            courseDragBox.labelCourse.stringValue = course.labelCourse.stringValue
         } else {
-            dragBoxConstraintLeading.constant = loc.x - courseDragBox.bounds.width/2
+            dragBoxConstraintLead.constant = loc.x - courseDragBox.bounds.width/2
             dragBoxConstraintTop.constant = self.view.bounds.height - loc.y - 5
         }
     }
     
-    func receiveMouseDragStopFromCourse(atLocation loc: NSPoint) {
-        if mouseDraggingBox {
-            courseDragBox.removeFromSuperview()
-            mouseDraggingBox = false
-            
-            if currentGridX != -1 {
-                timeSlotViews[currentGridX][currentGridY].receiveCourse(atLocation: loc, withColor: draggedCourse.originalColor, withTitle: draggedCourse.labelCourse.stringValue)
-            }
-            
-            self.draggedCourse = nil
+    func stoppedDraggingCourse(atLocation loc: NSPoint) {
+        // Ensure a course was being dragged
+        if self.dragCourseIndex != nil {
+            // Remove drag box from superview
+            self.courseDragBox.removeFromSuperview()
+            // Update visuals of a grid box
+//            gridBoxes[lastGridX][lastGridY].update(course: courses[dragCourseIndex], dropLocation: loc)
+            // Update model
+//            courses[dragCourseIndex].assignTime(withTimeSlot: timeSlots[lastGridX][lastGridY]) // ERROR, need precise check before letting this happen
+            self.dragCourseIndex = nil
         }
     }
     
-    func receiveCourseRemove(course: CourseBox) {
+    func remove(course: HXCourseBox) {
         for c in courseStack.subviews {
-            if let box = c as? CourseBox {
+            if let box = c as? HXCourseBox {
                 if (box.courseIndex <= course.courseIndex) {
                     continue
                 }
                 box.updateIndex(index: box.courseIndex - 1)
             }
         }
+        for t in courses[course.courseIndex].timeSlotsOccupied {
+            gridBoxes[t.xDim][t.yDim].removeCourse()
+        }
+        courses.remove(at: course.courseIndex)
         releaseColor(color: course.originalColor)
         courseStack.removeView(course)
     }
     
     override func mouseEntered(with event: NSEvent) {
         if let atX = event.trackingArea?.userInfo!["x"] as? Int {
-            currentGridX = atX
+            lastGridX = atX
         }
         if let atY = event.trackingArea?.userInfo!["y"] as? Int {
-            currentGridY = atY
+            lastGridY = atY
         }
-    }
-    
-    override func mouseExited(with event: NSEvent) {
-        currentGridX = -1
-        currentGridY = -1
-    }
-    
-    override func keyDown(with event: NSEvent) {
-        print("hey")
+        print("Grid location: \(lastGridX), \(lastGridY)")
     }
     
     func updateCourseName(atIndex index: Int, withName name: String) {

@@ -18,13 +18,19 @@ class TimeSlot {
     let lengthHour: Int!
     let lengthMinute: Int!
     
-    init(hour: Int, minute: Int, lengthHour: Int, lengthMinute: Int) {
+    let xDim: Int!
+    let yDim: Int!
+    
+    init(hour: Int, minute: Int, lengthHour: Int, lengthMinute: Int, xDim x: Int!, yDim y: Int!) {
         
         self.hour = hour
         self.minute = minute
         
         self.lengthHour = lengthHour
         self.lengthMinute = lengthMinute
+        
+        self.xDim = x;
+        self.yDim = y;
         
     }
 }

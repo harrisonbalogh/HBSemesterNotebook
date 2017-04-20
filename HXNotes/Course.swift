@@ -7,16 +7,21 @@
 //
 
 import Foundation
+import Cocoa
 
 class Course {
     
     var title: String = "New Course"
     
-    var timeSlotsOccupied: [TimeSlot]!
+    var timeSlotsOccupied = [TimeSlot]()
+    
+    var index: Int!
+    
+    var color: NSColor!
     
     
-    init() {
-        
+    init(withColor color: NSColor) {
+        self.color = color
     }
     
     deinit {

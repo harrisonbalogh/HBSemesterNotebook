@@ -8,7 +8,7 @@
 
 import Cocoa
 
-class CourseAddBox: NSBox {
+class HXCourseAddBox: NSBox {
     
     var parentController: CalendarViewController!
     
