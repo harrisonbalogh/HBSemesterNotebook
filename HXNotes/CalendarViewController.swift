@@ -181,12 +181,25 @@ class CalendarViewController: NSViewController {
         if self.dragCourseIndex != nil {
             // Remove drag box from superview
             self.courseDragBox.removeFromSuperview()
-            // Update visuals of a grid box
-//            gridBoxes[lastGridX][lastGridY].update(course: courses[dragCourseIndex], dropLocation: loc)
-            // Update model
-//            courses[dragCourseIndex].assignTime(withTimeSlot: timeSlots[lastGridX][lastGridY]) // ERROR, need precise check before letting this happen
+            if isLocationInLastGrid(location: loc) {
+                // Update visuals of a grid box
+                gridBoxes[lastGridX][lastGridY].update(course: courses[dragCourseIndex])
+                // Update model
+                courses[dragCourseIndex].assignTime(withTimeSlot: timeSlots[lastGridX][lastGridY])
+            }
             self.dragCourseIndex = nil
         }
+    }
+    
+    /// Use this to confirm that mouse location when finishing drag is inside expected grid
+    func isLocationInLastGrid(location loc: NSPoint) -> Bool {
+        let grid = gridBoxes[lastGridX][lastGridY]
+        // Check if the location of the dropped course is within the bounds of this grid space...
+        let gridLoc = grid.superview!.convert(grid.frame.origin, to: nil) as NSPoint
+        if loc.x > gridLoc.x && loc.x < gridLoc.x + grid.trackingArea.rect.width && loc.y > gridLoc.y && loc.y < gridLoc.y + grid.trackingArea.rect.height {
+            return true
+        }
+        return false
     }
     
     func remove(course: HXCourseBox) {
@@ -218,6 +231,9 @@ class CalendarViewController: NSViewController {
     
     func updateCourseName(atIndex index: Int, withName name: String) {
         courses[index].title = name
+        for t in courses[index].timeSlotsOccupied {
+            gridBoxes[t.xDim][t.yDim].labelTitle.stringValue = name
+        }
     }
     
 }

@@ -50,7 +50,7 @@ class HXGridBox: NSBox {
         
         trackingArea = NSTrackingArea(
             rect: bounds,
-            options: [NSTrackingAreaOptions.activeInKeyWindow, NSTrackingAreaOptions.mouseEnteredAndExited],
+            options: [NSTrackingAreaOptions.activeInKeyWindow, NSTrackingAreaOptions.enabledDuringMouseDrag, NSTrackingAreaOptions.mouseEnteredAndExited],
             owner: self,//self.calendar,
             userInfo: ["x":xDim, "y":yDim])
         
@@ -80,20 +80,12 @@ class HXGridBox: NSBox {
         }
     }
     
-    /// Will do its own check if the location of the drop was actually inside grid in case the mouseDrag couldn't keep up
-    func update(course: Course, dropLocation loc: NSPoint) {
-        // Check if the location of the dropped course is within the bounds of this grid space...
-        let gridLoc = self.superview!.convert(self.frame.origin, to: nil) as NSPoint
-        if
-            loc.x > gridLoc.x &&
-            loc.x < gridLoc.x + trackingArea.rect.width &&
-            loc.y > gridLoc.y &&
-            loc.y < gridLoc.y + trackingArea.rect.height {
-            
-            fillColor = course.color
-            
-            labelTitle.stringValue = course.title
-        }
+    /// Set visuals of GridBox to match the properties of the course supplied
+    func update(course: Course) {
+        
+        fillColor = course.color
+        
+        labelTitle.stringValue = course.title
     }
     
     /// Clears out the course styling
