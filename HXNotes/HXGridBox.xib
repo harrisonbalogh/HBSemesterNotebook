@@ -16,11 +16,11 @@
                 <rect key="frame" x="0.0" y="0.0" width="160" height="40"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
-                    <textField identifier="grid_label_title" horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="62X-lI-Jog">
-                        <rect key="frame" x="-2" y="13" width="164" height="14"/>
+                    <textField identifier="grid_label_title" hidden="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="62X-lI-Jog">
+                        <rect key="frame" x="18" y="26" width="124" height="14"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" id="DfD-83-qkI">
                             <font key="font" metaFont="systemLight" size="11"/>
-                            <color key="textColor" red="0.40000709295272829" green="0.40000709295272829" blue="0.40000709295272829" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <color key="textColor" red="0.29920631170272827" green="0.29920631170272827" blue="0.29920631170272827" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
@@ -48,27 +48,56 @@
                             <constraint firstAttribute="height" constant="1" id="wS0-fl-dVB"/>
                         </constraints>
                     </box>
+                    <imageView identifier="grid_resize" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="lSc-vX-bBn">
+                        <rect key="frame" x="0.0" y="0.0" width="160" height="5"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="5" id="JFx-HL-kpx"/>
+                        </constraints>
+                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="drag_icon" id="Xbe-yk-eQ1"/>
+                    </imageView>
+                    <button identifier="grid_button_remove" hidden="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yav-77-RA2">
+                        <rect key="frame" x="147" y="27" width="10" height="10"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="10" id="XjS-Md-Z0f"/>
+                            <constraint firstAttribute="width" constant="10" id="vh9-1x-FDt"/>
+                        </constraints>
+                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSStopProgressTemplate" imagePosition="only" alignment="center" enabled="NO" imageScaling="proportionallyUpOrDown" inset="2" id="MbG-CB-qI2">
+                            <behavior key="behavior" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                    </button>
                 </subviews>
             </view>
             <constraints>
+                <constraint firstAttribute="trailing" secondItem="yav-77-RA2" secondAttribute="trailing" constant="3" id="7tw-YC-YAf"/>
                 <constraint firstItem="x35-2o-haL" firstAttribute="centerY" secondItem="acs-fm-GlA" secondAttribute="centerY" id="9Ta-zF-3Kn"/>
+                <constraint firstItem="62X-lI-Jog" firstAttribute="top" secondItem="acs-fm-GlA" secondAttribute="top" id="A7c-Q9-Csj"/>
                 <constraint firstItem="zyg-mJ-OHq" firstAttribute="leading" secondItem="acs-fm-GlA" secondAttribute="leading" id="ERa-dM-aY3"/>
                 <constraint firstAttribute="bottom" secondItem="e7o-tb-3mV" secondAttribute="bottom" id="EXr-Kp-4OH"/>
+                <constraint firstItem="yav-77-RA2" firstAttribute="top" secondItem="acs-fm-GlA" secondAttribute="top" constant="3" id="HDa-ns-V0n"/>
                 <constraint firstItem="zyg-mJ-OHq" firstAttribute="height" secondItem="acs-fm-GlA" secondAttribute="height" id="Okb-c7-Hca"/>
                 <constraint firstItem="x35-2o-haL" firstAttribute="height" secondItem="acs-fm-GlA" secondAttribute="height" id="PhA-Vw-CD9"/>
                 <constraint firstItem="jdR-3p-g5P" firstAttribute="centerX" secondItem="acs-fm-GlA" secondAttribute="centerX" id="V27-cr-Wcg"/>
+                <constraint firstAttribute="trailing" secondItem="62X-lI-Jog" secondAttribute="trailing" constant="20" id="Wp5-dY-kX9"/>
                 <constraint firstItem="jdR-3p-g5P" firstAttribute="width" secondItem="acs-fm-GlA" secondAttribute="width" id="eqK-nB-453"/>
                 <constraint firstItem="jdR-3p-g5P" firstAttribute="top" secondItem="acs-fm-GlA" secondAttribute="top" id="fDz-Vk-OuL"/>
                 <constraint firstItem="zyg-mJ-OHq" firstAttribute="centerY" secondItem="acs-fm-GlA" secondAttribute="centerY" id="fG2-1d-Utp"/>
                 <constraint firstItem="62X-lI-Jog" firstAttribute="centerX" secondItem="acs-fm-GlA" secondAttribute="centerX" id="gUy-7d-u06"/>
-                <constraint firstItem="62X-lI-Jog" firstAttribute="centerY" secondItem="acs-fm-GlA" secondAttribute="centerY" id="lXd-ch-h5P"/>
+                <constraint firstItem="lSc-vX-bBn" firstAttribute="centerX" secondItem="acs-fm-GlA" secondAttribute="centerX" id="hzs-cb-UX2"/>
+                <constraint firstItem="lSc-vX-bBn" firstAttribute="width" secondItem="acs-fm-GlA" secondAttribute="width" id="iO7-mw-ifr"/>
+                <constraint firstItem="62X-lI-Jog" firstAttribute="leading" secondItem="acs-fm-GlA" secondAttribute="leading" constant="20" id="jDI-Ql-Wen"/>
+                <constraint firstAttribute="bottom" secondItem="lSc-vX-bBn" secondAttribute="bottom" id="rBC-YK-Z3M"/>
                 <constraint firstItem="e7o-tb-3mV" firstAttribute="centerX" secondItem="acs-fm-GlA" secondAttribute="centerX" id="rav-eo-Nv8"/>
-                <constraint firstItem="62X-lI-Jog" firstAttribute="width" secondItem="acs-fm-GlA" secondAttribute="width" id="sjY-Ye-ngN"/>
                 <constraint firstItem="e7o-tb-3mV" firstAttribute="width" secondItem="acs-fm-GlA" secondAttribute="width" id="tdu-ck-KBQ"/>
                 <constraint firstAttribute="trailing" secondItem="x35-2o-haL" secondAttribute="trailing" id="xnL-az-vmW"/>
             </constraints>
+            <point key="canvasLocation" x="168" y="192"/>
         </box>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
     </objects>
+    <resources>
+        <image name="NSStopProgressTemplate" width="11" height="11"/>
+        <image name="drag_icon" width="22.5" height="5"/>
+    </resources>
 </document>

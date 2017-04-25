@@ -33,4 +33,11 @@ class TimeSlot {
         self.yDim = y;
         
     }
+    
+    func clearCourse() {
+        if let i = occupyingCourse.timeSlotsOccupied.index(where: {$0.xDim == xDim && $0.yDim == yDim}) {
+            occupyingCourse.timeSlotsOccupied.remove(at: i)
+            occupyingCourse = nil
+        }
+    }
 }

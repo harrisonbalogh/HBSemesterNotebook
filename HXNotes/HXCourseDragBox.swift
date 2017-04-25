@@ -30,4 +30,14 @@ class HXCourseDragBox: NSBox {
         
     }
 
+    /// Set this box to match the properties of the course provided
+    func updateWithCourse(_ course: Course) {
+        labelCourse.stringValue = course.title
+        self.fillColor = NSColor(
+            red: course.color.redComponent,
+            green: course.color.greenComponent,
+            blue: course.color.blueComponent,
+            alpha: 0.5)
+    }
+    
 }

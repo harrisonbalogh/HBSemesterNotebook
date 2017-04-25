@@ -17,6 +17,6 @@ class HXCourseAddBox: NSBox {
     }
     
     override func mouseDown(with event: NSEvent) {
-        parentController.receiveMouseDownFromAddCourse()
+        parentController.action_addCourseButton()
     }
 }

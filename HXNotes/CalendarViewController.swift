@@ -7,6 +7,7 @@
 //
 
 import Cocoa
+import Foundation
 
 class CalendarViewController: NSViewController {
     
@@ -19,8 +20,14 @@ class CalendarViewController: NSViewController {
     @IBOutlet weak var gridFriday: NSStackView!
     // Horizontal stack view of course boxes
     @IBOutlet weak var courseStack: NSStackView!
-    // Vertical stack view of time labels on left side of window
+    // Horizontal stack view of day labels on top of calendar
+    @IBOutlet weak var dayStack: NSStackView!
+    // Vertical stack view of time labels on left of calendar
     @IBOutlet weak var timeStack: NSStackView!
+    // Reference to all the NSTextFields in the timeStack
+    var timeLabels = [NSTextField]()
+    // Reference to all the NSTextFields in the dayStack
+    var dayLabels = [NSTextField]()
     // Grid stack is an array of all grid'Day' NSStackViews above
     var gridStack = [NSStackView]()
     // Add course button
@@ -39,6 +46,12 @@ class CalendarViewController: NSViewController {
     // Note last grid box mouse dragged into
     var lastGridX = -1
     var lastGridY = -1
+    
+    // MARK: References to handle extending a course timeSlot
+    // Will be either the last time in the timeStack or the first occurance of a difference course
+    var maxDragExtendIndex = -1
+    // Note how far down dragging occurred to clear out transparent grid spaces
+    var lowestDragExtendIndex = -1
     
     // MARK: Color vars .............///...................................
     // Colors used to give course boxes unique colors
@@ -90,6 +103,20 @@ class CalendarViewController: NSViewController {
         // Populate gridStack
         gridStack = [self.gridMonday, self.gridTuesday, self.gridWednesday, self.gridThursday, self.gridFriday]
         
+        // Populate timeLabels
+        for t in timeStack.subviews {
+            if let label = t.subviews.first?.subviews.first as? NSTextField {
+                timeLabels.append(label)
+            }
+        }
+        
+        // Populate dayLabels
+        for d in dayStack.subviews {
+            if let label = d as? NSTextField {
+                dayLabels.append(label)
+            }
+        }
+        
         // Initialize grid add box button
         courseAddBox.setParentController(controller: self)
         
@@ -115,7 +142,8 @@ class CalendarViewController: NSViewController {
                 if let newBox = theObjects.filter({$0 is HXGridBox}).first as? HXGridBox {
                     gridBoxes[d].append(newBox)
                     // THIS ALL UGLY, FIX IT. MAKE BETTER SYSTEM
-                    timeSlots[d].append(TimeSlot(hour: 0, minute: 0, lengthHour: 1, lengthMinute: 0, xDim: d, yDim: t))
+                    // AND NOTE THE 8 IN BELOW LINE, SHOULDN'T BE MANUALLY ENTERED, OR DECLARE ABOVE AS CONSTANT
+                    timeSlots[d].append(TimeSlot(hour: (t+8), minute: 0, lengthHour: 1, lengthMinute: 0, xDim: d, yDim: t))
                     var trailing = false
                     if d == gridStack.count - 1 {
                         trailing = true
@@ -130,10 +158,11 @@ class CalendarViewController: NSViewController {
                 }
             }
         }
-    }
+    } // end viewDidLoad()
     
+    // MARK: Handling courses..................................................................
     /// Add a course model and view from template
-    func addCourse() {
+    private func addCourse() {
         // Load Course Add Template from nib
         var theObjects: NSArray = []
         Bundle.main.loadNibNamed("HXCourseBox", owner: nil, topLevelObjects: &theObjects)
@@ -145,24 +174,204 @@ class CalendarViewController: NSViewController {
             // Update NSStackView
             courseStack.insertArrangedSubview(newBox, at: courses.count - 1)
         }
+    }
+    /// Removes all information associated with a course object
+    private func removeCourse(_ course: HXCourseBox) {
+        for c in courseStack.subviews {
+            if let box = c as? HXCourseBox {
+                if (box.courseIndex <= course.courseIndex) {
+                    continue
+                }
+                box.updateIndex(index: box.courseIndex - 1)
+            }
+        }
+        for t in courses[course.courseIndex].timeSlotsOccupied {
+            gridBoxes[t.xDim][t.yDim].resetGrid()
+        }
+        courses[course.courseIndex].remove()
+        courses.remove(at: course.courseIndex)
+        releaseColor(color: course.originalColor)
+        courseStack.removeView(course)
+    }
+    
+    // MARK: Handling time slots..................................................................
+    ///
+    private func updateTimeSlot(xGrid x: Int, yGrid y: Int, course: Course) {
+        // Clear existing course if needed
+        if timeSlots[x][y].occupyingCourse != nil {
+            resetTimeSlot(xGrid: x, yGrid: y)
+        }
+        // Update data model and visuals
+        let (topTime, botTime) = course.assignTime(withTimeSlot: timeSlots[x][y])
+        for g in stride(from: topTime, through: botTime, by: 1) {
+            gridBoxes[x][g].update(course: course)
+            gridBoxes[x][g].update(topIndex: topTime, botIndex: botTime)
+        }
+    }
+    /// Frees up a time slot from a given course, also visually updates clusters of course times
+    private func resetTimeSlot(xGrid: Int, yGrid: Int) {
         
+        timeSlots[xGrid][yGrid].clearCourse()
+
+        // Only find above cluster if not earliest time in day
+        if yGrid > 0 {
+            var (aboveTopTime, aboveBotTime) = (-1,-1)
+            let aboveCourseCluster: Course! = timeSlots[xGrid][yGrid-1].occupyingCourse
+            if aboveCourseCluster != nil {
+                for i in stride(from: (yGrid-1), through: 0, by: -1) {
+                    if timeSlots[xGrid][i].occupyingCourse === aboveCourseCluster {
+                        if aboveBotTime == -1 {
+                            aboveBotTime = i
+                        }
+                        aboveTopTime = i
+                    } else {
+                        break
+                    }
+                }
+            }
+            if aboveBotTime != -1 {
+                for g in stride(from: aboveTopTime, through: aboveBotTime, by: 1) {
+                    gridBoxes[xGrid][g].update(course: aboveCourseCluster)
+                    gridBoxes[xGrid][g].update(topIndex: aboveTopTime, botIndex: aboveBotTime)
+                }
+            }
+        }
+        // Only find below cluster if not latest time in day
+        if yGrid < (timeLabels.count - 1) {
+            var (belowTopTime, belowBotTime) = (-1,-1)
+            let belowCourseCluster: Course! = timeSlots[xGrid][yGrid+1].occupyingCourse
+            if belowCourseCluster != nil {
+                for i in stride(from: (yGrid+1), through: (timeLabels.count - 1), by: 1) {
+                    if timeSlots[xGrid][i].occupyingCourse === belowCourseCluster {
+                        if belowTopTime == -1 {
+                            belowTopTime = i
+                        }
+                        belowBotTime = i
+                    } else {
+                        break
+                    }
+                }
+            }
+            if belowTopTime != -1 {
+                for g in stride(from: belowTopTime, through: belowBotTime, by: 1) {
+                    gridBoxes[xGrid][g].update(course: belowCourseCluster)
+                    gridBoxes[xGrid][g].update(topIndex: belowTopTime, botIndex: belowBotTime)
+                }
+            }
+        }
     }
     
-    /// Receives mouse down event from an add course template box
-    func receiveMouseDownFromAddCourse() {
-        addCourse()
+//    MAJOR GLITCH:
+//        Rewriting other classes by placing one over there other. Changes visual but not data model.
+//        Also should re-evaulate clusters on rewrite
+//    VISUAL GUARANTEE:
+//        Loop through unoccupied timeSlots about the extendDrag position and update their visuals,
+//        ... since tracking mouse enter doesn't always happen when moving mouse quickly.
+    
+    /// Use this to confirm that mouse location when finishing drag is inside expected grid
+    func isLocationInLastGrid(location loc: NSPoint) -> Bool {
+        if lastGridX != -1 {
+            let grid = gridBoxes[lastGridX][lastGridY]
+            // Check if the location of the dropped course is within the bounds of this grid space...
+            let gridLoc = grid.superview!.convert(grid.frame.origin, to: nil) as NSPoint
+            if loc.x > gridLoc.x && loc.x < gridLoc.x + grid.trackingArea.rect.width && loc.y > gridLoc.y && loc.y < gridLoc.y + grid.trackingArea.rect.height {
+                return true
+            }
+        }
+        return false
     }
     
-    func receiveMouseDragFromCourse(course: HXCourseBox, toLocation loc: NSPoint) {
+    func clearTransparentExtendedGridSpaces(dragX: Int, dragY: Int) {
+        for g in stride(from: (dragY + 1), through: lowestDragExtendIndex, by: 1) {
+            if timeSlots[dragX][g].occupyingCourse == nil {
+                gridBoxes[dragX][g].update(color: NSColor.white)
+            }
+        }
+        lowestDragExtendIndex = dragY + 1
+    }
+    
+    // MARK: Mouse handlers...........................................................................
+    // HXGridBox - Mouse Enter:
+    func mouseEntered_gridBox(atX: Int, atY: Int) {
+        // If currently dragging, revert color on last grid
+        if self.dragCourseIndex != nil && lastGridX != -1 {
+            dayLabels[lastGridX].textColor = NSColor.gray
+            timeLabels[lastGridY].textColor = NSColor.gray
+        }
+        lastGridX = atX
+        lastGridY = atY
+        // If currently dragging, do color update on hovering grid
+        if self.dragCourseIndex != nil && lastGridX != -1 {
+            timeLabels[lastGridY].textColor = NSColor.black
+            dayLabels[lastGridX].textColor = NSColor.black
+        }
+    }
+    /// HXGridBox - Mouse Up: Stop extending the course in a grid box to more time slots
+    func mouseUp_gridExtend(dragX: Int, dragY: Int, dragHeight h: CGFloat) {
+        let indicesDown = Int(Darwin.floor(h / gridBoxes[dragX][dragY].bounds.height) + 1)
+        let lowestIndex = min(dragY + indicesDown, maxDragExtendIndex - 1)
+        if lowestIndex > dragY {
+            for i in stride(from: (dragY+1), through: lowestIndex, by: 1) {
+                self.updateTimeSlot(xGrid: dragX, yGrid: i, course: timeSlots[dragX][dragY].occupyingCourse)
+            }
+        }
+        maxDragExtendIndex = timeLabels.count
+        lowestDragExtendIndex = -1
+    }
+    /// HXGridBox - Mouse Drag: Extend the course in a grid box to more time slots
+    func mouseDrag_gridExtend(dragX: Int, dragY: Int, dragHeight h: CGFloat) {
+        let indicesDown = Int(Darwin.floor(h / gridBoxes[dragX][dragY].bounds.height) + 1)
+        if maxDragExtendIndex == -1 {
+            maxDragExtendIndex = timeLabels.count
+            lowestDragExtendIndex = dragY + 1
+        }
+        if (dragY + indicesDown) < maxDragExtendIndex {
+            if timeSlots[dragX][dragY + indicesDown].occupyingCourse == nil {
+                gridBoxes[dragX][dragY + indicesDown].update(color: NSColor.init(
+                    red: gridBoxes[dragX][dragY].fillColor.redComponent,
+                    green: gridBoxes[dragX][dragY].fillColor.greenComponent,
+                    blue: gridBoxes[dragX][dragY].fillColor.blueComponent,
+                    alpha: 0.5))
+            } else if timeSlots[dragX][dragY + indicesDown].occupyingCourse !== timeSlots[dragX][dragY].occupyingCourse {
+                maxDragExtendIndex = dragY + indicesDown
+            }
+            if lowestDragExtendIndex > (dragY + indicesDown) {
+                // Clear transparent grids
+                for g in stride(from: (dragY + indicesDown + 1), through: lowestDragExtendIndex, by: 1) {
+                    if timeSlots[dragX][g].occupyingCourse == nil {
+                        gridBoxes[dragX][g].update(color: NSColor.white)
+                    }
+                }
+            }
+            lowestDragExtendIndex = dragY + indicesDown
+        }
+    }
+    /// HXCourseBox - Mouse Up: Stop dragging a course to a time slot
+    func mouseUp_courseBox(atLocation loc: NSPoint) {
+        // Ensure a course was being dragged
+        if self.dragCourseIndex != nil {
+            // Remove drag box from superview
+            self.courseDragBox.removeFromSuperview()
+            if isLocationInLastGrid(location: loc) {
+                self.updateTimeSlot(xGrid: lastGridX, yGrid: lastGridY, course: courses[dragCourseIndex])
+                // Reset grid hovering colors
+                timeLabels[lastGridY].textColor = NSColor.gray
+                dayLabels[lastGridX].textColor = NSColor.gray
+            } else if lastGridX != -1 {
+                if timeSlots[lastGridX][lastGridY].occupyingCourse == nil {
+                    timeLabels[lastGridY].textColor = NSColor.gray
+                    dayLabels[lastGridX].textColor = NSColor.gray
+                }
+            }
+            self.dragCourseIndex = nil
+        }
+    }
+    /// HXCourseBox - Mouse Drag: Drag a course to a time slot
+    func mouseDrag_courseBox(course: HXCourseBox, toLocation loc: NSPoint) {
         if self.dragCourseIndex == nil {
             self.dragCourseIndex = course.courseIndex
             // Update drag box visuals to match course being dragged
-            courseDragBox.labelCourse.stringValue = course.labelCourse.stringValue
-            courseDragBox.fillColor = NSColor(
-                red: course.originalColor.redComponent,
-                green: course.originalColor.greenComponent,
-                blue: course.originalColor.blueComponent,
-                alpha: 0.5)
+            courseDragBox.updateWithCourse(courses[course.courseIndex])
             // Add drag box back to the superview
             self.view.addSubview(courseDragBox)
             // Try and move these to dragBox initialize in viewDidLoad()
@@ -176,64 +385,24 @@ class CalendarViewController: NSViewController {
         }
     }
     
-    func stoppedDraggingCourse(atLocation loc: NSPoint) {
-        // Ensure a course was being dragged
-        if self.dragCourseIndex != nil {
-            // Remove drag box from superview
-            self.courseDragBox.removeFromSuperview()
-            if isLocationInLastGrid(location: loc) {
-                // Update visuals of a grid box
-                gridBoxes[lastGridX][lastGridY].update(course: courses[dragCourseIndex])
-                // Update model
-                courses[dragCourseIndex].assignTime(withTimeSlot: timeSlots[lastGridX][lastGridY])
-            }
-            self.dragCourseIndex = nil
-        }
+    // MARK: Action receivers.........................................................................
+    /// Button in HXCourseAddBox - on MouseDown
+    internal func action_addCourseButton() {
+        addCourse()
     }
-    
-    /// Use this to confirm that mouse location when finishing drag is inside expected grid
-    func isLocationInLastGrid(location loc: NSPoint) -> Bool {
-        let grid = gridBoxes[lastGridX][lastGridY]
-        // Check if the location of the dropped course is within the bounds of this grid space...
-        let gridLoc = grid.superview!.convert(grid.frame.origin, to: nil) as NSPoint
-        if loc.x > gridLoc.x && loc.x < gridLoc.x + grid.trackingArea.rect.width && loc.y > gridLoc.y && loc.y < gridLoc.y + grid.trackingArea.rect.height {
-            return true
-        }
-        return false
-    }
-    
-    func remove(course: HXCourseBox) {
-        for c in courseStack.subviews {
-            if let box = c as? HXCourseBox {
-                if (box.courseIndex <= course.courseIndex) {
-                    continue
-                }
-                box.updateIndex(index: box.courseIndex - 1)
-            }
-        }
-        for t in courses[course.courseIndex].timeSlotsOccupied {
-            gridBoxes[t.xDim][t.yDim].removeCourse()
-        }
-        courses.remove(at: course.courseIndex)
-        releaseColor(color: course.originalColor)
-        courseStack.removeView(course)
-    }
-    
-    override func mouseEntered(with event: NSEvent) {
-        if let atX = event.trackingArea?.userInfo!["x"] as? Int {
-            lastGridX = atX
-        }
-        if let atY = event.trackingArea?.userInfo!["y"] as? Int {
-            lastGridY = atY
-        }
-        print("Grid location: \(lastGridX), \(lastGridY)")
-    }
-    
-    func updateCourseName(atIndex index: Int, withName name: String) {
+    /// CourseLabel in HXCourseBox - on Enter
+    internal func action_courseTextField(atIndex index: Int, withName name: String) {
         courses[index].title = name
         for t in courses[index].timeSlotsOccupied {
             gridBoxes[t.xDim][t.yDim].labelTitle.stringValue = name
         }
     }
-    
+    /// Button in HXCourseBox - on MouseDown
+    internal func action_removeCourseButton(course: HXCourseBox) {
+        self.removeCourse(course)
+    }
+    /// Button in HXGridBox - on MouseDown
+    internal func action_clearTimeSlot(xGrid x: Int, yGrid y: Int) {
+        self.resetTimeSlot(xGrid: x, yGrid: y)
+    }
 }

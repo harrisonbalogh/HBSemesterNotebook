@@ -12,18 +12,15 @@
 		C00367081EA5851500C4DE0C /* HXCourseBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00367071EA5851500C4DE0C /* HXCourseBox.swift */; };
 		C0150EE81EA5AD6800BBBFA6 /* CourseLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0150EE71EA5AD6800BBBFA6 /* CourseLabel.swift */; };
 		C07953841EA721B90022BFCF /* HXGridBox.xib in Resources */ = {isa = PBXBuildFile; fileRef = C07953831EA721B90022BFCF /* HXGridBox.xib */; };
+		C09EBEBD1EAF20B700A6D72C /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C09EBEBC1EAF20B700A6D72C /* MasterViewController.swift */; };
 		C0AAE1361EA2BD12002939B6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0AAE1351EA2BD12002939B6 /* AppDelegate.swift */; };
-		C0AAE1381EA2BD12002939B6 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0AAE1371EA2BD12002939B6 /* ViewController.swift */; };
 		C0AAE13B1EA2BD12002939B6 /* HXNotes.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C0AAE1391EA2BD12002939B6 /* HXNotes.xcdatamodeld */; };
 		C0AAE13D1EA2BD12002939B6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C0AAE13C1EA2BD12002939B6 /* Assets.xcassets */; };
 		C0AAE1401EA2BD12002939B6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C0AAE13E1EA2BD12002939B6 /* Main.storyboard */; };
 		C0AAE14B1EA2BD13002939B6 /* HXNotesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0AAE14A1EA2BD13002939B6 /* HXNotesTests.swift */; };
 		C0AAE1561EA2BD13002939B6 /* HXNotesUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0AAE1551EA2BD13002939B6 /* HXNotesUITests.swift */; };
-		C0B697271EA5A326006AA618 /* colorWheel@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C0B697261EA5A326006AA618 /* colorWheel@2x.png */; };
 		C0D235EE1EA5369B00AB039A /* CalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D235ED1EA5369B00AB039A /* CalendarViewController.swift */; };
 		C0D687BD1EA4948400BF1D05 /* HXGridBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D687BC1EA4948400BF1D05 /* HXGridBox.swift */; };
-		C0D68CFA1EA691B5009B06E3 /* trash_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C0D68CF81EA691B5009B06E3 /* trash_icon@2x.png */; };
-		C0D68CFB1EA691B5009B06E3 /* fill_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C0D68CF91EA691B5009B06E3 /* fill_icon@2x.png */; };
 		C0D68CFD1EA6943F009B06E3 /* HXCourseDragBox.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0D68CFC1EA6943F009B06E3 /* HXCourseDragBox.xib */; };
 		C0D68CFF1EA6C8CF009B06E3 /* HXCourseDragBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D68CFE1EA6C8CF009B06E3 /* HXCourseDragBox.swift */; };
 		C0E6797F1EA7ECB200B3DC3B /* Course.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0E6797E1EA7ECB200B3DC3B /* Course.swift */; };
@@ -53,9 +50,9 @@
 		C00367071EA5851500C4DE0C /* HXCourseBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXCourseBox.swift; sourceTree = "<group>"; };
 		C0150EE71EA5AD6800BBBFA6 /* CourseLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CourseLabel.swift; sourceTree = "<group>"; };
 		C07953831EA721B90022BFCF /* HXGridBox.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXGridBox.xib; sourceTree = "<group>"; };
+		C09EBEBC1EAF20B700A6D72C /* MasterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MasterViewController.swift; sourceTree = "<group>"; };
 		C0AAE1321EA2BD12002939B6 /* HXNotes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HXNotes.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0AAE1351EA2BD12002939B6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		C0AAE1371EA2BD12002939B6 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		C0AAE13A1EA2BD12002939B6 /* HXNotes.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = HXNotes.xcdatamodel; sourceTree = "<group>"; };
 		C0AAE13C1EA2BD12002939B6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C0AAE13F1EA2BD12002939B6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -66,11 +63,8 @@
 		C0AAE1511EA2BD13002939B6 /* HXNotesUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HXNotesUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0AAE1551EA2BD13002939B6 /* HXNotesUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HXNotesUITests.swift; sourceTree = "<group>"; };
 		C0AAE1571EA2BD13002939B6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		C0B697261EA5A326006AA618 /* colorWheel@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "colorWheel@2x.png"; sourceTree = "<group>"; };
 		C0D235ED1EA5369B00AB039A /* CalendarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarViewController.swift; sourceTree = "<group>"; };
 		C0D687BC1EA4948400BF1D05 /* HXGridBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXGridBox.swift; sourceTree = "<group>"; };
-		C0D68CF81EA691B5009B06E3 /* trash_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "trash_icon@2x.png"; sourceTree = "<group>"; };
-		C0D68CF91EA691B5009B06E3 /* fill_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "fill_icon@2x.png"; sourceTree = "<group>"; };
 		C0D68CFC1EA6943F009B06E3 /* HXCourseDragBox.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXCourseDragBox.xib; sourceTree = "<group>"; };
 		C0D68CFE1EA6C8CF009B06E3 /* HXCourseDragBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXCourseDragBox.swift; sourceTree = "<group>"; };
 		C0E6797E1EA7ECB200B3DC3B /* Course.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Course.swift; sourceTree = "<group>"; };
@@ -157,14 +151,13 @@
 		C0AAE1341EA2BD12002939B6 /* HXNotes */ = {
 			isa = PBXGroup;
 			children = (
-				C0B697231EA5A2D2006AA618 /* Images */,
-				C0AAE1351EA2BD12002939B6 /* AppDelegate.swift */,
-				C0AAE1371EA2BD12002939B6 /* ViewController.swift */,
 				C0AAE13C1EA2BD12002939B6 /* Assets.xcassets */,
+				C0AAE1351EA2BD12002939B6 /* AppDelegate.swift */,
+				C09EBEBC1EAF20B700A6D72C /* MasterViewController.swift */,
 				C0AAE13E1EA2BD12002939B6 /* Main.storyboard */,
-				C0AAE1411EA2BD12002939B6 /* Info.plist */,
-				C0AAE1391EA2BD12002939B6 /* HXNotes.xcdatamodeld */,
 				C0D687BE1EA4948A00BF1D05 /* Calendar Functionality */,
+				C0AAE1391EA2BD12002939B6 /* HXNotes.xcdatamodeld */,
+				C0AAE1411EA2BD12002939B6 /* Info.plist */,
 			);
 			path = HXNotes;
 			sourceTree = "<group>";
@@ -185,16 +178,6 @@
 				C0AAE1571EA2BD13002939B6 /* Info.plist */,
 			);
 			path = HXNotesUITests;
-			sourceTree = "<group>";
-		};
-		C0B697231EA5A2D2006AA618 /* Images */ = {
-			isa = PBXGroup;
-			children = (
-				C0D68CF81EA691B5009B06E3 /* trash_icon@2x.png */,
-				C0D68CF91EA691B5009B06E3 /* fill_icon@2x.png */,
-				C0B697261EA5A326006AA618 /* colorWheel@2x.png */,
-			);
-			name = Images;
 			sourceTree = "<group>";
 		};
 		C0D687BE1EA4948A00BF1D05 /* Calendar Functionality */ = {
@@ -317,12 +300,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C0D68CFA1EA691B5009B06E3 /* trash_icon@2x.png in Resources */,
 				C0D68CFD1EA6943F009B06E3 /* HXCourseDragBox.xib in Resources */,
 				C00367041EA5825600C4DE0C /* HXCourseBox.xib in Resources */,
 				C07953841EA721B90022BFCF /* HXGridBox.xib in Resources */,
-				C0B697271EA5A326006AA618 /* colorWheel@2x.png in Resources */,
-				C0D68CFB1EA691B5009B06E3 /* fill_icon@2x.png in Resources */,
 				C0AAE13D1EA2BD12002939B6 /* Assets.xcassets in Resources */,
 				C0AAE1401EA2BD12002939B6 /* Main.storyboard in Resources */,
 			);
@@ -354,9 +334,9 @@
 				C0E6797F1EA7ECB200B3DC3B /* Course.swift in Sources */,
 				C0E679811EA7ECC300B3DC3B /* TimeSlot.swift in Sources */,
 				C00367021EA5756C00C4DE0C /* HXCourseAddBox.swift in Sources */,
-				C0AAE1381EA2BD12002939B6 /* ViewController.swift in Sources */,
 				C0AAE13B1EA2BD12002939B6 /* HXNotes.xcdatamodeld in Sources */,
 				C0150EE81EA5AD6800BBBFA6 /* CourseLabel.swift in Sources */,
+				C09EBEBD1EAF20B700A6D72C /* MasterViewController.swift in Sources */,
 				C0AAE1361EA2BD12002939B6 /* AppDelegate.swift in Sources */,
 				C0D687BD1EA4948400BF1D05 /* HXGridBox.swift in Sources */,
 				C0D68CFF1EA6C8CF009B06E3 /* HXCourseDragBox.swift in Sources */,

@@ -15,6 +15,10 @@ class HXCourseBox: NSBox {
     var courseIndex: Int!
     var parentCalendar: CalendarViewController!
     var originalColor: NSColor!
+    // Note when cursor is inside the area to drag box (to calendar)
+    var insideDrag = false
+    // Note when user started dragging after being in drag region
+    var dragging = false
     
     // Manually connect course box child elements using identifiers
     let ID_BUTTON_FILL      = "course_button_fill"
@@ -57,13 +61,13 @@ class HXCourseBox: NSBox {
         
         self.parentCalendar = parent
         
-        self.courseIndex = index;
+        self.courseIndex = index
         
         self.fillColor = color
         
         self.trackingArea = NSTrackingArea(
             rect: bounds,
-            options: [NSTrackingAreaOptions.activeInKeyWindow, NSTrackingAreaOptions.mouseEnteredAndExited],
+            options: [NSTrackingAreaOptions.activeInKeyWindow, NSTrackingAreaOptions.mouseMoved, NSTrackingAreaOptions.mouseEnteredAndExited],
             owner: self,
             userInfo: ["index":index])
         
@@ -72,18 +76,45 @@ class HXCourseBox: NSBox {
     
     /// Removes this course box from the stack view
     func removeCourseBox() {
-        parentCalendar.remove(course: self)
+        parentCalendar.action_removeCourseButton(course: self)
     }
     
     /// Clear selection of course's title field
     func endEditingCourseLabel() {
         labelCourse.isEditable = false
         labelCourse.isSelectable = false
-        parentCalendar.updateCourseName(atIndex: courseIndex, withName: labelCourse.stringValue)
+        parentCalendar.action_courseTextField(atIndex: courseIndex, withName: labelCourse.stringValue)
     }
     
     func updateIndex(index: Int) {
         self.courseIndex = index
+    }
+    
+    override func mouseMoved(with event: NSEvent) {
+        let origin = labelDragHere.superview!.convert(labelDragHere.frame.origin, to: nil) as NSPoint
+        let loc = event.locationInWindow
+        if loc.x > origin.x && loc.x < origin.x + labelDragHere.frame.width && loc.y > origin.y && loc.y < origin.y + labelDragHere.frame.height {
+            if !insideDrag {
+                NSCursor.openHand().push()
+                insideDrag = true
+            }
+        } else {
+            if insideDrag && !dragging {
+                Swift.print("Popping an openHand from mouseMoved")
+                NSCursor.openHand().pop()
+                insideDrag = false
+            }
+        }
+    }
+    
+    override func mouseExited(with event: NSEvent) {
+        if !dragging {
+            if insideDrag {
+                Swift.print("Popping an openHand from mouseExited")
+                NSCursor.openHand().pop()
+                insideDrag = false
+            }
+        }
     }
     
     override func mouseDragged(with event: NSEvent) {
@@ -94,7 +125,11 @@ class HXCourseBox: NSBox {
         buttonTrash.isHidden = true
         labelDragHere.alphaValue = 0
         labelCourse.alphaValue = 0.5
-        parentCalendar.receiveMouseDragFromCourse(course: self, toLocation: event.locationInWindow)
+        if !dragging {
+            dragging = true
+            NSCursor.closedHand().push()
+        }
+        parentCalendar.mouseDrag_courseBox(course: self, toLocation: event.locationInWindow)
     }
     
     override func mouseUp(with event: NSEvent) {
@@ -105,6 +140,25 @@ class HXCourseBox: NSBox {
         buttonTrash.isHidden = false
         labelDragHere.alphaValue = 1
         labelCourse.alphaValue = 1
-        parentCalendar.stoppedDraggingCourse(atLocation: event.locationInWindow)
+        if dragging {
+            dragging = false
+            Swift.print("Popping a closedHand from mouseUp")
+            NSCursor.closedHand().pop()
+            let origin = labelDragHere.superview!.convert(labelDragHere.frame.origin, to: nil) as NSPoint
+            let loc = event.locationInWindow
+            if loc.x > origin.x && loc.x < origin.x + labelDragHere.frame.width && loc.y > origin.y && loc.y < origin.y + labelDragHere.frame.height {
+                if !insideDrag {
+                    NSCursor.openHand().push()
+                    insideDrag = true
+                }
+            } else {
+                if insideDrag {
+                    Swift.print("Popping an openHand from mouseUp")
+                    NSCursor.openHand().pop()
+                    insideDrag = false
+                }
+            }
+        }
+        parentCalendar.mouseUp_courseBox(atLocation: event.locationInWindow)
     }
 }

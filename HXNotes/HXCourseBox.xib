@@ -15,45 +15,65 @@
                 <rect key="frame" x="1" y="1" width="78" height="68"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
-                    <textField identifier="course_label_title" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hkP-JE-JOf" customClass="CourseLabel" customModule="HXNotes" customModuleProvider="target">
-                        <rect key="frame" x="-2" y="31" width="82" height="17"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" lineBreakMode="truncatingTail" alignment="center" title="New Class" usesSingleLineMode="YES" id="lLD-iq-O0A">
-                            <font key="font" metaFont="systemMedium" size="14"/>
-                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
-                    <textField identifier="course_label_drag" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2ZQ-ND-0Ng">
-                        <rect key="frame" x="11" y="45" width="57" height="17"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textField identifier="course_label_drag" horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2ZQ-ND-0Ng">
+                        <rect key="frame" x="-3" y="48" width="84" height="21"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Drag Here" id="xSo-FV-lII">
                             <font key="font" metaFont="systemLight" size="10"/>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <button identifier="course_button_trash" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gYY-wr-sGQ">
+                    <textField identifier="course_label_title" horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hkP-JE-JOf" customClass="CourseLabel" customModule="HXNotes" customModuleProvider="target">
+                        <rect key="frame" x="-3" y="31" width="84" height="17"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="17" id="9tu-GD-eJI"/>
+                        </constraints>
+                        <textFieldCell key="cell" lineBreakMode="truncatingTail" alignment="center" title="New Class" usesSingleLineMode="YES" id="lLD-iq-O0A">
+                            <font key="font" metaFont="systemMedium" size="14"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <button identifier="course_button_trash" translatesAutoresizingMaskIntoConstraints="NO" id="gYY-wr-sGQ">
                         <rect key="frame" x="56" y="3" width="20" height="20"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="20" id="TtW-C3-zCZ"/>
+                            <constraint firstAttribute="height" constant="20" id="VWt-R9-juo"/>
+                        </constraints>
                         <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="trash_icon" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="Y2T-xA-sVe">
                             <behavior key="behavior" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
                     </button>
-                    <button identifier="course_button_fill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Sdk-VS-X58">
+                    <button identifier="course_button_fill" translatesAutoresizingMaskIntoConstraints="NO" id="Sdk-VS-X58">
                         <rect key="frame" x="2" y="3" width="20" height="20"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="20" id="5M7-jc-Oxc"/>
+                            <constraint firstAttribute="height" constant="20" id="hGU-Tz-eZZ"/>
+                        </constraints>
                         <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="fill_icon" imagePosition="only" alignment="center" enabled="NO" imageScaling="proportionallyUpOrDown" inset="2" id="Jt2-p8-ILM">
                             <behavior key="behavior" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
                     </button>
                 </subviews>
+                <constraints>
+                    <constraint firstItem="hkP-JE-JOf" firstAttribute="top" secondItem="2ZQ-ND-0Ng" secondAttribute="bottom" id="iJc-ZK-Rcp"/>
+                </constraints>
             </view>
             <constraints>
+                <constraint firstItem="2ZQ-ND-0Ng" firstAttribute="top" secondItem="hcv-2O-TOB" secondAttribute="top" id="4bZ-MV-YNI"/>
+                <constraint firstItem="2ZQ-ND-0Ng" firstAttribute="centerX" secondItem="hcv-2O-TOB" secondAttribute="centerX" id="5AS-oQ-Ldj"/>
+                <constraint firstItem="2ZQ-ND-0Ng" firstAttribute="width" secondItem="hcv-2O-TOB" secondAttribute="width" id="7gD-uh-ogl"/>
                 <constraint firstAttribute="height" constant="70" id="D5K-CM-ju3"/>
+                <constraint firstAttribute="trailing" secondItem="gYY-wr-sGQ" secondAttribute="trailing" constant="3" id="LOS-I9-65X"/>
+                <constraint firstAttribute="bottom" secondItem="hkP-JE-JOf" secondAttribute="bottom" constant="32" id="Pkd-LV-bDx"/>
+                <constraint firstItem="Sdk-VS-X58" firstAttribute="leading" secondItem="hcv-2O-TOB" secondAttribute="leading" constant="3" id="YZQ-2O-2st"/>
                 <constraint firstAttribute="width" constant="80" id="cgi-Wl-QLd"/>
+                <constraint firstAttribute="bottom" secondItem="Sdk-VS-X58" secondAttribute="bottom" constant="4" id="f1J-Dv-Wmg"/>
+                <constraint firstItem="hkP-JE-JOf" firstAttribute="width" secondItem="hcv-2O-TOB" secondAttribute="width" id="gOc-WV-aJ9"/>
+                <constraint firstItem="hkP-JE-JOf" firstAttribute="centerX" secondItem="hcv-2O-TOB" secondAttribute="centerX" id="uhF-aN-c38"/>
+                <constraint firstAttribute="bottom" secondItem="gYY-wr-sGQ" secondAttribute="bottom" constant="4" id="zzh-tW-QPv"/>
             </constraints>
             <color key="borderColor" name="headerColor" catalog="System" colorSpace="catalog"/>
             <color key="fillColor" red="1" green="1" blue="1" alpha="0.3896549916" colorSpace="custom" customColorSpace="sRGB"/>
