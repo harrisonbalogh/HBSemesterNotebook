@@ -1,4 +1,30 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11759" systemVersion="16E195" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <elements/>
+    <entity name="Course" representedClassName="Course" syncable="YES" codeGenerationType="class">
+        <attribute name="title" attributeType="String" minValueString="1" syncable="YES"/>
+        <relationship name="notes" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="NoteEntry" syncable="YES"/>
+        <relationship name="times" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="TimeSlot" syncable="YES"/>
+    </entity>
+    <entity name="NoteEntry" representedClassName="NoteEntry" syncable="YES" codeGenerationType="class">
+        <attribute name="lectureNumber" optional="YES" attributeType="Integer 16" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+    </entity>
+    <entity name="Semester" representedClassName="Semester" syncable="YES" codeGenerationType="class">
+        <attribute name="title" attributeType="String" syncable="YES"/>
+        <relationship name="courses" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Course" syncable="YES"/>
+    </entity>
+    <entity name="TimeSlot" representedClassName="TimeSlot" syncable="YES" codeGenerationType="class">
+        <attribute name="hour" attributeType="Integer 16" minValueString="0" maxValueString="23" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="minute" attributeType="Integer 16" minValueString="0" maxValueString="59" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+    </entity>
+    <entity name="Year" representedClassName="Year" syncable="YES" codeGenerationType="class">
+        <attribute name="year" attributeType="Integer 16" minValueString="0" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <relationship name="semesters" toMany="YES" minCount="2" maxCount="2" deletionRule="Nullify" ordered="YES" destinationEntity="Semester" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="Course" positionX="-29" positionY="-133" width="128" height="88"/>
+        <element name="NoteEntry" positionX="72" positionY="18" width="128" height="58"/>
+        <element name="TimeSlot" positionX="-135" positionY="17" width="128" height="73"/>
+        <element name="Semester" positionX="-209" positionY="-235" width="128" height="73"/>
+        <element name="Year" positionX="-351" positionY="-342" width="128" height="73"/>
+    </elements>
 </model>

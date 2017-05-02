@@ -91,6 +91,8 @@ class CalendarViewController: NSViewController {
     // MARK: Object models ...................................................
     var courses = [Course]()
     var timeSlots = [[TimeSlot]]()
+    
+    var masterViewController: MasterViewController!
 
     // MARK: Methods __________________________________________________________________________
     override func viewDidLoad() {
@@ -404,5 +406,9 @@ class CalendarViewController: NSViewController {
     /// Button in HXGridBox - on MouseDown
     internal func action_clearTimeSlot(xGrid x: Int, yGrid y: Int) {
         self.resetTimeSlot(xGrid: x, yGrid: y)
+    }
+    @IBAction func action_closeCalendar(_ sender: Any) {
+        masterViewController.closeCalendar()
+        self.view.removeFromSuperview()
     }
 }

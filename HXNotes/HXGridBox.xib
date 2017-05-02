@@ -17,9 +17,9 @@
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <textField identifier="grid_label_title" hidden="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="62X-lI-Jog">
-                        <rect key="frame" x="18" y="26" width="124" height="14"/>
+                        <rect key="frame" x="76" y="29" width="8" height="11"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" id="DfD-83-qkI">
-                            <font key="font" metaFont="systemLight" size="11"/>
+                            <font key="font" metaFont="systemLight" size="8"/>
                             <color key="textColor" red="0.29920631170272827" green="0.29920631170272827" blue="0.29920631170272827" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
@@ -78,14 +78,12 @@
                 <constraint firstItem="zyg-mJ-OHq" firstAttribute="height" secondItem="acs-fm-GlA" secondAttribute="height" id="Okb-c7-Hca"/>
                 <constraint firstItem="x35-2o-haL" firstAttribute="height" secondItem="acs-fm-GlA" secondAttribute="height" id="PhA-Vw-CD9"/>
                 <constraint firstItem="jdR-3p-g5P" firstAttribute="centerX" secondItem="acs-fm-GlA" secondAttribute="centerX" id="V27-cr-Wcg"/>
-                <constraint firstAttribute="trailing" secondItem="62X-lI-Jog" secondAttribute="trailing" constant="20" id="Wp5-dY-kX9"/>
                 <constraint firstItem="jdR-3p-g5P" firstAttribute="width" secondItem="acs-fm-GlA" secondAttribute="width" id="eqK-nB-453"/>
                 <constraint firstItem="jdR-3p-g5P" firstAttribute="top" secondItem="acs-fm-GlA" secondAttribute="top" id="fDz-Vk-OuL"/>
                 <constraint firstItem="zyg-mJ-OHq" firstAttribute="centerY" secondItem="acs-fm-GlA" secondAttribute="centerY" id="fG2-1d-Utp"/>
                 <constraint firstItem="62X-lI-Jog" firstAttribute="centerX" secondItem="acs-fm-GlA" secondAttribute="centerX" id="gUy-7d-u06"/>
                 <constraint firstItem="lSc-vX-bBn" firstAttribute="centerX" secondItem="acs-fm-GlA" secondAttribute="centerX" id="hzs-cb-UX2"/>
                 <constraint firstItem="lSc-vX-bBn" firstAttribute="width" secondItem="acs-fm-GlA" secondAttribute="width" id="iO7-mw-ifr"/>
-                <constraint firstItem="62X-lI-Jog" firstAttribute="leading" secondItem="acs-fm-GlA" secondAttribute="leading" constant="20" id="jDI-Ql-Wen"/>
                 <constraint firstAttribute="bottom" secondItem="lSc-vX-bBn" secondAttribute="bottom" id="rBC-YK-Z3M"/>
                 <constraint firstItem="e7o-tb-3mV" firstAttribute="centerX" secondItem="acs-fm-GlA" secondAttribute="centerX" id="rav-eo-Nv8"/>
                 <constraint firstItem="e7o-tb-3mV" firstAttribute="width" secondItem="acs-fm-GlA" secondAttribute="width" id="tdu-ck-KBQ"/>
