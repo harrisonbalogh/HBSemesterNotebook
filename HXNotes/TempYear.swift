@@ -1,16 +1,16 @@
 //
-//  Year.swift
+//  TempYear.swift
 //  HXNotes
 //
-//  Created by Harrison Balogh on 4/25/17.
+//  Created by Harrison Balogh on 5/2/17.
 //  Copyright © 2017 Harxer. All rights reserved.
 //
 
 import Foundation
 
-class Year {
+class TempYear {
     
-    let year: Int
+    var year: Int!
     
     init(_ year: Int) {
         self.year = year

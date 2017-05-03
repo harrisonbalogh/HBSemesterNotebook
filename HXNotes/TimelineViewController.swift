@@ -35,9 +35,11 @@ class TimelineViewController: NSViewController {
                 if (stackView_year.arrangedSubviews.count-1) > oldValue! {
                     if let buttonSelected = stackView_year.arrangedSubviews[oldValue] as? HXYearButton {
                         buttonSelected.deselect()
-                        masterViewController.closeCalendar()
                         button_toCurrentYear.isHidden = false
                         button_toCurrentYear.isEnabled = true
+                        buttonFall.alphaValue = 0.3
+                        buttonSpring.alphaValue = 0.3
+                        imageSemesterToggle.image = #imageLiteral(resourceName: "art_tree")
                     }
                 }
             }
@@ -60,7 +62,7 @@ class TimelineViewController: NSViewController {
             }
         }
     }
-    private var years = [Year]()
+    private var years = [TempYear]()
     private var earliestYear = 1993
     private var latestYear = 1992
 
@@ -106,7 +108,7 @@ class TimelineViewController: NSViewController {
         let newYearButton = HXYearButton(withYear: earliestYear - 1)
         newYearButton.target = self
         newYearButton.action = #selector(TimelineViewController.action_clickYear(sender:))
-        years.insert(Year(earliestYear - 1), at: 0)
+        years.insert(TempYear(earliestYear - 1), at: 0)
         earliestYear -= 1
         stackView_year.insertArrangedSubview(newYearButton, at: 0)
         clipView_year.bounds.origin.x += YEAR_BUTTON_WIDTH
@@ -116,7 +118,7 @@ class TimelineViewController: NSViewController {
         let newYearButton = HXYearButton(withYear: latestYear + 1)
         newYearButton.target = self
         newYearButton.action = #selector(TimelineViewController.action_clickYear(sender:))
-        years.append(Year(latestYear + 1))
+        years.append(TempYear(latestYear + 1))
         latestYear += 1
         stackView_year.addArrangedSubview(newYearButton)
     }
@@ -145,6 +147,11 @@ class TimelineViewController: NSViewController {
         
         handleYearResize()
         alignScrollToYear()
+    }
+    override func viewDidAppear() {
+        super.viewDidAppear()
+        
+        action_goToCurrentYear(self)
     }
     
     /// In one call, will populate or remove as many years as necessary to fit year stackView to new window width.
@@ -221,13 +228,13 @@ class TimelineViewController: NSViewController {
 //        self.view.removeFromSuperview()
 //    }
     @IBAction func action_selectFall(_ sender: Any) {
-        masterViewController.editSemester("fall")
+        masterViewController.selectSemester("fall")
         buttonFall.alphaValue = 1
         buttonSpring.alphaValue = 0.3
         imageSemesterToggle.image = #imageLiteral(resourceName: "art_tree_a")
     }
     @IBAction func action_selectSpring(_ sender: Any) {
-        masterViewController.editSemester("spring")
+        masterViewController.selectSemester("spring")
         buttonSpring.alphaValue = 1
         buttonFall.alphaValue = 0.3
         imageSemesterToggle.image = #imageLiteral(resourceName: "art_tree_b")

@@ -11,8 +11,8 @@ import Cocoa
 class HXCourseBox: NSBox {
     
     var trackingArea: NSTrackingArea!
-    // Need to update course index when a course gets removed
-    var courseIndex: Int!
+//    // Need to update course index when a course gets removed
+//    var courseIndex: Int!
     var parentCalendar: CalendarViewController!
     var originalColor: NSColor!
     // Note when cursor is inside the area to drag box (to calendar)
@@ -21,14 +21,12 @@ class HXCourseBox: NSBox {
     var dragging = false
     
     // Manually connect course box child elements using identifiers
-    let ID_BUTTON_FILL      = "course_button_fill"
     let ID_BUTTON_TRASH     = "course_button_trash"
     let ID_LABEL_TITLE      = "course_label_title"
     let ID_LABEL_DRAG       = "course_label_drag"
     // Elements of course box
     var labelCourse: CourseLabel!
     var labelDragHere: NSTextField!
-    var buttonFill: NSButton!
     var buttonTrash: NSButton!
     
     /// Initialize the color, index, and tracking area of the CourseBox view
@@ -37,8 +35,6 @@ class HXCourseBox: NSBox {
         // Initialize child elements
         for v in self.subviews[0].subviews {
             switch v.identifier! {
-            case ID_BUTTON_FILL:
-                buttonFill = v as! NSButton
             case ID_BUTTON_TRASH:
                 buttonTrash = v as! NSButton
             case ID_LABEL_TITLE:
@@ -61,8 +57,6 @@ class HXCourseBox: NSBox {
         
         self.parentCalendar = parent
         
-        self.courseIndex = index
-        
         self.fillColor = color
         
         self.trackingArea = NSTrackingArea(
@@ -83,11 +77,7 @@ class HXCourseBox: NSBox {
     func endEditingCourseLabel() {
         labelCourse.isEditable = false
         labelCourse.isSelectable = false
-        parentCalendar.action_courseTextField(atIndex: courseIndex, withName: labelCourse.stringValue)
-    }
-    
-    func updateIndex(index: Int) {
-        self.courseIndex = index
+        parentCalendar.action_courseTextField(self)
     }
     
     override func mouseMoved(with event: NSEvent) {
@@ -119,9 +109,7 @@ class HXCourseBox: NSBox {
     
     override func mouseDragged(with event: NSEvent) {
         fillColor = NSColor.white
-        buttonFill.isEnabled = false
         buttonTrash.isEnabled = false
-        buttonFill.isHidden = true
         buttonTrash.isHidden = true
         labelDragHere.alphaValue = 0
         labelCourse.alphaValue = 0.5
@@ -134,9 +122,7 @@ class HXCourseBox: NSBox {
     
     override func mouseUp(with event: NSEvent) {
         fillColor = originalColor
-        buttonFill.isEnabled = true
         buttonTrash.isEnabled = true
-        buttonFill.isHidden = false
         buttonTrash.isHidden = false
         labelDragHere.alphaValue = 1
         labelCourse.alphaValue = 1

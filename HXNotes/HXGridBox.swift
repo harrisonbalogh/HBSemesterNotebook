@@ -92,9 +92,16 @@ class HXGridBox: NSBox {
     
     /// Match grid properties with that of provided course object, some
     /// visuals will not display until update:topIndex:botIndex is called
-    func update(course: Course) {
-        fillColor = course.color
-        labelTitle.stringValue = course.title
+    func update(course: HXCourseBox) {
+        fillColor = course.fillColor
+        labelTitle.stringValue = course.labelCourse.stringValue
+        buttonRemove.isHidden = false
+        buttonRemove.isEnabled = true
+    }
+    /// Make this gridBox look like the passed gridBox
+    func update(matchBox: HXGridBox) {
+        fillColor = matchBox.fillColor
+        labelTitle.stringValue = matchBox.labelTitle.stringValue
         buttonRemove.isHidden = false
         buttonRemove.isEnabled = true
     }

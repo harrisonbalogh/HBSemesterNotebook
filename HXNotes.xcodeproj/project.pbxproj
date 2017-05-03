@@ -12,12 +12,13 @@
 		C00367081EA5851500C4DE0C /* HXCourseBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00367071EA5851500C4DE0C /* HXCourseBox.swift */; };
 		C0150EE81EA5AD6800BBBFA6 /* CourseLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0150EE71EA5AD6800BBBFA6 /* CourseLabel.swift */; };
 		C03AF8161EB856860028BA68 /* MasterWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C03AF8151EB856860028BA68 /* MasterWindowController.swift */; };
+		C052EC961EB8FC6300C1FBC8 /* TempYear.swift in Sources */ = {isa = PBXBuildFile; fileRef = C052EC951EB8FC6300C1FBC8 /* TempYear.swift */; };
 		C05AE3141EB01BAF00A7F2F7 /* HXYearButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C05AE3131EB01BAF00A7F2F7 /* HXYearButton.swift */; };
 		C07953841EA721B90022BFCF /* HXGridBox.xib in Resources */ = {isa = PBXBuildFile; fileRef = C07953831EA721B90022BFCF /* HXGridBox.xib */; };
 		C07F48D61EB2AF9B0010B455 /* HXYearStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = C07F48D51EB2AF9B0010B455 /* HXYearStack.swift */; };
+		C095D7811EB9461900BBE7CB /* EditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C095D7801EB9461900BBE7CB /* EditorViewController.swift */; };
+		C095D7831EB9578700BBE7CB /* NewCourseBox.xib in Resources */ = {isa = PBXBuildFile; fileRef = C095D7821EB9578700BBE7CB /* NewCourseBox.xib */; };
 		C09EBEBD1EAF20B700A6D72C /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C09EBEBC1EAF20B700A6D72C /* MasterViewController.swift */; };
-		C09EBEC31EAF2CF500A6D72C /* Year.swift in Sources */ = {isa = PBXBuildFile; fileRef = C09EBEC21EAF2CF500A6D72C /* Year.swift */; };
-		C09EBEC61EAF2D1900A6D72C /* Semester.swift in Sources */ = {isa = PBXBuildFile; fileRef = C09EBEC51EAF2D1900A6D72C /* Semester.swift */; };
 		C0AAE1361EA2BD12002939B6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0AAE1351EA2BD12002939B6 /* AppDelegate.swift */; };
 		C0AAE13B1EA2BD12002939B6 /* HXNotes.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C0AAE1391EA2BD12002939B6 /* HXNotes.xcdatamodeld */; };
 		C0AAE13D1EA2BD12002939B6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C0AAE13C1EA2BD12002939B6 /* Assets.xcassets */; };
@@ -29,8 +30,6 @@
 		C0D687BD1EA4948400BF1D05 /* HXGridBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D687BC1EA4948400BF1D05 /* HXGridBox.swift */; };
 		C0D68CFD1EA6943F009B06E3 /* HXCourseDragBox.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0D68CFC1EA6943F009B06E3 /* HXCourseDragBox.xib */; };
 		C0D68CFF1EA6C8CF009B06E3 /* HXCourseDragBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D68CFE1EA6C8CF009B06E3 /* HXCourseDragBox.swift */; };
-		C0E6797F1EA7ECB200B3DC3B /* Course.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0E6797E1EA7ECB200B3DC3B /* Course.swift */; };
-		C0E679811EA7ECC300B3DC3B /* TimeSlot.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0E679801EA7ECC300B3DC3B /* TimeSlot.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,12 +55,15 @@
 		C00367071EA5851500C4DE0C /* HXCourseBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXCourseBox.swift; sourceTree = "<group>"; };
 		C0150EE71EA5AD6800BBBFA6 /* CourseLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CourseLabel.swift; sourceTree = "<group>"; };
 		C03AF8151EB856860028BA68 /* MasterWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MasterWindowController.swift; sourceTree = "<group>"; };
+		C052EC831EB8E35C00C1FBC8 /* HXNotes 1.1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HXNotes 1.1.xcdatamodel"; sourceTree = "<group>"; };
+		C052EC841EB8EB1A00C1FBC8 /* HXNotes 1.11.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HXNotes 1.11.xcdatamodel"; sourceTree = "<group>"; };
+		C052EC951EB8FC6300C1FBC8 /* TempYear.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TempYear.swift; sourceTree = "<group>"; };
 		C05AE3131EB01BAF00A7F2F7 /* HXYearButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXYearButton.swift; sourceTree = "<group>"; };
 		C07953831EA721B90022BFCF /* HXGridBox.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXGridBox.xib; sourceTree = "<group>"; };
 		C07F48D51EB2AF9B0010B455 /* HXYearStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXYearStack.swift; sourceTree = "<group>"; };
+		C095D7801EB9461900BBE7CB /* EditorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditorViewController.swift; sourceTree = "<group>"; };
+		C095D7821EB9578700BBE7CB /* NewCourseBox.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NewCourseBox.xib; sourceTree = "<group>"; };
 		C09EBEBC1EAF20B700A6D72C /* MasterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MasterViewController.swift; sourceTree = "<group>"; };
-		C09EBEC21EAF2CF500A6D72C /* Year.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Year.swift; sourceTree = "<group>"; };
-		C09EBEC51EAF2D1900A6D72C /* Semester.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Semester.swift; sourceTree = "<group>"; };
 		C0AAE1321EA2BD12002939B6 /* HXNotes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HXNotes.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0AAE1351EA2BD12002939B6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C0AAE13A1EA2BD12002939B6 /* HXNotes.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = HXNotes.xcdatamodel; sourceTree = "<group>"; };
@@ -79,8 +81,6 @@
 		C0D687BC1EA4948400BF1D05 /* HXGridBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXGridBox.swift; sourceTree = "<group>"; };
 		C0D68CFC1EA6943F009B06E3 /* HXCourseDragBox.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXCourseDragBox.xib; sourceTree = "<group>"; };
 		C0D68CFE1EA6C8CF009B06E3 /* HXCourseDragBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXCourseDragBox.swift; sourceTree = "<group>"; };
-		C0E6797E1EA7ECB200B3DC3B /* Course.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Course.swift; sourceTree = "<group>"; };
-		C0E679801EA7ECC300B3DC3B /* TimeSlot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeSlot.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,8 +111,6 @@
 		C07EE8491EA8425C00B87035 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				C0E6797E1EA7ECB200B3DC3B /* Course.swift */,
-				C0E679801EA7ECC300B3DC3B /* TimeSlot.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -136,8 +134,17 @@
 				C00367031EA5825600C4DE0C /* HXCourseBox.xib */,
 				C0D68CFC1EA6943F009B06E3 /* HXCourseDragBox.xib */,
 				C07953831EA721B90022BFCF /* HXGridBox.xib */,
+				C095D7821EB9578700BBE7CB /* NewCourseBox.xib */,
 			);
 			name = "NIB Templates";
+			sourceTree = "<group>";
+		};
+		C095D77F1EB945EA00BBE7CB /* Editor Functionality */ = {
+			isa = PBXGroup;
+			children = (
+				C095D7801EB9461900BBE7CB /* EditorViewController.swift */,
+			);
+			name = "Editor Functionality";
 			sourceTree = "<group>";
 		};
 		C09EBEBE1EAF251000A6D72C /* Timeline Functionality */ = {
@@ -162,8 +169,7 @@
 		C09EBEC41EAF2CF900A6D72C /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				C09EBEC21EAF2CF500A6D72C /* Year.swift */,
-				C09EBEC51EAF2D1900A6D72C /* Semester.swift */,
+				C052EC951EB8FC6300C1FBC8 /* TempYear.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -196,6 +202,7 @@
 				C09EBEBC1EAF20B700A6D72C /* MasterViewController.swift */,
 				C03AF8151EB856860028BA68 /* MasterWindowController.swift */,
 				C0AAE13E1EA2BD12002939B6 /* Main.storyboard */,
+				C095D77F1EB945EA00BBE7CB /* Editor Functionality */,
 				C09EBEBE1EAF251000A6D72C /* Timeline Functionality */,
 				C0D687BE1EA4948A00BF1D05 /* Calendar Functionality */,
 				C0AAE1391EA2BD12002939B6 /* HXNotes.xcdatamodeld */,
@@ -347,6 +354,7 @@
 				C07953841EA721B90022BFCF /* HXGridBox.xib in Resources */,
 				C0AAE13D1EA2BD12002939B6 /* Assets.xcassets in Resources */,
 				C0AAE1401EA2BD12002939B6 /* Main.storyboard in Resources */,
+				C095D7831EB9578700BBE7CB /* NewCourseBox.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -371,22 +379,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C09EBEC31EAF2CF500A6D72C /* Year.swift in Sources */,
-				C09EBEC61EAF2D1900A6D72C /* Semester.swift in Sources */,
+				C052EC961EB8FC6300C1FBC8 /* TempYear.swift in Sources */,
 				C03AF8161EB856860028BA68 /* MasterWindowController.swift in Sources */,
 				C0D235EE1EA5369B00AB039A /* CalendarViewController.swift in Sources */,
 				C07F48D61EB2AF9B0010B455 /* HXYearStack.swift in Sources */,
 				C0C8E9F81EB64CD300CBBF1C /* TimelineViewController.swift in Sources */,
 				C05AE3141EB01BAF00A7F2F7 /* HXYearButton.swift in Sources */,
 				C00367081EA5851500C4DE0C /* HXCourseBox.swift in Sources */,
-				C0E6797F1EA7ECB200B3DC3B /* Course.swift in Sources */,
-				C0E679811EA7ECC300B3DC3B /* TimeSlot.swift in Sources */,
 				C00367021EA5756C00C4DE0C /* HXCourseAddBox.swift in Sources */,
 				C0AAE13B1EA2BD12002939B6 /* HXNotes.xcdatamodeld in Sources */,
 				C0150EE81EA5AD6800BBBFA6 /* CourseLabel.swift in Sources */,
 				C09EBEBD1EAF20B700A6D72C /* MasterViewController.swift in Sources */,
 				C0AAE1361EA2BD12002939B6 /* AppDelegate.swift in Sources */,
 				C0D687BD1EA4948400BF1D05 /* HXGridBox.swift in Sources */,
+				C095D7811EB9461900BBE7CB /* EditorViewController.swift in Sources */,
 				C0D68CFF1EA6C8CF009B06E3 /* HXCourseDragBox.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -661,9 +667,11 @@
 		C0AAE1391EA2BD12002939B6 /* HXNotes.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				C052EC841EB8EB1A00C1FBC8 /* HXNotes 1.11.xcdatamodel */,
+				C052EC831EB8E35C00C1FBC8 /* HXNotes 1.1.xcdatamodel */,
 				C0AAE13A1EA2BD12002939B6 /* HXNotes.xcdatamodel */,
 			);
-			currentVersion = C0AAE13A1EA2BD12002939B6 /* HXNotes.xcdatamodel */;
+			currentVersion = C052EC841EB8EB1A00C1FBC8 /* HXNotes 1.11.xcdatamodel */;
 			path = HXNotes.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

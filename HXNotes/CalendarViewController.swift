@@ -42,10 +42,11 @@ class CalendarViewController: NSViewController {
     var dragBoxConstraintLead: NSLayoutConstraint!
     var dragBoxConstraintTop: NSLayoutConstraint!
     // Reference to index of course being dragged, nil when not dragging
-    var dragCourseIndex: Int!
+    var dragCourse: HXCourseBox!
     // Note last grid box mouse dragged into
     var lastGridX = -1
     var lastGridY = -1
+    let EMPTY = ""
     
     // MARK: References to handle extending a course timeSlot
     // Will be either the last time in the timeStack or the first occurance of a difference course
@@ -89,10 +90,11 @@ class CalendarViewController: NSViewController {
     }
     
     // MARK: Object models ...................................................
-    var courses = [Course]()
-    var timeSlots = [[TimeSlot]]()
+    var thisSemester: Semester!
+    var thisYear: Year!
     
     var masterViewController: MasterViewController!
+    let appDelegate = NSApplication.shared().delegate as! AppDelegate
 
     // MARK: Methods __________________________________________________________________________
     override func viewDidLoad() {
@@ -134,7 +136,6 @@ class CalendarViewController: NSViewController {
         // Remove all grid views and generate them from nib template
         for d in 0..<gridStack.count {
             gridBoxes.append([HXGridBox]())
-            timeSlots.append([TimeSlot]())
             gridStack[d].subviews.forEach {$0.removeFromSuperview()}
             for t in 0..<timeStack.subviews.count {
                 // Load Grid template from nib
@@ -143,9 +144,6 @@ class CalendarViewController: NSViewController {
                 // Get NSView from top level objects returned from nib load
                 if let newBox = theObjects.filter({$0 is HXGridBox}).first as? HXGridBox {
                     gridBoxes[d].append(newBox)
-                    // THIS ALL UGLY, FIX IT. MAKE BETTER SYSTEM
-                    // AND NOTE THE 8 IN BELOW LINE, SHOULDN'T BE MANUALLY ENTERED, OR DECLARE ABOVE AS CONSTANT
-                    timeSlots[d].append(TimeSlot(hour: (t+8), minute: 0, lengthHour: 1, lengthMinute: 0, xDim: d, yDim: t))
                     var trailing = false
                     if d == gridStack.count - 1 {
                         trailing = true
@@ -162,113 +160,135 @@ class CalendarViewController: NSViewController {
         }
     } // end viewDidLoad()
     
+    /// Must be called after thisSemester and thisYear are set. Populates course stack
+    func loadCourses() {
+        // Load courses for this semester:year into courseStack
+        let courseFetch = NSFetchRequest<Course>(entityName: "Course")
+        do {
+            let courses = try appDelegate.managedObjectContext.fetch(courseFetch) as [Course]
+            let foundCourse = courses.filter({$0.semester == thisSemester}) as [Course]
+            for c in foundCourse {
+                // Update Views: Load Course Add Template from nib
+                var theObjects: NSArray = []
+                Bundle.main.loadNibNamed("HXCourseBox", owner: nil, topLevelObjects: &theObjects)
+                // Get NSView from top level objects returned from nib load
+                if let newBox = theObjects.filter({$0 is HXCourseBox}).first as? HXCourseBox {
+                    newBox.initialize(withCourseIndex: courseStack.subviews.count-1, withColor: nextColorAvailable(), withParent: self)
+                    newBox.labelCourse.stringValue = c.title!
+                    // Update NSStackView
+                    courseStack.insertArrangedSubview(newBox, at: courseStack.subviews.count - 1)
+                }
+            }
+        } catch {
+            fatalError("Failed to fetch times: \(error)")
+        }
+    }
+    
     // MARK: Handling courses..................................................................
+    
     /// Add a course model and view from template
     private func addCourse() {
-        // Load Course Add Template from nib
+        // Update Model
+        let appDel = NSApplication.shared().delegate as! AppDelegate
+        let newCourse = NSEntityDescription.insertNewObject(forEntityName: "Course", into: appDel.managedObjectContext) as! Course
+        newCourse.title = "New Course"
+        newCourse.semester = thisSemester
+        appDel.saveAction(nil)
+        
+        // Update Views: Load Course Add Template from nib
         var theObjects: NSArray = []
         Bundle.main.loadNibNamed("HXCourseBox", owner: nil, topLevelObjects: &theObjects)
         // Get NSView from top level objects returned from nib load
         if let newBox = theObjects.filter({$0 is HXCourseBox}).first as? HXCourseBox {
-            newBox.initialize(withCourseIndex: courses.count, withColor: nextColorAvailable(), withParent: self)
-            // Create object model
-            courses.append(Course(withColor: newBox.originalColor))
+            newBox.initialize(withCourseIndex: courseStack.subviews.count-1, withColor: nextColorAvailable(), withParent: self)
             // Update NSStackView
-            courseStack.insertArrangedSubview(newBox, at: courses.count - 1)
+            courseStack.insertArrangedSubview(newBox, at: courseStack.subviews.count - 1)
         }
     }
+    
     /// Removes all information associated with a course object
     private func removeCourse(_ course: HXCourseBox) {
-        for c in courseStack.subviews {
-            if let box = c as? HXCourseBox {
-                if (box.courseIndex <= course.courseIndex) {
-                    continue
-                }
-                box.updateIndex(index: box.courseIndex - 1)
+        
+        // Update Model
+        let courseFetch = NSFetchRequest<Course>(entityName: "Course")
+        do {
+            let courses = try appDelegate.managedObjectContext.fetch(courseFetch) as [Course]
+            if let foundCourse = courses.filter({$0.title == course.labelCourse.stringValue}).first {
+                appDelegate.managedObjectContext.delete(foundCourse)
             }
+        } catch {
+            fatalError("Failed to fetch times: \(error)")
         }
-        for t in courses[course.courseIndex].timeSlotsOccupied {
-            gridBoxes[t.xDim][t.yDim].resetGrid()
-        }
-        courses[course.courseIndex].remove()
-        courses.remove(at: course.courseIndex)
-        releaseColor(color: course.originalColor)
+        
+        // Update view clusters and views
+//        for c in courseStack.subviews {
+//            if let box = c as? HXCourseBox {
+//                if (box.courseIndex > course.courseIndex) {
+//                    box.updateIndex(index: box.courseIndex - 1)
+//                }
+//            }
+//        }
+        releaseColor(color: course.fillColor)
         courseStack.removeView(course)
     }
     
     // MARK: Handling time slots..................................................................
-    ///
-    private func updateTimeSlot(xGrid x: Int, yGrid y: Int, course: Course) {
-        // Clear existing course if needed
-        if timeSlots[x][y].occupyingCourse != nil {
-            resetTimeSlot(xGrid: x, yGrid: y)
-        }
-        // Update data model and visuals
-        let (topTime, botTime) = course.assignTime(withTimeSlot: timeSlots[x][y])
-        for g in stride(from: topTime, through: botTime, by: 1) {
-            gridBoxes[x][g].update(course: course)
-            gridBoxes[x][g].update(topIndex: topTime, botIndex: botTime)
-        }
-    }
-    /// Frees up a time slot from a given course, also visually updates clusters of course times
-    private func resetTimeSlot(xGrid: Int, yGrid: Int) {
-        
-        timeSlots[xGrid][yGrid].clearCourse()
-
-        // Only find above cluster if not earliest time in day
-        if yGrid > 0 {
-            var (aboveTopTime, aboveBotTime) = (-1,-1)
-            let aboveCourseCluster: Course! = timeSlots[xGrid][yGrid-1].occupyingCourse
-            if aboveCourseCluster != nil {
-                for i in stride(from: (yGrid-1), through: 0, by: -1) {
-                    if timeSlots[xGrid][i].occupyingCourse === aboveCourseCluster {
-                        if aboveBotTime == -1 {
-                            aboveBotTime = i
-                        }
-                        aboveTopTime = i
-                    } else {
-                        break
-                    }
-                }
-            }
-            if aboveBotTime != -1 {
-                for g in stride(from: aboveTopTime, through: aboveBotTime, by: 1) {
-                    gridBoxes[xGrid][g].update(course: aboveCourseCluster)
-                    gridBoxes[xGrid][g].update(topIndex: aboveTopTime, botIndex: aboveBotTime)
-                }
-            }
-        }
-        // Only find below cluster if not latest time in day
-        if yGrid < (timeLabels.count - 1) {
-            var (belowTopTime, belowBotTime) = (-1,-1)
-            let belowCourseCluster: Course! = timeSlots[xGrid][yGrid+1].occupyingCourse
-            if belowCourseCluster != nil {
-                for i in stride(from: (yGrid+1), through: (timeLabels.count - 1), by: 1) {
-                    if timeSlots[xGrid][i].occupyingCourse === belowCourseCluster {
-                        if belowTopTime == -1 {
-                            belowTopTime = i
-                        }
-                        belowBotTime = i
-                    } else {
-                        break
-                    }
-                }
-            }
-            if belowTopTime != -1 {
-                for g in stride(from: belowTopTime, through: belowBotTime, by: 1) {
-                    gridBoxes[xGrid][g].update(course: belowCourseCluster)
-                    gridBoxes[xGrid][g].update(topIndex: belowTopTime, botIndex: belowBotTime)
-                }
-            }
-        }
+    
+    /// Owner of a grid slot can be identified by its label title as this uniquely identifies a course in this year:semester
+    private func gridSlotKey(_ x: Int, _ y: Int) -> String {
+        return gridBoxes[x][y].labelTitle.stringValue
     }
     
-//    MAJOR GLITCH:
-//        Rewriting other classes by placing one over there other. Changes visual but not data model.
-//        Also should re-evaulate clusters on rewrite
-//    VISUAL GUARANTEE:
-//        Loop through unoccupied timeSlots about the extendDrag position and update their visuals,
-//        ... since tracking mouse enter doesn't always happen when moving mouse quickly.
+    /// Use to update a time slot visually and data model
+    private func updateTimeSlot(xGrid x: Int, yGrid y: Int, course: HXCourseBox) {
+        // Clear existing course if needed (visual and data model)
+        if gridSlotKey(x,y) != EMPTY {
+            clearTimeSlot(xGrid: x, yGrid: y)
+        }
+        
+        // Update Model:
+        let fetchRequest = NSFetchRequest<Course>(entityName: "Course")
+        do {
+            let fetch = try appDelegate.managedObjectContext.fetch(fetchRequest) as [Course]
+            if let found = fetch.filter({$0.title == course.labelCourse.stringValue && $0.semester == thisSemester}).first {
+                
+                let newTime = NSEntityDescription.insertNewObject(forEntityName: "TimeSlot", into: appDelegate.managedObjectContext) as! TimeSlot
+                newTime.hour = Int16(y)
+                newTime.day = Int16(x)
+                newTime.course = found
+            }
+        } catch {
+            fatalError("Failed to fetch: \(error)")
+        }
+
+        // Update Views:
+        gridBoxes[x][y].update(course: course)
+    }
+    /// Use to update a time slot visually to match another grid box and data model
+    private func updateTimeSlot(xGrid x: Int, yGrid y: Int, matchGridBox box: HXGridBox) {
+        // Clear existing course if needed
+        if gridSlotKey(x,y) != EMPTY {
+            clearTimeSlot(xGrid: x, yGrid: y)
+        }
+        
+        // Update Views:
+        gridBoxes[x][y].update(matchBox: box)
+    }
+    
+    /// Relinquish time slot data model
+    private func clearTimeSlot(xGrid: Int, yGrid: Int) {
+        
+        // Update Model
+        let fetchRequest = NSFetchRequest<TimeSlot>(entityName: "TimeSlot")
+        do {
+            let fetch = try appDelegate.managedObjectContext.fetch(fetchRequest) as [TimeSlot]
+            if let found = fetch.filter({$0.course?.title == gridSlotKey(xGrid, yGrid) && $0.day == Int16(xGrid) && $0.hour == Int16(yGrid)}).first {
+                appDelegate.managedObjectContext.delete(found)
+            }
+        } catch {
+            fatalError("Failed to fetch: \(error)")
+        }
+    }
     
     /// Use this to confirm that mouse location when finishing drag is inside expected grid
     func isLocationInLastGrid(location loc: NSPoint) -> Bool {
@@ -285,7 +305,7 @@ class CalendarViewController: NSViewController {
     
     func clearTransparentExtendedGridSpaces(dragX: Int, dragY: Int) {
         for g in stride(from: (dragY + 1), through: lowestDragExtendIndex, by: 1) {
-            if timeSlots[dragX][g].occupyingCourse == nil {
+            if gridSlotKey(dragX, dragY) == EMPTY {
                 gridBoxes[dragX][g].update(color: NSColor.white)
             }
         }
@@ -296,14 +316,14 @@ class CalendarViewController: NSViewController {
     // HXGridBox - Mouse Enter:
     func mouseEntered_gridBox(atX: Int, atY: Int) {
         // If currently dragging, revert color on last grid
-        if self.dragCourseIndex != nil && lastGridX != -1 {
+        if self.dragCourse != nil && lastGridX != -1 {
             dayLabels[lastGridX].textColor = NSColor.gray
             timeLabels[lastGridY].textColor = NSColor.gray
         }
         lastGridX = atX
         lastGridY = atY
         // If currently dragging, do color update on hovering grid
-        if self.dragCourseIndex != nil && lastGridX != -1 {
+        if self.dragCourse != nil && lastGridX != -1 {
             timeLabels[lastGridY].textColor = NSColor.black
             dayLabels[lastGridX].textColor = NSColor.black
         }
@@ -314,7 +334,7 @@ class CalendarViewController: NSViewController {
         let lowestIndex = min(dragY + indicesDown, maxDragExtendIndex - 1)
         if lowestIndex > dragY {
             for i in stride(from: (dragY+1), through: lowestIndex, by: 1) {
-                self.updateTimeSlot(xGrid: dragX, yGrid: i, course: timeSlots[dragX][dragY].occupyingCourse)
+                self.updateTimeSlot(xGrid: dragX, yGrid: i, matchGridBox: gridBoxes[dragX][dragY])
             }
         }
         maxDragExtendIndex = timeLabels.count
@@ -328,19 +348,19 @@ class CalendarViewController: NSViewController {
             lowestDragExtendIndex = dragY + 1
         }
         if (dragY + indicesDown) < maxDragExtendIndex {
-            if timeSlots[dragX][dragY + indicesDown].occupyingCourse == nil {
+            if gridSlotKey(dragX, dragY + indicesDown) == EMPTY {
                 gridBoxes[dragX][dragY + indicesDown].update(color: NSColor.init(
                     red: gridBoxes[dragX][dragY].fillColor.redComponent,
                     green: gridBoxes[dragX][dragY].fillColor.greenComponent,
                     blue: gridBoxes[dragX][dragY].fillColor.blueComponent,
                     alpha: 0.5))
-            } else if timeSlots[dragX][dragY + indicesDown].occupyingCourse !== timeSlots[dragX][dragY].occupyingCourse {
+            } else if gridSlotKey(dragX, dragY + indicesDown) != gridSlotKey(dragX, dragY) {
                 maxDragExtendIndex = dragY + indicesDown
             }
             if lowestDragExtendIndex > (dragY + indicesDown) {
                 // Clear transparent grids
                 for g in stride(from: (dragY + indicesDown + 1), through: lowestDragExtendIndex, by: 1) {
-                    if timeSlots[dragX][g].occupyingCourse == nil {
+                    if gridSlotKey(dragX, dragY + indicesDown) == EMPTY {
                         gridBoxes[dragX][g].update(color: NSColor.white)
                     }
                 }
@@ -351,29 +371,29 @@ class CalendarViewController: NSViewController {
     /// HXCourseBox - Mouse Up: Stop dragging a course to a time slot
     func mouseUp_courseBox(atLocation loc: NSPoint) {
         // Ensure a course was being dragged
-        if self.dragCourseIndex != nil {
+        if self.dragCourse != nil {
             // Remove drag box from superview
             self.courseDragBox.removeFromSuperview()
             if isLocationInLastGrid(location: loc) {
-                self.updateTimeSlot(xGrid: lastGridX, yGrid: lastGridY, course: courses[dragCourseIndex])
+                self.updateTimeSlot(xGrid: lastGridX, yGrid: lastGridY, course: dragCourse)
                 // Reset grid hovering colors
                 timeLabels[lastGridY].textColor = NSColor.gray
                 dayLabels[lastGridX].textColor = NSColor.gray
             } else if lastGridX != -1 {
-                if timeSlots[lastGridX][lastGridY].occupyingCourse == nil {
+                if gridSlotKey(lastGridX, lastGridY) == EMPTY {
                     timeLabels[lastGridY].textColor = NSColor.gray
                     dayLabels[lastGridX].textColor = NSColor.gray
                 }
             }
-            self.dragCourseIndex = nil
+            self.dragCourse = nil
         }
     }
     /// HXCourseBox - Mouse Drag: Drag a course to a time slot
     func mouseDrag_courseBox(course: HXCourseBox, toLocation loc: NSPoint) {
-        if self.dragCourseIndex == nil {
-            self.dragCourseIndex = course.courseIndex
+        if self.dragCourse == nil {
+            self.dragCourse = course
             // Update drag box visuals to match course being dragged
-            courseDragBox.updateWithCourse(courses[course.courseIndex])
+            courseDragBox.updateWithCourse(course)
             // Add drag box back to the superview
             self.view.addSubview(courseDragBox)
             // Try and move these to dragBox initialize in viewDidLoad()
@@ -393,11 +413,22 @@ class CalendarViewController: NSViewController {
         addCourse()
     }
     /// CourseLabel in HXCourseBox - on Enter
-    internal func action_courseTextField(atIndex index: Int, withName name: String) {
-        courses[index].title = name
-        for t in courses[index].timeSlotsOccupied {
-            gridBoxes[t.xDim][t.yDim].labelTitle.stringValue = name
-        }
+    internal func action_courseTextField(_ courseBox: HXCourseBox) {
+
+//        // Update Model:
+//        let fetchRequest = NSFetchRequest<Course>(entityName: "Course")
+//        do {
+//            let fetch = try appDelegate.managedObjectContext.fetch(fetchRequest) as [Course]
+//            if let found = fetch.filter({$0.title == dragBox.labelCourse.stringValue && $0.semester == thisSemester}).first {
+//                found.title = dragBox.labelCourse.stringValue
+//            }
+//        } catch {
+//            fatalError("Failed to fetch: \(error)")
+//        }
+//        
+//        for t in courses[index].timeSlotsOccupied {
+//            gridBoxes[t.xDim][t.yDim].labelTitle.stringValue = name
+//        }
     }
     /// Button in HXCourseBox - on MouseDown
     internal func action_removeCourseButton(course: HXCourseBox) {
@@ -405,10 +436,10 @@ class CalendarViewController: NSViewController {
     }
     /// Button in HXGridBox - on MouseDown
     internal func action_clearTimeSlot(xGrid x: Int, yGrid y: Int) {
-        self.resetTimeSlot(xGrid: x, yGrid: y)
+        self.clearTimeSlot(xGrid: x, yGrid: y)
     }
     @IBAction func action_closeCalendar(_ sender: Any) {
-        masterViewController.closeCalendar()
+        masterViewController.popCalendar()
         self.view.removeFromSuperview()
     }
 }
