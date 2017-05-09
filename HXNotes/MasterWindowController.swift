@@ -11,6 +11,7 @@ import Cocoa
 class MasterWindowController: NSWindowController {
     
     @IBOutlet weak var timelineButton_discloseTimeline: NSButton!
+    @IBOutlet weak var button_toggleSchedule: NSToolbarItem!
     
     override func windowDidLoad() {
         super.windowDidLoad()
@@ -26,4 +27,11 @@ class MasterWindowController: NSWindowController {
             controller.discloseTimeline(timelineButton_discloseTimeline.state)
         }
     }
+    
+    @IBAction func action_toggleSchedule(_ sender: Any) {
+        if let controller = self.contentViewController as? MasterViewController {
+            controller.toggleSchedule()
+        }
+    }
+    
 }

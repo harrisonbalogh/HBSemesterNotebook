@@ -26,12 +26,15 @@ class HXGridBox: NSBox {
     private let ID_LABEL_TITLE     = "grid_label_title"
     private let ID_RESIZE          = "grid_resize"
     private let ID_BUTTON_REMOVE   = "grid_button_remove"
+    private let ID_LINE_REMOVE     = "grid_line_remove"
+    
     // Elements of course box
     var labelTitle: NSTextField!
     private var lineTrailing: NSBox!
     private var lineBottom: NSBox!
     private var buttonResize: NSImageView!
     private var buttonRemove: NSButton!
+    private var lineRemove: NSBox!
     
     /// Call once on a CalendarGrid after view first appears
     func initialize(withCalendar calendar: CalendarViewController, atX: Int, atY: Int, trailBorder: Bool, botBorder: Bool) {
@@ -55,6 +58,8 @@ class HXGridBox: NSBox {
                 buttonResize = v as! NSImageView
             case ID_BUTTON_REMOVE:
                 buttonRemove = v as! NSButton
+            case ID_LINE_REMOVE:
+                lineRemove = v as! NSBox
             default: continue
             }
         }
@@ -80,8 +85,6 @@ class HXGridBox: NSBox {
             lineBottom.isHidden = false
         }
         
-        buttonResize.isHidden = true
-        
     } // End initialize()
     
     /// Removes visual of occupying course and notifies controller of press
@@ -93,10 +96,12 @@ class HXGridBox: NSBox {
     /// Match grid properties with that of provided course object, some
     /// visuals will not display until update:topIndex:botIndex is called
     func update(course: HXCourseBox) {
-        fillColor = course.fillColor
+        fillColor = course.boxDrag.fillColor
         labelTitle.stringValue = course.labelCourse.stringValue
         buttonRemove.isHidden = false
         buttonRemove.isEnabled = true
+        lineRemove.isHidden = false
+        Swift.print("Update v1: \(labelTitle.stringValue)")
     }
     /// Make this gridBox look like the passed gridBox
     func update(matchBox: HXGridBox) {
@@ -104,11 +109,14 @@ class HXGridBox: NSBox {
         labelTitle.stringValue = matchBox.labelTitle.stringValue
         buttonRemove.isHidden = false
         buttonRemove.isEnabled = true
+        lineRemove.isHidden = false
+        Swift.print("Update v2")
     }
     
     /// Color update of a grid space, primarily for previewing extending grid spaces
     func update(color: NSColor) {
         fillColor = color
+        Swift.print("Update v3")
     }
     
     /// Uses top/bot index of course cluster to deduce what visuals to show/hide
@@ -127,6 +135,8 @@ class HXGridBox: NSBox {
         }
         buttonRemove.isHidden = false
         buttonRemove.isEnabled = true
+        lineRemove.isHidden = false
+        Swift.print("Update v4")
     }
     
     /// Clears out the course styling
@@ -136,6 +146,7 @@ class HXGridBox: NSBox {
         buttonResize.isHidden = true
         buttonRemove.isHidden = true
         buttonRemove.isEnabled = false
+        lineRemove.isHidden = true
     }
     
     override func viewDidEndLiveResize() {

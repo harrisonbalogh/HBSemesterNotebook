@@ -16,7 +16,7 @@
                 <rect key="frame" x="0.0" y="0.0" width="160" height="40"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
-                    <textField identifier="grid_label_title" hidden="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="62X-lI-Jog">
+                    <textField identifier="grid_label_title" horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="62X-lI-Jog">
                         <rect key="frame" x="76" y="29" width="8" height="11"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" id="DfD-83-qkI">
                             <font key="font" metaFont="systemLight" size="8"/>
@@ -48,18 +48,21 @@
                             <constraint firstAttribute="height" constant="1" id="wS0-fl-dVB"/>
                         </constraints>
                     </box>
-                    <imageView identifier="grid_resize" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="lSc-vX-bBn">
+                    <imageView identifier="grid_resize" hidden="YES" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="lSc-vX-bBn">
                         <rect key="frame" x="0.0" y="0.0" width="160" height="5"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="5" id="JFx-HL-kpx"/>
                         </constraints>
                         <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="drag_icon" id="Xbe-yk-eQ1"/>
                     </imageView>
+                    <box identifier="grid_line_remove" hidden="YES" horizontalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="Vdd-zA-Whg">
+                        <rect key="frame" x="135" y="0.0" width="5" height="40"/>
+                    </box>
                     <button identifier="grid_button_remove" hidden="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yav-77-RA2">
-                        <rect key="frame" x="147" y="27" width="10" height="10"/>
+                        <rect key="frame" x="141" y="12" width="16" height="16"/>
                         <constraints>
-                            <constraint firstAttribute="height" constant="10" id="XjS-Md-Z0f"/>
-                            <constraint firstAttribute="width" constant="10" id="vh9-1x-FDt"/>
+                            <constraint firstAttribute="height" constant="16" id="XjS-Md-Z0f"/>
+                            <constraint firstAttribute="width" constant="16" id="vh9-1x-FDt"/>
                         </constraints>
                         <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSStopProgressTemplate" imagePosition="only" alignment="center" enabled="NO" imageScaling="proportionallyUpOrDown" inset="2" id="MbG-CB-qI2">
                             <behavior key="behavior" lightByContents="YES"/>
@@ -67,14 +70,19 @@
                         </buttonCell>
                     </button>
                 </subviews>
+                <constraints>
+                    <constraint firstItem="Vdd-zA-Whg" firstAttribute="centerY" secondItem="cWI-KP-5Xf" secondAttribute="centerY" id="1vm-wV-7ZN"/>
+                    <constraint firstItem="Vdd-zA-Whg" firstAttribute="height" secondItem="cWI-KP-5Xf" secondAttribute="height" id="6VE-Lr-t2Q"/>
+                    <constraint firstAttribute="trailing" secondItem="Vdd-zA-Whg" secondAttribute="trailing" constant="22" id="Iyy-6N-mvn"/>
+                    <constraint firstItem="yav-77-RA2" firstAttribute="centerY" secondItem="cWI-KP-5Xf" secondAttribute="centerY" id="crA-mu-jNd"/>
+                    <constraint firstAttribute="trailing" secondItem="yav-77-RA2" secondAttribute="trailing" constant="3" id="haq-eN-TYR"/>
+                </constraints>
             </view>
             <constraints>
-                <constraint firstAttribute="trailing" secondItem="yav-77-RA2" secondAttribute="trailing" constant="3" id="7tw-YC-YAf"/>
                 <constraint firstItem="x35-2o-haL" firstAttribute="centerY" secondItem="acs-fm-GlA" secondAttribute="centerY" id="9Ta-zF-3Kn"/>
                 <constraint firstItem="62X-lI-Jog" firstAttribute="top" secondItem="acs-fm-GlA" secondAttribute="top" id="A7c-Q9-Csj"/>
                 <constraint firstItem="zyg-mJ-OHq" firstAttribute="leading" secondItem="acs-fm-GlA" secondAttribute="leading" id="ERa-dM-aY3"/>
                 <constraint firstAttribute="bottom" secondItem="e7o-tb-3mV" secondAttribute="bottom" id="EXr-Kp-4OH"/>
-                <constraint firstItem="yav-77-RA2" firstAttribute="top" secondItem="acs-fm-GlA" secondAttribute="top" constant="3" id="HDa-ns-V0n"/>
                 <constraint firstItem="zyg-mJ-OHq" firstAttribute="height" secondItem="acs-fm-GlA" secondAttribute="height" id="Okb-c7-Hca"/>
                 <constraint firstItem="x35-2o-haL" firstAttribute="height" secondItem="acs-fm-GlA" secondAttribute="height" id="PhA-Vw-CD9"/>
                 <constraint firstItem="jdR-3p-g5P" firstAttribute="centerX" secondItem="acs-fm-GlA" secondAttribute="centerX" id="V27-cr-Wcg"/>

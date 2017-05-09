@@ -31,7 +31,7 @@ class CalendarViewController: NSViewController {
     // Grid stack is an array of all grid'Day' NSStackViews above
     var gridStack = [NSStackView]()
     // Add course button
-    @IBOutlet weak var courseAddBox: HXCourseAddBox!
+    
     // First array dimension is 'day', second is 'time'
     var gridBoxes = [[HXGridBox]]()
     
@@ -67,7 +67,7 @@ class CalendarViewController: NSViewController {
         NSColor.init(red: 54/255, green: 255/255, blue: 0/255, alpha: 1),
         NSColor.init(red: 0/255, green: 240/255, blue: 255/255, alpha: 1),
         NSColor.init(red: 254/255, green: 0/255, blue: 210/255, alpha: 1)]
-    // Track which colors have been used, 
+    // Track which colors have been used,
     // in case user removes a course box in the middle of stack
     var colorAvailability = [Int: Bool]()
     /// Return the first color available, or gray if all colors taken
@@ -95,7 +95,7 @@ class CalendarViewController: NSViewController {
     
     var masterViewController: MasterViewController!
     let appDelegate = NSApplication.shared().delegate as! AppDelegate
-
+    
     // MARK: Methods __________________________________________________________________________
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -121,9 +121,6 @@ class CalendarViewController: NSViewController {
             }
         }
         
-        // Initialize grid add box button
-        courseAddBox.setParentController(controller: self)
-        
         // Load course dragged box
         var theObjects: NSArray = []
         Bundle.main.loadNibNamed("HXCourseDragBox", owner: nil, topLevelObjects: &theObjects)
@@ -134,7 +131,7 @@ class CalendarViewController: NSViewController {
         }
         
         // Remove all grid views and generate them from nib template
-        for d in 0..<gridStack.count {
+        for d in 0..<dayStack.subviews.count {
             gridBoxes.append([HXGridBox]())
             gridStack[d].subviews.forEach {$0.removeFromSuperview()}
             for t in 0..<timeStack.subviews.count {
@@ -166,8 +163,8 @@ class CalendarViewController: NSViewController {
         let courseFetch = NSFetchRequest<Course>(entityName: "Course")
         do {
             let courses = try appDelegate.managedObjectContext.fetch(courseFetch) as [Course]
-            let foundCourse = courses.filter({$0.semester == thisSemester}) as [Course]
-            for c in foundCourse {
+            let foundCourses = courses.filter({$0.semester == thisSemester}) as [Course]
+            for c in foundCourses {
                 // Update Views: Load Course Add Template from nib
                 var theObjects: NSArray = []
                 Bundle.main.loadNibNamed("HXCourseBox", owner: nil, topLevelObjects: &theObjects)
@@ -179,9 +176,7 @@ class CalendarViewController: NSViewController {
                     courseStack.insertArrangedSubview(newBox, at: courseStack.subviews.count - 1)
                 }
             }
-        } catch {
-            fatalError("Failed to fetch times: \(error)")
-        }
+        } catch { fatalError("Failed to fetch times: \(error)") }
     }
     
     // MARK: Handling courses..................................................................
@@ -189,11 +184,22 @@ class CalendarViewController: NSViewController {
     /// Add a course model and view from template
     private func addCourse() {
         // Update Model
-        let appDel = NSApplication.shared().delegate as! AppDelegate
-        let newCourse = NSEntityDescription.insertNewObject(forEntityName: "Course", into: appDel.managedObjectContext) as! Course
-        newCourse.title = "New Course"
+        let newCourse = NSEntityDescription.insertNewObject(forEntityName: "Course", into: appDelegate.managedObjectContext) as! Course
+        
+        // Find next available number for naming Course
+        var nextCourseNumber = 1
+        var seekingNumber = true
+        repeat {
+            if (retrieveCourse(withName: "Untitled \(nextCourseNumber)")) == nil {
+                seekingNumber = false
+            } else {
+                nextCourseNumber += 1
+            }
+        } while(seekingNumber)
+        
+        newCourse.title = "Untitled \(nextCourseNumber)"
         newCourse.semester = thisSemester
-        appDel.saveAction(nil)
+        appDelegate.saveAction(nil)
         
         // Update Views: Load Course Add Template from nib
         var theObjects: NSArray = []
@@ -201,6 +207,7 @@ class CalendarViewController: NSViewController {
         // Get NSView from top level objects returned from nib load
         if let newBox = theObjects.filter({$0 is HXCourseBox}).first as? HXCourseBox {
             newBox.initialize(withCourseIndex: courseStack.subviews.count-1, withColor: nextColorAvailable(), withParent: self)
+            newBox.labelCourse.stringValue = newCourse.title!
             // Update NSStackView
             courseStack.insertArrangedSubview(newBox, at: courseStack.subviews.count - 1)
         }
@@ -209,37 +216,40 @@ class CalendarViewController: NSViewController {
     /// Removes all information associated with a course object
     private func removeCourse(_ course: HXCourseBox) {
         
-        // Update Model
-        let courseFetch = NSFetchRequest<Course>(entityName: "Course")
-        do {
-            let courses = try appDelegate.managedObjectContext.fetch(courseFetch) as [Course]
-            if let foundCourse = courses.filter({$0.title == course.labelCourse.stringValue}).first {
-                appDelegate.managedObjectContext.delete(foundCourse)
+        // Update Model:
+        if let fetchedCourse = retrieveCourse(withName: course.labelCourse.stringValue) {
+            let timeFetch = NSFetchRequest<TimeSlot>(entityName: "TimeSlot")
+            do {
+                let times = try appDelegate.managedObjectContext.fetch(timeFetch) as [TimeSlot]
+                let courseTimes = times.filter({$0.course == fetchedCourse})
+                for t in courseTimes {
+                    appDelegate.managedObjectContext.delete(t)
+                }
+            } catch { fatalError("Failed to fetch times: \(error)") }
+            appDelegate.managedObjectContext.delete(fetchedCourse)
+            
+            // Update Views:
+            for x in 0..<gridBoxes.count {
+                for y in 0..<gridBoxes[x].count {
+                    print ("At \(x),\(y): \(gridSlotKey(x, y))")
+                    if gridSlotKey(x, y) == fetchedCourse.title {
+                        gridBoxes[x][y].resetGrid()
+                    }
+                }
             }
-        } catch {
-            fatalError("Failed to fetch times: \(error)")
+            releaseColor(color: course.boxDrag.fillColor)
+            course.removeFromSuperview()
         }
-        
-        // Update view clusters and views
-//        for c in courseStack.subviews {
-//            if let box = c as? HXCourseBox {
-//                if (box.courseIndex > course.courseIndex) {
-//                    box.updateIndex(index: box.courseIndex - 1)
-//                }
-//            }
-//        }
-        releaseColor(color: course.fillColor)
-        courseStack.removeView(course)
     }
     
     // MARK: Handling time slots..................................................................
     
     /// Owner of a grid slot can be identified by its label title as this uniquely identifies a course in this year:semester
     private func gridSlotKey(_ x: Int, _ y: Int) -> String {
-        return gridBoxes[x][y].labelTitle.stringValue
+        print("The box is \(gridBoxes[x][y]) and the label is \(gridBoxes[x][y].labelTitle!) and the stringValue is '\(gridBoxes[x][y].labelTitle!.stringValue)'")
+        return gridBoxes[x][y].labelTitle!.stringValue
     }
-    
-    /// Use to update a time slot visually and data model
+    /// Use to update a time slot visuals and data model
     private func updateTimeSlot(xGrid x: Int, yGrid y: Int, course: HXCourseBox) {
         // Clear existing course if needed (visual and data model)
         if gridSlotKey(x,y) != EMPTY {
@@ -247,20 +257,13 @@ class CalendarViewController: NSViewController {
         }
         
         // Update Model:
-        let fetchRequest = NSFetchRequest<Course>(entityName: "Course")
-        do {
-            let fetch = try appDelegate.managedObjectContext.fetch(fetchRequest) as [Course]
-            if let found = fetch.filter({$0.title == course.labelCourse.stringValue && $0.semester == thisSemester}).first {
-                
-                let newTime = NSEntityDescription.insertNewObject(forEntityName: "TimeSlot", into: appDelegate.managedObjectContext) as! TimeSlot
-                newTime.hour = Int16(y)
-                newTime.day = Int16(x)
-                newTime.course = found
-            }
-        } catch {
-            fatalError("Failed to fetch: \(error)")
+        if let fetchedCourse = retrieveCourse(withName: course.labelCourse.stringValue) {
+            let newTime = NSEntityDescription.insertNewObject(forEntityName: "TimeSlot", into: appDelegate.managedObjectContext) as! TimeSlot
+            newTime.hour = Int16(y)
+            newTime.day = Int16(x)
+            newTime.course = fetchedCourse
         }
-
+        
         // Update Views:
         gridBoxes[x][y].update(course: course)
     }
@@ -273,21 +276,26 @@ class CalendarViewController: NSViewController {
         
         // Update Views:
         gridBoxes[x][y].update(matchBox: box)
+        
+        // Update model:
+        
     }
     
     /// Relinquish time slot data model
     private func clearTimeSlot(xGrid: Int, yGrid: Int) {
-        
         // Update Model
         let fetchRequest = NSFetchRequest<TimeSlot>(entityName: "TimeSlot")
         do {
             let fetch = try appDelegate.managedObjectContext.fetch(fetchRequest) as [TimeSlot]
-            if let found = fetch.filter({$0.course?.title == gridSlotKey(xGrid, yGrid) && $0.day == Int16(xGrid) && $0.hour == Int16(yGrid)}).first {
-                appDelegate.managedObjectContext.delete(found)
+            print("FETCHING: \(gridSlotKey(xGrid, yGrid))")
+            for f in fetch {
+                print("    TimeSlot h:\(f.hour) d:\(f.day) courseTitle:\(f.course!.title!) and day == Int16(xGrid): \(f.day == Int16(xGrid))")
             }
-        } catch {
-            fatalError("Failed to fetch: \(error)")
-        }
+            if let found = fetch.filter({$0.course!.title! == gridSlotKey(xGrid, yGrid) && $0.day == Int16(xGrid) && $0.hour == Int16(yGrid)}).first {
+                appDelegate.managedObjectContext.delete(found)
+                print("Clear time slot")
+            }
+        } catch { fatalError("Failed to fetch: \(error)") }
     }
     
     /// Use this to confirm that mouse location when finishing drag is inside expected grid
@@ -408,27 +416,21 @@ class CalendarViewController: NSViewController {
     }
     
     // MARK: Action receivers.........................................................................
-    /// Button in HXCourseAddBox - on MouseDown
-    internal func action_addCourseButton() {
+    /// Button in Course stackView - on MouseDown
+    @IBAction func action_addCourseButton(_ sender: Any) {
         addCourse()
     }
     /// CourseLabel in HXCourseBox - on Enter
     internal func action_courseTextField(_ courseBox: HXCourseBox) {
-
-//        // Update Model:
-//        let fetchRequest = NSFetchRequest<Course>(entityName: "Course")
-//        do {
-//            let fetch = try appDelegate.managedObjectContext.fetch(fetchRequest) as [Course]
-//            if let found = fetch.filter({$0.title == dragBox.labelCourse.stringValue && $0.semester == thisSemester}).first {
-//                found.title = dragBox.labelCourse.stringValue
-//            }
-//        } catch {
-//            fatalError("Failed to fetch: \(error)")
-//        }
-//        
-//        for t in courses[index].timeSlotsOccupied {
-//            gridBoxes[t.xDim][t.yDim].labelTitle.stringValue = name
-//        }
+        
+        // Update Model:
+        if let fetchedCourse = retrieveCourse(withName: courseBox.labelCourse.stringValue) {
+            fetchedCourse.title = courseBox.labelCourse.stringValue
+        }
+        
+        //        for t in courses[index].timeSlotsOccupied {
+        //            gridBoxes[t.xDim][t.yDim].labelTitle.stringValue = name
+        //        }
     }
     /// Button in HXCourseBox - on MouseDown
     internal func action_removeCourseButton(course: HXCourseBox) {
@@ -441,5 +443,16 @@ class CalendarViewController: NSViewController {
     @IBAction func action_closeCalendar(_ sender: Any) {
         masterViewController.popCalendar()
         self.view.removeFromSuperview()
+    }
+    
+    internal func retrieveCourse(withName: String) -> Course! {
+        let fetchRequest = NSFetchRequest<Course>(entityName: "Course")
+        do {
+            let times = try appDelegate.managedObjectContext.fetch(fetchRequest) as [Course]
+            if let foundCourse = times.filter({$0.title! == withName && $0.semester == thisSemester}).first  {
+                return foundCourse
+            }
+        } catch { fatalError("Failed to fetch times: \(error)") }
+        return nil
     }
 }

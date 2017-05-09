@@ -8,7 +8,7 @@
 
 import Cocoa
 
-class HXCourseBox: NSBox {
+class HXCourseBox: NSView {
     
     var trackingArea: NSTrackingArea!
 //    // Need to update course index when a course gets removed
@@ -23,24 +23,24 @@ class HXCourseBox: NSBox {
     // Manually connect course box child elements using identifiers
     let ID_BUTTON_TRASH     = "course_button_trash"
     let ID_LABEL_TITLE      = "course_label_title"
-    let ID_LABEL_DRAG       = "course_label_drag"
+    let ID_BOX_DRAG         = "course_box_drag"
     // Elements of course box
+    var boxDrag: NSBox!
     var labelCourse: CourseLabel!
-    var labelDragHere: NSTextField!
     var buttonTrash: NSButton!
     
     /// Initialize the color, index, and tracking area of the CourseBox view
     func initialize(withCourseIndex index: Int, withColor color: NSColor, withParent parent: CalendarViewController) {
         
         // Initialize child elements
-        for v in self.subviews[0].subviews {
+        for v in self.subviews {
             switch v.identifier! {
+            case ID_BOX_DRAG:
+                boxDrag = v as! NSBox
             case ID_BUTTON_TRASH:
                 buttonTrash = v as! NSButton
             case ID_LABEL_TITLE:
                 labelCourse = v as! CourseLabel
-            case ID_LABEL_DRAG:
-                labelDragHere = v as! NSTextField
             default: continue
             }
         }
@@ -55,12 +55,12 @@ class HXCourseBox: NSBox {
         
         self.originalColor = color
         
+        self.boxDrag.fillColor = color
+        
         self.parentCalendar = parent
         
-        self.fillColor = color
-        
         self.trackingArea = NSTrackingArea(
-            rect: bounds,
+            rect: boxDrag.bounds,
             options: [NSTrackingAreaOptions.activeInKeyWindow, NSTrackingAreaOptions.mouseMoved, NSTrackingAreaOptions.mouseEnteredAndExited],
             owner: self,
             userInfo: ["index":index])
@@ -81,9 +81,9 @@ class HXCourseBox: NSBox {
     }
     
     override func mouseMoved(with event: NSEvent) {
-        let origin = labelDragHere.superview!.convert(labelDragHere.frame.origin, to: nil) as NSPoint
+        let origin = boxDrag.superview!.convert(boxDrag.frame.origin, to: nil) as NSPoint
         let loc = event.locationInWindow
-        if loc.x > origin.x && loc.x < origin.x + labelDragHere.frame.width && loc.y > origin.y && loc.y < origin.y + labelDragHere.frame.height {
+        if loc.x > origin.x && loc.x < origin.x + boxDrag.frame.width && loc.y > origin.y && loc.y < origin.y + boxDrag.frame.height {
             if !insideDrag {
                 NSCursor.openHand().push()
                 insideDrag = true
@@ -108,10 +108,6 @@ class HXCourseBox: NSBox {
     }
     
     override func mouseDragged(with event: NSEvent) {
-        fillColor = NSColor.white
-        buttonTrash.isEnabled = false
-        buttonTrash.isHidden = true
-        labelDragHere.alphaValue = 0
         labelCourse.alphaValue = 0.5
         if !dragging {
             dragging = true
@@ -121,18 +117,14 @@ class HXCourseBox: NSBox {
     }
     
     override func mouseUp(with event: NSEvent) {
-        fillColor = originalColor
-        buttonTrash.isEnabled = true
-        buttonTrash.isHidden = false
-        labelDragHere.alphaValue = 1
         labelCourse.alphaValue = 1
         if dragging {
             dragging = false
             Swift.print("Popping a closedHand from mouseUp")
             NSCursor.closedHand().pop()
-            let origin = labelDragHere.superview!.convert(labelDragHere.frame.origin, to: nil) as NSPoint
+            let origin = boxDrag.superview!.convert(boxDrag.frame.origin, to: nil) as NSPoint
             let loc = event.locationInWindow
-            if loc.x > origin.x && loc.x < origin.x + labelDragHere.frame.width && loc.y > origin.y && loc.y < origin.y + labelDragHere.frame.height {
+            if loc.x > origin.x && loc.x < origin.x + boxDrag.frame.width && loc.y > origin.y && loc.y < origin.y + boxDrag.frame.height {
                 if !insideDrag {
                     NSCursor.openHand().push()
                     insideDrag = true

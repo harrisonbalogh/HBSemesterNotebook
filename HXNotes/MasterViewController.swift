@@ -153,4 +153,18 @@ class MasterViewController: NSViewController {
             timelineTopConstraint.constant = -105
         }
     }
+    
+    func toggleSchedule() {
+        // Calendar is visible
+        if calendarViewController != nil {
+            if calendarViewController.view.superview != nil {
+                popCalendar()
+                pushEditor()
+            } else {
+                // Calendar is not visible
+                popEditor()
+                pushCalendar()
+            }
+        }
+    }
 }

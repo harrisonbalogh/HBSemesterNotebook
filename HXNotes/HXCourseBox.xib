@@ -5,84 +5,64 @@
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11762"/>
         <capability name="box content view" minToolsVersion="7.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
-        <capability name="system font weights other than Regular or Bold" minToolsVersion="7.0"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner"/>
-        <box boxType="custom" cornerRadius="4" title="Box" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="hcv-2O-TOB" userLabel="CourseBox" customClass="HXCourseBox" customModule="HXNotes" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="80" height="70"/>
-            <view key="contentView" id="cTh-4t-i2h">
-                <rect key="frame" x="1" y="1" width="78" height="68"/>
-                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                <subviews>
-                    <textField identifier="course_label_drag" horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2ZQ-ND-0Ng">
-                        <rect key="frame" x="-3" y="48" width="84" height="21"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Drag Here" id="xSo-FV-lII">
-                            <font key="font" metaFont="systemLight" size="10"/>
-                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
-                    <textField identifier="course_label_title" horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hkP-JE-JOf" customClass="CourseLabel" customModule="HXNotes" customModuleProvider="target">
-                        <rect key="frame" x="-3" y="31" width="84" height="17"/>
-                        <constraints>
-                            <constraint firstAttribute="height" constant="17" id="9tu-GD-eJI"/>
-                        </constraints>
-                        <textFieldCell key="cell" lineBreakMode="truncatingTail" alignment="center" title="New Class" usesSingleLineMode="YES" id="lLD-iq-O0A">
-                            <font key="font" metaFont="systemMedium" size="14"/>
-                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
-                    <button identifier="course_button_trash" translatesAutoresizingMaskIntoConstraints="NO" id="gYY-wr-sGQ">
-                        <rect key="frame" x="56" y="3" width="20" height="20"/>
-                        <constraints>
-                            <constraint firstAttribute="width" constant="20" id="TtW-C3-zCZ"/>
-                            <constraint firstAttribute="height" constant="20" id="VWt-R9-juo"/>
-                        </constraints>
-                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="trash_icon" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="Y2T-xA-sVe">
-                            <behavior key="behavior" lightByContents="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                    </button>
-                    <button identifier="course_button_fill" translatesAutoresizingMaskIntoConstraints="NO" id="Sdk-VS-X58">
-                        <rect key="frame" x="2" y="3" width="20" height="20"/>
-                        <constraints>
-                            <constraint firstAttribute="width" constant="20" id="5M7-jc-Oxc"/>
-                            <constraint firstAttribute="height" constant="20" id="hGU-Tz-eZZ"/>
-                        </constraints>
-                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="fill_icon" imagePosition="only" alignment="center" enabled="NO" imageScaling="proportionallyUpOrDown" inset="2" id="Jt2-p8-ILM">
-                            <behavior key="behavior" lightByContents="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                    </button>
-                </subviews>
-                <constraints>
-                    <constraint firstItem="hkP-JE-JOf" firstAttribute="top" secondItem="2ZQ-ND-0Ng" secondAttribute="bottom" id="iJc-ZK-Rcp"/>
-                </constraints>
-            </view>
-            <constraints>
-                <constraint firstItem="2ZQ-ND-0Ng" firstAttribute="top" secondItem="hcv-2O-TOB" secondAttribute="top" id="4bZ-MV-YNI"/>
-                <constraint firstItem="2ZQ-ND-0Ng" firstAttribute="centerX" secondItem="hcv-2O-TOB" secondAttribute="centerX" id="5AS-oQ-Ldj"/>
-                <constraint firstItem="2ZQ-ND-0Ng" firstAttribute="width" secondItem="hcv-2O-TOB" secondAttribute="width" id="7gD-uh-ogl"/>
-                <constraint firstAttribute="height" constant="70" id="D5K-CM-ju3"/>
-                <constraint firstAttribute="trailing" secondItem="gYY-wr-sGQ" secondAttribute="trailing" constant="3" id="LOS-I9-65X"/>
-                <constraint firstAttribute="bottom" secondItem="hkP-JE-JOf" secondAttribute="bottom" constant="32" id="Pkd-LV-bDx"/>
-                <constraint firstItem="Sdk-VS-X58" firstAttribute="leading" secondItem="hcv-2O-TOB" secondAttribute="leading" constant="3" id="YZQ-2O-2st"/>
-                <constraint firstAttribute="width" constant="80" id="cgi-Wl-QLd"/>
-                <constraint firstAttribute="bottom" secondItem="Sdk-VS-X58" secondAttribute="bottom" constant="4" id="f1J-Dv-Wmg"/>
-                <constraint firstItem="hkP-JE-JOf" firstAttribute="width" secondItem="hcv-2O-TOB" secondAttribute="width" id="gOc-WV-aJ9"/>
-                <constraint firstItem="hkP-JE-JOf" firstAttribute="centerX" secondItem="hcv-2O-TOB" secondAttribute="centerX" id="uhF-aN-c38"/>
-                <constraint firstAttribute="bottom" secondItem="gYY-wr-sGQ" secondAttribute="bottom" constant="4" id="zzh-tW-QPv"/>
-            </constraints>
-            <color key="borderColor" name="headerColor" catalog="System" colorSpace="catalog"/>
-            <color key="fillColor" red="1" green="1" blue="1" alpha="0.3896549916" colorSpace="custom" customColorSpace="sRGB"/>
-        </box>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView id="c22-O7-iKe" customClass="HXCourseBox" customModule="HXNotes" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="124" height="21"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <box identifier="course_box_drag" boxType="custom" cornerRadius="4" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="7zU-te-0AV">
+                    <rect key="frame" x="0.0" y="1" width="18" height="18"/>
+                    <view key="contentView" id="Ymd-5E-764">
+                        <rect key="frame" x="1" y="1" width="16" height="16"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    </view>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="18" id="aRB-6T-dei"/>
+                        <constraint firstAttribute="height" constant="18" id="hZd-yj-8Is"/>
+                    </constraints>
+                    <color key="borderColor" white="0.0" alpha="0.59955641778523494" colorSpace="calibratedWhite"/>
+                    <color key="fillColor" red="0.47121701977114583" green="0.82496093749999999" blue="0.48645101695106585" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                </box>
+                <textField identifier="course_label_title" horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kzF-F0-7SU" customClass="CourseLabel" customModule="HXNotes" customModuleProvider="target">
+                    <rect key="frame" x="20" y="2" width="84" height="17"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="80" id="qvE-Pf-BPp"/>
+                    </constraints>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="CECS 426" usesSingleLineMode="YES" id="QIJ-5f-9dI">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="0.84999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <button identifier="course_button_trash" translatesAutoresizingMaskIntoConstraints="NO" id="jqd-gm-tjw">
+                    <rect key="frame" x="106" y="2" width="18" height="18"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="18" id="Xj1-IH-wRx"/>
+                        <constraint firstAttribute="height" constant="18" id="ofk-OM-nGS"/>
+                    </constraints>
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="trash_icon" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="iTU-rs-vfE">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                </button>
+            </subviews>
+            <constraints>
+                <constraint firstItem="jqd-gm-tjw" firstAttribute="centerY" secondItem="kzF-F0-7SU" secondAttribute="centerY" id="2Of-Ld-Hbo"/>
+                <constraint firstAttribute="trailing" secondItem="jqd-gm-tjw" secondAttribute="trailing" id="5Y4-4y-iHE"/>
+                <constraint firstItem="jqd-gm-tjw" firstAttribute="leading" secondItem="kzF-F0-7SU" secondAttribute="trailing" constant="4" id="JV2-cd-qir"/>
+                <constraint firstItem="kzF-F0-7SU" firstAttribute="centerX" secondItem="c22-O7-iKe" secondAttribute="centerX" id="Lru-0Q-kRq"/>
+                <constraint firstItem="kzF-F0-7SU" firstAttribute="centerY" secondItem="c22-O7-iKe" secondAttribute="centerY" id="PFF-qE-4n0"/>
+                <constraint firstItem="kzF-F0-7SU" firstAttribute="leading" secondItem="7zU-te-0AV" secondAttribute="trailing" constant="4" id="Qdn-aB-IZq"/>
+                <constraint firstItem="7zU-te-0AV" firstAttribute="centerY" secondItem="kzF-F0-7SU" secondAttribute="centerY" id="WuM-xT-7OY"/>
+            </constraints>
+            <point key="canvasLocation" x="-24" y="58.5"/>
+        </customView>
     </objects>
     <resources>
-        <image name="fill_icon" width="25" height="25"/>
         <image name="trash_icon" width="25" height="25"/>
     </resources>
 </document>
