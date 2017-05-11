@@ -10,7 +10,6 @@ import Cocoa
 
 class HXCourseDragBox: NSBox {
     
-    
     // Manually connect drag box child elements using identifiers
     let ID_LABEL_TITLE      = "course_label_title"
     // Elements of course box
@@ -31,7 +30,7 @@ class HXCourseDragBox: NSBox {
     }
 
     /// Set this box to match the properties of the course provided
-    func updateWithCourse(_ course: HXCourseBox) {
+    func updateWithCourse(_ course: HXCourseEditBox) {
         labelCourse.stringValue = course.labelCourse.stringValue
         self.fillColor = NSColor(
             red: course.boxDrag.fillColor.redComponent,

@@ -125,6 +125,9 @@ class MasterViewController: NSViewController {
             container_content.addSubview(editorViewController.view)
             editorViewController.view.frame = container_content.bounds
             editorViewController.view.autoresizingMask = [.viewWidthSizable, .viewHeightSizable]
+            editorViewController.thisYear = yearSelected
+            editorViewController.thisSemester = semesterSelected
+            editorViewController.loadCourses()
         }
     }
     func popCalendar() {
@@ -157,6 +160,7 @@ class MasterViewController: NSViewController {
     func toggleSchedule() {
         // Calendar is visible
         if calendarViewController != nil {
+            print("CalendarViewController")
             if calendarViewController.view.superview != nil {
                 popCalendar()
                 pushEditor()
@@ -165,6 +169,9 @@ class MasterViewController: NSViewController {
                 popEditor()
                 pushCalendar()
             }
+        } else {
+            popEditor()
+            pushCalendar()
         }
     }
 }

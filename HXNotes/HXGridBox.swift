@@ -89,19 +89,19 @@ class HXGridBox: NSBox {
     
     /// Removes visual of occupying course and notifies controller of press
     func buttonRemoveAction() {
-        resetGrid()
         calendar.action_clearTimeSlot(xGrid: xDim, yGrid: yDim)
+        resetGrid()
+        calendar.updateClusters(xDim, yDim)
     }
     
     /// Match grid properties with that of provided course object, some
     /// visuals will not display until update:topIndex:botIndex is called
-    func update(course: HXCourseBox) {
+    func update(course: HXCourseEditBox) {
         fillColor = course.boxDrag.fillColor
         labelTitle.stringValue = course.labelCourse.stringValue
         buttonRemove.isHidden = false
         buttonRemove.isEnabled = true
         lineRemove.isHidden = false
-        Swift.print("Update v1: \(labelTitle.stringValue)")
     }
     /// Make this gridBox look like the passed gridBox
     func update(matchBox: HXGridBox) {
@@ -110,33 +110,33 @@ class HXGridBox: NSBox {
         buttonRemove.isHidden = false
         buttonRemove.isEnabled = true
         lineRemove.isHidden = false
-        Swift.print("Update v2")
     }
     
     /// Color update of a grid space, primarily for previewing extending grid spaces
     func update(color: NSColor) {
         fillColor = color
-        Swift.print("Update v3")
     }
     
     /// Uses top/bot index of course cluster to deduce what visuals to show/hide
-    func update(topIndex: Int, botIndex: Int) {
-        if topIndex == yDim {
-            labelTitle.isHidden = false
-        } else {
-            labelTitle.isHidden = true
+    func updateVisualRange(_ topIndex: Int, _ botIndex: Int) {
+        if labelTitle.stringValue != "" {
+            if topIndex == yDim {
+                labelTitle.isHidden = false
+            } else {
+                labelTitle.isHidden = true
+            }
+            if botIndex == yDim {
+                // Reveal resize button
+                buttonResize.isHidden = false
+            } else {
+                // Hide resize button
+                buttonResize.isHidden = true
+            }
+            buttonRemove.isHidden = false
+            buttonRemove.isEnabled = true
+            lineRemove.isHidden = false
         }
-        if botIndex == yDim {
-            // Reveal resize button
-            buttonResize.isHidden = false
-        } else {
-            // Hide resize button
-            buttonResize.isHidden = true
-        }
-        buttonRemove.isHidden = false
-        buttonRemove.isEnabled = true
-        lineRemove.isHidden = false
-        Swift.print("Update v4")
+        
     }
     
     /// Clears out the course styling
@@ -178,6 +178,7 @@ class HXGridBox: NSBox {
             if origin.y > loc.y {
                 calendar.mouseDrag_gridExtend(dragX: xDim, dragY: yDim, dragHeight: origin.y - loc.y)
             } else {
+                Swift.print("ABOVE line")
                 calendar.clearTransparentExtendedGridSpaces(dragX: xDim, dragY: yDim)
             }
         }
