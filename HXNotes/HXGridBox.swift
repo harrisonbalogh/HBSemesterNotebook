@@ -10,6 +10,18 @@ import Cocoa
 
 class HXGridBox: NSBox {
     
+    /// Return a new instance of a HXGridBox based on the nib template.
+    static func instance(atX x: Int, atY y: Int, trailBorder trailing: Bool, botBorder bottoming: Bool, withParent parent: CalendarViewController) -> HXGridBox! {
+        var theObjects: NSArray = []
+        Bundle.main.loadNibNamed("HXGridBox", owner: nil, topLevelObjects: &theObjects)
+        // Get NSView from top level objects returned from nib load
+        if let newBox = theObjects.filter({$0 is HXGridBox}).first as? HXGridBox {
+            newBox.initialize(withCalendar: parent, atX: x, atY: y, trailBorder: trailing, botBorder: bottoming)
+            return newBox
+        }
+        return nil
+    }
+    
     var xDim: Int!
     var yDim: Int!
     private var calendar: CalendarViewController!

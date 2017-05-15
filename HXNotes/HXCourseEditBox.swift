@@ -10,6 +10,19 @@ import Cocoa
 
 class HXCourseEditBox: NSView {
     
+    /// Return a new instance of a HXCourseEditBox based on the nib template.
+    static func instance(withTitle title: String, withCourseIndex index: Int, withColor color: NSColor, withParent parent: CalendarViewController) -> HXCourseEditBox! {
+        var theObjects: NSArray = []
+        Bundle.main.loadNibNamed("HXCourseEditBox", owner: nil, topLevelObjects: &theObjects)
+        // Get NSView from top level objects returned from nib load
+        if let newBox = theObjects.filter({$0 is HXCourseEditBox}).first as? HXCourseEditBox {
+            newBox.initialize(withTitle: title, withCourseIndex: index, withColor: color, withParent: parent)
+            return newBox
+        }
+        return nil
+    }
+    
+    
     var trackingArea: NSTrackingArea!
 //    // Need to update course index when a course gets removed
 //    var courseIndex: Int!
@@ -32,7 +45,7 @@ class HXCourseEditBox: NSView {
     var buttonTrash: NSButton!
     
     /// Initialize the color, index, and tracking area of the CourseBox view
-    func initialize(withCourseIndex index: Int, withColor color: NSColor, withParent parent: CalendarViewController) {
+    private func initialize(withTitle title: String, withCourseIndex index: Int, withColor color: NSColor, withParent parent: CalendarViewController) {
         
         // Initialize child elements
         for v in self.subviews {
@@ -68,6 +81,10 @@ class HXCourseEditBox: NSView {
             userInfo: ["index":index])
         
         addTrackingArea(trackingArea)
+        
+        self.labelCourse.stringValue = title
+        self.oldName = title
+        
     }
     
     /// Removes this course box from the stack view

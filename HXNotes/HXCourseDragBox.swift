@@ -10,6 +10,18 @@ import Cocoa
 
 class HXCourseDragBox: NSBox {
     
+    /// Return a new instance of a HXCourseDragBox based on the nib template.
+    static func instance() -> HXCourseDragBox! {
+        var theObjects: NSArray = []
+        Bundle.main.loadNibNamed("HXCourseDragBox", owner: nil, topLevelObjects: &theObjects)
+        // Get NSView from top level objects returned from nib load
+        if let newBox = theObjects.filter({$0 is HXCourseDragBox}).first as? HXCourseDragBox {
+            newBox.initialize()
+            return newBox
+        }
+        return nil
+    }
+    
     // Manually connect drag box child elements using identifiers
     let ID_LABEL_TITLE      = "course_label_title"
     // Elements of course box

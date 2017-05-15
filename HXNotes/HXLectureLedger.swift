@@ -1,5 +1,5 @@
 //
-//  HXLectureBox.swift
+//  HXLectureLedger.swift
 //  HXNotes
 //
 //  Created by Harrison Balogh on 5/9/17.
@@ -8,7 +8,19 @@
 
 import Cocoa
 
-class HXLectureBox: NSBox {
+class HXLectureLedger: NSBox {
+    
+    /// Return a new instance of a HXLectureLedger based on the nib template.
+    static func instance(withNumber num: Int, withDate date: String) -> HXLectureLedger! {
+        var theObjects: NSArray = []
+        Bundle.main.loadNibNamed("HXLectureLedger", owner: nil, topLevelObjects: &theObjects)
+        // Get NSView from top level objects returned from nib load
+        if let newBox = theObjects.filter({$0 is HXLectureLedger}).first as? HXLectureLedger {
+            newBox.initialize(lectureNuber: num, withDate: date)
+            return newBox
+        }
+        return nil
+    }
     
     // Manually connect drag box child elements using identifiers
     let ID_LABEL_TITLE      = "lecture_label_title"
@@ -34,5 +46,4 @@ class HXLectureBox: NSBox {
         
         labelDate.stringValue = withDate
     }
-    
 }

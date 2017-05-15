@@ -10,7 +10,7 @@
         <customObject id="-2" userLabel="File's Owner"/>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <box boxType="custom" borderWidth="0.0" title="Box" id="t5V-vF-Qiz" customClass="HXLectureBox" customModule="HXNotes" customModuleProvider="target">
+        <box boxType="custom" borderWidth="0.0" title="Box" id="t5V-vF-Qiz" customClass="HXLectureLedger" customModule="HXNotes" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="186" height="20"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <view key="contentView" id="rmH-cL-yEB">

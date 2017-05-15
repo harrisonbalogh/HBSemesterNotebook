@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11762" systemVersion="16E195" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11762"/>
+        <capability name="box content view" minToolsVersion="7.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner"/>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView id="c22-O7-iKe">
+            <rect key="frame" x="0.0" y="0.0" width="343" height="155"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <box boxType="custom" cornerRadius="1" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="B1g-o1-uPs">
+                    <rect key="frame" x="0.0" y="0.0" width="343" height="155"/>
+                    <view key="contentView" id="eG9-rB-Rd7">
+                        <rect key="frame" x="1" y="1" width="341" height="153"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="04u-V9-VdE">
+                                <rect key="frame" x="-2" y="136" width="37" height="17"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Label" id="Cjm-oP-fik">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ytu-AC-f6d">
+                                <rect key="frame" x="306" y="136" width="37" height="17"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Label" id="qx6-JA-Sw1">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <scrollView horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rKw-ec-9tP">
+                                <rect key="frame" x="0.0" y="0.0" width="341" height="135"/>
+                                <clipView key="contentView" id="MC1-hi-g7c">
+                                    <rect key="frame" x="1" y="1" width="339" height="133"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <textView importsGraphics="NO" usesFontPanel="YES" findStyle="panel" continuousSpellChecking="YES" allowsUndo="YES" usesRuler="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" dashSubstitution="YES" spellingCorrection="YES" smartInsertDelete="YES" id="0bk-0y-lhP" customClass="HXCroppingTextView" customModule="HXNotes" customModuleProvider="target">
+                                            <rect key="frame" x="0.0" y="0.0" width="339" height="133"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <size key="minSize" width="339" height="133"/>
+                                            <size key="maxSize" width="463" height="10000000"/>
+                                            <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                        </textView>
+                                    </subviews>
+                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </clipView>
+                                <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="o7V-Tc-Uze">
+                                    <rect key="frame" x="-100" y="-100" width="87" height="18"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </scroller>
+                                <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="gYu-mJ-utd">
+                                    <rect key="frame" x="324" y="1" width="16" height="133"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </scroller>
+                            </scrollView>
+                        </subviews>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="Ytu-AC-f6d" secondAttribute="trailing" id="5XQ-Xc-yp5"/>
+                            <constraint firstItem="04u-V9-VdE" firstAttribute="leading" secondItem="eG9-rB-Rd7" secondAttribute="leading" id="G87-RK-7Qe"/>
+                            <constraint firstItem="04u-V9-VdE" firstAttribute="top" secondItem="eG9-rB-Rd7" secondAttribute="top" id="JRV-4O-8J9"/>
+                            <constraint firstAttribute="trailing" secondItem="rKw-ec-9tP" secondAttribute="trailing" id="bcU-RO-Wc4"/>
+                            <constraint firstItem="rKw-ec-9tP" firstAttribute="leading" secondItem="eG9-rB-Rd7" secondAttribute="leading" id="czM-uC-DIW"/>
+                            <constraint firstAttribute="bottom" secondItem="rKw-ec-9tP" secondAttribute="bottom" id="eOn-1C-4HD"/>
+                            <constraint firstItem="rKw-ec-9tP" firstAttribute="top" secondItem="Ytu-AC-f6d" secondAttribute="bottom" constant="1" id="l5W-l1-uTU"/>
+                            <constraint firstItem="Ytu-AC-f6d" firstAttribute="top" secondItem="eG9-rB-Rd7" secondAttribute="top" id="xJ8-vi-UIi"/>
+                        </constraints>
+                    </view>
+                </box>
+            </subviews>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="B1g-o1-uPs" secondAttribute="bottom" id="8ML-aS-Pju"/>
+                <constraint firstItem="B1g-o1-uPs" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" id="BeY-y2-kBm"/>
+                <constraint firstItem="B1g-o1-uPs" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" id="Sfz-lt-dhh"/>
+                <constraint firstAttribute="trailing" secondItem="B1g-o1-uPs" secondAttribute="trailing" id="rbC-Ef-dYY"/>
+            </constraints>
+            <point key="canvasLocation" x="37.5" y="100.5"/>
+        </customView>
+        <collectionViewItem nibName="HXCollectionViewItem" id="nHP-iG-IR0" customClass="HXCollectionViewItem" customModule="HXNotes" customModuleProvider="target">
+            <connections>
+                <outlet property="view" destination="c22-O7-iKe" id="smy-5T-xxa"/>
+            </connections>
+        </collectionViewItem>
+    </objects>
+</document>

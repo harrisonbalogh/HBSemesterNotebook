@@ -21,6 +21,7 @@ class MasterViewController: NSViewController {
     // The following 2 controllers fill container_content as is needed
     var calendarViewController: CalendarViewController!
     var editorViewController: EditorViewController!
+    var tableTestViewController: TableTestViewController!
     
     let appDelegate = NSApplication.shared().delegate as! AppDelegate
     
@@ -100,7 +101,21 @@ class MasterViewController: NSViewController {
             
             pushCalendar()
         }
-        
+    }
+    
+    @IBAction func action_TABLE_TEST(_ sender: Any) {
+        pushTableTest()
+    }
+    func pushTableTest() {
+        //TableTestID
+        let strybrd = NSStoryboard.init(name: "Main", bundle: nil)
+        if let newController = strybrd.instantiateController(withIdentifier: "TableTestID") as? TableTestViewController {
+            self.addChildViewController(newController)
+            container_content.addSubview(newController.view)
+            newController.view.frame = container_content.bounds
+            newController.view.autoresizingMask = [.viewWidthSizable, .viewHeightSizable]
+            newController.initialize(withSemester: semesterSelected)
+        }
     }
     
     func pushCalendar() {
@@ -112,9 +127,7 @@ class MasterViewController: NSViewController {
             calendarViewController.masterViewController = self
             calendarViewController.view.frame = container_content.bounds
             calendarViewController.view.autoresizingMask = [.viewWidthSizable, .viewHeightSizable]
-            calendarViewController.thisYear = yearSelected
-            calendarViewController.thisSemester = semesterSelected
-            calendarViewController.loadCourses()
+            calendarViewController.initialize(withSemester: semesterSelected)
         }
     }
     func pushEditor() {
@@ -125,9 +138,7 @@ class MasterViewController: NSViewController {
             container_content.addSubview(editorViewController.view)
             editorViewController.view.frame = container_content.bounds
             editorViewController.view.autoresizingMask = [.viewWidthSizable, .viewHeightSizable]
-            editorViewController.thisYear = yearSelected
-            editorViewController.thisSemester = semesterSelected
-            editorViewController.loadCourses()
+            editorViewController.initialize(withSemester: semesterSelected)
         }
     }
     func popCalendar() {

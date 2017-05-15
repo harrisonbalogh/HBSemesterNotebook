@@ -10,6 +10,18 @@ import Cocoa
 
 class HXCourseBox: NSBox {
     
+    /// Return a new instance of a HXCourseBox based on the nib template.
+    static func instance(withTitle title: String, withParent parent: EditorViewController) -> HXCourseBox! {
+        var theObjects: NSArray = []
+        Bundle.main.loadNibNamed("HXCourseBox", owner: nil, topLevelObjects: &theObjects)
+        // Get NSView from top level objects returned from nib load
+        if let newBox = theObjects.filter({$0 is HXCourseBox}).first as? HXCourseBox {
+            newBox.initialize(withTitle: title, parent: parent)
+            return newBox
+        }
+        return nil
+    }
+    
     var parent: EditorViewController!
     
     // Manually connect course box child elements using identifiers
