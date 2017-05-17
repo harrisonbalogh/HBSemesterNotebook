@@ -41,17 +41,17 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <scrollView identifier="content_scroller" borderType="none" horizontalLineScroll="0.0" horizontalPageScroll="0.0" verticalLineScroll="0.0" verticalPageScroll="0.0" hasHorizontalScroller="NO" hasVerticalScroller="NO" usesPredominantAxisScrolling="NO" verticalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="yL3-k5-tgV" customClass="HXNonScrollView" customModule="HXNotes" customModuleProvider="target">
+                    <scrollView identifier="content_scroller" horizontalLineScroll="0.0" horizontalPageScroll="0.0" verticalLineScroll="0.0" verticalPageScroll="0.0" hasHorizontalScroller="NO" hasVerticalScroller="NO" usesPredominantAxisScrolling="NO" verticalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="yL3-k5-tgV" customClass="HXNonScrollView" customModule="HXNotes" customModuleProvider="target">
                         <rect key="frame" x="10" y="6" width="485" height="31"/>
                         <clipView key="contentView" identifier="content_clipper" drawsBackground="NO" copiesOnScroll="NO" id="46F-Zt-pFB">
-                            <rect key="frame" x="0.0" y="0.0" width="485" height="31"/>
+                            <rect key="frame" x="1" y="1" width="483" height="29"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <textView identifier="content_text" drawsBackground="NO" importsGraphics="NO" usesFontPanel="YES" findStyle="panel" continuousSpellChecking="YES" allowsUndo="YES" usesRuler="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" dashSubstitution="YES" spellingCorrection="YES" smartInsertDelete="YES" id="N8V-sZ-F2n" customClass="HXResizingTextView" customModule="HXNotes" customModuleProvider="target">
-                                    <rect key="frame" x="0.0" y="0.0" width="485" height="31"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="483" height="29"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                    <size key="minSize" width="485" height="31"/>
+                                    <size key="minSize" width="483" height="29"/>
                                     <size key="maxSize" width="487" height="10000000"/>
                                     <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                 </textView>

@@ -18,10 +18,10 @@ class MasterViewController: NSViewController {
     
     // Children controllers
     var timelineViewController: TimelineViewController!
+    var courseViewController: CourseViewController!
     // The following 2 controllers fill container_content as is needed
     var calendarViewController: CalendarViewController!
     var editorViewController: EditorViewController!
-    var tableTestViewController: TableTestViewController!
     
     let appDelegate = NSApplication.shared().delegate as! AppDelegate
     
@@ -31,20 +31,42 @@ class MasterViewController: NSViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         timelineTopConstraint = container_timeline.topAnchor.constraint(equalTo: self.view.topAnchor)
         timelineTopConstraint.isActive = true
     }
     
     override func viewDidAppear() {
-        if let timelineVC = self.childViewControllers.filter({$0.className == "HXNotes.TimelineViewController"}).first as? TimelineViewController {
+        for case let timelineVC as TimelineViewController in self.childViewControllers {
             self.timelineViewController = timelineVC
-            self.timelineViewController.masterViewController = self
+        }
+        for case let courseVC as CourseViewController in self.childViewControllers {
+            self.courseViewController = courseVC
+        }
+//        if let timelineVC = self.childViewControllers.filter({$0.className == "HXNotes.TimelineViewController"}).first as? TimelineViewController {
+//            self.timelineViewController = timelineVC
+//            self.timelineViewController.masterViewController = self
+//        }
+        checkWhatCourses()
+    }
+    
+    // MARK: Login Logic
+    
+    private func checkWhatCourses() {
+        let yr = NSCalendar.current.component(.year, from: NSDate() as Date)
+        selectYear(yr)
+        timelineViewController.selectYear(yr)
+        
+        let month = NSCalendar.current.component(.month, from: NSDate() as Date)
+        if month >= 7 || month <= 12 {
+            timelineViewController.action_selectFall(self)
+        } else {
+            timelineViewController.action_selectSpring(self)
         }
     }
     
      /// Notifies MasterViewController from TimelineViewController that user has landed on a year.
-    func selectedYear(_ year: Int) {
+    func selectYear(_ year: Int) {
         // Try fetching this year in persistent store
         let yearFetch = NSFetchRequest<Year>(entityName: "Year")
         do {
@@ -78,19 +100,10 @@ class MasterViewController: NSViewController {
                 semesterSelected = newSemester
             }
         } catch { fatalError("Failed to fetch semesters: \(error)")}
+        // Update Course View with new semester so it can populate courses
+        courseViewController.thisSemester = semesterSelected
         
-        var foundCoursesForSemester = false
-        // Check if courses are present for this semester:year
-        let courseFetch = NSFetchRequest<Course>(entityName: "Course")
-        do {
-            let courses = try appDelegate.managedObjectContext.fetch(courseFetch) as [Course]
-            if courses.filter({$0.semester == semesterSelected}).count > 0 {
-                // Check if courses exist in this semester
-                foundCoursesForSemester = true
-            }
-        } catch { fatalError("Failed to fetch times: \(error)") }
-        
-        if foundCoursesForSemester {
+        if semesterSelected.courses!.count > 0 {
             popCalendar()
             popEditor()
             
@@ -100,21 +113,6 @@ class MasterViewController: NSViewController {
             popEditor()
             
             pushCalendar()
-        }
-    }
-    
-    @IBAction func action_TABLE_TEST(_ sender: Any) {
-        pushTableTest()
-    }
-    func pushTableTest() {
-        //TableTestID
-        let strybrd = NSStoryboard.init(name: "Main", bundle: nil)
-        if let newController = strybrd.instantiateController(withIdentifier: "TableTestID") as? TableTestViewController {
-            self.addChildViewController(newController)
-            container_content.addSubview(newController.view)
-            newController.view.frame = container_content.bounds
-            newController.view.autoresizingMask = [.viewWidthSizable, .viewHeightSizable]
-            newController.initialize(withSemester: semesterSelected)
         }
     }
     
@@ -138,7 +136,6 @@ class MasterViewController: NSViewController {
             container_content.addSubview(editorViewController.view)
             editorViewController.view.frame = container_content.bounds
             editorViewController.view.autoresizingMask = [.viewWidthSizable, .viewHeightSizable]
-            editorViewController.initialize(withSemester: semesterSelected)
         }
     }
     func popCalendar() {
@@ -148,7 +145,6 @@ class MasterViewController: NSViewController {
                 calendarViewController.removeFromParentViewController()
             }
         }
-        
     }
     func popEditor() {
         if editorViewController != nil {

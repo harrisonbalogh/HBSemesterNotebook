@@ -11,7 +11,7 @@ import Cocoa
 class HXCourseEditBox: NSView {
     
     /// Return a new instance of a HXCourseEditBox based on the nib template.
-    static func instance(withTitle title: String, withCourseIndex index: Int, withColor color: NSColor, withParent parent: CalendarViewController) -> HXCourseEditBox! {
+    static func instance(withTitle title: String, withCourseIndex index: Int, withColor color: NSColor, withParent parent: CourseViewController) -> HXCourseEditBox! {
         var theObjects: NSArray = []
         Bundle.main.loadNibNamed("HXCourseEditBox", owner: nil, topLevelObjects: &theObjects)
         // Get NSView from top level objects returned from nib load
@@ -22,11 +22,10 @@ class HXCourseEditBox: NSView {
         return nil
     }
     
-    
     var trackingArea: NSTrackingArea!
 //    // Need to update course index when a course gets removed
 //    var courseIndex: Int!
-    var parentCalendar: CalendarViewController!
+    var parentCalendar: CourseViewController!
     var originalColor: NSColor!
     // Note when cursor is inside the area to drag box (to calendar)
     var insideDrag = false
@@ -45,7 +44,7 @@ class HXCourseEditBox: NSView {
     var buttonTrash: NSButton!
     
     /// Initialize the color, index, and tracking area of the CourseBox view
-    private func initialize(withTitle title: String, withCourseIndex index: Int, withColor color: NSColor, withParent parent: CalendarViewController) {
+    private func initialize(withTitle title: String, withCourseIndex index: Int, withColor color: NSColor, withParent parent: CourseViewController) {
         
         // Initialize child elements
         for v in self.subviews {
@@ -139,7 +138,7 @@ class HXCourseEditBox: NSView {
             dragging = true
             NSCursor.closedHand().push()
         }
-        parentCalendar.mouseDrag_courseBox(course: self, toLocation: event.locationInWindow)
+//        parentCalendar.mouseDrag_courseBox(course: self, toLocation: event.locationInWindow)
     }
     
     override func mouseUp(with event: NSEvent) {
@@ -163,6 +162,6 @@ class HXCourseEditBox: NSView {
                 }
             }
         }
-        parentCalendar.mouseUp_courseBox(atLocation: event.locationInWindow)
+//        parentCalendar.mouseUp_courseBox(atLocation: event.locationInWindow)
     }
 }

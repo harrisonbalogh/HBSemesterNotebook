@@ -10,8 +10,6 @@ import Cocoa
 
 class HXYearButton: NSButton {
     
-    private(set) var selected = false
-    
     required init(withYear year: Int) {
         super.init(frame: .zero)
         
@@ -28,13 +26,11 @@ class HXYearButton: NSButton {
     }
     
     func select() {
-        selected = true
         self.font = NSFont.boldSystemFont(ofSize: 12)
         self.alphaValue = 1
     }
     
     func deselect() {
-        selected = false
         self.font = NSFont.systemFont(ofSize: 12)
         self.alphaValue = 0.5
     }

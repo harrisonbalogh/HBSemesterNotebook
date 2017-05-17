@@ -79,7 +79,7 @@ class HXGridBox: NSBox {
         // Initialize button functionality
         buttonRemove.target = self
         buttonRemove.action = #selector(self.buttonRemoveAction)
-        buttonRemove.alphaValue = 0.5
+        buttonRemove.alphaValue = 0.25
         
         trackingArea = NSTrackingArea(
             rect: bounds,
@@ -127,6 +127,11 @@ class HXGridBox: NSBox {
     /// Color update of a grid space, primarily for previewing extending grid spaces
     func update(color: NSColor) {
         fillColor = color
+        if color == NSColor.white {
+            lineRemove.isHidden = true
+        } else {
+            lineRemove.isHidden = false
+        }
     }
     
     /// Uses top/bot index of course cluster to deduce what visuals to show/hide
@@ -148,7 +153,6 @@ class HXGridBox: NSBox {
             buttonRemove.isEnabled = true
             lineRemove.isHidden = false
         }
-        
     }
     
     /// Clears out the course styling
@@ -162,6 +166,7 @@ class HXGridBox: NSBox {
     }
     
     override func viewDidEndLiveResize() {
+        Swift.print("View did end live resize")
         // When the user resizes the window, the tracking bounds have to be updated
         if trackingArea != nil {
             removeTrackingArea(trackingArea)

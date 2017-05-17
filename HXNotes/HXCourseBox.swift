@@ -11,7 +11,7 @@ import Cocoa
 class HXCourseBox: NSBox {
     
     /// Return a new instance of a HXCourseBox based on the nib template.
-    static func instance(withTitle title: String, withParent parent: EditorViewController) -> HXCourseBox! {
+    static func instance(withTitle title: String, withParent parent: CourseViewController) -> HXCourseBox! {
         var theObjects: NSArray = []
         Bundle.main.loadNibNamed("HXCourseBox", owner: nil, topLevelObjects: &theObjects)
         // Get NSView from top level objects returned from nib load
@@ -22,7 +22,7 @@ class HXCourseBox: NSBox {
         return nil
     }
     
-    var parent: EditorViewController!
+    var parent: CourseViewController!
     
     // Manually connect course box child elements using identifiers
     let ID_BUTTON_TITLE = "course_button_title"
@@ -30,7 +30,7 @@ class HXCourseBox: NSBox {
     var buttonTitle: NSButton!
     
     /// Initialize the color, index, and tracking area of the CourseBox view
-    func initialize(withTitle: String, parent: EditorViewController) {
+    func initialize(withTitle: String, parent: CourseViewController) {
         
         self.parent = parent
         
@@ -50,8 +50,13 @@ class HXCourseBox: NSBox {
     }
     
     func goToNotes() {
-        self.select()
-        parent.selectCourse(withTitle: buttonTitle.title)
+        if buttonTitle.state == NSOnState {
+            self.select()
+            parent.selectCourse(withTitle: buttonTitle.title)
+        } else {
+            parent.clearSelectedCourse()
+            self.deselect()
+        }
     }
     
     func select() {
