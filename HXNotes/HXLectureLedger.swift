@@ -11,12 +11,12 @@ import Cocoa
 class HXLectureLedger: NSBox {
     
     /// Return a new instance of a HXLectureLedger based on the nib template.
-    static func instance(withNumber num: Int, withDate date: String) -> HXLectureLedger! {
+    static func instance(withNumber num: Int, withDate date: String, owner: EditorViewController) -> HXLectureLedger! {
         var theObjects: NSArray = []
         Bundle.main.loadNibNamed("HXLectureLedger", owner: nil, topLevelObjects: &theObjects)
         // Get NSView from top level objects returned from nib load
         if let newBox = theObjects.filter({$0 is HXLectureLedger}).first as? HXLectureLedger {
-            newBox.initialize(lectureNuber: num, withDate: date)
+            newBox.initialize(lectureNuber: num, withDate: date, owner: owner)
             return newBox
         }
         return nil
@@ -29,7 +29,9 @@ class HXLectureLedger: NSBox {
     var labelTitle: NSButton!
     var labelDate: NSTextField!
     
-    func initialize(lectureNuber: Int, withDate: String) {
+    var parentController: EditorViewController!
+    
+    func initialize(lectureNuber: Int, withDate: String, owner: EditorViewController) {
         
         // Initialize child elements
         for v in self.subviews[0].subviews {
@@ -45,5 +47,14 @@ class HXLectureLedger: NSBox {
         labelTitle.title = "Lecture \(lectureNuber)"
         
         labelDate.stringValue = withDate
+        
+        self.parentController = owner
+        
+        labelTitle.target = self
+        labelTitle.action = #selector(HXLectureLedger.action_clickLecture)
+    }
+    
+    func action_clickLecture() {
+        parentController.scrollToLecture(labelTitle.title)
     }
 }

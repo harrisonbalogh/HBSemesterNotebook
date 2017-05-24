@@ -18,9 +18,8 @@
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <button identifier="lecture_label_title" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="zPB-QB-22P">
-                        <rect key="frame" x="1" y="0.0" width="130" height="20"/>
+                        <rect key="frame" x="1" y="0.0" width="64" height="20"/>
                         <constraints>
-                            <constraint firstAttribute="width" constant="130" id="6Vr-8d-H5m"/>
                             <constraint firstAttribute="height" constant="20" id="ByV-li-iB0"/>
                         </constraints>
                         <buttonCell key="cell" type="bevel" title="Lecture 1" bezelStyle="rounded" alignment="left" imageScaling="proportionallyDown" inset="2" id="g40-r4-7Hb">
@@ -29,7 +28,7 @@
                         </buttonCell>
                     </button>
                     <textField identifier="lecture_label_date" horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kOz-iL-Isi">
-                        <rect key="frame" x="129" y="2" width="56" height="16"/>
+                        <rect key="frame" x="139" y="2" width="46" height="16"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="1/23/17" id="QZO-bc-xpH">
                             <font key="font" metaFont="cellTitle"/>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -38,7 +37,6 @@
                     </textField>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="kOz-iL-Isi" firstAttribute="leading" secondItem="zPB-QB-22P" secondAttribute="trailing" id="SjE-CA-z9t"/>
                     <constraint firstItem="kOz-iL-Isi" firstAttribute="centerY" secondItem="zPB-QB-22P" secondAttribute="centerY" id="mho-j8-6gA"/>
                 </constraints>
             </view>

@@ -11,18 +11,19 @@ import Cocoa
 class HXCourseBox: NSBox {
     
     /// Return a new instance of a HXCourseBox based on the nib template.
-    static func instance(withTitle title: String, withParent parent: CourseViewController) -> HXCourseBox! {
+    static func instance(with course: Course, owner parent: CourseViewController) -> HXCourseBox! {
         var theObjects: NSArray = []
         Bundle.main.loadNibNamed("HXCourseBox", owner: nil, topLevelObjects: &theObjects)
         // Get NSView from top level objects returned from nib load
         if let newBox = theObjects.filter({$0 is HXCourseBox}).first as? HXCourseBox {
-            newBox.initialize(withTitle: title, parent: parent)
+            newBox.initialize(with: course, owner: parent)
             return newBox
         }
         return nil
     }
     
     var parent: CourseViewController!
+    var course: Course!
     
     // Manually connect course box child elements using identifiers
     let ID_BUTTON_TITLE = "course_button_title"
@@ -30,9 +31,10 @@ class HXCourseBox: NSBox {
     var buttonTitle: NSButton!
     
     /// Initialize the color, index, and tracking area of the CourseBox view
-    func initialize(withTitle: String, parent: CourseViewController) {
+    func initialize(with course: Course, owner parent: CourseViewController) {
         
         self.parent = parent
+        self.course = course
         
         // Initialize child elements
         for v in self.subviews {
@@ -43,19 +45,26 @@ class HXCourseBox: NSBox {
             }
         }
         
-        buttonTitle.title = withTitle
+        buttonTitle.title = course.title!
         // Initialize course label functionality
         buttonTitle.target = self
         buttonTitle.action = #selector(self.goToNotes)
+        
+        let trackArea = NSTrackingArea(
+            rect: self.bounds,
+            options: [NSTrackingAreaOptions.activeInKeyWindow, NSTrackingAreaOptions.mouseEnteredAndExited],
+            owner: self,
+            userInfo: nil)
+        addTrackingArea(trackArea)
     }
     
     func goToNotes() {
         if buttonTitle.state == NSOnState {
             self.select()
-            parent.selectCourse(withTitle: buttonTitle.title)
+            parent.select(course: self.course)
         } else {
-            parent.clearSelectedCourse()
             self.deselect()
+            parent.select(course: nil)
         }
     }
     
@@ -65,6 +74,14 @@ class HXCourseBox: NSBox {
     
     func deselect() {
         buttonTitle.state = NSOffState
+    }
+    
+    override func mouseEntered(with event: NSEvent) {
+        NSCursor.pointingHand().push()
+    }
+    
+    override func mouseExited(with event: NSEvent) {
+        NSCursor.pointingHand().pop()
     }
     
 }

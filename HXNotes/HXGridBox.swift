@@ -25,6 +25,7 @@ class HXGridBox: NSBox {
     var xDim: Int!
     var yDim: Int!
     private var calendar: CalendarViewController!
+    var course: Course!
     
     var trackingArea: NSTrackingArea!
     // When the mouse moves within the extend course region
@@ -108,20 +109,14 @@ class HXGridBox: NSBox {
     
     /// Match grid properties with that of provided course object, some
     /// visuals will not display until update:topIndex:botIndex is called
-    func update(course: HXCourseEditBox) {
-        fillColor = course.boxDrag.fillColor
-        labelTitle.stringValue = course.labelCourse.stringValue
+    func update(course: Course) {
+        let theColor = NSColor(red: CGFloat(course.colorRed), green: CGFloat(course.colorGreen), blue: CGFloat(course.colorBlue), alpha: 1)
+        fillColor = theColor
+        labelTitle.stringValue = course.title!
         buttonRemove.isHidden = false
         buttonRemove.isEnabled = true
         lineRemove.isHidden = false
-    }
-    /// Make this gridBox look like the passed gridBox
-    func update(matchBox: HXGridBox) {
-        fillColor = matchBox.fillColor
-        labelTitle.stringValue = matchBox.labelTitle.stringValue
-        buttonRemove.isHidden = false
-        buttonRemove.isEnabled = true
-        lineRemove.isHidden = false
+        self.course = course
     }
     
     /// Color update of a grid space, primarily for previewing extending grid spaces
@@ -163,10 +158,10 @@ class HXGridBox: NSBox {
         buttonRemove.isHidden = true
         buttonRemove.isEnabled = false
         lineRemove.isHidden = true
+        self.course = nil
     }
     
     override func viewDidEndLiveResize() {
-        Swift.print("View did end live resize")
         // When the user resizes the window, the tracking bounds have to be updated
         if trackingArea != nil {
             removeTrackingArea(trackingArea)
@@ -193,9 +188,8 @@ class HXGridBox: NSBox {
             let loc = event.locationInWindow
             let origin = buttonResize.superview!.convert(buttonResize.frame.origin, to: nil) as NSPoint
             if origin.y > loc.y {
-                calendar.mouseDrag_gridExtend(dragX: xDim, dragY: yDim, dragHeight: origin.y - loc.y)
+                calendar.mouseDrag_gridExtend(xDim, yDim, dragHeight: origin.y - loc.y)
             } else {
-                Swift.print("ABOVE line")
                 calendar.clearTransparentExtendedGridSpaces(dragX: xDim, dragY: yDim)
             }
         }

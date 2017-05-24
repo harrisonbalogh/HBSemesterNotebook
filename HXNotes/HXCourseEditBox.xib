@@ -30,6 +30,16 @@
                     <view key="contentView" id="Ymd-5E-764">
                         <rect key="frame" x="1" y="1" width="16" height="16"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView identifier="course_edit_icon_resize" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="oII-ja-sel">
+                                <rect key="frame" x="0.0" y="0.0" width="16" height="16"/>
+                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="icon_resize" id="0br-tw-dos"/>
+                            </imageView>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="oII-ja-sel" firstAttribute="centerY" secondItem="Ymd-5E-764" secondAttribute="centerY" id="CN2-sR-eLN"/>
+                            <constraint firstItem="oII-ja-sel" firstAttribute="centerX" secondItem="Ymd-5E-764" secondAttribute="centerX" id="qo1-dM-gov"/>
+                        </constraints>
                     </view>
                     <constraints>
                         <constraint firstAttribute="width" constant="18" id="aRB-6T-dei"/>
@@ -63,6 +73,7 @@
         </customView>
     </objects>
     <resources>
+        <image name="icon_resize" width="16" height="16"/>
         <image name="trash_icon" width="25" height="25"/>
     </resources>
 </document>

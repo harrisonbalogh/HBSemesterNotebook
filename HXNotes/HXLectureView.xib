@@ -12,7 +12,7 @@
                 <outlet property="label_lectureDate" destination="Twy-6v-YbQ" id="8Js-4Q-5bK"/>
                 <outlet property="label_lectureTitle" destination="rtP-Xd-KSa" id="GqV-L9-FqK"/>
                 <outlet property="scrollView_lecture" destination="yL3-k5-tgV" id="Fvf-S1-cPn"/>
-                <outlet property="textView_lecture" destination="N8V-sZ-F2n" id="g6k-Gg-MQJ"/>
+                <outlet property="textView_lecture" destination="N8V-sZ-F2n" id="IIH-bl-Wjq"/>
                 <outlet property="view" destination="0Hk-u4-N0i" id="yr0-Jx-Een"/>
             </connections>
         </customObject>
@@ -34,24 +34,25 @@
                         </textFieldCell>
                     </textField>
                     <textField identifier="content_label_date" horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Twy-6v-YbQ">
-                        <rect key="frame" x="444" y="53" width="57" height="17"/>
+                        <rect key="frame" x="432" y="53" width="57" height="17"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="12/13/93" id="pL2-2r-iRr">
                             <font key="font" metaFont="system"/>
-                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="textColor" red="0.27931640619999998" green="0.27931640619999998" blue="0.27931640619999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <scrollView identifier="content_scroller" horizontalLineScroll="0.0" horizontalPageScroll="0.0" verticalLineScroll="0.0" verticalPageScroll="0.0" hasHorizontalScroller="NO" hasVerticalScroller="NO" usesPredominantAxisScrolling="NO" verticalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="yL3-k5-tgV" customClass="HXNonScrollView" customModule="HXNotes" customModuleProvider="target">
-                        <rect key="frame" x="10" y="6" width="485" height="31"/>
+                    <scrollView identifier="content_scroller" borderType="none" horizontalLineScroll="0.0" horizontalPageScroll="0.0" verticalLineScroll="0.0" verticalPageScroll="0.0" hasHorizontalScroller="NO" hasVerticalScroller="NO" usesPredominantAxisScrolling="NO" verticalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="yL3-k5-tgV" customClass="HXNonScrollView" customModule="HXNotes" customModuleProvider="target">
+                        <rect key="frame" x="10" y="6" width="477" height="31"/>
                         <clipView key="contentView" identifier="content_clipper" drawsBackground="NO" copiesOnScroll="NO" id="46F-Zt-pFB">
-                            <rect key="frame" x="1" y="1" width="483" height="29"/>
+                            <rect key="frame" x="0.0" y="0.0" width="477" height="31"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
-                                <textView identifier="content_text" drawsBackground="NO" importsGraphics="NO" usesFontPanel="YES" findStyle="panel" continuousSpellChecking="YES" allowsUndo="YES" usesRuler="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" dashSubstitution="YES" spellingCorrection="YES" smartInsertDelete="YES" id="N8V-sZ-F2n" customClass="HXResizingTextView" customModule="HXNotes" customModuleProvider="target">
-                                    <rect key="frame" x="0.0" y="0.0" width="483" height="29"/>
+                                <textView identifier="content_text" drawsBackground="NO" usesFontPanel="YES" findStyle="bar" continuousSpellChecking="YES" allowsUndo="YES" usesRuler="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" dashSubstitution="YES" spellingCorrection="YES" smartInsertDelete="YES" id="N8V-sZ-F2n">
+                                    <rect key="frame" x="0.0" y="0.0" width="477" height="31"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <color key="textColor" red="0.27931640619999998" green="0.27931640619999998" blue="0.27931640619999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                    <size key="minSize" width="483" height="29"/>
+                                    <size key="minSize" width="477" height="31"/>
                                     <size key="maxSize" width="487" height="10000000"/>
                                     <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                 </textView>
@@ -73,9 +74,9 @@
                 </subviews>
                 <constraints>
                     <constraint firstItem="rtP-Xd-KSa" firstAttribute="top" secondItem="KjG-vB-MAo" secondAttribute="top" constant="7" id="0r8-Og-cIH"/>
-                    <constraint firstAttribute="trailing" secondItem="yL3-k5-tgV" secondAttribute="trailing" constant="10" id="5vh-E0-6fk"/>
+                    <constraint firstAttribute="trailing" secondItem="yL3-k5-tgV" secondAttribute="trailing" constant="18" id="5vh-E0-6fk"/>
                     <constraint firstItem="yL3-k5-tgV" firstAttribute="top" secondItem="rtP-Xd-KSa" secondAttribute="bottom" constant="8" id="Fol-yc-Olb"/>
-                    <constraint firstAttribute="trailing" secondItem="Twy-6v-YbQ" secondAttribute="trailing" constant="6" id="PFu-pC-z7D"/>
+                    <constraint firstAttribute="trailing" secondItem="Twy-6v-YbQ" secondAttribute="trailing" constant="18" id="PFu-pC-z7D"/>
                     <constraint firstItem="rtP-Xd-KSa" firstAttribute="leading" secondItem="KjG-vB-MAo" secondAttribute="leading" constant="10" id="RfI-tr-zDo"/>
                     <constraint firstItem="Twy-6v-YbQ" firstAttribute="top" secondItem="KjG-vB-MAo" secondAttribute="top" constant="6" id="gqi-JO-x1d"/>
                     <constraint firstAttribute="bottom" secondItem="yL3-k5-tgV" secondAttribute="bottom" constant="6" id="leB-HQ-ARi"/>

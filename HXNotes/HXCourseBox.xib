@@ -10,14 +10,13 @@
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customView id="bW5-Ce-BLW" customClass="HXCourseBox" customModule="HXNotes" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="127" height="30"/>
+            <rect key="frame" x="0.0" y="0.0" width="127" height="32"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <button identifier="course_button_title" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="85O-e2-ljm">
-                    <rect key="frame" x="6" y="0.0" width="80" height="30"/>
+                    <rect key="frame" x="6" y="0.0" width="80" height="32"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="80" id="fne-Gp-doP"/>
-                        <constraint firstAttribute="height" constant="30" id="jmt-j4-1OV"/>
                     </constraints>
                     <buttonCell key="cell" type="bevel" title="Button" bezelStyle="rounded" alignment="right" imageScaling="proportionallyDown" inset="2" id="Qm2-cv-xH9">
                         <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>

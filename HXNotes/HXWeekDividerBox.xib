@@ -26,7 +26,7 @@
                         </textFieldCell>
                     </textField>
                     <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="BWf-Q4-9kq">
-                        <rect key="frame" x="0.0" y="-2" width="150" height="5"/>
+                        <rect key="frame" x="0.0" y="-2" width="164" height="5"/>
                     </box>
                 </subviews>
                 <constraints>
@@ -37,7 +37,7 @@
                 <constraint firstAttribute="bottom" secondItem="BWf-Q4-9kq" secondAttribute="bottom" id="FBt-LX-ENI"/>
                 <constraint firstItem="HR4-GH-oNx" firstAttribute="top" secondItem="P58-rQ-lXy" secondAttribute="top" constant="16" id="KpY-Iw-9yT"/>
                 <constraint firstItem="HR4-GH-oNx" firstAttribute="centerX" secondItem="P58-rQ-lXy" secondAttribute="centerX" id="VAg-jB-x7n"/>
-                <constraint firstAttribute="trailing" secondItem="BWf-Q4-9kq" secondAttribute="trailing" constant="14" id="WLI-qI-RnM"/>
+                <constraint firstAttribute="trailing" secondItem="BWf-Q4-9kq" secondAttribute="trailing" id="WLI-qI-RnM"/>
                 <constraint firstItem="BWf-Q4-9kq" firstAttribute="leading" secondItem="P58-rQ-lXy" secondAttribute="leading" id="eBd-qn-qhL"/>
             </constraints>
             <point key="canvasLocation" x="139" y="164"/>

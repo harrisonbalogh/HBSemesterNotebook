@@ -15,5 +15,4 @@ class HXNonScrollView: NSScrollView {
     override func scrollWheel(with event: NSEvent) {
         parentController.notifyScrolling(with: event)
     }
-    
 }

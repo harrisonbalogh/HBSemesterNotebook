@@ -9,16 +9,14 @@
 import Cocoa
 
 class CourseViewController: NSViewController {
-
     
-    
+    // Mark: View references
     @IBOutlet weak var lectureListYrSemLabel: NSTextField!
     @IBOutlet weak var toggleEditsButtons: NSButton!
     @IBOutlet weak var courseStack: NSStackView!
     
-    let appDelegate = NSApplication.shared().delegate as! AppDelegate
-    
     // MARK: Object models and logic
+    let appDelegate = NSApplication.shared().delegate as! AppDelegate
     var thisSemester: Semester! {
         didSet {
             // Clear old course visuals
@@ -29,32 +27,29 @@ class CourseViewController: NSViewController {
             } else {
                 loadEditableCourses(fromSemester: thisSemester)
             }
-            
             lectureListYrSemLabel.stringValue = "\(thisSemester.title!.capitalized) \(thisSemester.year!.year)"
         }
     }
     private var thisCourse: Course! {
         didSet {
-            // Setting thisCourse immediately updates visuals
-            if thisCourse != nil {
-                // Clear old lecture visuals
-//                popAllLectures()
-                // Populate new lecture visuals
-//                loadLectures(fromCourse: thisCourse)
-                // Reset other lecture buttons to not be bold in course stack
-                for case let courseButton as HXCourseBox in courseStack.arrangedSubviews {
-                    if courseButton.buttonTitle.title != thisCourse.title! {
-                        courseButton.deselect()
-                    }
+            // Notify masterViewController that a course was selected
+            masterViewController.select(course: thisCourse)
+            // Deselect all other buttons
+            for case let courseButton as HXCourseBox in courseStack.arrangedSubviews {
+                if thisCourse == nil {
+                    courseButton.deselect()
+                } else if courseButton.buttonTitle.title != thisCourse.title {
+                    courseButton.deselect()
                 }
-            } else {
-//                popAllLectures()
-//                lectureListIsDisclosed(false)
             }
         }
     }
+    var masterViewController: MasterViewController!
+    // MARK: Dragging editable course references
+    // Reference to index of course being dragged, nil when not dragging
+    var dragCourse: Course!
     
-    // MARK: Color vars
+    // MARK: Color handling for editing courses
     // Colors used to give course boxes unique colors
     let COLORS_ORDERED = [
         NSColor.init(red: 88/255, green: 205/255, blue: 189/255, alpha: 1),
@@ -72,7 +67,7 @@ class CourseViewController: NSViewController {
     var colorAvailability = [Int: Bool]()
     /// Return the first color available, or gray if all colors taken
     func nextColorAvailable() -> NSColor {
-        for x in 0..<colorAvailability.count {
+        for x in 0..<COLORS_ORDERED.count {
             if colorAvailability[x] == true {
                 colorAvailability[x] = false
                 return COLORS_ORDERED[x]
@@ -80,15 +75,42 @@ class CourseViewController: NSViewController {
         }
         return NSColor.gray
     }
+    /// Mark a color as in-use
+    func useColor(color: NSColor) {
+        for i in 0..<COLORS_ORDERED.count {
+            if Int(COLORS_ORDERED[i].redComponent * 1000) == Int(color.redComponent * 1000) &&
+                Int(COLORS_ORDERED[i].greenComponent * 1000) == Int(color.greenComponent * 1000) &&
+                Int(COLORS_ORDERED[i].blueComponent * 1000) == Int(color.blueComponent * 1000) {
+                colorAvailability[i] = false
+            }
+        }
+    }
     /// Release a color to be usuable again
     func releaseColor(color: NSColor) {
         for i in 0..<COLORS_ORDERED.count {
-            if COLORS_ORDERED[i] == color {
+            if Int(COLORS_ORDERED[i].redComponent * 1000) == Int(color.redComponent * 1000) &&
+                Int(COLORS_ORDERED[i].greenComponent * 1000) == Int(color.greenComponent * 1000) &&
+                Int(COLORS_ORDERED[i].blueComponent * 1000) == Int(color.blueComponent * 1000) {
                 colorAvailability[i] = true
             }
         }
     }
+    /// Return the first number available in the course for untitled courses.
+    func nextNumberAvailable() -> Int {
+        // Find next available number for naming Course
+        var nextCourseNumber = 1
+        var seekingNumber = true
+        repeat {
+            if (retrieveCourse(withName: "Untitled \(nextCourseNumber)")) == nil {
+                seekingNumber = false
+            } else {
+                nextCourseNumber += 1
+            }
+        } while(seekingNumber)
+        return nextCourseNumber
+    }
     
+    // MARK: Initialize course viewController ...........................................................................
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -96,9 +118,6 @@ class CourseViewController: NSViewController {
         for x in 0..<COLORS_ORDERED.count {
             colorAvailability[x] = true
         }
-    }
-    func initialize(withSemester sem: Semester) {
-        self.thisSemester = sem
     }
     
     // MARK: Load object models ..........................................................................................
@@ -119,39 +138,21 @@ class CourseViewController: NSViewController {
         }
     }
     // MARK: Populating stacks ...........................................................................................
-    /// Populates the lecture stacks with data from the course with the given title.
-    func selectCourse(withTitle: String) {
-        // Find the course with the given title and update thisCourse
-        for case let course as Course in thisSemester.courses! {
-            if course.title == withTitle {
-                // Setting thisCourse calls visual updates and loads lectures
-                self.thisCourse = course
-//                lectureListIsDisclosed(true)
-                break
-            }
-        }
-    }
-    /// Clears the selected course. NYI: Shows overview of all courses in columns.
-    func clearSelectedCourse() {
-        self.thisCourse = nil
+    /// Change selected course in course view. Nil value is appropriate when clearing selection. 
+    /// SEE thisCourse didSet method for more details.
+    func select(course: Course?) {
+        self.thisCourse = course
     }
     /// Creates and returns a new persistent Course object.
     private func newCourse() -> Course {
         let newCourse = NSEntityDescription.insertNewObject(forEntityName: "Course", into: appDelegate.managedObjectContext) as! Course
-        
-        // Find next available number for naming Course
-        var nextCourseNumber = 1
-        var seekingNumber = true
-        repeat {
-            if (retrieveCourse(withName: "Untitled \(nextCourseNumber)")) == nil {
-                seekingNumber = false
-            } else {
-                nextCourseNumber += 1
-            }
-        } while(seekingNumber)
-        
-        newCourse.title = "Untitled \(nextCourseNumber)"
+        let assignedColor = nextColorAvailable()
+        newCourse.colorRed = Float(assignedColor.redComponent)
+        newCourse.colorGreen = Float(assignedColor.greenComponent)
+        newCourse.colorBlue = Float(assignedColor.blueComponent)
+        newCourse.title = "Untitled \(nextNumberAvailable())"
         newCourse.semester = thisSemester
+        masterViewController.notifyCalendarOfCourseListChange()
         return newCourse
     }
     /// Add a course model and visual to courseStack
@@ -163,18 +164,31 @@ class CourseViewController: NSViewController {
     private func addEditableCourse() {
         // Creates new course data model and puts new view in courseStack
         pushEditableCourse( newCourse() )
+        // Allow user to access lecture view when there are courses added
+        toggleEditsButtons.isEnabled = true
     }
     /// Removes all information associated with a course object. Model and Views
     private func removeCourse(_ course: HXCourseEditBox) {
         // Remove course from courseStack, reset grid spaces of timeSlots, delete data model
         popCourse( course )
+        masterViewController.removeCourse(named: course.labelCourse.stringValue)
 //        popTimeSlots(forCourse: retrieveCourse(withName: course.labelCourse.stringValue) )
         appDelegate.managedObjectContext.delete( retrieveCourse(withName: course.labelCourse.stringValue) )
+        appDelegate.saveAction(self)
+        masterViewController.notifyCalendarOfCourseListChange()
+        // Prevent user from accessing lecture view if there are no courses
+        if thisSemester.courses!.count == 0 {
+            toggleEditsButtons.isEnabled = false
+        }
+//        self.removeCourse(course)
+        
     }
     /// Handles purely the visual aspect of courses. Populates courseStack.
     private func pushCourse(_ course: Course) {
-        let newBox = HXCourseBox.instance(withTitle: course.title!, withParent: self)
+        let newBox = HXCourseBox.instance(with: course, owner: self)
         courseStack.addArrangedSubview(newBox!)
+        let theColor = NSColor(red: CGFloat(course.colorRed), green: CGFloat(course.colorGreen), blue: CGFloat(course.colorBlue), alpha: 1)
+        useColor(color: theColor)
     }
     private func popCourse(_ course: HXCourseEditBox) {
         course.removeFromSuperview()
@@ -183,7 +197,9 @@ class CourseViewController: NSViewController {
 
     /// Handles purely the visual aspect of editable courses. Populates courseStack.
     private func pushEditableCourse(_ course: Course) {
-        let newBox = HXCourseEditBox.instance(withTitle: course.title!, withCourseIndex: courseStack.subviews.count-1, withColor: nextColorAvailable(), withParent: self)
+        let courseColor = NSColor(red: CGFloat(course.colorRed), green: CGFloat(course.colorGreen), blue: CGFloat(course.colorBlue), alpha: 1)
+        useColor(color: courseColor)
+        let newBox = HXCourseEditBox.instance(with: course, withCourseIndex: courseStack.subviews.count-1, withParent: self)
         courseStack.insertArrangedSubview(newBox!, at: courseStack.subviews.count - 1)
     }
     
@@ -197,18 +213,14 @@ class CourseViewController: NSViewController {
             colorAvailability[x] = true
         }
     }
-    
+    /// Receive action from toggleEditsButton to toggle course editing modes.
     @IBAction func action_toggleEdits(_ sender: Any) {
-        if let thisParent = self.parent! as? MasterViewController {
-            if toggleEditsButtons.state == NSOnState {
-                isEditing(true)
-                thisParent.popEditor()
-                thisParent.pushCalendar()
-            } else {
-                isEditing(false)
-                thisParent.popCalendar()
-                thisParent.pushEditor()
-            }
+        if toggleEditsButtons.state == NSOnState {
+            isEditing(true)
+            masterViewController.isEditing(true)
+        } else {
+            isEditing(false)
+            masterViewController.isEditing(false)
         }
     }
     func action_addCourseButton() {
@@ -223,14 +235,7 @@ class CourseViewController: NSViewController {
         // Update Model:
         if let fetchedCourse = retrieveCourse(withName: courseBox.oldName) {
             fetchedCourse.title = courseBox.labelCourse.stringValue
-//            let fetchRequest = NSFetchRequest<TimeSlot>(entityName: "TimeSlot")
-//            do {
-//                let fetch = try appDelegate.managedObjectContext.fetch(fetchRequest) as [TimeSlot]
-//                let found = fetch.filter({$0.course == fetchedCourse})
-//                for t in found {
-//                    gridBoxes[Int(t.day)][Int(t.hour)].labelTitle.stringValue = courseBox.labelCourse.stringValue
-//                }
-//            } catch { fatalError("Failed to fetch: \(error)") }
+            (self.parent! as! MasterViewController).updateCourse(from: courseBox.oldName)
         }
         courseBox.oldName = courseBox.labelCourse.stringValue
     }
@@ -242,12 +247,36 @@ class CourseViewController: NSViewController {
         }
         return nil
     }
+    /// Setting this reloads all courses in this semester based on if the user is
+    /// editing the courses in the calendar or view/writing lectures.
     func isEditing(_ editing: Bool) {
         popAllCourses()
         if editing {
             loadEditableCourses(fromSemester: thisSemester)
+            toggleEditsButtons.state = NSOnState
         } else {
             loadCourses(fromSemester: thisSemester)
+            toggleEditsButtons.state = NSOffState
+        }
+    }
+    
+    // MARK: Dragging editable courses
+    /// HXCourseEditBox - Mouse Up: Stop dragging a course to a time slot
+    func mouseUp_courseBox(for course: Course, at loc: NSPoint) {
+        // Ensure a course was being dragged
+        if self.dragCourse != nil {
+            // Remove drag box from superview
+            masterViewController.stopDragging(course: course, at: loc)
+            self.dragCourse = nil
+        }
+    }
+    /// HXCourseEditBox - Mouse Drag: Drag a course to a time slot
+    func mouseDrag_courseBox(with course: Course, to loc: NSPoint) {
+        if self.dragCourse == nil {
+            self.dragCourse = course
+            masterViewController.startDragging(course: course)
+        } else {
+            masterViewController.moveDragging(course: course, to: loc)
         }
     }
 }
