@@ -350,17 +350,37 @@
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <menu key="submenu" title="Font" systemMenu="font" id="aXa-aM-Jaq">
                                                 <items>
-                                                    <menuItem title="Show Fonts" keyEquivalent="t" id="Q5e-8K-NDq"/>
-                                                    <menuItem title="Bold" tag="2" keyEquivalent="b" id="GB9-OM-e27"/>
-                                                    <menuItem title="Italic" tag="1" keyEquivalent="i" id="Vjx-xi-njq"/>
+                                                    <menuItem title="Show Fonts" keyEquivalent="t" id="Q5e-8K-NDq">
+                                                        <connections>
+                                                            <action selector="orderFrontFontPanel:" target="b2w-RD-Zvt" id="hBp-mp-ZVb"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem title="Bold" tag="2" keyEquivalent="b" id="GB9-OM-e27">
+                                                        <connections>
+                                                            <action selector="addFontTrait:" target="b2w-RD-Zvt" id="C2j-e8-oif"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem title="Italic" tag="1" keyEquivalent="i" id="Vjx-xi-njq">
+                                                        <connections>
+                                                            <action selector="addFontTrait:" target="b2w-RD-Zvt" id="Gry-3e-e68"/>
+                                                        </connections>
+                                                    </menuItem>
                                                     <menuItem title="Underline" keyEquivalent="u" id="WRG-CD-K1S">
                                                         <connections>
                                                             <action selector="underline:" target="Ady-hI-5gd" id="FYS-2b-JAY"/>
                                                         </connections>
                                                     </menuItem>
                                                     <menuItem isSeparatorItem="YES" id="5gT-KC-WSO"/>
-                                                    <menuItem title="Bigger" tag="3" keyEquivalent="+" id="Ptp-SP-VEL"/>
-                                                    <menuItem title="Smaller" tag="4" keyEquivalent="-" id="i1d-Er-qST"/>
+                                                    <menuItem title="Bigger" tag="3" keyEquivalent="+" id="Ptp-SP-VEL">
+                                                        <connections>
+                                                            <action selector="modifyFont:" target="b2w-RD-Zvt" id="fEK-6d-0Rz"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem title="Smaller" tag="4" keyEquivalent="-" id="i1d-Er-qST">
+                                                        <connections>
+                                                            <action selector="modifyFont:" target="b2w-RD-Zvt" id="lTr-qj-Hwh"/>
+                                                        </connections>
+                                                    </menuItem>
                                                     <menuItem isSeparatorItem="YES" id="kx3-Dk-x3B"/>
                                                     <menuItem title="Kern" id="jBQ-r6-VK2">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
@@ -559,25 +579,6 @@
                                                             </items>
                                                         </menu>
                                                     </menuItem>
-                                                    <menuItem isSeparatorItem="YES" id="fKy-g9-1gm"/>
-                                                    <menuItem title="Show Ruler" id="vLm-3I-IUL">
-                                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                                        <connections>
-                                                            <action selector="toggleRuler:" target="Ady-hI-5gd" id="FOx-HJ-KwY"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="Copy Ruler" keyEquivalent="c" id="MkV-Pr-PK5">
-                                                        <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
-                                                        <connections>
-                                                            <action selector="copyRuler:" target="Ady-hI-5gd" id="71i-fW-3W2"/>
-                                                        </connections>
-                                                    </menuItem>
-                                                    <menuItem title="Paste Ruler" keyEquivalent="v" id="LVM-kO-fVI">
-                                                        <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
-                                                        <connections>
-                                                            <action selector="pasteRuler:" target="Ady-hI-5gd" id="cSh-wd-qM2"/>
-                                                        </connections>
-                                                    </menuItem>
                                                 </items>
                                             </menu>
                                         </menuItem>
@@ -594,19 +595,7 @@
                                                 <action selector="toggleToolbarShown:" target="Ady-hI-5gd" id="BXY-wc-z0C"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Customize Toolbar…" id="1UK-8n-QPP">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="runToolbarCustomizationPalette:" target="Ady-hI-5gd" id="pQI-g3-MTW"/>
-                                            </connections>
-                                        </menuItem>
                                         <menuItem isSeparatorItem="YES" id="hB3-LF-h0Y"/>
-                                        <menuItem title="Show Sidebar" keyEquivalent="s" id="kIP-vf-haE">
-                                            <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
-                                            <connections>
-                                                <action selector="toggleSourceList:" target="Ady-hI-5gd" id="iwa-gc-5KM"/>
-                                            </connections>
-                                        </menuItem>
                                         <menuItem title="Enter Full Screen" keyEquivalent="f" id="4J7-dP-txa">
                                             <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                                             <connections>
@@ -660,6 +649,7 @@
                     </connections>
                 </application>
                 <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="HXNotes" customModuleProvider="target"/>
+                <customObject id="b2w-RD-Zvt" customClass="NSFontManager"/>
                 <customObject id="Ady-hI-5gd" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="75" y="0.0"/>
@@ -668,12 +658,12 @@
         <scene sceneID="R2V-B0-nI4">
             <objects>
                 <windowController id="B8D-0N-5wS" customClass="MasterWindowController" customModule="HXNotes" customModuleProvider="target" sceneMemberID="viewController">
-                    <window key="window" title="HXNotes" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" id="IQv-IB-iLA">
+                    <window key="window" title="HXNotes" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" tabbingMode="disallowed" id="IQv-IB-iLA">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
                         <rect key="contentRect" x="196" y="240" width="489" height="270"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
-                        <toolbar key="toolbar" implicitIdentifier="FEC46B77-6FAF-4779-B89F-9330AA257111" autosavesConfiguration="NO" allowsUserCustomization="NO" displayMode="iconOnly" sizeMode="regular" id="Q0o-CH-4bA">
+                        <toolbar key="toolbar" implicitIdentifier="FEC46B77-6FAF-4779-B89F-9330AA257111" autosavesConfiguration="NO" allowsUserCustomization="NO" displayMode="iconAndLabel" sizeMode="regular" id="Q0o-CH-4bA">
                             <allowedToolbarItems>
                                 <toolbarItem implicitItemIdentifier="NSToolbarShowColorsItem" id="G4o-7l-NCY"/>
                                 <toolbarItem implicitItemIdentifier="NSToolbarShowFontsItem" id="fWg-bg-gea"/>
@@ -831,7 +821,7 @@
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <subviews>
                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="urZ-NJ-uJU">
-                                                                            <rect key="frame" x="12" y="12" width="27" height="13"/>
+                                                                            <rect key="frame" x="12" y="12.5" width="27" height="13"/>
                                                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="9:00" id="NNC-u5-veX">
                                                                                 <font key="font" metaFont="system" size="10"/>
                                                                                 <color key="textColor" name="scrollBarColor" catalog="System" colorSpace="catalog"/>
@@ -873,7 +863,7 @@
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <subviews>
                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qhs-ln-cgc">
-                                                                            <rect key="frame" x="9" y="12.5" width="30" height="13"/>
+                                                                            <rect key="frame" x="9" y="12" width="30" height="13"/>
                                                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="11:00" id="hSC-bg-iL9">
                                                                                 <font key="font" metaFont="system" size="10"/>
                                                                                 <color key="textColor" name="scrollBarColor" catalog="System" colorSpace="catalog"/>
@@ -915,7 +905,7 @@
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <subviews>
                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3ab-p4-m72">
-                                                                            <rect key="frame" x="14" y="12.5" width="25" height="13"/>
+                                                                            <rect key="frame" x="14" y="12" width="25" height="13"/>
                                                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="1:00" id="BHm-Ws-wzf">
                                                                                 <font key="font" metaFont="system" size="10"/>
                                                                                 <color key="textColor" name="scrollBarColor" catalog="System" colorSpace="catalog"/>
@@ -999,7 +989,7 @@
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <subviews>
                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lnP-l1-boM">
-                                                                            <rect key="frame" x="12" y="12" width="27" height="13"/>
+                                                                            <rect key="frame" x="12" y="12.5" width="27" height="13"/>
                                                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="5:00" id="eFd-oD-mjW">
                                                                                 <font key="font" metaFont="system" size="10"/>
                                                                                 <color key="textColor" name="scrollBarColor" catalog="System" colorSpace="catalog"/>
@@ -1579,16 +1569,16 @@
                                 </connections>
                             </button>
                             <scrollView borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="0.0" verticalPageScroll="0.0" hasHorizontalScroller="NO" hasVerticalScroller="NO" verticalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="eGH-ec-HXW" userLabel="Year Scroll">
-                                <rect key="frame" x="0.0" y="58" width="709" height="40"/>
+                                <rect key="frame" x="20" y="58" width="669" height="40"/>
                                 <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="tj2-LB-aBT">
-                                    <rect key="frame" x="0.0" y="0.0" width="709" height="40"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="669" height="40"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <view translatesAutoresizingMaskIntoConstraints="NO" id="RCA-AT-G6t">
-                                            <rect key="frame" x="0.0" y="0.0" width="1313" height="40"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="1273" height="40"/>
                                             <subviews>
                                                 <stackView distribution="equalSpacing" orientation="horizontal" alignment="top" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="biO-ZO-T6d" userLabel="Year Stack">
-                                                    <rect key="frame" x="20" y="8" width="1273" height="25"/>
+                                                    <rect key="frame" x="0.0" y="8" width="1273" height="25"/>
                                                     <subviews>
                                                         <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cNq-9C-5SU">
                                                             <rect key="frame" x="0.0" y="0.0" width="67" height="25"/>
@@ -1846,8 +1836,8 @@
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="biO-ZO-T6d" firstAttribute="centerX" secondItem="RCA-AT-G6t" secondAttribute="centerX" id="Ea2-fl-MIE"/>
-                                                <constraint firstAttribute="trailing" secondItem="biO-ZO-T6d" secondAttribute="trailing" constant="20" id="WOj-Kl-I9a"/>
-                                                <constraint firstItem="biO-ZO-T6d" firstAttribute="leading" secondItem="RCA-AT-G6t" secondAttribute="leading" constant="20" id="a6s-Se-ixX"/>
+                                                <constraint firstAttribute="trailing" secondItem="biO-ZO-T6d" secondAttribute="trailing" id="WOj-Kl-I9a"/>
+                                                <constraint firstItem="biO-ZO-T6d" firstAttribute="leading" secondItem="RCA-AT-G6t" secondAttribute="leading" id="a6s-Se-ixX"/>
                                                 <constraint firstItem="biO-ZO-T6d" firstAttribute="centerY" secondItem="RCA-AT-G6t" secondAttribute="centerY" id="ah7-Pl-MvA"/>
                                             </constraints>
                                         </view>
@@ -1872,7 +1862,7 @@
                                 </scroller>
                             </scrollView>
                             <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="CiU-zn-jMa" userLabel="Gradient L">
-                                <rect key="frame" x="0.0" y="66" width="136" height="23"/>
+                                <rect key="frame" x="20" y="66" width="136" height="23"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="23" id="9nK-0S-h5c"/>
                                     <constraint firstAttribute="width" constant="136" id="RzC-Dn-9qy"/>
@@ -1880,7 +1870,7 @@
                                 <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="art_gradient_left" id="Vdx-6b-TjK"/>
                             </imageView>
                             <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="AMA-6b-iYv" userLabel="Gradient R">
-                                <rect key="frame" x="573" y="66" width="136" height="23"/>
+                                <rect key="frame" x="553" y="66" width="136" height="23"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="136" id="D0W-Re-CTq"/>
                                     <constraint firstAttribute="height" constant="23" id="wqu-63-Zd5"/>
@@ -1939,9 +1929,9 @@
                             <constraint firstItem="CiU-zn-jMa" firstAttribute="leading" secondItem="eGH-ec-HXW" secondAttribute="leading" id="HQW-oE-Kq6"/>
                             <constraint firstItem="gfp-To-9v2" firstAttribute="centerX" secondItem="6TU-lb-gdv" secondAttribute="leading" constant="4" id="P5G-0N-qGO"/>
                             <constraint firstItem="j5G-fz-6g8" firstAttribute="top" secondItem="6TU-lb-gdv" secondAttribute="bottom" constant="4" id="QAo-H5-ZnX"/>
-                            <constraint firstItem="eGH-ec-HXW" firstAttribute="leading" secondItem="m3a-ui-bHz" secondAttribute="leading" id="T0A-tb-ADm"/>
+                            <constraint firstItem="eGH-ec-HXW" firstAttribute="leading" secondItem="m3a-ui-bHz" secondAttribute="leading" constant="20" id="T0A-tb-ADm"/>
                             <constraint firstItem="Th0-9W-HRx" firstAttribute="centerX" secondItem="m3a-ui-bHz" secondAttribute="centerX" id="TPQ-GJ-4AV"/>
-                            <constraint firstAttribute="trailing" secondItem="eGH-ec-HXW" secondAttribute="trailing" id="XKY-4t-6Hh"/>
+                            <constraint firstAttribute="trailing" secondItem="eGH-ec-HXW" secondAttribute="trailing" constant="20" id="XKY-4t-6Hh"/>
                             <constraint firstAttribute="bottom" secondItem="gfp-To-9v2" secondAttribute="bottom" constant="8" id="Y6B-J5-zvT"/>
                             <constraint firstAttribute="bottom" secondItem="j5G-fz-6g8" secondAttribute="bottom" constant="8" id="boh-zy-Rjk"/>
                             <constraint firstItem="6TU-lb-gdv" firstAttribute="centerX" secondItem="m3a-ui-bHz" secondAttribute="centerX" id="d1n-r7-IpQ"/>

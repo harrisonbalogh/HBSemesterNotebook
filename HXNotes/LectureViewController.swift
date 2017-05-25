@@ -33,7 +33,7 @@ class LectureViewController: NSViewController {
         textHeightConstraint.isActive = true
         
         if withLecture.content != nil {
-            textView_lecture.string = withLecture.content
+            textView_lecture.textStorage?.setAttributedString(withLecture.content!)
             textHeightConstraint.constant = textHeight()
         }
         
@@ -43,13 +43,6 @@ class LectureViewController: NSViewController {
         
         NotificationCenter.default.addObserver(self, selector: #selector(LectureViewController.notifyTextChange),
                                                name: .NSTextDidChange, object: textView_lecture)
-    }
-    
-    // MARK: Save object models ..........................................................................................
-    func testSaveRTF(from: LectureViewController) {
-        textView_lecture.attributedString()
-        // we'll test copying a string to the previous lecture to see if we can retain special information
-        owner.testSaveRTF(from: self)
     }
     // ...................................................................................................................
     
@@ -64,12 +57,10 @@ class LectureViewController: NSViewController {
     }
     
     func notifyTextChange() {
-        // Temp test:
-        testSaveRTF(from: self)
         // Update height of view
         textHeightConstraint.constant = textHeight()
         // Save to Model
-        lecture.content = textView_lecture.string
+        lecture.content = textView_lecture.attributedString()
         owner.notifyHeightUpdate(from: self)
     }
     

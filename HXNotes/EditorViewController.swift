@@ -34,10 +34,14 @@ class EditorViewController: NSViewController {
     var weekCount = 0
     var thisCourse: Course! {
         didSet {
-            // Setting thisCourse immediately updates visuals
+            // Setting thisCourse, immediately updates visuals
             if thisCourse != nil {
                 // Populate new lecture visuals
-                lectureListIsDisclosed(true)
+                if thisCourse.lectures!.count != 0 {
+                    lectureListIsDisclosed(true)
+                } else {
+                    lectureListIsDisclosed(false)
+                }
             } else {
                 lectureListIsDisclosed(false)
             }
@@ -51,7 +55,9 @@ class EditorViewController: NSViewController {
         lectureLeadingConstraint = lectureListContainer.leadingAnchor.constraint(equalTo: self.view.leadingAnchor)
         lectureLeadingConstraint.isActive = true
         
-        lectureListIsDisclosed(false)
+        lectureLeadingConstraint.constant = -197
+        stickyHeaderBox.alphaValue = 0
+        lectureScroller.alphaValue = 0
         
         lectureBottomConstraint = lectureBottomBufferView.heightAnchor.constraint(equalTo: lectureScroller.heightAnchor)
         lectureBottomConstraint.isActive = true
@@ -60,32 +66,13 @@ class EditorViewController: NSViewController {
         stickyHeaderTopConstraint.isActive = true
         
         // Setup observers for timeline scrolling - start/active/end scrolling years
-        NotificationCenter.default.addObserver(self, selector: #selector(EditorViewController.didScroll),
+        NotificationCenter.default.addObserver(self, selector: #selector(EditorViewController.didLiveScroll),
                                                name: .NSScrollViewDidLiveScroll, object: lectureScroller)
         NotificationCenter.default.addObserver(self, selector: #selector(EditorViewController.didScroll),
                                                name: .NSViewBoundsDidChange, object: lectureClipper)
     }
     override func viewDidAppear() {
         lectureBottomBufferView.initialize(owner: self)
-    }
-    // MARK: Save object models ..........................................................................................
-    func testSaveRTF(from: LectureViewController) {
-        print("Printing all child controllers of \(self)")
-        var prevLectController = from
-        for case let c as LectureViewController in self.childViewControllers {
-            print("    \(c.label_lectureTitle.stringValue)")
-            if from != c {
-                prevLectController = c
-            } else {
-                break
-            }
-        }
-        print("  Prev is: \(prevLectController.label_lectureTitle.stringValue)")
-//        prevLectController.textView_lecture.string = from.textView_lecture.string
-        prevLectController.textView_lecture.textStorage?.setAttributedString(from.textView_lecture.attributedString())
-        // attempting to save attributed string
-        
-        print("...")
     }
     // MARK: Load object models ..........................................................................................
     /// Called when a course is pressed in the courseStack. Populate stackViews with the loaded lectures from the selected course
@@ -94,13 +81,16 @@ class EditorViewController: NSViewController {
         for case let lecture as Lecture in course.lectures! {
             pushLecture( lecture )
         }
+        if lectureCount == 0 {
+            stickyHeaderBox.alphaValue = 1
+        }
     }
     
     // MARK: Populating stacks ...........................................................................................
     /// Creates a Lecture object for the currently selected course, and pushes an HXLectureLedger plus HXLectureView
     /// to their appropriate stacks. Will also add an HXWeekDividerBox to the lectureLedgerStack if necessary.
     private func addLecture() {
-        
+        print("Add lecture")
         pushLecture( newLecture() )
         
     }
@@ -141,6 +131,7 @@ class EditorViewController: NSViewController {
     private func newLecture() -> Lecture {
         let newLecture = NSEntityDescription.insertNewObject(forEntityName: "Lecture", into: appDelegate.managedObjectContext) as! Lecture
         newLecture.course = thisCourse
+        print("  With \(thisCourse.title)")
         newLecture.lecture = Int16(lectureCount + 1)
         newLecture.week = Int16(weekCount + 1)
         newLecture.day = Int16(NSCalendar.current.component(.day, from: NSDate() as Date))
@@ -167,7 +158,8 @@ class EditorViewController: NSViewController {
             stickyHeaderBox.animator().alphaValue = 1
             lectureScroller.animator().alphaValue = 1
             NSAnimationContext.endGrouping()
-        } else {
+        } else if lectureLeadingConstraint.constant == 0 {
+            print("FUCKER: \(lectureListContainer.bounds.origin.x)")
             // Animate showing the lecture
             NSAnimationContext.beginGrouping()
             NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
@@ -193,7 +185,18 @@ class EditorViewController: NSViewController {
             }
         }
     }
-    /// Receives scrolling from lectureScroller NSScrollView and any time clipper changes its bounds. 
+    /// This is called by the users scrolling versus didScroll is called by lectureClipper bounds change.
+    /// Distinguished here since user scrolling should cancel any scroll animations. Else the clipper stutters.
+    func didLiveScroll() {
+        // Stop any scrolling animations currently happening on the clipper
+        NSAnimationContext.beginGrouping()
+        NSAnimationContext.current().duration = 0 // This overwrites animator proxy object with 0 duration aimation
+        lectureClipper.animator().setBoundsOrigin(NSPoint(x: 0, y: lectureClipper.bounds.origin.y))
+        NSAnimationContext.endGrouping()
+        // Then call didScroll as normal to produce stickyheader effect
+        didScroll()
+    }
+    /// Receives scrolling from lectureScroller NSScrollView and any time clipper changes its bounds.
     /// Is responsible for updating the StickyHeaderBox to simulate the iOS effect of lecture titles
     /// staying at the top of scrollView.
     func didScroll() {
@@ -243,6 +246,8 @@ class EditorViewController: NSViewController {
             }
         }
     }
+    /// Received from LectureViewController on any change to a given lecture text view. 
+    /// Is responsible for auto scrolling the lectureScroller.
     internal func notifyHeightUpdate(from sender: LectureViewController) {
         // Get last view in lectureStack
         if let lectureController = childViewControllers.filter({$0 is LectureViewController})[lectureCount - 1] as?LectureViewController {
@@ -251,14 +256,40 @@ class EditorViewController: NSViewController {
             } else {
                 lectureBottomConstraint.constant = -lectureScroller.frame.height/2 - 50
             }
-            // Auto Scroll Feature: Smooth scroll to center on text line.
+            // AUTO SCROLL FEATURE: Smooth scroll to center on text line.
             let selectionY = sender.textSelectionHeight()
             // Center current typing position to center of lecture scroller
-            let yPos = lectureStack.frame.height - selectionY - lectureScroller.frame.height/2
-            NSAnimationContext.beginGrouping()
-            NSAnimationContext.current().duration = 0.5
-            lectureClipper.animator().setBoundsOrigin(NSPoint(x: 0, y: yPos))
-            NSAnimationContext.endGrouping()
+            let yPos = lectureStack.frame.height - selectionY // - lectureScroller.frame.height/2
+            // Don't auto-scroll if selection is already visible and above center line of window
+            if yPos < (lectureClipper.bounds.origin.y + stickyHeaderBox.frame.height) || yPos > (lectureClipper.bounds.origin.y + lectureScroller.frame.height/2) {
+                NSAnimationContext.beginGrouping()
+                NSAnimationContext.current().duration = 0.5
+                // Get clipper to center selection in scroller
+                lectureClipper.animator().setBoundsOrigin(NSPoint(x: 0, y: yPos - lectureScroller.frame.height/2))
+                NSAnimationContext.endGrouping()
+            }
         }
     }
+    
+    // MARK: Find functinoality
+    func find(str: String) {
+        let allLectures = true
+        if allLectures {
+            // Go through each lecture individually to find word
+            for case let lectureController as LectureViewController in self.childViewControllers {
+                let thisStr = lectureController.textView_lecture.string!
+                if thisStr.contains(str) {
+//                    let ind = thisStr.
+                    
+                }
+            }
+        } else {
+            // Go through selected lecture to find word
+            
+        }
+    }
+    // MARK: Print functionality
+//    func print() {
+//        
+//    }
 }

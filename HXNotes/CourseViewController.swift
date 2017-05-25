@@ -24,8 +24,12 @@ class CourseViewController: NSViewController {
             // Get courses from this semester
             if thisSemester.courses!.count > 0 {
                 loadCourses(fromSemester: thisSemester)
+                masterViewController.notifySemesterViewing(semester: thisSemester)
+                toggleEditsButtons.isEnabled = true
             } else {
                 loadEditableCourses(fromSemester: thisSemester)
+                masterViewController.notifySemesterEditing(semester: thisSemester)
+                toggleEditsButtons.isEnabled = false
             }
             lectureListYrSemLabel.stringValue = "\(thisSemester.title!.capitalized) \(thisSemester.year!.year)"
         }
@@ -33,7 +37,7 @@ class CourseViewController: NSViewController {
     private var thisCourse: Course! {
         didSet {
             // Notify masterViewController that a course was selected
-            masterViewController.select(course: thisCourse)
+            masterViewController.notifyCourseSelection(course: thisCourse)
             // Deselect all other buttons
             for case let courseButton as HXCourseBox in courseStack.arrangedSubviews {
                 if thisCourse == nil {
@@ -152,7 +156,6 @@ class CourseViewController: NSViewController {
         newCourse.colorBlue = Float(assignedColor.blueComponent)
         newCourse.title = "Untitled \(nextNumberAvailable())"
         newCourse.semester = thisSemester
-        masterViewController.notifyCalendarOfCourseListChange()
         return newCourse
     }
     /// Add a course model and visual to courseStack
@@ -171,11 +174,10 @@ class CourseViewController: NSViewController {
     private func removeCourse(_ course: HXCourseEditBox) {
         // Remove course from courseStack, reset grid spaces of timeSlots, delete data model
         popCourse( course )
-        masterViewController.removeCourse(named: course.labelCourse.stringValue)
+        masterViewController.notifyCourseDeletion(named: course.labelCourse.stringValue)
 //        popTimeSlots(forCourse: retrieveCourse(withName: course.labelCourse.stringValue) )
         appDelegate.managedObjectContext.delete( retrieveCourse(withName: course.labelCourse.stringValue) )
         appDelegate.saveAction(self)
-        masterViewController.notifyCalendarOfCourseListChange()
         // Prevent user from accessing lecture view if there are no courses
         if thisSemester.courses!.count == 0 {
             toggleEditsButtons.isEnabled = false
@@ -217,10 +219,10 @@ class CourseViewController: NSViewController {
     @IBAction func action_toggleEdits(_ sender: Any) {
         if toggleEditsButtons.state == NSOnState {
             isEditing(true)
-            masterViewController.isEditing(true)
+            masterViewController.notifySemesterEditing(semester: thisSemester)
         } else {
             isEditing(false)
-            masterViewController.isEditing(false)
+            masterViewController.notifySemesterViewing(semester: thisSemester)
         }
     }
     func action_addCourseButton() {
@@ -235,7 +237,7 @@ class CourseViewController: NSViewController {
         // Update Model:
         if let fetchedCourse = retrieveCourse(withName: courseBox.oldName) {
             fetchedCourse.title = courseBox.labelCourse.stringValue
-            (self.parent! as! MasterViewController).updateCourse(from: courseBox.oldName)
+            (self.parent! as! MasterViewController).notifyCourseRename(from: courseBox.oldName)
         }
         courseBox.oldName = courseBox.labelCourse.stringValue
     }

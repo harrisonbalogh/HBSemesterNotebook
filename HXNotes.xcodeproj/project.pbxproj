@@ -39,6 +39,7 @@
 		C0D687BD1EA4948400BF1D05 /* HXGridBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D687BC1EA4948400BF1D05 /* HXGridBox.swift */; };
 		C0D68CFD1EA6943F009B06E3 /* HXCourseDragBox.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0D68CFC1EA6943F009B06E3 /* HXCourseDragBox.xib */; };
 		C0D68CFF1EA6C8CF009B06E3 /* HXCourseDragBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D68CFE1EA6C8CF009B06E3 /* HXCourseDragBox.swift */; };
+		C0E881A01ED66E30004974DE /* HXConfirmationBox.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0E8819F1ED66E30004974DE /* HXConfirmationBox.xib */; };
 		C0FD6C231EC273C200338F1C /* HXCourseBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0FD6C221EC273C200338F1C /* HXCourseBox.swift */; };
 		C0FD6C261EC273DA00338F1C /* HXCourseBox.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0FD6C251EC273DA00338F1C /* HXCourseBox.xib */; };
 /* End PBXBuildFile section */
@@ -101,6 +102,7 @@
 		C0D687BC1EA4948400BF1D05 /* HXGridBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXGridBox.swift; sourceTree = "<group>"; };
 		C0D68CFC1EA6943F009B06E3 /* HXCourseDragBox.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXCourseDragBox.xib; sourceTree = "<group>"; };
 		C0D68CFE1EA6C8CF009B06E3 /* HXCourseDragBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXCourseDragBox.swift; sourceTree = "<group>"; };
+		C0E8819F1ED66E30004974DE /* HXConfirmationBox.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXConfirmationBox.xib; sourceTree = "<group>"; };
 		C0FD6C221EC273C200338F1C /* HXCourseBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXCourseBox.swift; sourceTree = "<group>"; };
 		C0FD6C251EC273DA00338F1C /* HXCourseBox.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXCourseBox.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -300,6 +302,7 @@
 				C0009E2A1EC43BE200C80642 /* HXLectureView.xib */,
 				C025FD9A1EC2A4970090A287 /* HXLectureLedger.xib */,
 				C025FD9C1EC2A68F0090A287 /* HXWeekDividerBox.xib */,
+				C0E8819F1ED66E30004974DE /* HXConfirmationBox.xib */,
 			);
 			name = "NIB Templates";
 			sourceTree = "<group>";
@@ -421,6 +424,7 @@
 				C0AAE13D1EA2BD12002939B6 /* Assets.xcassets in Resources */,
 				C0009E2B1EC43BE200C80642 /* HXLectureView.xib in Resources */,
 				C0AAE1401EA2BD12002939B6 /* Main.storyboard in Resources */,
+				C0E881A01ED66E30004974DE /* HXConfirmationBox.xib in Resources */,
 				C0FD6C261EC273DA00338F1C /* HXCourseBox.xib in Resources */,
 				C095D7831EB9578700BBE7CB /* HXCourseEditBox.xib in Resources */,
 			);

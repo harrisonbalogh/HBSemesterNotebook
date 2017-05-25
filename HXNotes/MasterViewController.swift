@@ -33,22 +33,22 @@ class MasterViewController: NSViewController {
     // Mark: Object models informed by TimelineViewController
     let appDelegate = NSApplication.shared().delegate as! AppDelegate
     var yearSelected: Year!
-    var semesterSelected: Semester! {
-        didSet {
-            // Clear all other content displayed
-            popCalendar()
-            popEditor()
-            // Check if this semester has courses entered
-            if semesterSelected.courses!.count > 0 {
-                pushEditor()
-                courseViewController.toggleEditsButtons.isEnabled = true
-            } else {
-                pushCalendar()
-                // Prevent user from going into lecture mode if there are no courses yet.
-                courseViewController.toggleEditsButtons.isEnabled = false
-            }
-        }
-    }
+//    var semesterSelected: Semester! {
+//        didSet {
+//            // Clear all other content displayed
+//            popCalendar()
+//            popEditor()
+//            // Check if this semester has courses entered
+//            if semesterSelected.courses!.count > 0 {
+//                pushEditor()
+//                courseViewController.toggleEditsButtons.isEnabled = true
+//            } else {
+//                pushCalendar()
+//                // Prevent user from going into lecture mode if there are no courses yet.
+//                courseViewController.toggleEditsButtons.isEnabled = false
+//            }
+//        }
+//    }
     
     // Mark: Initialize the viewController ..................................................................
     override func viewDidLoad() {
@@ -68,93 +68,106 @@ class MasterViewController: NSViewController {
             self.courseViewController = courseVC
             courseViewController.masterViewController = self
         }
-        checkWhatCourses()
+//        checkWhatCourses()
+        
+        // Test func
+//        checkWhatCourses(month: 3, year: 2015, dayOfWeek: 3, hour: 14, minute: 56)
     }
     
     // MARK: Login Logic ....................................................................................
     /// Default UI setup when app loads
-    private func checkWhatCourses() {
-        // Default to current year
-        let yr = NSCalendar.current.component(.year, from: NSDate() as Date)
-        selectYear(yr)
-        timelineViewController.selectYear(yr)
-        // Default to current semester by assuming Fall: [July, December]
-        let month = NSCalendar.current.component(.month, from: NSDate() as Date)
-        if month >= 7 && month <= 12 {
-            timelineViewController.action_selectFall(self)
-        } else {
-            timelineViewController.action_selectSpring(self)
-        }
-        // Find lecture happening in current time
-        let dayOfWeek = NSCalendar.current.component(.weekday, from: NSDate() as Date)
-        if dayOfWeek == 1 || dayOfWeek == 7 {
-            // Stop here if opening app on weekend since we assume no classes are on weekend.
-            return
-        }
-        let hour = NSCalendar.current.component(.hour, from: NSDate() as Date)
-        let minute = NSCalendar.current.component(.minute, from: NSDate() as Date)
-        // Get all courses in this semester
-        for case let course as Course in semesterSelected.courses! {
-            for case let timeSlot as TimeSlot in course.timeSlots! {
-                if timeSlot.day + 2 == Int16(dayOfWeek) {
-                    // timeSlot.day has range [2,6] and dayOfWeek is [1,7]
-                    if timeSlot.hour == Int16(hour - 8) {
-                        // Check if in the hour of a course
-                        
-                    } else if timeSlot.hour - 1 + 8 == Int16(hour) && minute >= 55 {
-                        // Check if its close enough before the start of a lecture
-                        
-                    }
-                }
-            }
-        }
-    }
+    // MOVING OUT OF MASTER VIEW CONTROLLER
+//    private func checkWhatCourses() {
+//        print("Running the open check.")
+//        // Default to current year
+//        let yr = NSCalendar.current.component(.year, from: NSDate() as Date)
+//        selectYear(yr)
+//        timelineViewController.selectYear(yr)
+//        print("    Year is \(yr)")
+//        // Default to current semester by assuming Fall: [July, December]
+//        let month = NSCalendar.current.component(.month, from: NSDate() as Date)
+//        print("    Month is \(month)")
+//        if month >= 7 && month <= 12 {
+//            timelineViewController.action_selectFall(self)
+//        } else {
+//            timelineViewController.action_selectSpring(self)
+//        }
+//        // Find lecture happening in current time
+//        let dayOfWeek = NSCalendar.current.component(.weekday, from: NSDate() as Date)
+//        print("    Day of week is \(dayOfWeek)")
+//        if dayOfWeek == 1 || dayOfWeek == 7 {
+//            // Stop here if opening app on weekend since we assume no classes are on weekend.
+//            print("        Dumping here. It's the weekend!")
+//            return
+//        }
+//        let hour = NSCalendar.current.component(.hour, from: NSDate() as Date)
+//        let minute = NSCalendar.current.component(.minute, from: NSDate() as Date)
+//        print("    Hour is \(hour)")
+//        print("    Minute is \(minute)")
+//        // Get all courses in this semester
+//        for case let course as Course in semesterSelected.courses! {
+//            for case let timeSlot as TimeSlot in course.timeSlots! {
+//                if timeSlot.day + 2 == Int16(dayOfWeek) {
+//                    // timeSlot.day has range [2,6] and dayOfWeek is [1,7]
+//                    if timeSlot.hour == Int16(hour - 8) {
+//                        // Check if in the hour of a course
+//                    } else if timeSlot.hour - 1 + 8 == Int16(hour) && minute >= 55 {
+//                        // Check if its close enough before the start of a lecture
+//                        
+//                    }
+//                }
+//            }
+//        }
+//    }
+//    
+//    private func checkWhatCourses(month: Int, year: Int, dayOfWeek: Int, hour: Int, minute: Int) {
+//        print("Running the open check.")
+//        print("    Year is \(year)")
+//        selectYear(year)
+//        timelineViewController.selectYear(year)
+//        if month >= 7 && month <= 12 {
+//            timelineViewController.action_selectFall(self)
+//        } else {
+//            timelineViewController.action_selectSpring(self)
+//        }
+//        print("    Month is \(month)")
+//        // Find lecture happening in current time
+//        print("    Day of week is \(dayOfWeek)")
+//        if dayOfWeek == 1 || dayOfWeek == 7 {
+//            // Stop here if opening app on weekend since we assume no classes are on weekend.
+//            print("        Dumping here. It's the weekend!")
+//            return
+//        }
+//        print("    Hour is \(hour)")
+//        print("    Minute is \(minute)")
+//        // Get all courses in this semester
+//        for case let course as Course in semesterSelected.courses! {
+//            for case let timeSlot as TimeSlot in course.timeSlots! {
+//                if timeSlot.day + 2 == Int16(dayOfWeek) {
+//                    print("        \(course.title!) is today.")
+//                    // timeSlot.day has range [2,6] and dayOfWeek is [1,7]
+//                    if timeSlot.hour == Int16(hour - 8) {
+//                        print("            Class is happening now. \(hour):00")
+//                        courseViewController.select(course: course)
+//                        editorViewController.action_addLecture(self)
+//                        break
+//                        // Check if in the hour of a course
+//                    } else if timeSlot.hour - 1 + 8 == Int16(hour) && minute >= 55 {
+//                        print("            Class is about to happen. \(60 - minute) minutes 'till.")
+//                        courseViewController.select(course: course)
+//                        editorViewController.action_addLecture(self)
+//                        break
+//                        // Check if its close enough before the start of a lecture
+//                    } else {
+//                        print("            No class at the moment.")
+//                    }
+//                }
+//            }
+//        }
+//    }
     
-    // MARK: Handle content container changes ................................................................
-     /// Notifies MasterViewController from TimelineViewController that user has landed on a year.
-    func selectYear(_ year: Int) {
-        // Try fetching this year in persistent store
-        let yearFetch = NSFetchRequest<Year>(entityName: "Year")
-        do {
-            let years = try appDelegate.managedObjectContext.fetch(yearFetch) as [Year]
-            if let foundYear = years.filter({$0.year == Int16(year)}).first {
-                // This year already present in store so load
-                yearSelected = foundYear
-            } else {
-                // Create year since it wasn't found
-                let newYear = NSEntityDescription.insertNewObject(forEntityName: "Year", into: appDelegate.managedObjectContext) as! Year
-                newYear.year = Int16(year)
-                yearSelected = newYear
-            }
-        } catch { fatalError("Failed to fetch years: \(error)") }
-    }
-    
-    /// Notifies MasterViewController from TimelineViewCotnroler that user has selected a semester.
-    func selectSemester(_ semester: String) {
-        // Try finding this semester in year selected
-        for case let sem as Semester in yearSelected.semesters! {
-            if sem.title! == semester {
-                semesterSelected = sem
-                courseViewController.thisSemester = semesterSelected
-                return;
-            }
-        }
-        // Create semester since it wasn't found
-        semesterSelected = NSEntityDescription.insertNewObject(forEntityName: "Semester", into: appDelegate.managedObjectContext) as! Semester
-        semesterSelected.title = semester
-        semesterSelected.year = yearSelected
-        courseViewController.thisSemester = semesterSelected
-    }
-    
-    func notifyCalendarOfCourseListChange() {
-        calendarViewController.evaluateEmptyVisuals()
-    }
-    
-    func updateCourse(from oldName: String) {
-        calendarViewController.reloadTimeslotTitles(named: oldName)
-    }
-    
-    func pushCalendar() {
+    // MARK: Handle content container changes ................................................................    
+    func pushCalendar(semester: Semester) {
         let strybrd = NSStoryboard.init(name: "Main", bundle: nil)
         if let newController = strybrd.instantiateController(withIdentifier: "CalendarID") as? CalendarViewController {
             calendarViewController = newController
@@ -163,7 +176,7 @@ class MasterViewController: NSViewController {
             calendarViewController.masterViewController = self
             calendarViewController.view.frame = container_content.bounds
             calendarViewController.view.autoresizingMask = [.viewWidthSizable, .viewHeightSizable]
-            calendarViewController.initialize(withSemester: semesterSelected)
+            calendarViewController.initialize(withSemester: semester)
         }
         courseViewController.toggleEditsButtons.state = NSOnState
     }
@@ -214,21 +227,6 @@ class MasterViewController: NSViewController {
         }
     }
     
-    /// Handles toggle between course editing in the calendar versus editing lectures.
-    func isEditing(_ editing: Bool) {
-        popCalendar()
-        popEditor()
-        if editing {
-            pushCalendar()
-        } else {
-            pushEditor()
-        }
-    }
-    /// Tells lecture content to display a specific course or clear it if set to nil
-    func select(course: Course?) {
-        editorViewController.thisCourse = course
-    }
-    
     // MARK: Dragging functionality for calendar
     /// Initializes drag box from the calendar view
     func startDragging(course: Course) {
@@ -254,7 +252,50 @@ class MasterViewController: NSViewController {
         self.courseDragBox.removeFromSuperview()
         calendarViewController.drop(course: course, at: loc)
     }
-    func removeCourse(named course: String) {
+    
+    // MARK: Notifiers - Child Controllers ............................................................
+    /// Notify MasterViewController that a semester has been selected.
+    /// Passes on semester selection to CourseViewController
+    func notifySemesterSelection(semester: Semester) {
+        courseViewController.thisSemester = semester
+    }
+    /// Notify MasterViewController that a course has been selected or deselected.
+    /// Passes on course selection to EditorViewController
+    func notifyCourseSelection(course: Course?) {
+        editorViewController.thisCourse = course
+    }
+    /// Notfy MasterViewController that a course has been removed.
+    /// Currently used to remove time slot grid spaces in Calendar.
+    func notifyCourseDeletion(named course: String) {
         calendarViewController.clearTimeSlots(named: course)
+    }
+    /// Notify MasterViewController that a course has been renamed.
+    /// Currently used to reload the label titles on time slots in the Calendar.
+    func notifyCourseRename(from oldName: String) {
+        calendarViewController.reloadTimeslotTitles(named: oldName)
+    }
+    ///
+    func notifyCourseDragStart(course: Course) {
+        
+    }
+    ///
+    func notifyCourseDragMoved(course: Course) {
+        
+    }
+    ///
+    func notifyCourseDragDrop(course: Course) {
+        
+    }
+    ///
+    func notifySemesterEditing(semester: Semester) {
+        popEditor()
+        popCalendar()
+        pushCalendar(semester: semester)
+    }
+    ///
+    func notifySemesterViewing(semester: Semester) {
+        popEditor()
+        popCalendar()
+        pushEditor()
     }
 }
