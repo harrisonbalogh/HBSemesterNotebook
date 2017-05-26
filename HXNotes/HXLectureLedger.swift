@@ -57,4 +57,12 @@ class HXLectureLedger: NSBox {
     func action_clickLecture() {
         parentController.scrollToLecture(labelTitle.title)
     }
+    
+    func focusVisuals(_ focus: Bool) {
+        if focus {
+            
+        } else {
+            
+        }
+    }
 }

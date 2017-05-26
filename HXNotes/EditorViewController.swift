@@ -21,6 +21,45 @@ class EditorViewController: NSViewController {
     @IBOutlet weak var stickyHeaderTitle: NSTextField!
     @IBOutlet weak var stickyHeaderDate: NSTextField!
     
+    @IBOutlet weak var button_style_regular: NSButton!
+    @IBOutlet weak var button_style_underline: NSButton!
+    @IBOutlet weak var button_style_italicize: NSButton!
+    @IBOutlet weak var button_style_bold: NSButton!
+    @IBOutlet weak var button_style_left: NSButton!
+    @IBOutlet weak var button_style_center: NSButton!
+    @IBOutlet weak var button_style_right: NSButton!
+    
+    var lectureFocused: LectureViewController! {
+        didSet {
+            if lectureFocused == nil {
+                // Animate scrolling timeline
+                NSAnimationContext.beginGrouping()
+                NSAnimationContext.current().duration = 0.25
+                button_style_regular.animator().alphaValue = 0
+                button_style_underline.animator().alphaValue = 0
+                button_style_italicize.animator().alphaValue = 0
+                button_style_bold.animator().alphaValue = 0
+                button_style_regular.animator().alphaValue = 0
+                button_style_left.animator().alphaValue = 0
+                button_style_center.animator().alphaValue = 0
+                button_style_right.animator().alphaValue = 0
+                NSAnimationContext.endGrouping()
+            } else if stickyHeaderTitle.stringValue == lectureFocused.label_lectureTitle.stringValue {
+                // Animate scrolling timeline
+                NSAnimationContext.beginGrouping()
+                NSAnimationContext.current().duration = 1
+                button_style_regular.animator().alphaValue = 1
+                button_style_underline.animator().alphaValue = 1
+                button_style_italicize.animator().alphaValue = 1
+                button_style_bold.animator().alphaValue = 1
+                button_style_regular.animator().alphaValue = 1
+                button_style_left.animator().alphaValue = 1
+                button_style_center.animator().alphaValue = 1
+                button_style_right.animator().alphaValue = 1
+                NSAnimationContext.endGrouping()
+            }
+        }
+    }
     // Reference lecture lead constraint to hide/show this container
     private var lectureLeadingConstraint: NSLayoutConstraint!
     // This constraint is for an invisible view at the bottom of lecture stack to allow user to scroll
@@ -70,6 +109,15 @@ class EditorViewController: NSViewController {
                                                name: .NSScrollViewDidLiveScroll, object: lectureScroller)
         NotificationCenter.default.addObserver(self, selector: #selector(EditorViewController.didScroll),
                                                name: .NSViewBoundsDidChange, object: lectureClipper)
+        
+        button_style_regular.alphaValue = 0
+        button_style_underline.alphaValue = 0
+        button_style_italicize.alphaValue = 0
+        button_style_bold.alphaValue = 0
+        button_style_regular.alphaValue = 0
+        button_style_left.alphaValue = 0
+        button_style_center.alphaValue = 0
+        button_style_right.alphaValue = 0
     }
     override func viewDidAppear() {
         lectureBottomBufferView.initialize(owner: self)
@@ -225,6 +273,27 @@ class EditorViewController: NSViewController {
                     foundLowestLecture = true
                 }
                 stickyHeaderTopConstraint.constant = 0
+                if lectureFocused != nil {
+                    if lectureFocused.label_lectureTitle.stringValue != stickyHeaderTitle.stringValue {
+                        button_style_regular.alphaValue = 0
+                        button_style_underline.alphaValue = 0
+                        button_style_italicize.alphaValue = 0
+                        button_style_bold.alphaValue = 0
+                        button_style_regular.alphaValue = 0
+                        button_style_left.alphaValue = 0
+                        button_style_center.alphaValue = 0
+                        button_style_right.alphaValue = 0
+                    } else {
+                        button_style_regular.alphaValue = 1
+                        button_style_underline.alphaValue = 1
+                        button_style_italicize.alphaValue = 1
+                        button_style_bold.alphaValue = 1
+                        button_style_regular.alphaValue = 1
+                        button_style_left.alphaValue = 1
+                        button_style_center.alphaValue = 1
+                        button_style_right.alphaValue = 1
+                    }
+                }
             } else {
                 // Check how close the next element is to determine if stickyheader should be pushed aside
                 if (clipperYPos + stickyHeaderBox.bounds.height) > (accumulatedHeight) {
@@ -271,25 +340,87 @@ class EditorViewController: NSViewController {
         }
     }
     
-    // MARK: Find functinoality
-    func find(str: String) {
-        let allLectures = true
+    // MARK: Find, Print, Export Functions
+    @IBAction func actionTest_find(_ sender: NSTextField) {
+        find(str: sender.stringValue, allLectures: true, includeTitles: true)
+    }
+    /// If allLectures is true, will search through all lectures together.
+    /// If allLectures is false, will search through currently focused lecture.
+    /// If includeTitles is true, will also search the lecture header titles. NYI
+    func find(str: String, allLectures: Bool, includeTitles: Bool) {
+        print("Running a find on '\(str)'")
         if allLectures {
             // Go through each lecture individually to find word
+            var foundCount = 0
             for case let lectureController as LectureViewController in self.childViewControllers {
-                let thisStr = lectureController.textView_lecture.string!
-                if thisStr.contains(str) {
-//                    let ind = thisStr.
-                    
+                var thisStr = lectureController.textView_lecture.string!.lowercased()
+                var found = thisStr.range(of: str.lowercased())
+                while found != nil {
+                    foundCount = foundCount + 1
+                    thisStr = thisStr.substring(from: found!.upperBound)
+                    found = thisStr.range(of: str.lowercased())
                 }
             }
+            print("    Found: \(foundCount)")
         } else {
             // Go through selected lecture to find word
             
         }
     }
     // MARK: Print functionality
-//    func print() {
-//        
-//    }
+    @IBAction func actionTest_print(_ sender: Any) {
+        print("print test \n\(printableFormat().string)")
+    }
+    func printableFormat() -> NSAttributedString{
+        let attribString = NSMutableAttributedString()
+        for case let lectureController as LectureViewController in self.childViewControllers {
+            attribString.append(NSAttributedString(string: lectureController.label_lectureTitle.stringValue + "\n"))
+            attribString.append(NSAttributedString(string: lectureController.label_lectureDate.stringValue + "\n\n"))
+            attribString.append(lectureController.textView_lecture.attributedString())
+            attribString.append(NSAttributedString(string: "\n"))
+        }
+        return attribString
+    }
+    /// Assumes all lectures will be included
+    func exportRTF() {
+        
+    }
+    func exportRTF(for lecture: LectureViewController) {
+        
+    }
+    @IBAction func action_styleRegular(_ sender: NSButton) {
+        if lectureFocused != nil {
+            lectureFocused.action_styleRegular(sender)
+        }
+    }
+    @IBAction func action_styleUnderline(_ sender: NSButton) {
+        if lectureFocused != nil {
+            lectureFocused.action_styleUnderline(sender)
+        }
+    }
+    @IBAction func action_styleItalicize(_ sender: NSButton) {
+        if lectureFocused != nil {
+            lectureFocused.action_styleItalicize(sender)
+        }
+    }
+    @IBAction func action_styleBold(_ sender: NSButton) {
+        if lectureFocused != nil {
+            lectureFocused.action_styleBold(sender)
+        }
+    }
+    @IBAction func action_styleLeft(_ sender: NSButton) {
+        if lectureFocused != nil {
+            lectureFocused.action_styleLeft(sender)
+        }
+    }
+    @IBAction func action_styleCenter(_ sender: NSButton) {
+        if lectureFocused != nil {
+            lectureFocused.action_styleCenter(sender)
+        }
+    }
+    @IBAction func action_styleRight(_ sender: NSButton) {
+        if lectureFocused != nil {
+            lectureFocused.action_styleRight(sender)
+        }
+    }
 }
