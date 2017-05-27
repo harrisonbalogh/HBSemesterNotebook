@@ -369,9 +369,11 @@ class EditorViewController: NSViewController {
     }
     // MARK: Print functionality
     @IBAction func actionTest_print(_ sender: Any) {
-        print("print test \n\(printableFormat().string)")
+//        print("print test \n\(printableFormat().string)")
+//        exportAllLectures()
+        printAllLectures()
     }
-    func printableFormat() -> NSAttributedString{
+    func exportAllLectures(){
         let attribString = NSMutableAttributedString()
         for case let lectureController as LectureViewController in self.childViewControllers {
             attribString.append(NSAttributedString(string: lectureController.label_lectureTitle.stringValue + "\n"))
@@ -379,7 +381,34 @@ class EditorViewController: NSViewController {
             attribString.append(lectureController.textView_lecture.attributedString())
             attribString.append(NSAttributedString(string: "\n"))
         }
-        return attribString
+        let fullRange = NSRange(location: 0, length: attribString.length)
+        do {
+            let data1 = try attribString.data(from: fullRange, documentAttributes: [NSDocumentTypeDocumentAttribute: NSRTFDTextDocumentType])
+            let data3 = attribString.rtfd(from: fullRange, documentAttributes: [NSDocumentTypeDocumentAttribute: NSRTFDTextDocumentType])
+            let savePanel = NSSavePanel()
+            savePanel.nameFieldLabel = "Export As:"
+            savePanel.canSelectHiddenExtension = true
+            savePanel.nameFieldStringValue = "\(thisCourse.title!) Lectures - \(thisCourse.semester!.title!.capitalized) \(thisCourse.semester!.year!.year)"
+            savePanel.prompt = "Export"
+            savePanel.allowedFileTypes = [NSRTFDTextDocumentType]
+            savePanel.beginSheetModal(for: NSApp.keyWindow!, completionHandler: {result in
+                if result == NSFileHandlingPanelOKButton {
+                    do {
+                        print("File extension: \(savePanel.url!)")
+//                        try writableData.write(to: savePanel.url!)
+                        try data3!.write(to: savePanel.url!, options: .atomic)
+                    } catch {
+                    }
+                }
+            })
+        } catch {
+        }
+    }
+    // EXPORT AND PRINT should get file data from
+    func printAllLectures() {
+        if lectureFocused != nil {
+            lectureFocused.textView_lecture.print(self)
+        }
     }
     /// Assumes all lectures will be included
     func exportRTF() {

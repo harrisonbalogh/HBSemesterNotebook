@@ -14,6 +14,8 @@ class LectureViewController: NSViewController {
     @IBOutlet weak var label_lectureDate: NSTextField!
     @IBOutlet weak var scrollView_lecture: HXNonScrollView!
     @IBOutlet var textView_lecture: HXTextView!
+    @IBOutlet weak var label_titleDivider: NSTextField!
+    @IBOutlet weak var label_customTitle: NSTextField!
     @IBOutlet weak var button_style_regular: NSButton!
     @IBOutlet weak var button_style_underline: NSButton!
     @IBOutlet weak var button_style_italicize: NSButton!
@@ -23,6 +25,7 @@ class LectureViewController: NSViewController {
     @IBOutlet weak var button_style_right: NSButton!
     
     var textHeightConstraint: NSLayoutConstraint!
+    var customTitleTrailingConstraint: NSLayoutConstraint!
     
     var lecture: Lecture!
     
@@ -30,6 +33,7 @@ class LectureViewController: NSViewController {
     
     var hasFocus = false {
         didSet {
+            customTitleTrailingConstraint.isActive = false
             if hasFocus {
                 // Animate scrolling timeline
                 NSAnimationContext.beginGrouping()
@@ -43,6 +47,7 @@ class LectureViewController: NSViewController {
                 button_style_center.animator().alphaValue = 1
                 button_style_right.animator().alphaValue = 1
                 NSAnimationContext.endGrouping()
+                customTitleTrailingConstraint = label_customTitle.trailingAnchor.constraint(equalTo: button_style_regular.leadingAnchor)
             } else {
                 // Animate scrolling timeline
                 NSAnimationContext.beginGrouping()
@@ -56,7 +61,9 @@ class LectureViewController: NSViewController {
                 button_style_center.animator().alphaValue = 0
                 button_style_right.animator().alphaValue = 0
                 NSAnimationContext.endGrouping()
+                customTitleTrailingConstraint = label_customTitle.trailingAnchor.constraint(equalTo: label_lectureDate.leadingAnchor)
             }
+            customTitleTrailingConstraint.isActive = true
         }
     }
     
@@ -79,6 +86,16 @@ class LectureViewController: NSViewController {
         
         self.lecture = withLecture
         
+        if lecture.title == nil {
+            label_customTitle.stringValue = ""
+        } else {
+            label_customTitle.stringValue = lecture.title!
+        }
+        notifyCustomTitleUpdate()
+        
+        customTitleTrailingConstraint = label_customTitle.trailingAnchor.constraint(equalTo: label_lectureDate.leadingAnchor)
+        customTitleTrailingConstraint.isActive = true
+        
         self.owner = owner
         
         button_style_regular.alphaValue = 0
@@ -92,6 +109,10 @@ class LectureViewController: NSViewController {
         
         NotificationCenter.default.addObserver(self, selector: #selector(LectureViewController.notifyTextChange),
                                                name: .NSTextDidChange, object: textView_lecture)
+        NotificationCenter.default.addObserver(self, selector: #selector(LectureViewController.notifyCustomTitleUpdate),
+                                               name: .NSControlTextDidEndEditing, object: label_customTitle)
+        NotificationCenter.default.addObserver(self, selector: #selector(LectureViewController.notifyCustomTitleChange),
+                                               name: .NSControlTextDidChange, object: label_customTitle)
 
     }
     // ...................................................................................................................
@@ -104,6 +125,31 @@ class LectureViewController: NSViewController {
     override func viewDidLayout() {
         super.viewDidLayout()
         notifyTextChange()
+    }
+    
+    @IBAction func action_customTitle(_ sender: Any) {
+        NSApp.keyWindow?.makeFirstResponder(self)
+    }
+    
+    func notifyCustomTitleChange() {
+        if label_customTitle.stringValue == "" {
+            label_titleDivider.alphaValue = 0.3
+            lecture.title = nil
+        } else {
+            label_titleDivider.alphaValue = 1
+        }
+    }
+    
+    func notifyCustomTitleUpdate() {
+        label_customTitle.stringValue = label_customTitle.stringValue.trimmingCharacters(in: .whitespaces)
+        // Check if it has content
+        if label_customTitle.stringValue == "" {
+            label_titleDivider.alphaValue = 0.3
+            lecture.title = nil
+        } else {
+            lecture.title = label_customTitle.stringValue
+            label_titleDivider.alphaValue = 1
+        }
     }
     
     func notifyTextChange() {

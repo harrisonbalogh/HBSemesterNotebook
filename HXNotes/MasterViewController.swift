@@ -32,23 +32,6 @@ class MasterViewController: NSViewController {
     
     // Mark: Object models informed by TimelineViewController
     let appDelegate = NSApplication.shared().delegate as! AppDelegate
-    var yearSelected: Year!
-//    var semesterSelected: Semester! {
-//        didSet {
-//            // Clear all other content displayed
-//            popCalendar()
-//            popEditor()
-//            // Check if this semester has courses entered
-//            if semesterSelected.courses!.count > 0 {
-//                pushEditor()
-//                courseViewController.toggleEditsButtons.isEnabled = true
-//            } else {
-//                pushCalendar()
-//                // Prevent user from going into lecture mode if there are no courses yet.
-//                courseViewController.toggleEditsButtons.isEnabled = false
-//            }
-//        }
-//    }
     
     // Mark: Initialize the viewController ..................................................................
     override func viewDidLoad() {
