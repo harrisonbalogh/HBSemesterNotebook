@@ -13,22 +13,23 @@ class MasterViewController: NSViewController {
     
     // MARK: View references
     @IBOutlet weak var container_content: NSView!
-    @IBOutlet weak var container_timeline: NSView!
-    // Reference timeline top constraint to hide/show this container
-    var timelineTopConstraint: NSLayoutConstraint!
-    // Children controllers
-    var timelineViewController: TimelineViewController!
-    var courseViewController: CourseViewController!
-    // The following 2 controllers fill container_content as is needed
-    var calendarViewController: CalendarViewController!
-    var editorViewController: EditorViewController!
+    @IBOutlet weak var container_topBar: NSView!
+    @IBOutlet weak var container_sideBar: NSView!
     
-    // MARK: Drag Box for adding time slots for course
+    // Children controllers
+    var sidebarViewController: SidebarViewController!
+    // The following 2 controllers fill container_content as is needed
+    private var calendarViewController: CalendarViewController!
+    private var editorViewController: EditorViewController!
+    
     // Course drag box for moving courses
-    var courseDragBox: HXCourseDragBox!
+    var courseDragBox: HXCourseDragBox = HXCourseDragBox.instance()
     // These constraints control the position of courseDragBox
     var dragBoxConstraintLead: NSLayoutConstraint!
     var dragBoxConstraintTop: NSLayoutConstraint!
+    
+    var topBarConstraintTop: NSLayoutConstraint!
+    var sideBarConstraintLead: NSLayoutConstraint!
     
     // Mark: Object models informed by TimelineViewController
     let appDelegate = NSApplication.shared().delegate as! AppDelegate
@@ -36,25 +37,22 @@ class MasterViewController: NSViewController {
     // Mark: Initialize the viewController ..................................................................
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        timelineTopConstraint = container_timeline.topAnchor.constraint(equalTo: self.view.topAnchor)
-        timelineTopConstraint.isActive = true
         
-        // Create course dragged box
-        self.courseDragBox = HXCourseDragBox.instance()
+        topBarConstraintTop = container_topBar.topAnchor.constraint(equalTo: self.view.topAnchor)
+        topBarConstraintTop.isActive = true
+        
+        sideBarConstraintLead = container_sideBar.leadingAnchor.constraint(equalTo: self.view.leadingAnchor)
+        sideBarConstraintLead.isActive = true
+        
+        courseDragBox.translatesAutoresizingMaskIntoConstraints = false
+        
+        topBarConstraintTop.constant = -container_topBar.frame.height
     }
     override func viewDidAppear() {
-        for case let timelineVC as TimelineViewController in self.childViewControllers {
-            self.timelineViewController = timelineVC
+        for case let sidebarVC as SidebarViewController in self.childViewControllers {
+            self.sidebarViewController = sidebarVC
+            self.sidebarViewController.masterViewController = self
         }
-        for case let courseVC as CourseViewController in self.childViewControllers {
-            self.courseViewController = courseVC
-            courseViewController.masterViewController = self
-        }
-//        checkWhatCourses()
-        
-        // Test func
-//        checkWhatCourses(month: 3, year: 2015, dayOfWeek: 3, hour: 14, minute: 56)
     }
     
     // MARK: Login Logic ....................................................................................
@@ -150,7 +148,7 @@ class MasterViewController: NSViewController {
 //    }
     
     // MARK: Handle content container changes ................................................................    
-    func pushCalendar(semester: Semester) {
+    private func pushCalendar(semester: Semester) {
         let strybrd = NSStoryboard.init(name: "Main", bundle: nil)
         if let newController = strybrd.instantiateController(withIdentifier: "CalendarID") as? CalendarViewController {
             calendarViewController = newController
@@ -159,98 +157,88 @@ class MasterViewController: NSViewController {
             calendarViewController.masterViewController = self
             calendarViewController.view.frame = container_content.bounds
             calendarViewController.view.autoresizingMask = [.viewWidthSizable, .viewHeightSizable]
-            calendarViewController.initialize(withSemester: semester)
+            calendarViewController.initialize(with: semester)
         }
-        courseViewController.toggleEditsButtons.state = NSOnState
     }
-    func pushEditor() {
+    private func pushEditor() {
         let strybrd = NSStoryboard.init(name: "Main", bundle: nil)
         if let newController = strybrd.instantiateController(withIdentifier: "EditorID") as? EditorViewController {
             editorViewController = newController
             self.addChildViewController(editorViewController)
+            editorViewController.masterViewController = self
             container_content.addSubview(editorViewController.view)
             editorViewController.view.frame = container_content.bounds
             editorViewController.view.autoresizingMask = [.viewWidthSizable, .viewHeightSizable]
         }
-        courseViewController.toggleEditsButtons.state = NSOffState
     }
-    func popCalendar() {
+    private func popCalendar() {
         if calendarViewController != nil {
             if calendarViewController.view.superview != nil {
                 calendarViewController.view.removeFromSuperview()
                 calendarViewController.removeFromParentViewController()
+                calendarViewController = nil
             }
         }
+        topBarShown(false)
     }
-    func popEditor() {
+    private func popEditor() {
         if editorViewController != nil {
             if editorViewController.view.superview != nil {
                 editorViewController.view.removeFromSuperview()
                 editorViewController.removeFromParentViewController()
+                editorViewController = nil
             }
         }
     }
     
-    /// Show or hide the timeline pull out drawer.
-    func discloseTimeline(_ state: Int) {
-        if state == NSOnState {
-            // Animate showing the timeline
-            NSAnimationContext.beginGrouping()
-            NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
-            NSAnimationContext.current().duration = 0.2
-            timelineTopConstraint.animator().constant = 0
-            NSAnimationContext.endGrouping()
-        } else if state == NSOffState {
-            // Animate hiding the timeline
-            NSAnimationContext.beginGrouping()
-            NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
-            NSAnimationContext.current().duration = 0.2
-            timelineTopConstraint.animator().constant = -105
-            NSAnimationContext.endGrouping()
+    // MARK: Container Disclosure Functionality
+    /// Reveal or hide the top bar container.
+    func topBarShown(_ visible: Bool) {
+        NSAnimationContext.beginGrouping()
+        NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
+        NSAnimationContext.current().duration = 0.25
+        if visible {
+            topBarConstraintTop.animator().constant = 0
+        } else {
+            topBarConstraintTop.animator().constant = -container_topBar.frame.height
         }
+        NSAnimationContext.endGrouping()
     }
     
-    // MARK: Dragging functionality for calendar
-    /// Initializes drag box from the calendar view
-    func startDragging(course: Course) {
-        // Update drag box visuals to match course being dragged
-        courseDragBox.updateWithCourse(course)
-        // Add drag box back to the superview
-        self.view.addSubview(courseDragBox)
-        // Try and move these to dragBox initialize in viewDidLoad()
-        dragBoxConstraintLead = courseDragBox.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: -1000)
-        dragBoxConstraintTop = courseDragBox.topAnchor.constraint(equalTo: self.view.topAnchor, constant: -1000)
-        dragBoxConstraintLead.isActive = true
-        dragBoxConstraintTop.isActive = true
-    }
-    /// Notify the drag box of movement
-    func moveDragging(course: Course, to loc: NSPoint) {
-        dragBoxConstraintLead.constant = loc.x - courseDragBox.bounds.width/2
-        dragBoxConstraintTop.constant = self.view.bounds.height - loc.y - 5
-        
-        calendarViewController.drag()
-    }
-    /// Remove the drag box from master view
-    func stopDragging(course: Course, at loc: NSPoint) {
-        self.courseDragBox.removeFromSuperview()
-        calendarViewController.drop(course: course, at: loc)
+    func sideBarShown(_ visible: Bool) {
+        NSAnimationContext.beginGrouping()
+        NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
+        NSAnimationContext.current().duration = 0.25
+        if visible {
+            sideBarConstraintLead.animator().constant = 0
+        } else {
+            sideBarConstraintLead.animator().constant = -container_sideBar.frame.width
+        }
+        NSAnimationContext.endGrouping()
     }
     
     // MARK: Notifiers - Child Controllers ............................................................
-    /// Notify MasterViewController that a semester has been selected.
-    /// Passes on semester selection to CourseViewController
-    func notifySemesterSelection(semester: Semester) {
-        courseViewController.thisSemester = semester
-    }
     /// Notify MasterViewController that a course has been selected or deselected.
     /// Passes on course selection to EditorViewController
     func notifyCourseSelection(course: Course?) {
-        editorViewController.thisCourse = course
+        editorViewController.selectedCourse = course
+        if course != nil {
+            topBarShown(true)
+        } else {
+            topBarShown(false)
+        }
     }
     /// Notfy MasterViewController that a course has been removed.
     /// Currently used to remove time slot grid spaces in Calendar.
     func notifyCourseDeletion(named course: String) {
         calendarViewController.clearTimeSlots(named: course)
+        calendarViewController.evaluateEmptyVisuals()
+    }
+    /// Notify calendar of a course being added so it may display proper visuals.
+    func notifyCourseAddition() {
+        if calendarViewController != nil {
+            calendarViewController.evaluateEmptyVisuals()
+        }
     }
     /// Notify MasterViewController that a course has been renamed.
     /// Currently used to reload the label titles on time slots in the Calendar.
@@ -258,27 +246,65 @@ class MasterViewController: NSViewController {
         calendarViewController.reloadTimeslotTitles(named: oldName)
     }
     ///
-    func notifyCourseDragStart(course: Course) {
-        
+    func notifyCourseDragStart(editBox: HXCourseEditBox, to loc: NSPoint) {
+        // Update drag box visuals to match course being dragged
+        courseDragBox.updateWithCourse(editBox.course)
+        // Add drag box back to the superview
+        self.view.addSubview(courseDragBox)
+        // Try and move these to dragBox initialize in viewDidLoad()
+        courseDragBox.removeConstraints(courseDragBox.constraints)
+        dragBoxConstraintLead = courseDragBox.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: loc.x - editBox.boxDrag.frame.origin.x - editBox.boxDrag.frame.width/2)
+        dragBoxConstraintTop = courseDragBox.topAnchor.constraint(equalTo: self.view.topAnchor, constant: self.view.bounds.height - loc.y - editBox.boxDrag.frame.origin.y - editBox.boxDrag.frame.height/2)
+        dragBoxConstraintLead.isActive = true
+        dragBoxConstraintTop.isActive = true
+        courseDragBox.widthAnchor.constraint(equalToConstant: editBox.bounds.width + 2).isActive = true
+        courseDragBox.heightAnchor.constraint(equalToConstant: editBox.bounds.height + 1).isActive = true
     }
     ///
-    func notifyCourseDragMoved(course: Course) {
-        
+    func notifyCourseDragMoved(editBox: HXCourseEditBox, to loc: NSPoint) {
+        dragBoxConstraintLead.constant = loc.x - editBox.boxDrag.frame.origin.x - editBox.boxDrag.frame.width/2
+        dragBoxConstraintTop.constant = self.view.bounds.height - loc.y - editBox.boxDrag.frame.origin.y - editBox.boxDrag.frame.height/2
+        calendarViewController.drag()
     }
     ///
-    func notifyCourseDragDrop(course: Course) {
-        
+    func notifyCourseDragEnd(course: Course, at loc: NSPoint) {
+        self.courseDragBox.removeFromSuperview()
+        calendarViewController.drop(course: course, at: loc)
+    }
+    ///
+    func notifyLectureFocus(is lecture: Lecture?) {
+        sidebarViewController.focus(lecture: lecture)
+    }
+    /// 
+    func notifyLectureSelection(lecture: String) {
+        editorViewController.scrollToLecture(lecture)
     }
     ///
     func notifySemesterEditing(semester: Semester) {
-        popEditor()
-        popCalendar()
-        pushCalendar(semester: semester)
+        if calendarViewController == nil {
+            // Only push a new calendar if the editor is showing.
+            popEditor()
+            pushCalendar(semester: semester)
+        } else {
+            calendarViewController.initialize(with: semester)
+        }
     }
     ///
     func notifySemesterViewing(semester: Semester) {
-        popEditor()
-        popCalendar()
-        pushEditor()
+        if editorViewController == nil {
+            // Only push a new editor if the calendar is showing.
+            popCalendar()
+            pushEditor()
+        } else {
+            editorViewController.selectedCourse = nil
+        }
+    }
+    /// 
+    func notifyTimeSlotAddition() {
+        sidebarViewController.notifyTimeSlotAdded()
+    }
+    ///
+    func notifyTimeSlotDeletion() {
+        sidebarViewController.notifyTimeSlotRemoved()
     }
 }

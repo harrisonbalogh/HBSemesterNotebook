@@ -10,19 +10,26 @@ import Cocoa
 
 class MasterWindowController: NSWindowController {
     
-    @IBOutlet weak var timelineButton_discloseTimeline: NSButton!
-    @IBOutlet weak var button_toggleSchedule: NSToolbarItem!
+    var masterViewController: MasterViewController!
     
     override func windowDidLoad() {
         super.windowDidLoad()
     
         // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
-        self.window!.titleVisibility = NSWindowTitleVisibility.hidden
-    }
-    
-    @IBAction func action_discloseTimeline(_ sender: Any) {
-        if let controller = self.contentViewController as? MasterViewController {
-            controller.discloseTimeline(timelineButton_discloseTimeline.state)
+//        self.window!.titleVisibility = NSWindowTitleVisibility.hidden
+        
+        if let mVC = self.contentViewController as? MasterViewController {
+            masterViewController = mVC
         }
     }
+    
+
+    @IBAction func actionTemp_sidebar(_ sender: NSButton) {
+        if sender.state == NSOnState {
+            masterViewController.sideBarShown(true)
+        } else {
+            masterViewController.sideBarShown(false)
+        }
+    }
+    
 }

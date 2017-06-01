@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11762" systemVersion="16E195" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11762" systemVersion="16F73" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11762"/>
@@ -11,22 +11,22 @@
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customView id="c22-O7-iKe" customClass="HXCourseEditBox" customModule="HXNotes" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="127" height="21"/>
+            <rect key="frame" x="0.0" y="0.0" width="124" height="30"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <textField identifier="course_label_title" horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kzF-F0-7SU" customClass="CourseLabel" customModule="HXNotes" customModuleProvider="target">
-                    <rect key="frame" x="4" y="2" width="84" height="17"/>
+                    <rect key="frame" x="6" y="6" width="78" height="17"/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="80" id="qvE-Pf-BPp"/>
+                        <constraint firstAttribute="height" constant="17" id="esH-BJ-7BW"/>
                     </constraints>
-                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="CECS 426" usesSingleLineMode="YES" id="QIJ-5f-9dI">
+                    <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="left" title="Label" usesSingleLineMode="YES" id="QIJ-5f-9dI">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="0.84999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <box identifier="course_box_drag" boxType="custom" cornerRadius="4" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="7zU-te-0AV">
-                    <rect key="frame" x="89" y="1" width="18" height="18"/>
+                <box identifier="course_box_drag" boxType="custom" cornerRadius="4" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="7zU-te-0AV" userLabel="Drag Box">
+                    <rect key="frame" x="104" y="5" width="18" height="18"/>
                     <view key="contentView" id="Ymd-5E-764">
                         <rect key="frame" x="1" y="1" width="16" height="16"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -49,7 +49,7 @@
                     <color key="fillColor" red="0.47121701977114583" green="0.82496093749999999" blue="0.48645101695106585" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                 </box>
                 <button identifier="course_button_trash" translatesAutoresizingMaskIntoConstraints="NO" id="jqd-gm-tjw" userLabel="Trash Button">
-                    <rect key="frame" x="109" y="1" width="18" height="18"/>
+                    <rect key="frame" x="86" y="5" width="18" height="18"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="18" id="Xj1-IH-wRx"/>
                         <constraint firstAttribute="height" constant="18" id="ofk-OM-nGS"/>
@@ -59,17 +59,24 @@
                         <font key="font" metaFont="system"/>
                     </buttonCell>
                 </button>
+                <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="zzh-eW-hNw">
+                    <rect key="frame" x="0.0" y="-2" width="124" height="5"/>
+                </box>
             </subviews>
             <constraints>
+                <constraint firstAttribute="bottom" secondItem="kzF-F0-7SU" secondAttribute="bottom" constant="6" id="2Oe-Tg-Cvl"/>
                 <constraint firstItem="jqd-gm-tjw" firstAttribute="centerY" secondItem="kzF-F0-7SU" secondAttribute="centerY" id="2Of-Ld-Hbo"/>
-                <constraint firstAttribute="trailing" secondItem="jqd-gm-tjw" secondAttribute="trailing" id="5Y4-4y-iHE"/>
-                <constraint firstItem="jqd-gm-tjw" firstAttribute="leading" secondItem="7zU-te-0AV" secondAttribute="trailing" constant="2" id="OeS-UG-bV8"/>
-                <constraint firstItem="kzF-F0-7SU" firstAttribute="centerY" secondItem="c22-O7-iKe" secondAttribute="centerY" id="PFF-qE-4n0"/>
-                <constraint firstItem="7zU-te-0AV" firstAttribute="centerY" secondItem="kzF-F0-7SU" secondAttribute="centerY" constant="1" id="WuM-xT-7OY"/>
-                <constraint firstItem="kzF-F0-7SU" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" constant="6" id="bGE-cW-4hY"/>
-                <constraint firstItem="7zU-te-0AV" firstAttribute="leading" secondItem="kzF-F0-7SU" secondAttribute="trailing" constant="3" id="ifS-t4-Y4l"/>
+                <constraint firstAttribute="trailing" secondItem="zzh-eW-hNw" secondAttribute="trailing" id="5Jm-jP-oT4"/>
+                <constraint firstAttribute="trailing" secondItem="7zU-te-0AV" secondAttribute="trailing" constant="2" id="FB6-lE-d0O"/>
+                <constraint firstItem="kzF-F0-7SU" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" constant="7" id="GXu-8X-Yy2"/>
+                <constraint firstItem="7zU-te-0AV" firstAttribute="leading" secondItem="jqd-gm-tjw" secondAttribute="trailing" id="HLR-yD-n0n"/>
+                <constraint firstItem="7zU-te-0AV" firstAttribute="centerY" secondItem="kzF-F0-7SU" secondAttribute="centerY" id="WuM-xT-7OY"/>
+                <constraint firstAttribute="bottom" secondItem="zzh-eW-hNw" secondAttribute="bottom" id="ZwE-xn-DSP"/>
+                <constraint firstItem="kzF-F0-7SU" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" constant="8" id="bGE-cW-4hY"/>
+                <constraint firstItem="zzh-eW-hNw" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" id="s5o-Ia-aXC"/>
+                <constraint firstItem="jqd-gm-tjw" firstAttribute="leading" secondItem="kzF-F0-7SU" secondAttribute="trailing" constant="4" id="yXM-ir-UQq"/>
             </constraints>
-            <point key="canvasLocation" x="-24" y="58.5"/>
+            <point key="canvasLocation" x="-24" y="58"/>
         </customView>
     </objects>
     <resources>

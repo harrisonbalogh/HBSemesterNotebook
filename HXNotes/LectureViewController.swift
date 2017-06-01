@@ -14,8 +14,80 @@ class LectureViewController: NSViewController {
     @IBOutlet weak var label_lectureDate: NSTextField!
     @IBOutlet weak var scrollView_lecture: HXNonScrollView!
     @IBOutlet var textView_lecture: HXTextView!
+    
+    // Set the when user sets or remove focus to the customTitle textField.
+    var isTitling = false {
+        didSet {
+            print("isTitling update: \(isTitling) for \(label_lectureTitle.stringValue)")
+            if isTitling {
+                owner.customTitleFocused = self
+//                if NSApp.keyWindow?.firstResponder != label_customTitle {
+//                    print("Set label_customTitle to responder")
+//                    NSApp.keyWindow?.makeFirstResponder(label_customTitle)
+//                    owner.customTitleFocused = self
+//                }
+                
+            } else if owner.customTitleFocused != nil {
+                if owner.customTitleFocused == self && NSApp.keyWindow!.firstResponder != owner.stickyHeaderCustomTitle {
+                    owner.customTitleFocused = nil
+                }
+            }
+        }
+    }
     @IBOutlet weak var label_titleDivider: NSTextField!
-    @IBOutlet weak var label_customTitle: NSTextField!
+    @IBOutlet weak var label_customTitle: HXCustomTitleField!
+    @IBAction func action_customTitle(_ sender: HXCustomTitleField) {
+        print("action_customTitle")
+        NSApp.keyWindow?.makeFirstResponder(self)
+    }
+    
+    // Set when the user sets or removes focus to the textView_lecture. Will reveal
+    // or hide styling buttons and update customTitle textField constraints.
+    var isStyling = false {
+        didSet {
+            print("isStyling update: \(isStyling) for \(label_lectureTitle.stringValue)")
+            // Remove constraint before updating and reinstating
+            customTitleTrailingConstraint.isActive = false
+            if isStyling {
+                // Notify owning EditorVC that this LectureVC's textView is being styled
+                owner.lectureFocused = self
+                // Animate revealing the styling buttons
+                NSAnimationContext.beginGrouping()
+                NSAnimationContext.current().duration = 1
+                button_style_regular.animator().alphaValue = 1
+                button_style_underline.animator().alphaValue = 1
+                button_style_italicize.animator().alphaValue = 1
+                button_style_bold.animator().alphaValue = 1
+                button_style_regular.animator().alphaValue = 1
+                button_style_left.animator().alphaValue = 1
+                button_style_center.animator().alphaValue = 1
+                button_style_right.animator().alphaValue = 1
+                NSAnimationContext.endGrouping()
+                // Have to shift the customTitle textField to truncate at the closest style button
+                customTitleTrailingConstraint = label_customTitle.trailingAnchor.constraint(equalTo: button_style_regular.leadingAnchor)
+            } else {
+                if owner.lectureFocused == self {
+                    owner.lectureFocused = nil
+                }
+                // Animate hiding the styling buttons
+                NSAnimationContext.beginGrouping()
+                NSAnimationContext.current().duration = 0.25
+                button_style_regular.animator().alphaValue = 0
+                button_style_underline.animator().alphaValue = 0
+                button_style_italicize.animator().alphaValue = 0
+                button_style_bold.animator().alphaValue = 0
+                button_style_regular.animator().alphaValue = 0
+                button_style_left.animator().alphaValue = 0
+                button_style_center.animator().alphaValue = 0
+                button_style_right.animator().alphaValue = 0
+                NSAnimationContext.endGrouping()
+                // Have to shift the customTitle textField to extend to the date label
+                customTitleTrailingConstraint = label_customTitle.trailingAnchor.constraint(equalTo: label_lectureDate.leadingAnchor)
+            }
+            // Reinstate constraint
+            customTitleTrailingConstraint.isActive = true
+        }
+    }
     @IBOutlet weak var button_style_regular: NSButton!
     @IBOutlet weak var button_style_underline: NSButton!
     @IBOutlet weak var button_style_italicize: NSButton!
@@ -31,72 +103,44 @@ class LectureViewController: NSViewController {
     
     var owner: EditorViewController!
     
-    var hasFocus = false {
-        didSet {
-            customTitleTrailingConstraint.isActive = false
-            if hasFocus {
-                // Animate scrolling timeline
-                NSAnimationContext.beginGrouping()
-                NSAnimationContext.current().duration = 1
-                button_style_regular.animator().alphaValue = 1
-                button_style_underline.animator().alphaValue = 1
-                button_style_italicize.animator().alphaValue = 1
-                button_style_bold.animator().alphaValue = 1
-                button_style_regular.animator().alphaValue = 1
-                button_style_left.animator().alphaValue = 1
-                button_style_center.animator().alphaValue = 1
-                button_style_right.animator().alphaValue = 1
-                NSAnimationContext.endGrouping()
-                customTitleTrailingConstraint = label_customTitle.trailingAnchor.constraint(equalTo: button_style_regular.leadingAnchor)
-            } else {
-                // Animate scrolling timeline
-                NSAnimationContext.beginGrouping()
-                NSAnimationContext.current().duration = 0.25
-                button_style_regular.animator().alphaValue = 0
-                button_style_underline.animator().alphaValue = 0
-                button_style_italicize.animator().alphaValue = 0
-                button_style_bold.animator().alphaValue = 0
-                button_style_regular.animator().alphaValue = 0
-                button_style_left.animator().alphaValue = 0
-                button_style_center.animator().alphaValue = 0
-                button_style_right.animator().alphaValue = 0
-                NSAnimationContext.endGrouping()
-                customTitleTrailingConstraint = label_customTitle.trailingAnchor.constraint(equalTo: label_lectureDate.leadingAnchor)
-            }
-            customTitleTrailingConstraint.isActive = true
+    func initialize(with lecture: Lecture) {
+        if let parentVC = self.parent as? EditorViewController {
+            self.owner = parentVC
         }
-    }
-    
-    func initialize(withNumber: Int, withDate: String, withLecture: Lecture, owner: EditorViewController) {
         
-        label_lectureTitle.stringValue = "Lecture \(withNumber)"
+        label_lectureTitle.stringValue = "Lecture \(lecture.number)"
         
-        label_lectureDate.stringValue = withDate
+        label_lectureDate.stringValue = "\(lecture.month)/\(lecture.day)/\(lecture.year % 100)"
         
         scrollView_lecture.parentController = self
         textView_lecture.parentController = self
+        label_customTitle.parentController = self
         
         textHeightConstraint = scrollView_lecture.heightAnchor.constraint(equalToConstant: 31)
         textHeightConstraint.isActive = true
         
-        if withLecture.content != nil {
-            textView_lecture.textStorage?.setAttributedString(withLecture.content!)
+        if lecture.content != nil {
+            textView_lecture.textStorage?.setAttributedString(lecture.content!)
             textHeightConstraint.constant = textHeight()
         }
         
-        self.lecture = withLecture
+        self.lecture = lecture
         
-        if lecture.title == nil {
-            label_customTitle.stringValue = ""
-        } else {
+        if lecture.title != nil {
             label_customTitle.stringValue = lecture.title!
+            if label_customTitle.stringValue == "" {
+                label_titleDivider.alphaValue = 0.3
+                lecture.title = nil
+            } else {
+                label_titleDivider.alphaValue = 1
+            }
+        } else {
+            label_titleDivider.alphaValue = 0.3
+            lecture.title = nil
         }
-        notifyCustomTitleUpdate()
         
         customTitleTrailingConstraint = label_customTitle.trailingAnchor.constraint(equalTo: label_lectureDate.leadingAnchor)
         customTitleTrailingConstraint.isActive = true
-        
-        self.owner = owner
         
         button_style_regular.alphaValue = 0
         button_style_underline.alphaValue = 0
@@ -107,31 +151,24 @@ class LectureViewController: NSViewController {
         button_style_center.alphaValue = 0
         button_style_right.alphaValue = 0
         
-        NotificationCenter.default.addObserver(self, selector: #selector(LectureViewController.notifyTextChange),
+        NotificationCenter.default.addObserver(self, selector: #selector(LectureViewController.notifyTextViewChange),
                                                name: .NSTextDidChange, object: textView_lecture)
-        NotificationCenter.default.addObserver(self, selector: #selector(LectureViewController.notifyCustomTitleUpdate),
+        NotificationCenter.default.addObserver(self, selector: #selector(LectureViewController.notifyCustomTitleEndEditing),
                                                name: .NSControlTextDidEndEditing, object: label_customTitle)
         NotificationCenter.default.addObserver(self, selector: #selector(LectureViewController.notifyCustomTitleChange),
                                                name: .NSControlTextDidChange, object: label_customTitle)
 
     }
-    // ...................................................................................................................
-    
-    func notifyScrolling(with event: NSEvent) {
-        // Send textView scroller's scrollWheel event to containing scroll view
-        self.nextResponder?.scrollWheel(with: event)
-    }
     
     override func viewDidLayout() {
         super.viewDidLayout()
-        notifyTextChange()
+        notifyTextViewChange()
     }
     
-    @IBAction func action_customTitle(_ sender: Any) {
-        NSApp.keyWindow?.makeFirstResponder(self)
-    }
-    
+    // MARK: Notifiers
+    ///
     func notifyCustomTitleChange() {
+        print("hi123")
         if label_customTitle.stringValue == "" {
             label_titleDivider.alphaValue = 0.3
             lecture.title = nil
@@ -139,8 +176,9 @@ class LectureViewController: NSViewController {
             label_titleDivider.alphaValue = 1
         }
     }
-    
-    func notifyCustomTitleUpdate() {
+    ///
+    func notifyCustomTitleEndEditing() {
+        print("notifyCustomTitleEndEditing is running for \(label_lectureTitle.stringValue)")
         label_customTitle.stringValue = label_customTitle.stringValue.trimmingCharacters(in: .whitespaces)
         // Check if it has content
         if label_customTitle.stringValue == "" {
@@ -150,33 +188,38 @@ class LectureViewController: NSViewController {
             lecture.title = label_customTitle.stringValue
             label_titleDivider.alphaValue = 1
         }
+        if owner != nil {
+            notifyCustomTitleFocus(false)
+        }
     }
-    
-    func notifyTextChange() {
+    /// Received from HXNonScrollView's override of scrollWheel.
+    func notifyTextViewScrolling(with event: NSEvent) {
+        // Send textView scroller's scrollWheel event to containing scroll view
+        self.nextResponder?.scrollWheel(with: event)
+    }
+    /// Any time the textview text changes, this will resize the textView height and the owning EditorVC's 
+    /// stack height. Will also update the object model with the new attributed string.
+    func notifyTextViewChange() {
         // Update height of view
         textHeightConstraint.constant = textHeight()
         // Save to Model
         lecture.content = textView_lecture.attributedString()
         owner.notifyHeightUpdate(from: self)
     }
-    
-    func notifyFocus(_ focus: Bool) {
-        if focus {
-            owner.lectureFocused = self
-            hasFocus = true
-        } else {
-            hasFocus = false
-            if owner.lectureFocused == self {
-                owner.lectureFocused = nil
-            }
+    /// Received from HXCustomTitleField
+    func notifyCustomTitleFocus(_ focus: Bool) {
+        print("Setting isTitling to \(focus)")
+        if isTitling != focus {
+            isTitling = focus
         }
     }
-    
-    func focusText() {
-        textView_lecture.window?.makeFirstResponder(textView_lecture)
-        // FIX HERE. Need to set text cursor to last element
+    /// Received from HXTextView
+    func notifyTextViewFocus(_ focus: Bool) {
+        isStyling = focus
     }
     
+    // MARK: Auto Scroll and Resizing Helper Functions
+    /// Return the height to the selected character in the textView
     func textSelectionHeight() -> CGFloat {
         let positionOfSelection = textView_lecture.selectedRanges.first!.rangeValue.location
         let rangeToSelection = NSRange(location: 0, length: positionOfSelection)
@@ -191,7 +234,7 @@ class LectureViewController: NSViewController {
         layoutManager.glyphRange(for: txtContainer)
         return view.frame.origin.y + view.frame.height - (layoutManager.usedRect(for: txtContainer).size.height + 39) // height from top of lecture view to top of text
     }
-    
+    /// Return the height of all the text in the textView
     func textHeight() -> CGFloat {
         let txtStorage = NSTextStorage(attributedString: textView_lecture.attributedString())
         let txtContainer = NSTextContainer(containerSize: NSSize(width: textView_lecture.frame.width, height: 10000))
@@ -204,56 +247,67 @@ class LectureViewController: NSViewController {
         return layoutManager.usedRect(for: txtContainer).size.height + 50 // 50 is arbitrary bottom buffer space added
     }
     
-    // MARK: Edit text selection
+    // MARK: Styling Functionality
+    ///
     func textIncrease() {
     }
+    ///
     func textDecrease() {
     }
+    ///
     func textColor() {
     }
+    ///
     func textShowFonts() {
     }
+    ///
     @IBAction func action_styleRegular(_ sender: Any) {
-        if hasFocus {
+        if isStyling {
             textView_lecture.textStorage?.applyFontTraits(.unboldFontMask, range: textView_lecture.selectedRange())
             textView_lecture.textStorage?.applyFontTraits(.unitalicFontMask, range: textView_lecture.selectedRange())
             textView_lecture.needsDisplay = true
-            notifyTextChange()
+            notifyTextViewChange()
         }
     }
+    ///
     @IBAction func action_styleUnderline(_ sender: Any) {
-        if hasFocus {
+        if isStyling {
             textView_lecture.underline(self)
             textView_lecture.needsDisplay = true
-            notifyTextChange()
+            notifyTextViewChange()
         }
     }
+    ///
     @IBAction func action_styleItalicize(_ sender: Any) {
-        if hasFocus {
+        if isStyling {
             textView_lecture.textStorage?.applyFontTraits(.italicFontMask, range: textView_lecture.selectedRange())
             textView_lecture.needsDisplay = true
-            notifyTextChange()
+            notifyTextViewChange()
         }
     }
+    ///
     @IBAction func action_styleBold(_ sender: Any) {
-        if hasFocus {
+        if isStyling {
             textView_lecture.textStorage?.applyFontTraits(.boldFontMask, range: textView_lecture.selectedRange())
             textView_lecture.needsDisplay = true
-            notifyTextChange()
+            notifyTextViewChange()
         }
     }
+    ///
     @IBAction func action_styleLeft(_ sender: Any) {
-        if hasFocus {
+        if isStyling {
             textView_lecture.alignLeft(self)
         }
     }
+    ///
     @IBAction func action_styleCenter(_ sender: Any) {
-        if hasFocus {
+        if isStyling {
             textView_lecture.alignCenter(self)
         }
     }
+    ///
     @IBAction func action_styleRight(_ sender: Any) {
-        if hasFocus {
+        if isStyling {
             textView_lecture.alignRight(self)
         }
     }

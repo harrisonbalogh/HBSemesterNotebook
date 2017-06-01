@@ -11,7 +11,7 @@ import Cocoa
 class HXCourseBox: NSBox {
     
     /// Return a new instance of a HXCourseBox based on the nib template.
-    static func instance(with course: Course, owner parent: CourseViewController) -> HXCourseBox! {
+    static func instance(with course: Course, owner parent: SidebarViewController) -> HXCourseBox! {
         var theObjects: NSArray = []
         Bundle.main.loadNibNamed("HXCourseBox", owner: nil, topLevelObjects: &theObjects)
         // Get NSView from top level objects returned from nib load
@@ -22,7 +22,7 @@ class HXCourseBox: NSBox {
         return nil
     }
     
-    var parent: CourseViewController!
+    var parent: SidebarViewController!
     var course: Course!
     
     // Manually connect course box child elements using identifiers
@@ -31,7 +31,7 @@ class HXCourseBox: NSBox {
     var buttonTitle: NSButton!
     
     /// Initialize the color, index, and tracking area of the CourseBox view
-    func initialize(with course: Course, owner parent: CourseViewController) {
+    func initialize(with course: Course, owner parent: SidebarViewController) {
         
         self.parent = parent
         self.course = course

@@ -9,80 +9,36 @@
 import Cocoa
 
 class EditorViewController: NSViewController {
+    
+    var masterViewController: MasterViewController!
 
     // MARK: View References
     @IBOutlet weak var lectureStack: NSStackView!
     @IBOutlet weak var lectureLedgerStack: NSStackView!
-    @IBOutlet weak var lectureListContainer: NSBox!
     @IBOutlet weak var lectureBottomBufferView: HXBottomBufferView!
     @IBOutlet weak var lectureScroller: NSScrollView!
     @IBOutlet weak var lectureClipper: HXFlippedClipView!
-    @IBOutlet weak var stickyHeaderBox: NSBox!
-    @IBOutlet weak var stickyHeaderTitle: NSTextField!
-    @IBOutlet weak var stickyHeaderDate: NSTextField!
     
-    @IBOutlet weak var button_style_regular: NSButton!
-    @IBOutlet weak var button_style_underline: NSButton!
-    @IBOutlet weak var button_style_italicize: NSButton!
-    @IBOutlet weak var button_style_bold: NSButton!
-    @IBOutlet weak var button_style_left: NSButton!
-    @IBOutlet weak var button_style_center: NSButton!
-    @IBOutlet weak var button_style_right: NSButton!
-    
-    var lectureFocused: LectureViewController! {
-        didSet {
-            if lectureFocused == nil {
-                // Animate scrolling timeline
-                NSAnimationContext.beginGrouping()
-                NSAnimationContext.current().duration = 0.25
-                button_style_regular.animator().alphaValue = 0
-                button_style_underline.animator().alphaValue = 0
-                button_style_italicize.animator().alphaValue = 0
-                button_style_bold.animator().alphaValue = 0
-                button_style_regular.animator().alphaValue = 0
-                button_style_left.animator().alphaValue = 0
-                button_style_center.animator().alphaValue = 0
-                button_style_right.animator().alphaValue = 0
-                NSAnimationContext.endGrouping()
-            } else if stickyHeaderTitle.stringValue == lectureFocused.label_lectureTitle.stringValue {
-                // Animate scrolling timeline
-                NSAnimationContext.beginGrouping()
-                NSAnimationContext.current().duration = 1
-                button_style_regular.animator().alphaValue = 1
-                button_style_underline.animator().alphaValue = 1
-                button_style_italicize.animator().alphaValue = 1
-                button_style_bold.animator().alphaValue = 1
-                button_style_regular.animator().alphaValue = 1
-                button_style_left.animator().alphaValue = 1
-                button_style_center.animator().alphaValue = 1
-                button_style_right.animator().alphaValue = 1
-                NSAnimationContext.endGrouping()
-            }
-        }
-    }
-    // Reference lecture lead constraint to hide/show this container
-    private var lectureLeadingConstraint: NSLayoutConstraint!
     // This constraint is for an invisible view at the bottom of lecture stack to allow user to scroll
-    // enough for the last lecture to be at top of screen regardless of amount of text
+    // enough for the last lecture's textView to be in middle of screen.
     private var lectureBottomConstraint: NSLayoutConstraint!
-    // Reference to stickyHeader top constraint
-    private var stickyHeaderTopConstraint: NSLayoutConstraint!
     // MARK: Object models
     let appDelegate = NSApplication.shared().delegate as! AppDelegate
-    var lectureCount = 0
-    var weekCount = 0
-    var thisCourse: Course! {
+    var selectedCourse: Course! {
         didSet {
-            // Setting thisCourse, immediately updates visuals
-            if thisCourse != nil {
+            // Setting selectedCourse, immediately updates visuals
+            if selectedCourse != nil {
                 // Populate new lecture visuals
-                if thisCourse.lectures!.count != 0 {
-                    lectureListIsDisclosed(true)
-                } else {
-                    lectureListIsDisclosed(false)
-                }
+                loadLectures(from: selectedCourse)
             } else {
-                lectureListIsDisclosed(false)
+                // Animate hiding the lecture
+                NSAnimationContext.beginGrouping()
+                NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+                NSAnimationContext.current().completionHandler = {self.popLectures()}
+                NSAnimationContext.current().duration = 0.25
+                stickyHeaderBox.animator().alphaValue = 0
+                lectureScroller.animator().alphaValue = 0
+                NSAnimationContext.endGrouping()
             }
         }
     }
@@ -91,10 +47,6 @@ class EditorViewController: NSViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        lectureLeadingConstraint = lectureListContainer.leadingAnchor.constraint(equalTo: self.view.leadingAnchor)
-        lectureLeadingConstraint.isActive = true
-        
-        lectureLeadingConstraint.constant = -197
         stickyHeaderBox.alphaValue = 0
         lectureScroller.alphaValue = 0
         
@@ -104,11 +56,20 @@ class EditorViewController: NSViewController {
         stickyHeaderTopConstraint = stickyHeaderBox.topAnchor.constraint(equalTo: lectureScroller.topAnchor)
         stickyHeaderTopConstraint.isActive = true
         
-        // Setup observers for timeline scrolling - start/active/end scrolling years
+        // Setup observers for scrolling lectures
         NotificationCenter.default.addObserver(self, selector: #selector(EditorViewController.didLiveScroll),
                                                name: .NSScrollViewDidLiveScroll, object: lectureScroller)
         NotificationCenter.default.addObserver(self, selector: #selector(EditorViewController.didScroll),
                                                name: .NSViewBoundsDidChange, object: lectureClipper)
+        NotificationCenter.default.addObserver(self, selector: #selector(EditorViewController.notifyCustomTitleUpdate),
+                                               name: .NSControlTextDidEndEditing, object: stickyHeaderCustomTitle)
+        NotificationCenter.default.addObserver(self, selector: #selector(EditorViewController.notifyCustomTitleChange),
+                                               name: .NSControlTextDidChange, object: stickyHeaderCustomTitle)
+        
+        stickyHeaderCustomTitleTrailingConstraint = stickyHeaderCustomTitle.trailingAnchor.constraint(equalTo: stickyHeaderDate.leadingAnchor)
+        stickyHeaderCustomTitleTrailingConstraint.isActive = true
+        
+        stickyHeaderCustomTitle.parentController = self
         
         button_style_regular.alphaValue = 0
         button_style_underline.alphaValue = 0
@@ -120,109 +81,66 @@ class EditorViewController: NSViewController {
         button_style_right.alphaValue = 0
     }
     override func viewDidAppear() {
+        super.viewDidAppear()
         lectureBottomBufferView.initialize(owner: self)
     }
+    override func viewDidLayout() {
+        super.viewDidLayout()
+        
+    }
     // MARK: Load object models ..........................................................................................
-    /// Called when a course is pressed in the courseStack. Populate stackViews with the loaded lectures from the selected course
+    /// Internal usage only. Reach this function by setting selectedCourse.
     private func loadLectures(from course: Course) {
-        self.popAllLectures()
+        self.popLectures()
         for case let lecture as Lecture in course.lectures! {
             pushLecture( lecture )
         }
-        if lectureCount == 0 {
-            stickyHeaderBox.alphaValue = 1
+        if course.lectures!.count == 0 {
+            stickyHeaderBox.alphaValue = 0
+            lectureScroller.alphaValue = 0
+        } else {
+            // Animate showing the lecture
+            NSAnimationContext.beginGrouping()
+            NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+            NSAnimationContext.current().duration = 0.5
+            stickyHeaderBox.animator().alphaValue = 1
+            lectureScroller.animator().alphaValue = 1
+            NSAnimationContext.endGrouping()
         }
     }
     
     // MARK: Populating stacks ...........................................................................................
     /// Creates a Lecture object for the currently selected course, and pushes an HXLectureLedger plus HXLectureView
-    /// to their appropriate stacks. Will also add an HXWeekDividerBox to the lectureLedgerStack if necessary.
-    private func addLecture() {
-        print("Add lecture")
-        pushLecture( newLecture() )
+    /// to their appropriate stacks.
+    private func addLecture(_ lecture: Lecture) {
+        
+        pushLecture( lecture )
         
     }
-    /// Handles purely the visual aspect of lectures. Populates lectureLedgerStack and lectureStack.
+    /// Handles purely the visual aspect of lectures. Populates lectureStack.
     private func pushLecture(_ lecture: Lecture) {
-        if Int(lectureCount % 2) == 0 {
-            lectureLedgerStack.addArrangedSubview(HXWeekBox.instance(withNumber: (weekCount+1)))
-            weekCount += 1
-        }
-        // Update Views
         let newController = LectureViewController(nibName: "HXLectureView", bundle: nil)!
         self.addChildViewController(newController)
         lectureStack.insertArrangedSubview(newController.view, at: lectureStack.arrangedSubviews.count - 1)
-        newController.initialize(withNumber: (lectureCount+1), withDate: "\(lecture.month)/\(lecture.day)/\(lecture.year % 100)", withLecture: lecture, owner: self)
-        lectureLedgerStack.addArrangedSubview(HXLectureLedger.instance(withNumber: (lectureCount+1), withDate: "\(lecture.month)/\(lecture.day)/\(lecture.year % 100)", owner: self))
-        
-        lectureCount += 1
+        newController.initialize(with: lecture)
     }
-    /// Handles purely the visual aspect of lectures. Resets lectureLedgerStack, lectureStack, lectureCount, and weekCount
-    private func popAllLectures() {
-        for v in lectureLedgerStack.arrangedSubviews {
-            v.removeFromSuperview()
-        }
-        for v in lectureStack.arrangedSubviews {
-            if v.identifier != "BottomBufferView" {
-                v.removeFromSuperview()
-            }
-        }
-        lectureCount = 0
-        weekCount = 0
-        
+    /// Handles purely the visual aspect of lectures. Resets lectureLedgerStack, lectureStack, selectedCourse.lectures!.count, and weekCount
+    private func popLectures() {
         for case let lectureController as LectureViewController in self.childViewControllers {
+            lectureController.view.removeFromSuperview()
             lectureController.removeFromParentViewController()
         }
     }
-    // MARK: Instance object models .....................................................................................
-    /// Doesn't require parameters. Accesses local lectureCount, weekCount, thisCourse, and current NSCalendar date
-    private func newLecture() -> Lecture {
-        let newLecture = NSEntityDescription.insertNewObject(forEntityName: "Lecture", into: appDelegate.managedObjectContext) as! Lecture
-        newLecture.course = thisCourse
-        print("  With \(thisCourse.title)")
-        newLecture.lecture = Int16(lectureCount + 1)
-        newLecture.week = Int16(weekCount + 1)
-        newLecture.day = Int16(NSCalendar.current.component(.day, from: NSDate() as Date))
-        newLecture.month = Int16(NSCalendar.current.component(.month, from: NSDate() as Date))
-        newLecture.year = Int16(NSCalendar.current.component(.year, from: NSDate() as Date))
-        return newLecture
-    }
-    
     // MARK: TEMP
     /// Should not be able to simply add lectures this way
     @IBAction func action_addLecture(_ sender: Any) {
-        addLecture()
-    }
-    func lectureListIsDisclosed(_ visible: Bool) {
-        if visible {
-            loadLectures(from: thisCourse)
-            lectureScroller.alphaValue = 0
-            // Animate hiding the lecture
-            NSAnimationContext.beginGrouping()
-            NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
-            NSAnimationContext.current().duration = 0.2
-            lectureLeadingConstraint.animator().constant = 0
-            NSAnimationContext.current().duration = 1
-            stickyHeaderBox.animator().alphaValue = 1
-            lectureScroller.animator().alphaValue = 1
-            NSAnimationContext.endGrouping()
-        } else if lectureLeadingConstraint.constant == 0 {
-            print("FUCKER: \(lectureListContainer.bounds.origin.x)")
-            // Animate showing the lecture
-            NSAnimationContext.beginGrouping()
-            NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
-            NSAnimationContext.current().completionHandler = {self.popAllLectures()}
-            NSAnimationContext.current().duration = 0.25
-            lectureLeadingConstraint.animator().constant = -197
-            stickyHeaderBox.animator().alphaValue = 0
-            lectureScroller.animator().alphaValue = 0
-            NSAnimationContext.endGrouping()
-        }
+//        addLecture()
     }
     /// Comes from the LectureLedger stack, scrolls to supplied lecture number. Lecture guaranteed to exist.
     func scrollToLecture(_ lecture: String) {
         for case let lectureController as LectureViewController in self.childViewControllers {
             if lectureController.label_lectureTitle.stringValue == lecture {
+                NSApp.keyWindow?.makeFirstResponder(lectureController.textView_lecture)
                 let yPos = lectureStack.frame.height - lectureController.view.frame.origin.y - lectureController.view.frame.height
                 // Animate scroll to lecture
                 NSAnimationContext.beginGrouping()
@@ -258,41 +176,27 @@ class EditorViewController: NSViewController {
             if !foundLowestLecture {
                 // If scroller is using elastic effect don't proceed past first element
                 if clipperYPos < 0 {
-                    stickyHeaderTitle.stringValue = lectureController.label_lectureTitle.stringValue
-                    stickyHeaderDate.stringValue = lectureController.label_lectureDate.stringValue
-                    stickyHeaderTopConstraint.constant = -clipperYPos
+                    if stickyHeaderCustomTitle.isFocused {
+                        print("5")
+                        lectureController.notifyCustomTitleFocus(true)
+                    }
+                    stickyHeaderLectureViewController = nil
                     return
                 }
                 let height = lectureController.view.bounds.height
                 accumulatedHeight = accumulatedHeight + height
                 // Since the last visible element in stack is not found yet, check if this element is visible still.
                 if clipperYPos <= accumulatedHeight {
-                    // It is visible so update sticky header fields and dump out of loop after one more iteration
-                    stickyHeaderTitle.stringValue = lectureController.label_lectureTitle.stringValue
-                    stickyHeaderDate.stringValue = lectureController.label_lectureDate.stringValue
+                    // It is visible so update sticky header VC and dump out of loop after one more iteration
+                    if stickyHeaderLectureViewController != lectureController {
+                        // Only update stickyHeaderLectureViewController when its a new LectureVC
+                        stickyHeaderLectureViewController = lectureController
+                    }
                     foundLowestLecture = true
                 }
-                stickyHeaderTopConstraint.constant = 0
-                if lectureFocused != nil {
-                    if lectureFocused.label_lectureTitle.stringValue != stickyHeaderTitle.stringValue {
-                        button_style_regular.alphaValue = 0
-                        button_style_underline.alphaValue = 0
-                        button_style_italicize.alphaValue = 0
-                        button_style_bold.alphaValue = 0
-                        button_style_regular.alphaValue = 0
-                        button_style_left.alphaValue = 0
-                        button_style_center.alphaValue = 0
-                        button_style_right.alphaValue = 0
-                    } else {
-                        button_style_regular.alphaValue = 1
-                        button_style_underline.alphaValue = 1
-                        button_style_italicize.alphaValue = 1
-                        button_style_bold.alphaValue = 1
-                        button_style_regular.alphaValue = 1
-                        button_style_left.alphaValue = 1
-                        button_style_center.alphaValue = 1
-                        button_style_right.alphaValue = 1
-                    }
+                if self.childViewControllers.last == lectureController {
+                    // The last view controller should set its constant to 0 in this iteraiton
+                    stickyHeaderTopConstraint.constant = 0
                 }
             } else {
                 // Check how close the next element is to determine if stickyheader should be pushed aside
@@ -310,16 +214,65 @@ class EditorViewController: NSViewController {
     }
     func bottomBufferClicked() {
         for case let lectureController as LectureViewController in self.childViewControllers {
-            if lectureController.label_lectureTitle.stringValue == "Lecture \(lectureCount)" {
-                lectureController.focusText()
+            if lectureController.label_lectureTitle.stringValue == "Lecture \(selectedCourse.lectures!.count)" {
+                NSApp.keyWindow?.makeFirstResponder(lectureController.textView_lecture)
             }
         }
     }
+    
+    @IBAction func action_customTitle(_ sender: NSTextField) {
+        print("Check1")
+        NSApp.keyWindow?.makeFirstResponder(self)
+    }
+    
+    func notifyCustomTitleStartEditing() {
+        if !stickyHeaderLectureViewController.isTitling {
+            stickyHeaderLectureViewController.isTitling = true
+        }
+    }
+    
+    func notifyCustomTitleChange() {
+        print("Current responder is: \(NSApp.keyWindow?.firstResponder)")
+        if customTitleFocused != nil {
+            customTitleFocused.label_customTitle.stringValue = stickyHeaderCustomTitle.stringValue
+        }
+        if stickyHeaderCustomTitle.stringValue == "" {
+            stickyHeaderDivider.alphaValue = 0.3
+        } else {
+            stickyHeaderDivider.alphaValue = 1
+        }
+    }
+    
+    func notifyCustomTitleUpdate() {
+        print("This is called...")
+        stickyHeaderLectureViewController.isTitling = false
+        stickyHeaderCustomTitle.stringValue = stickyHeaderCustomTitle.stringValue.trimmingCharacters(in: .whitespaces)
+        // If customTitleFocused is nil and this function just got called, it implies that the StickyHeader's
+        // customTitle textfield has just finished editing. Need to find current stickyheadered lecture.
+        if customTitleFocused == nil {
+            for case let lectureController as LectureViewController in self.childViewControllers {
+                if lectureController.label_lectureTitle.stringValue == stickyHeaderTitle.stringValue {
+                    lectureController.label_customTitle.stringValue = stickyHeaderCustomTitle.stringValue
+                }
+            }
+        } else {
+            customTitleFocused.label_customTitle.stringValue = stickyHeaderCustomTitle.stringValue
+            customTitleFocused.notifyCustomTitleEndEditing()
+            customTitleFocused = nil
+        }
+        // Check if it has content
+        if stickyHeaderCustomTitle.stringValue == "" {
+            stickyHeaderDivider.alphaValue = 0.3
+        } else {
+            stickyHeaderDivider.alphaValue = 1
+        }
+    }
+    
     /// Received from LectureViewController on any change to a given lecture text view. 
     /// Is responsible for auto scrolling the lectureScroller.
     internal func notifyHeightUpdate(from sender: LectureViewController) {
         // Get last view in lectureStack
-        if let lectureController = childViewControllers.filter({$0 is LectureViewController})[lectureCount - 1] as?LectureViewController {
+        if let lectureController = childViewControllers.filter({$0 is LectureViewController})[selectedCourse.lectures!.count - 1] as?LectureViewController {
             if lectureController.view.frame.height < lectureScroller.frame.height/2 + 50 {
                 lectureBottomConstraint.constant = -lectureController.view.frame.height
             } else {
@@ -383,12 +336,12 @@ class EditorViewController: NSViewController {
         }
         let fullRange = NSRange(location: 0, length: attribString.length)
         do {
-            let data1 = try attribString.data(from: fullRange, documentAttributes: [NSDocumentTypeDocumentAttribute: NSRTFDTextDocumentType])
+//            let data1 = try attribString.data(from: fullRange, documentAttributes: [NSDocumentTypeDocumentAttribute: NSRTFDTextDocumentType])
             let data3 = attribString.rtfd(from: fullRange, documentAttributes: [NSDocumentTypeDocumentAttribute: NSRTFDTextDocumentType])
             let savePanel = NSSavePanel()
             savePanel.nameFieldLabel = "Export As:"
             savePanel.canSelectHiddenExtension = true
-            savePanel.nameFieldStringValue = "\(thisCourse.title!) Lectures - \(thisCourse.semester!.title!.capitalized) \(thisCourse.semester!.year!.year)"
+            savePanel.nameFieldStringValue = "\(selectedCourse.title!) Lectures - \(selectedCourse.semester!.title!.capitalized) \(selectedCourse.semester!.year!.year)"
             savePanel.prompt = "Export"
             savePanel.allowedFileTypes = [NSRTFDTextDocumentType]
             savePanel.beginSheetModal(for: NSApp.keyWindow!, completionHandler: {result in
@@ -417,6 +370,174 @@ class EditorViewController: NSViewController {
     func exportRTF(for lecture: LectureViewController) {
         
     }
+    
+    // MARK: Sticky Header Functionality ....................................................................
+    var stickyHeaderLectureViewController: LectureViewController! {
+        didSet {
+            if stickyHeaderLectureViewController != nil {
+                stickyHeaderBox.alphaValue = 1
+                stickyHeaderTitle.stringValue = stickyHeaderLectureViewController.label_lectureTitle.stringValue
+                stickyHeaderDate.stringValue = stickyHeaderLectureViewController.label_lectureDate.stringValue
+                stickyHeaderCustomTitle.stringValue = stickyHeaderLectureViewController.label_customTitle.stringValue
+                if stickyHeaderCustomTitle.stringValue == "" {
+                    stickyHeaderDivider.alphaValue = 0.3
+                } else {
+                    stickyHeaderDivider.alphaValue = 1
+                }
+                stickyHeaderCustomTitleTrailingConstraint.isActive = false
+                if stickyHeaderLectureViewController.isStyling {
+                    button_style_regular.alphaValue = 1
+                    button_style_underline.alphaValue = 1
+                    button_style_italicize.alphaValue = 1
+                    button_style_bold.alphaValue = 1
+                    button_style_regular.alphaValue = 1
+                    button_style_left.alphaValue = 1
+                    button_style_center.alphaValue = 1
+                    button_style_right.alphaValue = 1
+                    stickyHeaderCustomTitleTrailingConstraint = stickyHeaderCustomTitle.trailingAnchor.constraint(equalTo: button_style_regular.leadingAnchor)
+                } else {
+                    button_style_regular.alphaValue = 0
+                    button_style_underline.alphaValue = 0
+                    button_style_italicize.alphaValue = 0
+                    button_style_bold.alphaValue = 0
+                    button_style_regular.alphaValue = 0
+                    button_style_left.alphaValue = 0
+                    button_style_center.alphaValue = 0
+                    button_style_right.alphaValue = 0
+                    stickyHeaderCustomTitleTrailingConstraint = stickyHeaderCustomTitle.trailingAnchor.constraint(equalTo: stickyHeaderDate.leadingAnchor)
+                }
+                print("\(stickyHeaderLectureViewController.label_customTitle.stringValue) isTitling: \(stickyHeaderLectureViewController.isTitling)")
+                stickyHeaderCustomTitleTrailingConstraint.isActive = true
+                if stickyHeaderLectureViewController.isTitling {
+                    if !stickyHeaderCustomTitle.isFocused {
+                        print("2")
+                        NSApp.keyWindow?.makeFirstResponder(stickyHeaderCustomTitle)
+                    }
+                } else if customTitleFocused != nil {
+                    if customTitleFocused == stickyHeaderLectureViewController {
+                        if !stickyHeaderCustomTitle.isFocused {
+                            NSApp.keyWindow?.makeFirstResponder(stickyHeaderCustomTitle)
+                        } else {
+//                            NSApp.keyWindow?.makeFirstResponder(self)
+                        }
+                        print("1")
+                        
+                    }
+                }
+            } else {
+                stickyHeaderBox.alphaValue = 0
+            }
+            
+        }
+    }
+    
+    // When a textView is focused, the styling buttons appear which should truncate the lecture's custom title.
+    var stickyHeaderCustomTitleTrailingConstraint: NSLayoutConstraint!
+    // StickyHeader can be shifted as the next/previous lecture encroaches on the stickyHeader.
+    private var stickyHeaderTopConstraint: NSLayoutConstraint!
+    var lectureFocused: LectureViewController! {
+        didSet {
+            stickyHeaderCustomTitleTrailingConstraint.isActive = false
+            // Check first if a lecture's textView is focused on at the moment
+            if lectureFocused != nil {
+                // Lecture is focused, notify masterVC
+                masterViewController.notifyLectureFocus(is: lectureFocused.lecture)
+                // Check if lecture focused is the same as StickyHeaders LectureVC
+                print("found a nil ?!?!? \(stickyHeaderLectureViewController)")
+                if stickyHeaderLectureViewController != nil {
+                    if stickyHeaderLectureViewController == lectureFocused {
+                        // Animate revealing the styling buttons on stickyHeader
+                        NSAnimationContext.beginGrouping()
+                        NSAnimationContext.current().duration = 1
+                        button_style_regular.animator().alphaValue = 1
+                        button_style_underline.animator().alphaValue = 1
+                        button_style_italicize.animator().alphaValue = 1
+                        button_style_bold.animator().alphaValue = 1
+                        button_style_regular.animator().alphaValue = 1
+                        button_style_left.animator().alphaValue = 1
+                        button_style_center.animator().alphaValue = 1
+                        button_style_right.animator().alphaValue = 1
+                        NSAnimationContext.endGrouping()
+                        stickyHeaderCustomTitleTrailingConstraint = stickyHeaderCustomTitle.trailingAnchor.constraint(equalTo: button_style_regular.leadingAnchor)
+                    }
+                } else {
+                    // StickyHeaders LectureVC is not focused, hide styling buttons
+                    // Animate hiding style buttons
+                    NSAnimationContext.beginGrouping()
+                    NSAnimationContext.current().duration = 0.25
+                    button_style_regular.animator().alphaValue = 0
+                    button_style_underline.animator().alphaValue = 0
+                    button_style_italicize.animator().alphaValue = 0
+                    button_style_bold.animator().alphaValue = 0
+                    button_style_regular.animator().alphaValue = 0
+                    button_style_left.animator().alphaValue = 0
+                    button_style_center.animator().alphaValue = 0
+                    button_style_right.animator().alphaValue = 0
+                    NSAnimationContext.endGrouping()
+                    stickyHeaderCustomTitleTrailingConstraint = stickyHeaderCustomTitle.trailingAnchor.constraint(equalTo: stickyHeaderDate.leadingAnchor)
+                }
+            } else {
+                // StickyHeaders LectureVC is not focused, hide styling buttons
+                NSAnimationContext.beginGrouping()
+                NSAnimationContext.current().duration = 0.25
+                button_style_regular.animator().alphaValue = 0
+                button_style_underline.animator().alphaValue = 0
+                button_style_italicize.animator().alphaValue = 0
+                button_style_bold.animator().alphaValue = 0
+                button_style_regular.animator().alphaValue = 0
+                button_style_left.animator().alphaValue = 0
+                button_style_center.animator().alphaValue = 0
+                button_style_right.animator().alphaValue = 0
+                NSAnimationContext.endGrouping()
+                stickyHeaderCustomTitleTrailingConstraint = stickyHeaderCustomTitle.trailingAnchor.constraint(equalTo: stickyHeaderDate.leadingAnchor)
+                // No lecture is focused, notify masterVC
+                masterViewController.notifyLectureFocus(is: nil)
+            }
+            stickyHeaderCustomTitleTrailingConstraint.isActive = true
+        }
+    }
+    
+    // For StickyHeader to transfer custom title editing state appropriately, need to keep track of
+    // when a custom title is being set on a lecture.
+    var customTitleFocused: LectureViewController! {
+        didSet {
+            // Check if user isTitling a lectureVC
+            print("customTitleFocused: \(customTitleFocused)")
+            if customTitleFocused != nil {
+                print("A NIL1?: \(stickyHeaderLectureViewController)")
+                if stickyHeaderLectureViewController != nil {
+                    if stickyHeaderLectureViewController == customTitleFocused {
+                        print("3")
+                        if !stickyHeaderCustomTitle.isFocused {
+                            print("Current responder is: \(NSApp.keyWindow?.firstResponder)")
+                            NSApp.keyWindow?.makeFirstResponder(stickyHeaderCustomTitle)
+                        }
+                    }
+//                    NSApp.keyWindow?.makeFirstResponder(stickyHeaderCustomTitle)
+                } else {
+//                    if stickyHeaderCustomTitle.isFocused {
+//                        print("4")
+//                        NSApp.keyWindow?.makeFirstResponder(self)
+//                    }
+                }
+            }
+        }
+    }
+    
+    @IBOutlet weak var stickyHeaderBox: NSBox!
+    @IBOutlet weak var stickyHeaderTitle: NSTextField!
+    @IBOutlet weak var stickyHeaderDate: NSTextField!
+    @IBOutlet weak var stickyHeaderDivider: NSTextField!
+    @IBOutlet weak var stickyHeaderCustomTitle: HXStickyCustomTitleField!
+    
+    @IBOutlet weak var button_style_regular: NSButton!
+    @IBOutlet weak var button_style_underline: NSButton!
+    @IBOutlet weak var button_style_italicize: NSButton!
+    @IBOutlet weak var button_style_bold: NSButton!
+    @IBOutlet weak var button_style_left: NSButton!
+    @IBOutlet weak var button_style_center: NSButton!
+    @IBOutlet weak var button_style_right: NSButton!
+    
     @IBAction func action_styleRegular(_ sender: NSButton) {
         if lectureFocused != nil {
             lectureFocused.action_styleRegular(sender)

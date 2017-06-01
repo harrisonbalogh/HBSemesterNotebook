@@ -14,12 +14,12 @@ class HXTextView: NSTextView {
     
     override func becomeFirstResponder() -> Bool {
         super.becomeFirstResponder()
-        parentController.notifyFocus(true)
+        parentController.notifyTextViewFocus(true)
         return true
     }
     override func resignFirstResponder() -> Bool {
         super.resignFirstResponder()
-        parentController.notifyFocus(false)
+        parentController.notifyTextViewFocus(false)
         return true
     }
 }

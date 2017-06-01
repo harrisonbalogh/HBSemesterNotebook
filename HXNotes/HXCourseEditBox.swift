@@ -11,7 +11,7 @@ import Cocoa
 class HXCourseEditBox: NSView {
     
     /// Return a new instance of a HXCourseEditBox based on the nib template.
-    static func instance(with course: Course, withCourseIndex index: Int, withParent parent: CourseViewController) -> HXCourseEditBox! {
+    static func instance(with course: Course, withCourseIndex index: Int, withParent parent: SidebarViewController) -> HXCourseEditBox! {
         var theObjects: NSArray = []
         Bundle.main.loadNibNamed("HXCourseEditBox", owner: nil, topLevelObjects: &theObjects)
         // Get NSView from top level objects returned from nib load
@@ -24,7 +24,7 @@ class HXCourseEditBox: NSView {
     
 //    // Need to update course index when a course gets removed
 //    var courseIndex: Int!
-    var parentController: CourseViewController!
+    var parentController: SidebarViewController!
     var course: Course!
     // Note when cursor is inside the area to drag box (to calendar)
     var insideDrag = false
@@ -41,17 +41,15 @@ class HXCourseEditBox: NSView {
     var boxDrag: NSBox!
     var labelCourse: CourseLabel!
     var buttonTrash: NSButton!
-    var resizeIcon: NSImageView!
     
     /// Initialize the color, index, and tracking area of the CourseBox view
-    private func initialize(with course: Course, withCourseIndex index: Int, withParent parent: CourseViewController) {
+    private func initialize(with course: Course, withCourseIndex index: Int, withParent parent: SidebarViewController) {
         
         // Initialize child elements
         for v in self.subviews {
             switch v.identifier! {
             case ID_BOX_DRAG:
                 boxDrag = v as! NSBox
-                resizeIcon = boxDrag.subviews.first!.subviews.first! as! NSImageView
             case ID_BUTTON_TRASH:
                 buttonTrash = v as! NSButton
             case ID_LABEL_TITLE:
@@ -88,7 +86,7 @@ class HXCourseEditBox: NSView {
     
     /// Removes this course box from the stack view
     func removeCourseBox() {
-        parentController.action_removeCourseButton(course: self)
+        parentController.removeCourse(self)
     }
     
     /// Clear selection of course's title field
@@ -101,7 +99,7 @@ class HXCourseEditBox: NSView {
         if labelCourse.stringValue == "" {
             labelCourse.stringValue = oldName
         } else {
-            parentController.action_courseTextField(self)
+            parentController.renameCourse(self)
         }
     }
     
@@ -154,20 +152,23 @@ class HXCourseEditBox: NSView {
     }
     
     override func mouseDragged(with event: NSEvent) {
-        labelCourse.alphaValue = 0.5
         if !dragging {
             dragging = true
-            resizeIcon.alphaValue = 0
+            buttonTrash.alphaValue = 0
+            boxDrag.alphaValue = 0
+            labelCourse.alphaValue = 0
             NSCursor.closedHand().push()
         }
-        parentController.mouseDrag_courseBox(with: course, to: event.locationInWindow)
+        parentController.mouseDrag_courseBox(with: self, to: event.locationInWindow)
     }
     
     override func mouseUp(with event: NSEvent) {
         labelCourse.alphaValue = 1
         if dragging {
             dragging = false
-            resizeIcon.alphaValue = 1
+            buttonTrash.alphaValue = 1
+            boxDrag.alphaValue = 1
+            labelCourse.alphaValue = 1
             NSCursor.closedHand().pop()
             let origin = boxDrag.superview!.convert(boxDrag.frame.origin, to: nil) as NSPoint
             let loc = event.locationInWindow

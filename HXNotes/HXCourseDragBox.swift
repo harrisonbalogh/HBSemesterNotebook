@@ -24,8 +24,10 @@ class HXCourseDragBox: NSBox {
     
     // Manually connect drag box child elements using identifiers
     let ID_LABEL_TITLE      = "course_label_title"
+    let ID_BOX_DRAG         = "course_box_drag"
     // Elements of course box
-    var labelCourse: CourseLabel!
+    var labelCourse: NSTextField!
+    var boxDrag: NSBox!
     
     /// Initialize the color, index, and tracking area of the CourseBox view
     func initialize() {
@@ -34,7 +36,9 @@ class HXCourseDragBox: NSBox {
         for v in self.subviews[0].subviews {
             switch v.identifier! {
             case ID_LABEL_TITLE:
-                labelCourse = v as! CourseLabel
+                labelCourse = v as! NSTextField
+            case ID_BOX_DRAG:
+                boxDrag = v as! NSBox
             default: continue
             }
         }
@@ -44,11 +48,10 @@ class HXCourseDragBox: NSBox {
     /// Set this box to match the properties of the course provided
     func updateWithCourse(_ course: Course) {
         labelCourse.stringValue = course.title!
-        self.fillColor = NSColor(
+        boxDrag.fillColor = NSColor(
             red: CGFloat(course.colorRed),
             green: CGFloat(course.colorGreen),
             blue: CGFloat(course.colorBlue),
-            alpha: 0.5)
+            alpha: 1)
     }
-    
 }

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11762" systemVersion="16F73" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11762"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner"/>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView id="ImR-CX-SWb" userLabel="Course Add Box" customClass="HXCourseAddBox" customModule="HXNotes" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="130" height="30"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="Jks-JN-wya">
+                    <rect key="frame" x="0.0" y="-2" width="130" height="5"/>
+                </box>
+                <button identifier="add_button_id" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="BFf-6y-M4q">
+                    <rect key="frame" x="0.0" y="0.0" width="130" height="30"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="30" id="k5m-oQ-C7S"/>
+                    </constraints>
+                    <buttonCell key="cell" type="bevel" title="Add New Course" bezelStyle="rounded" alignment="center" imageScaling="proportionallyDown" inset="2" id="pCU-7e-y7P">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="systemBold"/>
+                    </buttonCell>
+                </button>
+                <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="TsE-FB-3z4">
+                    <rect key="frame" x="0.0" y="-2" width="130" height="5"/>
+                </box>
+            </subviews>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="Jks-JN-wya" secondAttribute="trailing" id="0Nf-gj-BW4"/>
+                <constraint firstItem="BFf-6y-M4q" firstAttribute="leading" secondItem="ImR-CX-SWb" secondAttribute="leading" id="0eI-75-Mcf"/>
+                <constraint firstItem="Jks-JN-wya" firstAttribute="leading" secondItem="ImR-CX-SWb" secondAttribute="leading" id="B8Q-5i-um0"/>
+                <constraint firstAttribute="bottom" secondItem="TsE-FB-3z4" secondAttribute="bottom" id="JjI-oo-gPX"/>
+                <constraint firstAttribute="trailing" secondItem="BFf-6y-M4q" secondAttribute="trailing" id="MD0-E1-zoW"/>
+                <constraint firstAttribute="bottom" secondItem="Jks-JN-wya" secondAttribute="bottom" id="YqA-mC-L1O"/>
+                <constraint firstItem="BFf-6y-M4q" firstAttribute="top" secondItem="ImR-CX-SWb" secondAttribute="top" id="c38-9s-PIZ"/>
+                <constraint firstItem="BFf-6y-M4q" firstAttribute="centerX" secondItem="ImR-CX-SWb" secondAttribute="centerX" id="grf-aU-epx"/>
+                <constraint firstAttribute="bottom" secondItem="BFf-6y-M4q" secondAttribute="bottom" id="jRN-lD-ajy"/>
+                <constraint firstAttribute="trailing" secondItem="TsE-FB-3z4" secondAttribute="trailing" id="l3u-2b-Kny"/>
+                <constraint firstItem="TsE-FB-3z4" firstAttribute="leading" secondItem="ImR-CX-SWb" secondAttribute="leading" id="neW-9U-RNt"/>
+            </constraints>
+            <point key="canvasLocation" x="-24" y="58"/>
+        </customView>
+    </objects>
+</document>

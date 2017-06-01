@@ -5,18 +5,18 @@
 //  Created by Harrison Balogh on 5/9/17.
 //  Copyright © 2017 Harxer. All rights reserved.
 //
-
+    
 import Cocoa
 
-class HXLectureLedger: NSBox {
+class HXLectureBox: NSBox {
     
     /// Return a new instance of a HXLectureLedger based on the nib template.
-    static func instance(withNumber num: Int, withDate date: String, owner: EditorViewController) -> HXLectureLedger! {
+    static func instance(numbered number: Int16, dated date: String, owner: SidebarViewController) -> HXLectureBox! {
         var theObjects: NSArray = []
-        Bundle.main.loadNibNamed("HXLectureLedger", owner: nil, topLevelObjects: &theObjects)
+        Bundle.main.loadNibNamed("HXLectureBox", owner: nil, topLevelObjects: &theObjects)
         // Get NSView from top level objects returned from nib load
-        if let newBox = theObjects.filter({$0 is HXLectureLedger}).first as? HXLectureLedger {
-            newBox.initialize(lectureNuber: num, withDate: date, owner: owner)
+        if let newBox = theObjects.filter({$0 is HXLectureBox}).first as? HXLectureBox {
+            newBox.initialize(numbered: Int(number), dated: date, owner: owner)
             return newBox
         }
         return nil
@@ -29,9 +29,9 @@ class HXLectureLedger: NSBox {
     var labelTitle: NSButton!
     var labelDate: NSTextField!
     
-    var parentController: EditorViewController!
+    var parentController: SidebarViewController!
     
-    func initialize(lectureNuber: Int, withDate: String, owner: EditorViewController) {
+    func initialize(numbered number: Int, dated date: String, owner: SidebarViewController) {
         
         // Initialize child elements
         for v in self.subviews[0].subviews {
@@ -44,25 +44,26 @@ class HXLectureLedger: NSBox {
             }
         }
         
-        labelTitle.title = "Lecture \(lectureNuber)"
+        labelTitle.title = "Lecture \(number)"
         
-        labelDate.stringValue = withDate
+        labelDate.stringValue = date
         
         self.parentController = owner
         
         labelTitle.target = self
-        labelTitle.action = #selector(HXLectureLedger.action_clickLecture)
+        labelTitle.action = #selector(HXLectureBox.action_clickLecture)
     }
     
     func action_clickLecture() {
-        parentController.scrollToLecture(labelTitle.title)
+        
+        parentController.select(lecture: labelTitle.title)
     }
     
-    func focusVisuals(_ focus: Bool) {
-        if focus {
-            
-        } else {
-            
-        }
+    func focus() {
+        labelTitle.isBordered = true
+    }
+    
+    func unfocus() {
+        labelTitle.isBordered = false
     }
 }

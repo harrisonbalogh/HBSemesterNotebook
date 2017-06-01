@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11762" systemVersion="16E195" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11762" systemVersion="16F73" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11762"/>
@@ -11,35 +11,30 @@
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <box boxType="custom" borderWidth="0.0" title="Box" id="P58-rQ-lXy" customClass="HXWeekBox" customModule="HXNotes" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="164" height="31"/>
+            <rect key="frame" x="0.0" y="0.0" width="164" height="20"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <view key="contentView" id="M2J-u5-Hoo">
-                <rect key="frame" x="0.0" y="0.0" width="164" height="31"/>
+                <rect key="frame" x="0.0" y="0.0" width="164" height="20"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <textField identifier="week_label_title" horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HR4-GH-oNx">
-                        <rect key="frame" x="61" y="1" width="42" height="14"/>
+                        <rect key="frame" x="0.0" y="2" width="42" height="14"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="Week 1" id="AWQ-SK-cWa">
                             <font key="font" metaFont="smallSystem"/>
-                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="textColor" red="0.24251953125000003" green="0.24251953125000003" blue="0.24251953125000003" alpha="0.84999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="BWf-Q4-9kq">
-                        <rect key="frame" x="0.0" y="-2" width="164" height="5"/>
-                    </box>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="BWf-Q4-9kq" firstAttribute="top" secondItem="HR4-GH-oNx" secondAttribute="bottom" id="CQ1-bC-v5u"/>
+                    <constraint firstItem="HR4-GH-oNx" firstAttribute="leading" secondItem="M2J-u5-Hoo" secondAttribute="leading" constant="2" id="B8v-CA-PPz"/>
+                    <constraint firstAttribute="bottom" secondItem="HR4-GH-oNx" secondAttribute="bottom" constant="2" id="VkS-mG-Yz2"/>
                 </constraints>
             </view>
             <constraints>
-                <constraint firstAttribute="bottom" secondItem="BWf-Q4-9kq" secondAttribute="bottom" id="FBt-LX-ENI"/>
-                <constraint firstItem="HR4-GH-oNx" firstAttribute="top" secondItem="P58-rQ-lXy" secondAttribute="top" constant="16" id="KpY-Iw-9yT"/>
-                <constraint firstItem="HR4-GH-oNx" firstAttribute="centerX" secondItem="P58-rQ-lXy" secondAttribute="centerX" id="VAg-jB-x7n"/>
-                <constraint firstAttribute="trailing" secondItem="BWf-Q4-9kq" secondAttribute="trailing" id="WLI-qI-RnM"/>
-                <constraint firstItem="BWf-Q4-9kq" firstAttribute="leading" secondItem="P58-rQ-lXy" secondAttribute="leading" id="eBd-qn-qhL"/>
+                <constraint firstItem="HR4-GH-oNx" firstAttribute="top" secondItem="P58-rQ-lXy" secondAttribute="top" constant="4" id="KpY-Iw-9yT"/>
             </constraints>
+            <color key="fillColor" red="0.93580762863159184" green="0.93580762863159184" blue="0.93580762863159184" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <point key="canvasLocation" x="139" y="164"/>
         </box>
     </objects>

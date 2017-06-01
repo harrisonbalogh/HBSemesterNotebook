@@ -122,7 +122,7 @@ class HXGridBox: NSBox {
     /// Color update of a grid space, primarily for previewing extending grid spaces
     func update(color: NSColor) {
         fillColor = color
-        if color == NSColor.white {
+        if color == NSColor.white || color == NSColor.lightGray {
             lineRemove.isHidden = true
         } else {
             lineRemove.isHidden = false
@@ -174,6 +174,12 @@ class HXGridBox: NSBox {
             
             addTrackingArea(trackingArea)
         }
+    }
+    
+    override func layout() {
+        super.layout()
+        
+        viewDidEndLiveResize()
     }
     
     // MARK: Tracking Area - Mouse Listeners/Receivers......................................................

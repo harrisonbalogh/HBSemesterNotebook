@@ -13,6 +13,6 @@ class HXNonScrollView: NSScrollView {
     var parentController: LectureViewController!
     
     override func scrollWheel(with event: NSEvent) {
-        parentController.notifyScrolling(with: event)
+        parentController.notifyTextViewScrolling(with: event)
     }
 }

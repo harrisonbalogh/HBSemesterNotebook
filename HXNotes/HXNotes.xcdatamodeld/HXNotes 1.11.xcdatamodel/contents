@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11759" systemVersion="16E195" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11759" systemVersion="16F73" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Course" representedClassName="Course" syncable="YES" codeGenerationType="class">
         <attribute name="colorBlue" attributeType="Float" minValueString="0" maxValueString="1" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="colorGreen" attributeType="Float" minValueString="0" maxValueString="1" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
@@ -12,8 +12,8 @@
     <entity name="Lecture" representedClassName="Lecture" syncable="YES" codeGenerationType="class">
         <attribute name="content" optional="YES" attributeType="Transformable" valueTransformerName="content" defaultValueString=" " customClassName="NSAttributedString" syncable="YES"/>
         <attribute name="day" attributeType="Integer 16" minValueString="1" defaultValueString="1" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="lecture" attributeType="Integer 16" minValueString="0" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="month" attributeType="Integer 16" minValueString="1" maxValueString="12" defaultValueString="1" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="number" attributeType="Integer 16" minValueString="0" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="week" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="year" attributeType="Integer 16" defaultValueString="1993" usesScalarValueType="YES" syncable="YES"/>

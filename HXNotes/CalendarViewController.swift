@@ -35,10 +35,31 @@ class CalendarViewController: NSViewController {
     @IBOutlet weak var noCourseSubLabel: NSTextField!
     @IBOutlet weak var calendarContainer: NSBox!
     
-    // MARK: References for dragging a course to calendar
-    // Note last grid box mouse dragged into
-    var lastGridX = 0
-    var lastGridY = 0
+    // Dragging and Extending Course
+    private var lastGridX = -1
+    private var lastGridY = -1
+    private func lastGrid(_ x: Int, _ y: Int) {
+        if lastGridX != -1 {
+            dayLabels[lastGridX].textColor = NSColor.gray
+            timeLabels[lastGridY].textColor = NSColor.gray
+            if gridSlotTitle(lastGridX, lastGridY) == EMPTY {
+                gridBoxes[lastGridX][lastGridY].update(color: NSColor.white)
+            }
+        }
+        lastGridX = x
+        lastGridY = y
+        if x != -1 {
+            timeLabels[lastGridY].textColor = NSColor.black
+            dayLabels[lastGridX].textColor = NSColor.black
+            // Lightly color the hovering grid box
+            if gridSlotTitle(lastGridX, lastGridY) == EMPTY && lowestDragExtendIndex == -1 {
+                gridBoxes[lastGridX][lastGridY].update(color: NSColor.lightGray)
+            }
+        } else {
+            dragging = false
+        }
+    }
+    private var dragging = false
     let EMPTY = ""
     
     // MARK: References to handle extending a course timeSlot
@@ -55,8 +76,10 @@ class CalendarViewController: NSViewController {
             popAllTimeSlots()
             // Populate new lecture visuals
 //            loadCourses(fromSemester: thisSemester)
-            for case let course as Course in thisSemester.courses! {
-                loadTimeSlots(for: course)
+            if thisSemester != nil {
+                for case let course as Course in thisSemester.courses! {
+                    loadTimeSlots(for: course)
+                }
             }
         }
     }
@@ -92,14 +115,7 @@ class CalendarViewController: NSViewController {
             }
         }
     }
-    override func viewDidLayout() {
-        for columns in gridBoxes {
-            for row in columns {
-                row.viewDidEndLiveResize()
-            }
-        }
-    }
-    func initialize(withSemester semester: Semester) {
+    func initialize(with semester: Semester) {
         self.thisSemester = semester
     }
     
@@ -165,11 +181,8 @@ class CalendarViewController: NSViewController {
         noCourseSubLabel.isEnabled = true
         if thisSemester.courses!.count == 0 {
             noCourseLabel.stringValue = "No Course Data"
-            noCourseSubLabel.stringValue = "Add a course above."
+            noCourseSubLabel.stringValue = "Add a course in the left sidebar."
         } else {
-            for case let course as Course in thisSemester.courses! {
-                print("    \(course.title!)")
-            }
             noCourseLabel.stringValue = "Drag to Here"
             noCourseSubLabel.stringValue = "Mouse over course color."
         }
@@ -201,6 +214,7 @@ class CalendarViewController: NSViewController {
     /// Add a timeslot model and update gridBox visuals
     private func addTimeSlot(for course: Course, atDay day: Int, atHour hour: Int) {
         pushTimeSlot( newTimeSlot(for: course, atDay: day, atHour: hour), for: course)
+        masterViewController.notifyTimeSlotAddition()
     }
     /// Remove a timeslot model and update gridBox visuals
     private func removeTimeSlot(_ x: Int, _ y: Int) {
@@ -210,6 +224,9 @@ class CalendarViewController: NSViewController {
             let fetch = try appDelegate.managedObjectContext.fetch(fetchRequest) as [TimeSlot]
             if let found = fetch.filter({$0.course!.semester == thisSemester && $0.day == Int16(x) && $0.hour == Int16(y)}).first {
                 appDelegate.managedObjectContext.delete(found)
+                appDelegate.saveAction(self)
+                // Notify sidebar
+                masterViewController.notifyTimeSlotDeletion()
                 // Update Visuals
                 popTimeSlot(x, y)
             }
@@ -299,17 +316,21 @@ class CalendarViewController: NSViewController {
     // MARK: Mouse handlers...........................................................................
     // HXGridBox - Mouse Enter:
     func mouseEntered_gridBox(atX: Int, atY: Int) {
-        // Revert color on last grid
-        dayLabels[lastGridX].textColor = NSColor.gray
-        timeLabels[lastGridY].textColor = NSColor.gray
-        // Update grid location
-        lastGridY = atY
-        if lowestDragExtendIndex != -1 {
-            lastGridY = lowestDragExtendIndex
+        if dragging {
+            print("Dragging")
+            // User is not extending so do full visual update for dragging course
+            lastGrid(atX, atY)
+        } else if lowestDragExtendIndex != -1 {
+            print("Extending")
+            // User is extending so only update labels on border of calendar
+            if lastGridX != -1 {
+                dayLabels[lastGridX].textColor = NSColor.lightGray
+                timeLabels[lastGridY].textColor = NSColor.lightGray
+            }
+            lastGridX = atX
+            lastGridY = atY
             dayLabels[lastGridX].textColor = NSColor.black
             timeLabels[lastGridY].textColor = NSColor.black
-        } else {
-            lastGridX = atX
         }
     }
     /// HXGridBox - Mouse Up: Stop extending the course in a grid box to more time slots
@@ -322,9 +343,8 @@ class CalendarViewController: NSViewController {
             }
         }
         maxDragExtendIndex = timeLabels.count
-        dayLabels[lastGridX].textColor = NSColor.gray
-        timeLabels[lastGridY].textColor = NSColor.gray
         lowestDragExtendIndex = -1
+        lastGrid(-1, -1)
         extendingCourse = nil
     }
     /// HXGridBox - Mouse Drag: Extend the course in a grid box to more time slots
@@ -335,6 +355,7 @@ class CalendarViewController: NSViewController {
             maxDragExtendIndex = timeLabels.count
             lowestDragExtendIndex = y + 1
             extendingCourse = gridBoxes[x][y].course
+            return
         }
         if (y + indicesDown) < maxDragExtendIndex {
             if gridSlotTitle(x, y + indicesDown) == EMPTY {
@@ -385,10 +406,6 @@ class CalendarViewController: NSViewController {
     internal func action_clearTimeSlot(xGrid x: Int, yGrid y: Int) {
         self.removeTimeSlot(x,y)
     }
-    @IBAction func action_closeCalendar(_ sender: Any) {
-        masterViewController.popCalendar()
-        self.view.removeFromSuperview()
-    }
 
     /// Lets the calendar know that there was a drag update from a course
     func drag() {
@@ -396,21 +413,30 @@ class CalendarViewController: NSViewController {
         if lastGridX != -1 {
             timeLabels[lastGridY].textColor = NSColor.black
             dayLabels[lastGridX].textColor = NSColor.black
-            
+            // Clear away no-course visuals so user can see calendar
+            calendarContainer.alphaValue = 1
+            noCourseLabel.isHidden = true
+            noCourseSubLabel.isHidden = true
+            noCourseLabel.isEnabled = false
+            noCourseSubLabel.isEnabled = false
+            // Lightly color the hovering grid box
+            if gridSlotTitle(lastGridX, lastGridY) == EMPTY && lowestDragExtendIndex == -1 {
+                gridBoxes[lastGridX][lastGridY].update(color: NSColor.lightGray)
+            }
+        } else {
+            dragging = true
+            lastGrid(0, 0)
         }
     }
-    /// Lets the calendar know that the course has been dropped on a grid space
+    /// Lets the calendar know that the course has been dropped, potentially on a grid space
     func drop(course: Course, at loc: NSPoint) {
         if isLocationInLastGrid(location: loc) {
             self.updateTimeSlot(xGrid: lastGridX, yGrid: lastGridY, course: course)
             // Reset grid hovering colors
             timeLabels[lastGridY].textColor = NSColor.gray
             dayLabels[lastGridX].textColor = NSColor.gray
-        } else if lastGridX != -1 {
-            if gridSlotTitle(lastGridX, lastGridY) == EMPTY {
-                timeLabels[lastGridY].textColor = NSColor.gray
-                dayLabels[lastGridX].textColor = NSColor.gray
-            }
         }
+        lastGrid(-1, -1)
+        evaluateEmptyVisuals()
     }
 }
