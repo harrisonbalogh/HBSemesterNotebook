@@ -18,26 +18,38 @@ class EditorViewController: NSViewController {
     @IBOutlet weak var lectureBottomBufferView: HXBottomBufferView!
     @IBOutlet weak var lectureScroller: NSScrollView!
     @IBOutlet weak var lectureClipper: HXFlippedClipView!
+    var oldClipperHeight: CGFloat = 0
+    // These 2 labels are displayed when no course is selected
+    @IBOutlet weak var labelNoCourse: NSTextField!
+    @IBOutlet weak var subLabelNoCourse: NSTextField!
     
     // This constraint is for an invisible view at the bottom of lecture stack to allow user to scroll
     // enough for the last lecture's textView to be in middle of screen.
     private var lectureBottomConstraint: NSLayoutConstraint!
     // MARK: Object models
     let appDelegate = NSApplication.shared().delegate as! AppDelegate
+    let sharedFontManager = NSFontManager.shared()
     var selectedCourse: Course! {
         didSet {
             // Setting selectedCourse, immediately updates visuals
             if selectedCourse != nil {
                 // Populate new lecture visuals
                 loadLectures(from: selectedCourse)
+                NSAnimationContext.beginGrouping()
+                NSAnimationContext.current().duration = 0.4
+                labelNoCourse.animator().alphaValue = 0
+                subLabelNoCourse.animator().alphaValue = 0
+                NSAnimationContext.endGrouping()
             } else {
                 // Animate hiding the lecture
                 NSAnimationContext.beginGrouping()
-                NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
                 NSAnimationContext.current().completionHandler = {self.popLectures()}
                 NSAnimationContext.current().duration = 0.25
                 stickyHeaderBox.animator().alphaValue = 0
                 lectureScroller.animator().alphaValue = 0
+                NSAnimationContext.current().duration = 0.4
+                labelNoCourse.animator().alphaValue = 1
+                subLabelNoCourse.animator().alphaValue = 1
                 NSAnimationContext.endGrouping()
             }
         }
@@ -71,11 +83,9 @@ class EditorViewController: NSViewController {
         
         stickyHeaderCustomTitle.parentController = self
         
-        button_style_regular.alphaValue = 0
         button_style_underline.alphaValue = 0
         button_style_italicize.alphaValue = 0
         button_style_bold.alphaValue = 0
-        button_style_regular.alphaValue = 0
         button_style_left.alphaValue = 0
         button_style_center.alphaValue = 0
         button_style_right.alphaValue = 0
@@ -87,6 +97,7 @@ class EditorViewController: NSViewController {
     override func viewDidLayout() {
         super.viewDidLayout()
         
+        didScroll()
     }
     // MARK: Load object models ..........................................................................................
     /// Internal usage only. Reach this function by setting selectedCourse.
@@ -123,6 +134,12 @@ class EditorViewController: NSViewController {
         self.addChildViewController(newController)
         lectureStack.insertArrangedSubview(newController.view, at: lectureStack.arrangedSubviews.count - 1)
         newController.initialize(with: lecture)
+        // Animate showing the lecture
+        NSAnimationContext.beginGrouping()
+        NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+        NSAnimationContext.current().duration = 0.5
+        lectureScroller.animator().alphaValue = 1
+        NSAnimationContext.endGrouping()
     }
     /// Handles purely the visual aspect of lectures. Resets lectureLedgerStack, lectureStack, selectedCourse.lectures!.count, and weekCount
     private func popLectures() {
@@ -130,14 +147,10 @@ class EditorViewController: NSViewController {
             lectureController.view.removeFromSuperview()
             lectureController.removeFromParentViewController()
         }
-    }
-    // MARK: TEMP
-    /// Should not be able to simply add lectures this way
-    @IBAction func action_addLecture(_ sender: Any) {
-//        addLecture()
+        lectureClipper.bounds.origin.y = 0
     }
     /// Comes from the LectureLedger stack, scrolls to supplied lecture number. Lecture guaranteed to exist.
-    func scrollToLecture(_ lecture: String) {
+    private func scrollToLecture(_ lecture: String) {
         for case let lectureController as LectureViewController in self.childViewControllers {
             if lectureController.label_lectureTitle.stringValue == lecture {
                 NSApp.keyWindow?.makeFirstResponder(lectureController.textView_lecture)
@@ -166,6 +179,10 @@ class EditorViewController: NSViewController {
     /// Is responsible for updating the StickyHeaderBox to simulate the iOS effect of lecture titles
     /// staying at the top of scrollView.
     func didScroll() {
+        // didScroll should only be called when the origin.y changes, not the height
+        if oldClipperHeight == lectureClipper.bounds.height {
+            
+        }
         let clipperYPos = lectureClipper.bounds.origin.y
         // The y positions of each view in the stackview can be found by adding the heights of the previous views. Assumes zero spacing.
         var accumulatedHeight: CGFloat = 0
@@ -177,7 +194,6 @@ class EditorViewController: NSViewController {
                 // If scroller is using elastic effect don't proceed past first element
                 if clipperYPos < 0 {
                     if stickyHeaderCustomTitle.isFocused {
-                        print("5")
                         lectureController.notifyCustomTitleFocus(true)
                     }
                     stickyHeaderLectureViewController = nil
@@ -221,7 +237,6 @@ class EditorViewController: NSViewController {
     }
     
     @IBAction func action_customTitle(_ sender: NSTextField) {
-        print("Check1")
         NSApp.keyWindow?.makeFirstResponder(self)
     }
     
@@ -232,7 +247,6 @@ class EditorViewController: NSViewController {
     }
     
     func notifyCustomTitleChange() {
-        print("Current responder is: \(NSApp.keyWindow?.firstResponder)")
         if customTitleFocused != nil {
             customTitleFocused.label_customTitle.stringValue = stickyHeaderCustomTitle.stringValue
         }
@@ -244,7 +258,6 @@ class EditorViewController: NSViewController {
     }
     
     func notifyCustomTitleUpdate() {
-        print("This is called...")
         stickyHeaderLectureViewController.isTitling = false
         stickyHeaderCustomTitle.stringValue = stickyHeaderCustomTitle.stringValue.trimmingCharacters(in: .whitespaces)
         // If customTitleFocused is nil and this function just got called, it implies that the StickyHeader's
@@ -273,24 +286,36 @@ class EditorViewController: NSViewController {
     internal func notifyHeightUpdate(from sender: LectureViewController) {
         // Get last view in lectureStack
         if let lectureController = childViewControllers.filter({$0 is LectureViewController})[selectedCourse.lectures!.count - 1] as?LectureViewController {
-            if lectureController.view.frame.height < lectureScroller.frame.height/2 + 50 {
+            // Resize last lecture to keep text in the center of screen.
+            if lectureController.view.frame.height < lectureScroller.frame.height/2 + 3 {
                 lectureBottomConstraint.constant = -lectureController.view.frame.height
             } else {
-                lectureBottomConstraint.constant = -lectureScroller.frame.height/2 - 50
+                lectureBottomConstraint.constant = -lectureScroller.frame.height/2 - 3
             }
             // AUTO SCROLL FEATURE: Smooth scroll to center on text line.
-            let selectionY = sender.textSelectionHeight()
-            // Center current typing position to center of lecture scroller
-            let yPos = lectureStack.frame.height - selectionY // - lectureScroller.frame.height/2
-            // Don't auto-scroll if selection is already visible and above center line of window
-            if yPos < (lectureClipper.bounds.origin.y + stickyHeaderBox.frame.height) || yPos > (lectureClipper.bounds.origin.y + lectureScroller.frame.height/2) {
-                NSAnimationContext.beginGrouping()
-                NSAnimationContext.current().duration = 0.5
-                // Get clipper to center selection in scroller
-                lectureClipper.animator().setBoundsOrigin(NSPoint(x: 0, y: yPos - lectureScroller.frame.height/2))
-                NSAnimationContext.endGrouping()
+            if sender.isStyling {
+                let selectionY = sender.textSelectionHeight()
+                // Center current typing position to center of lecture scroller
+                let yPos = lectureStack.frame.height - selectionY // - lectureScroller.frame.height/2
+                // Don't auto-scroll if selection is already visible and above center line of window
+                if yPos < (lectureClipper.bounds.origin.y + stickyHeaderBox.frame.height) || yPos > (lectureClipper.bounds.origin.y + lectureScroller.frame.height/2) {
+                    NSAnimationContext.beginGrouping()
+                    NSAnimationContext.current().duration = 0.5
+                    // Get clipper to center selection in scroller
+                    lectureClipper.animator().setBoundsOrigin(NSPoint(x: 0, y: yPos - lectureScroller.frame.height/2))
+                    NSAnimationContext.endGrouping()
+                }
             }
         }
+    }
+    
+    func notifyLectureAddition(lecture: Lecture) {
+        addLecture(lecture)
+        
+        scrollToLecture("Lecture \(lecture.number)")
+    }
+    func notifyLectureSelection(lecture: String) {
+        scrollToLecture(lecture)
     }
     
     // MARK: Find, Print, Export Functions
@@ -386,31 +411,25 @@ class EditorViewController: NSViewController {
                 }
                 stickyHeaderCustomTitleTrailingConstraint.isActive = false
                 if stickyHeaderLectureViewController.isStyling {
-                    button_style_regular.alphaValue = 1
                     button_style_underline.alphaValue = 1
                     button_style_italicize.alphaValue = 1
                     button_style_bold.alphaValue = 1
-                    button_style_regular.alphaValue = 1
                     button_style_left.alphaValue = 1
                     button_style_center.alphaValue = 1
                     button_style_right.alphaValue = 1
-                    stickyHeaderCustomTitleTrailingConstraint = stickyHeaderCustomTitle.trailingAnchor.constraint(equalTo: button_style_regular.leadingAnchor)
+                    stickyHeaderCustomTitleTrailingConstraint = stickyHeaderCustomTitle.trailingAnchor.constraint(equalTo: button_style_underline.leadingAnchor)
                 } else {
-                    button_style_regular.alphaValue = 0
                     button_style_underline.alphaValue = 0
                     button_style_italicize.alphaValue = 0
                     button_style_bold.alphaValue = 0
-                    button_style_regular.alphaValue = 0
                     button_style_left.alphaValue = 0
                     button_style_center.alphaValue = 0
                     button_style_right.alphaValue = 0
                     stickyHeaderCustomTitleTrailingConstraint = stickyHeaderCustomTitle.trailingAnchor.constraint(equalTo: stickyHeaderDate.leadingAnchor)
                 }
-                print("\(stickyHeaderLectureViewController.label_customTitle.stringValue) isTitling: \(stickyHeaderLectureViewController.isTitling)")
                 stickyHeaderCustomTitleTrailingConstraint.isActive = true
                 if stickyHeaderLectureViewController.isTitling {
                     if !stickyHeaderCustomTitle.isFocused {
-                        print("2")
                         NSApp.keyWindow?.makeFirstResponder(stickyHeaderCustomTitle)
                     }
                 } else if customTitleFocused != nil {
@@ -420,7 +439,6 @@ class EditorViewController: NSViewController {
                         } else {
 //                            NSApp.keyWindow?.makeFirstResponder(self)
                         }
-                        print("1")
                         
                     }
                 }
@@ -443,33 +461,28 @@ class EditorViewController: NSViewController {
                 // Lecture is focused, notify masterVC
                 masterViewController.notifyLectureFocus(is: lectureFocused.lecture)
                 // Check if lecture focused is the same as StickyHeaders LectureVC
-                print("found a nil ?!?!? \(stickyHeaderLectureViewController)")
                 if stickyHeaderLectureViewController != nil {
                     if stickyHeaderLectureViewController == lectureFocused {
                         // Animate revealing the styling buttons on stickyHeader
                         NSAnimationContext.beginGrouping()
                         NSAnimationContext.current().duration = 1
-                        button_style_regular.animator().alphaValue = 1
                         button_style_underline.animator().alphaValue = 1
                         button_style_italicize.animator().alphaValue = 1
                         button_style_bold.animator().alphaValue = 1
-                        button_style_regular.animator().alphaValue = 1
                         button_style_left.animator().alphaValue = 1
                         button_style_center.animator().alphaValue = 1
                         button_style_right.animator().alphaValue = 1
                         NSAnimationContext.endGrouping()
-                        stickyHeaderCustomTitleTrailingConstraint = stickyHeaderCustomTitle.trailingAnchor.constraint(equalTo: button_style_regular.leadingAnchor)
+                        stickyHeaderCustomTitleTrailingConstraint = stickyHeaderCustomTitle.trailingAnchor.constraint(equalTo: button_style_underline.leadingAnchor)
                     }
                 } else {
                     // StickyHeaders LectureVC is not focused, hide styling buttons
                     // Animate hiding style buttons
                     NSAnimationContext.beginGrouping()
                     NSAnimationContext.current().duration = 0.25
-                    button_style_regular.animator().alphaValue = 0
                     button_style_underline.animator().alphaValue = 0
                     button_style_italicize.animator().alphaValue = 0
                     button_style_bold.animator().alphaValue = 0
-                    button_style_regular.animator().alphaValue = 0
                     button_style_left.animator().alphaValue = 0
                     button_style_center.animator().alphaValue = 0
                     button_style_right.animator().alphaValue = 0
@@ -480,11 +493,9 @@ class EditorViewController: NSViewController {
                 // StickyHeaders LectureVC is not focused, hide styling buttons
                 NSAnimationContext.beginGrouping()
                 NSAnimationContext.current().duration = 0.25
-                button_style_regular.animator().alphaValue = 0
                 button_style_underline.animator().alphaValue = 0
                 button_style_italicize.animator().alphaValue = 0
                 button_style_bold.animator().alphaValue = 0
-                button_style_regular.animator().alphaValue = 0
                 button_style_left.animator().alphaValue = 0
                 button_style_center.animator().alphaValue = 0
                 button_style_right.animator().alphaValue = 0
@@ -502,14 +513,10 @@ class EditorViewController: NSViewController {
     var customTitleFocused: LectureViewController! {
         didSet {
             // Check if user isTitling a lectureVC
-            print("customTitleFocused: \(customTitleFocused)")
             if customTitleFocused != nil {
-                print("A NIL1?: \(stickyHeaderLectureViewController)")
                 if stickyHeaderLectureViewController != nil {
                     if stickyHeaderLectureViewController == customTitleFocused {
-                        print("3")
                         if !stickyHeaderCustomTitle.isFocused {
-                            print("Current responder is: \(NSApp.keyWindow?.firstResponder)")
                             NSApp.keyWindow?.makeFirstResponder(stickyHeaderCustomTitle)
                         }
                     }
@@ -530,7 +537,6 @@ class EditorViewController: NSViewController {
     @IBOutlet weak var stickyHeaderDivider: NSTextField!
     @IBOutlet weak var stickyHeaderCustomTitle: HXStickyCustomTitleField!
     
-    @IBOutlet weak var button_style_regular: NSButton!
     @IBOutlet weak var button_style_underline: NSButton!
     @IBOutlet weak var button_style_italicize: NSButton!
     @IBOutlet weak var button_style_bold: NSButton!
@@ -538,11 +544,6 @@ class EditorViewController: NSViewController {
     @IBOutlet weak var button_style_center: NSButton!
     @IBOutlet weak var button_style_right: NSButton!
     
-    @IBAction func action_styleRegular(_ sender: NSButton) {
-        if lectureFocused != nil {
-            lectureFocused.action_styleRegular(sender)
-        }
-    }
     @IBAction func action_styleUnderline(_ sender: NSButton) {
         if lectureFocused != nil {
             lectureFocused.action_styleUnderline(sender)
@@ -571,6 +572,33 @@ class EditorViewController: NSViewController {
     @IBAction func action_styleRight(_ sender: NSButton) {
         if lectureFocused != nil {
             lectureFocused.action_styleRight(sender)
+        }
+    }
+    
+    func textSelectionChange() {
+        if sharedFontManager.selectedFont == nil {
+            return
+        }
+        let traits = sharedFontManager.traits(of: sharedFontManager.selectedFont!)
+        
+        sharedFontManager.convert(sharedFontManager.selectedFont!)
+        
+        print("traits: \(traits)")
+        if traits == NSFontTraitMask.boldFontMask {
+            button_style_bold.state = NSOnState
+            button_style_italicize.state = NSOffState
+        }
+        if traits == NSFontTraitMask.italicFontMask {
+            button_style_bold.state = NSOffState
+            button_style_italicize.state = NSOnState
+        }
+        if traits == NSFontTraitMask.init(rawValue: 0) {
+            button_style_bold.state = NSOffState
+            button_style_italicize.state = NSOffState
+        }
+        if traits == NSFontTraitMask.init(rawValue: 3) {
+            button_style_bold.state = NSOnState
+            button_style_italicize.state = NSOnState
         }
     }
 }

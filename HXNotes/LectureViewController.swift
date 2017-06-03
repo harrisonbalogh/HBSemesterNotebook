@@ -14,11 +14,14 @@ class LectureViewController: NSViewController {
     @IBOutlet weak var label_lectureDate: NSTextField!
     @IBOutlet weak var scrollView_lecture: HXNonScrollView!
     @IBOutlet var textView_lecture: HXTextView!
+    @IBOutlet weak var image_corner1: NSImageView!
+    @IBOutlet weak var image_corner2: NSImageView!
+    @IBOutlet weak var image_corner3: NSImageView!
+    @IBOutlet weak var image_corner4: NSImageView!
     
     // Set the when user sets or remove focus to the customTitle textField.
     var isTitling = false {
         didSet {
-            print("isTitling update: \(isTitling) for \(label_lectureTitle.stringValue)")
             if isTitling {
                 owner.customTitleFocused = self
 //                if NSApp.keyWindow?.firstResponder != label_customTitle {
@@ -37,7 +40,6 @@ class LectureViewController: NSViewController {
     @IBOutlet weak var label_titleDivider: NSTextField!
     @IBOutlet weak var label_customTitle: HXCustomTitleField!
     @IBAction func action_customTitle(_ sender: HXCustomTitleField) {
-        print("action_customTitle")
         NSApp.keyWindow?.makeFirstResponder(self)
     }
     
@@ -45,7 +47,6 @@ class LectureViewController: NSViewController {
     // or hide styling buttons and update customTitle textField constraints.
     var isStyling = false {
         didSet {
-            print("isStyling update: \(isStyling) for \(label_lectureTitle.stringValue)")
             // Remove constraint before updating and reinstating
             customTitleTrailingConstraint.isActive = false
             if isStyling {
@@ -54,17 +55,19 @@ class LectureViewController: NSViewController {
                 // Animate revealing the styling buttons
                 NSAnimationContext.beginGrouping()
                 NSAnimationContext.current().duration = 1
-                button_style_regular.animator().alphaValue = 1
                 button_style_underline.animator().alphaValue = 1
                 button_style_italicize.animator().alphaValue = 1
                 button_style_bold.animator().alphaValue = 1
-                button_style_regular.animator().alphaValue = 1
                 button_style_left.animator().alphaValue = 1
                 button_style_center.animator().alphaValue = 1
                 button_style_right.animator().alphaValue = 1
+                image_corner1.animator().alphaValue = 1
+                image_corner2.animator().alphaValue = 1
+                image_corner3.animator().alphaValue = 1
+                image_corner4.animator().alphaValue = 1
                 NSAnimationContext.endGrouping()
                 // Have to shift the customTitle textField to truncate at the closest style button
-                customTitleTrailingConstraint = label_customTitle.trailingAnchor.constraint(equalTo: button_style_regular.leadingAnchor)
+                customTitleTrailingConstraint = label_customTitle.trailingAnchor.constraint(equalTo: button_style_underline.leadingAnchor)
             } else {
                 if owner.lectureFocused == self {
                     owner.lectureFocused = nil
@@ -72,14 +75,16 @@ class LectureViewController: NSViewController {
                 // Animate hiding the styling buttons
                 NSAnimationContext.beginGrouping()
                 NSAnimationContext.current().duration = 0.25
-                button_style_regular.animator().alphaValue = 0
                 button_style_underline.animator().alphaValue = 0
                 button_style_italicize.animator().alphaValue = 0
                 button_style_bold.animator().alphaValue = 0
-                button_style_regular.animator().alphaValue = 0
                 button_style_left.animator().alphaValue = 0
                 button_style_center.animator().alphaValue = 0
                 button_style_right.animator().alphaValue = 0
+                image_corner1.animator().alphaValue = 0
+                image_corner2.animator().alphaValue = 0
+                image_corner3.animator().alphaValue = 0
+                image_corner4.animator().alphaValue = 0
                 NSAnimationContext.endGrouping()
                 // Have to shift the customTitle textField to extend to the date label
                 customTitleTrailingConstraint = label_customTitle.trailingAnchor.constraint(equalTo: label_lectureDate.leadingAnchor)
@@ -88,13 +93,14 @@ class LectureViewController: NSViewController {
             customTitleTrailingConstraint.isActive = true
         }
     }
-    @IBOutlet weak var button_style_regular: NSButton!
     @IBOutlet weak var button_style_underline: NSButton!
     @IBOutlet weak var button_style_italicize: NSButton!
     @IBOutlet weak var button_style_bold: NSButton!
     @IBOutlet weak var button_style_left: NSButton!
     @IBOutlet weak var button_style_center: NSButton!
     @IBOutlet weak var button_style_right: NSButton!
+    
+    let sharedFontManager = NSFontManager.shared()
     
     var textHeightConstraint: NSLayoutConstraint!
     var customTitleTrailingConstraint: NSLayoutConstraint!
@@ -142,14 +148,17 @@ class LectureViewController: NSViewController {
         customTitleTrailingConstraint = label_customTitle.trailingAnchor.constraint(equalTo: label_lectureDate.leadingAnchor)
         customTitleTrailingConstraint.isActive = true
         
-        button_style_regular.alphaValue = 0
         button_style_underline.alphaValue = 0
         button_style_italicize.alphaValue = 0
         button_style_bold.alphaValue = 0
-        button_style_regular.alphaValue = 0
         button_style_left.alphaValue = 0
         button_style_center.alphaValue = 0
         button_style_right.alphaValue = 0
+        
+        image_corner1.alphaValue = 0
+        image_corner2.alphaValue = 0
+        image_corner3.alphaValue = 0
+        image_corner4.alphaValue = 0
         
         NotificationCenter.default.addObserver(self, selector: #selector(LectureViewController.notifyTextViewChange),
                                                name: .NSTextDidChange, object: textView_lecture)
@@ -157,18 +166,23 @@ class LectureViewController: NSViewController {
                                                name: .NSControlTextDidEndEditing, object: label_customTitle)
         NotificationCenter.default.addObserver(self, selector: #selector(LectureViewController.notifyCustomTitleChange),
                                                name: .NSControlTextDidChange, object: label_customTitle)
-
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(LectureViewController.selectionChange),
+                                               name: .NSTextViewDidChangeSelection, object: textView_lecture)
     }
     
     override func viewDidLayout() {
         super.viewDidLayout()
+        
+        // Update height of view
+//        textHeightConstraint.constant = textHeight()
+        
         notifyTextViewChange()
     }
     
     // MARK: Notifiers
     ///
     func notifyCustomTitleChange() {
-        print("hi123")
         if label_customTitle.stringValue == "" {
             label_titleDivider.alphaValue = 0.3
             lecture.title = nil
@@ -178,7 +192,6 @@ class LectureViewController: NSViewController {
     }
     ///
     func notifyCustomTitleEndEditing() {
-        print("notifyCustomTitleEndEditing is running for \(label_lectureTitle.stringValue)")
         label_customTitle.stringValue = label_customTitle.stringValue.trimmingCharacters(in: .whitespaces)
         // Check if it has content
         if label_customTitle.stringValue == "" {
@@ -205,22 +218,30 @@ class LectureViewController: NSViewController {
         // Save to Model
         lecture.content = textView_lecture.attributedString()
         owner.notifyHeightUpdate(from: self)
+        // Update styling buttons
+        selectionChange()
     }
     /// Received from HXCustomTitleField
     func notifyCustomTitleFocus(_ focus: Bool) {
-        print("Setting isTitling to \(focus)")
         if isTitling != focus {
             isTitling = focus
         }
     }
     /// Received from HXTextView
     func notifyTextViewFocus(_ focus: Bool) {
-        isStyling = focus
+        if isStyling != focus {
+            isStyling = focus
+        }
     }
     
     // MARK: Auto Scroll and Resizing Helper Functions
     /// Return the height to the selected character in the textView
     func textSelectionHeight() -> CGFloat {
+        if !self.isStyling {
+            // If user is not actively editing this lecture's textView, then the request to get selection
+            // height came from a clipView resize, not from the user changing the textView text.
+            return 0
+        }
         let positionOfSelection = textView_lecture.selectedRanges.first!.rangeValue.location
         let rangeToSelection = NSRange(location: 0, length: positionOfSelection)
         let substring = textView_lecture.attributedString().attributedSubstring(from: rangeToSelection)
@@ -244,7 +265,7 @@ class LectureViewController: NSViewController {
         txtStorage.addAttributes([NSFontAttributeName: textView_lecture.font!], range: NSRange(location: 0, length: txtStorage.length))
         txtContainer.lineFragmentPadding = 0
         layoutManager.glyphRange(for: txtContainer)
-        return layoutManager.usedRect(for: txtContainer).size.height + 50 // 50 is arbitrary bottom buffer space added
+        return layoutManager.usedRect(for: txtContainer).size.height + 3 // 3 is arbitrary bottom buffer space added
     }
     
     // MARK: Styling Functionality
@@ -261,15 +282,6 @@ class LectureViewController: NSViewController {
     func textShowFonts() {
     }
     ///
-    @IBAction func action_styleRegular(_ sender: Any) {
-        if isStyling {
-            textView_lecture.textStorage?.applyFontTraits(.unboldFontMask, range: textView_lecture.selectedRange())
-            textView_lecture.textStorage?.applyFontTraits(.unitalicFontMask, range: textView_lecture.selectedRange())
-            textView_lecture.needsDisplay = true
-            notifyTextViewChange()
-        }
-    }
-    ///
     @IBAction func action_styleUnderline(_ sender: Any) {
         if isStyling {
             textView_lecture.underline(self)
@@ -277,22 +289,14 @@ class LectureViewController: NSViewController {
             notifyTextViewChange()
         }
     }
-    ///
-    @IBAction func action_styleItalicize(_ sender: Any) {
-        if isStyling {
-            textView_lecture.textStorage?.applyFontTraits(.italicFontMask, range: textView_lecture.selectedRange())
-            textView_lecture.needsDisplay = true
-            notifyTextViewChange()
-        }
+
+    @IBAction func action_styleItalicize(_ sender: NSButton) {
+        sharedFontManager.addFontTrait(sender)
     }
-    ///
-    @IBAction func action_styleBold(_ sender: Any) {
-        if isStyling {
-            textView_lecture.textStorage?.applyFontTraits(.boldFontMask, range: textView_lecture.selectedRange())
-            textView_lecture.needsDisplay = true
-            notifyTextViewChange()
-        }
+    @IBAction func action_styleBold(_ sender: NSButton) {
+        sharedFontManager.addFontTrait(sender)
     }
+    
     ///
     @IBAction func action_styleLeft(_ sender: Any) {
         if isStyling {
@@ -311,4 +315,38 @@ class LectureViewController: NSViewController {
             textView_lecture.alignRight(self)
         }
     }
+    func selectionChange() {
+        if sharedFontManager.selectedFont == nil {
+            return
+        }
+        
+        let traits = sharedFontManager.traits(of: sharedFontManager.selectedFont!)
+        
+        print("traits: \(traits)")
+        if traits == NSFontTraitMask.boldFontMask {
+            button_style_bold.state = NSOnState
+            button_style_italicize.state = NSOffState
+        }
+        if traits == NSFontTraitMask.italicFontMask {
+            button_style_bold.state = NSOffState
+            button_style_italicize.state = NSOnState
+        }
+        if traits == NSFontTraitMask.init(rawValue: 0) {
+            button_style_bold.state = NSOffState
+            button_style_italicize.state = NSOffState
+        }
+        if traits == NSFontTraitMask.init(rawValue: 3) {
+            button_style_bold.state = NSOnState
+            button_style_italicize.state = NSOnState
+        }
+        
+        owner.textSelectionChange()
+    }
+    
+    
+    
+    
+    
+
+    
 }

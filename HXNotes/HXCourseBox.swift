@@ -27,8 +27,10 @@ class HXCourseBox: NSBox {
     
     // Manually connect course box child elements using identifiers
     let ID_BUTTON_TITLE = "course_button_title"
+    let ID_LABEL_DAYS   = "course_days_label"
     // Elements of course box
     var buttonTitle: NSButton!
+    var labelDays: NSTextField!
     
     /// Initialize the color, index, and tracking area of the CourseBox view
     func initialize(with course: Course, owner parent: SidebarViewController) {
@@ -41,6 +43,8 @@ class HXCourseBox: NSBox {
             switch v.identifier! {
             case ID_BUTTON_TITLE:
                 buttonTitle = v as! NSButton
+            case ID_LABEL_DAYS:
+                labelDays = v as! NSTextField
             default: continue
             }
         }

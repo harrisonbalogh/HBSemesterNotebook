@@ -25,9 +25,13 @@ class HXLectureBox: NSBox {
     // Manually connect drag box child elements using identifiers
     let ID_LABEL_TITLE      = "lecture_label_title"
     let ID_LABEL_DATE       = "lecture_label_date"
+    let ID_IMAGE            = "lecture_image"
+    let ID_BUTTON_OVERLAY   = "lecture_button_overlay"
     // Elements of course box
-    var labelTitle: NSButton!
+    var labelTitle: NSTextField!
     var labelDate: NSTextField!
+    var imageLecture: NSImageView!
+    var buttonOverlay: NSButton!
     
     var parentController: SidebarViewController!
     
@@ -37,33 +41,37 @@ class HXLectureBox: NSBox {
         for v in self.subviews[0].subviews {
             switch v.identifier! {
             case ID_LABEL_TITLE:
-                labelTitle = v as! NSButton
+                labelTitle = v as! NSTextField
             case ID_LABEL_DATE:
                 labelDate = v as! NSTextField
+            case ID_IMAGE:
+                imageLecture = v as! NSImageView
+            case ID_BUTTON_OVERLAY:
+                buttonOverlay = v as! NSButton
             default: continue
             }
         }
         
-        labelTitle.title = "Lecture \(number)"
+        labelTitle.stringValue = "Lecture \(number)"
         
         labelDate.stringValue = date
         
         self.parentController = owner
         
-        labelTitle.target = self
-        labelTitle.action = #selector(HXLectureBox.action_clickLecture)
+        buttonOverlay.target = self
+        buttonOverlay.action = #selector(HXLectureBox.action_clickLecture)
     }
     
     func action_clickLecture() {
         
-        parentController.select(lecture: labelTitle.title)
+        parentController.select(lecture: labelTitle.stringValue)
     }
     
     func focus() {
-        labelTitle.isBordered = true
+        imageLecture.image = #imageLiteral(resourceName: "icon_pencil_alt")
     }
     
     func unfocus() {
-        labelTitle.isBordered = false
+        imageLecture.image = #imageLiteral(resourceName: "icon_pencil")
     }
 }

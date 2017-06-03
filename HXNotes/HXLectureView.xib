@@ -13,9 +13,12 @@
                 <outlet property="button_style_center" destination="P2u-0g-011" id="ZjP-Fc-VC4"/>
                 <outlet property="button_style_italicize" destination="haU-mA-Ce7" id="FI3-Ne-2Uc"/>
                 <outlet property="button_style_left" destination="MGf-Et-IYi" id="LRj-SP-ULH"/>
-                <outlet property="button_style_regular" destination="CNQ-HC-CVe" id="gSr-Cq-0f1"/>
                 <outlet property="button_style_right" destination="GJR-w2-5tc" id="unK-Aa-O82"/>
                 <outlet property="button_style_underline" destination="J9V-Xz-uvJ" id="2Ug-C1-j7a"/>
+                <outlet property="image_corner1" destination="mo7-tU-2xj" id="9ls-LV-oIs"/>
+                <outlet property="image_corner2" destination="akD-e9-ZL2" id="6UZ-iJ-WTL"/>
+                <outlet property="image_corner3" destination="aQd-2w-Viv" id="MPK-Bt-7bv"/>
+                <outlet property="image_corner4" destination="rb3-9F-LEf" id="3ZS-2B-fOH"/>
                 <outlet property="label_customTitle" destination="Yhh-M5-M6C" id="6iI-PV-WgU"/>
                 <outlet property="label_lectureDate" destination="Twy-6v-YbQ" id="8Js-4Q-5bK"/>
                 <outlet property="label_lectureTitle" destination="rtP-Xd-KSa" id="GqV-L9-FqK"/>
@@ -28,14 +31,14 @@
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <box boxType="custom" borderWidth="0.0" title="Box" id="0Hk-u4-N0i">
-            <rect key="frame" x="0.0" y="0.0" width="505" height="71"/>
+            <rect key="frame" x="0.0" y="0.0" width="505" height="73"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <view key="contentView" id="KjG-vB-MAo">
-                <rect key="frame" x="0.0" y="0.0" width="505" height="71"/>
+                <rect key="frame" x="0.0" y="0.0" width="505" height="73"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <textField identifier="content_label_lecture" horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rtP-Xd-KSa">
-                        <rect key="frame" x="8" y="45" width="92" height="24"/>
+                        <rect key="frame" x="8" y="47" width="92" height="24"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="Lecture 1" id="wLv-sP-Biu">
                             <font key="font" metaFont="systemBold" size="20"/>
                             <color key="textColor" red="0.27931640619999998" green="0.27931640619999998" blue="0.27931640619999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -43,7 +46,7 @@
                         </textFieldCell>
                     </textField>
                     <textField identifier="content_label_date" horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Twy-6v-YbQ">
-                        <rect key="frame" x="427" y="48" width="62" height="17"/>
+                        <rect key="frame" x="427" y="50" width="62" height="17"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="58" id="MZN-b7-R6L"/>
                         </constraints>
@@ -53,6 +56,22 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
+                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="mo7-tU-2xj" userLabel="Corner 1">
+                        <rect key="frame" x="11" y="19" width="21" height="21"/>
+                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="image_corner_1" id="QSW-jF-UNv"/>
+                    </imageView>
+                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="akD-e9-ZL2" userLabel="Corner 2">
+                        <rect key="frame" x="465" y="19" width="21" height="21"/>
+                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="image_corner_2" id="Egp-Ix-fYr"/>
+                    </imageView>
+                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="aQd-2w-Viv" userLabel="Corner 3">
+                        <rect key="frame" x="465" y="5" width="21" height="21"/>
+                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="image_corner_3" id="DxB-HG-1P0"/>
+                    </imageView>
+                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="rb3-9F-LEf" userLabel="Corner 4">
+                        <rect key="frame" x="11" y="5" width="21" height="21"/>
+                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="image_corner_4" id="x6a-ax-OKt"/>
+                    </imageView>
                     <scrollView identifier="content_scroller" borderType="none" horizontalLineScroll="0.0" horizontalPageScroll="0.0" verticalLineScroll="0.0" verticalPageScroll="0.0" hasHorizontalScroller="NO" hasVerticalScroller="NO" usesPredominantAxisScrolling="NO" verticalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="yL3-k5-tgV" customClass="HXNonScrollView" customModule="HXNotes" customModuleProvider="target">
                         <rect key="frame" x="10" y="6" width="477" height="31"/>
                         <clipView key="contentView" identifier="content_clipper" drawsBackground="NO" copiesOnScroll="NO" id="46F-Zt-pFB">
@@ -84,13 +103,13 @@
                         </scroller>
                     </scrollView>
                     <button translatesAutoresizingMaskIntoConstraints="NO" id="GJR-w2-5tc" userLabel="Button Right">
-                        <rect key="frame" x="400" y="47" width="19" height="19"/>
+                        <rect key="frame" x="400" y="49" width="19" height="19"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="19" id="R4k-P7-efp"/>
                             <constraint firstAttribute="height" constant="19" id="eyG-Yy-5DW"/>
                         </constraints>
                         <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="icon_text_right" imagePosition="only" alignment="center" alternateImage="icon_text_right_alt" imageScaling="proportionallyUpOrDown" inset="2" id="cmX-X6-Frt">
-                            <behavior key="behavior" lightByContents="YES"/>
+                            <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
                         <connections>
@@ -98,13 +117,13 @@
                         </connections>
                     </button>
                     <button translatesAutoresizingMaskIntoConstraints="NO" id="P2u-0g-011" userLabel="Button Center">
-                        <rect key="frame" x="376" y="47" width="19" height="19"/>
+                        <rect key="frame" x="376" y="49" width="19" height="19"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="19" id="DTY-tE-j8z"/>
                             <constraint firstAttribute="height" constant="19" id="Vpr-Un-aro"/>
                         </constraints>
                         <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="icon_text_center" imagePosition="only" alignment="center" alternateImage="icon_text_center_alt" imageScaling="proportionallyUpOrDown" inset="2" id="TxN-Bl-f69">
-                            <behavior key="behavior" lightByContents="YES"/>
+                            <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
                         <connections>
@@ -112,13 +131,13 @@
                         </connections>
                     </button>
                     <button translatesAutoresizingMaskIntoConstraints="NO" id="MGf-Et-IYi" userLabel="Button Left">
-                        <rect key="frame" x="352" y="47" width="19" height="19"/>
+                        <rect key="frame" x="352" y="49" width="19" height="19"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="19" id="6Uz-gD-LXu"/>
                             <constraint firstAttribute="width" constant="19" id="jsy-pn-Zwl"/>
                         </constraints>
                         <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="icon_text_left" imagePosition="only" alignment="center" alternateImage="icon_text_left_alt" imageScaling="proportionallyUpOrDown" inset="2" id="xlX-Ld-Yfy">
-                            <behavior key="behavior" lightByContents="YES"/>
+                            <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
                         <connections>
@@ -126,63 +145,49 @@
                         </connections>
                     </button>
                     <button translatesAutoresizingMaskIntoConstraints="NO" id="CV2-1F-Bli" userLabel="Button Bold">
-                        <rect key="frame" x="328" y="47" width="19" height="19"/>
+                        <rect key="frame" x="328" y="49" width="19" height="19"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="19" id="6Lf-Ny-Mg5"/>
                             <constraint firstAttribute="height" constant="19" id="uYg-BD-y1i"/>
                         </constraints>
                         <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="icon_text_bold" imagePosition="only" alignment="center" alternateImage="icon_text_bold_alt" imageScaling="proportionallyUpOrDown" inset="2" id="Mtk-sO-eoQ">
-                            <behavior key="behavior" lightByContents="YES"/>
+                            <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
                         <connections>
-                            <action selector="action_styleBold:" target="-2" id="0Hz-Kg-Jli"/>
+                            <action selector="action_styleBold:" target="-2" id="w7N-de-Q3J"/>
                         </connections>
                     </button>
                     <button translatesAutoresizingMaskIntoConstraints="NO" id="haU-mA-Ce7" userLabel="Button Italic">
-                        <rect key="frame" x="304" y="47" width="19" height="19"/>
+                        <rect key="frame" x="304" y="49" width="19" height="19"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="19" id="6yu-OA-sCj"/>
                             <constraint firstAttribute="height" constant="19" id="e53-5m-DRr"/>
                         </constraints>
                         <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="icon_text_italic" imagePosition="only" alignment="center" alternateImage="icon_text_italic_alt" imageScaling="proportionallyUpOrDown" inset="2" id="JSY-Js-uLf">
-                            <behavior key="behavior" lightByContents="YES"/>
+                            <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
                         <connections>
-                            <action selector="action_styleItalicize:" target="-2" id="gPQ-9g-Yuj"/>
+                            <action selector="action_styleItalicize:" target="-2" id="ZZU-0E-iz8"/>
                         </connections>
                     </button>
                     <button translatesAutoresizingMaskIntoConstraints="NO" id="J9V-Xz-uvJ" userLabel="Button Underline">
-                        <rect key="frame" x="280" y="47" width="19" height="19"/>
+                        <rect key="frame" x="280" y="49" width="19" height="19"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="19" id="HbO-Cv-9L1"/>
                             <constraint firstAttribute="width" constant="19" id="QTi-Fi-oiF"/>
                         </constraints>
                         <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="icon_text_underline" imagePosition="only" alignment="center" alternateImage="icon_text_underline_alt" imageScaling="proportionallyUpOrDown" inset="2" id="7uJ-Fe-Xco">
-                            <behavior key="behavior" lightByContents="YES"/>
+                            <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
                         <connections>
                             <action selector="action_styleUnderline:" target="-2" id="RW1-K1-YoN"/>
                         </connections>
                     </button>
-                    <button translatesAutoresizingMaskIntoConstraints="NO" id="CNQ-HC-CVe" userLabel="Button Regular">
-                        <rect key="frame" x="256" y="47" width="19" height="19"/>
-                        <constraints>
-                            <constraint firstAttribute="height" constant="19" id="jdK-ty-xgC"/>
-                            <constraint firstAttribute="width" constant="19" id="tXb-Cy-plZ"/>
-                        </constraints>
-                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="icon_text_regular" imagePosition="only" alignment="center" alternateImage="icon_text_regular_alt" imageScaling="proportionallyUpOrDown" inset="2" id="H6Y-87-nAW">
-                            <behavior key="behavior" lightByContents="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="action_styleRegular:" target="-2" id="EMO-vC-2hV"/>
-                        </connections>
-                    </button>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yhh-M5-M6C" customClass="HXCustomTitleField" customModule="HXNotes" customModuleProvider="target">
-                        <rect key="frame" x="115" y="48" width="133" height="17"/>
+                        <rect key="frame" x="115" y="50" width="157" height="17"/>
                         <textFieldCell key="cell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" alignment="left" placeholderString="Untitled" usesSingleLineMode="YES" id="6kC-Ke-RFL">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" red="0.27931640619999998" green="0.27931640619999998" blue="0.27931640619999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -193,7 +198,7 @@
                         </connections>
                     </textField>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hnn-XP-M9a">
-                        <rect key="frame" x="102" y="50" width="11" height="17"/>
+                        <rect key="frame" x="102" y="52" width="11" height="17"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="-" id="Uz7-jv-ctM">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" red="0.27931640619999998" green="0.27931640619999998" blue="0.27931640619999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -204,11 +209,12 @@
                 <constraints>
                     <constraint firstItem="rtP-Xd-KSa" firstAttribute="top" secondItem="KjG-vB-MAo" secondAttribute="top" constant="2" id="0r8-Og-cIH"/>
                     <constraint firstItem="Yhh-M5-M6C" firstAttribute="centerY" secondItem="hnn-XP-M9a" secondAttribute="centerY" constant="2" id="2Pm-8u-bVq"/>
-                    <constraint firstItem="CNQ-HC-CVe" firstAttribute="centerY" secondItem="J9V-Xz-uvJ" secondAttribute="centerY" id="2ic-6U-ToB"/>
                     <constraint firstItem="haU-mA-Ce7" firstAttribute="leading" secondItem="J9V-Xz-uvJ" secondAttribute="trailing" constant="5" id="2qR-hH-rCe"/>
                     <constraint firstAttribute="trailing" secondItem="yL3-k5-tgV" secondAttribute="trailing" constant="18" id="5vh-E0-6fk"/>
                     <constraint firstItem="P2u-0g-011" firstAttribute="centerY" secondItem="MGf-Et-IYi" secondAttribute="centerY" id="F61-pq-r9L"/>
-                    <constraint firstItem="yL3-k5-tgV" firstAttribute="top" secondItem="rtP-Xd-KSa" secondAttribute="bottom" constant="8" id="Fol-yc-Olb"/>
+                    <constraint firstItem="yL3-k5-tgV" firstAttribute="top" secondItem="rtP-Xd-KSa" secondAttribute="bottom" constant="10" id="Fol-yc-Olb"/>
+                    <constraint firstItem="mo7-tU-2xj" firstAttribute="leading" secondItem="yL3-k5-tgV" secondAttribute="leading" constant="1" id="Fpd-Uk-T89"/>
+                    <constraint firstItem="akD-e9-ZL2" firstAttribute="top" secondItem="yL3-k5-tgV" secondAttribute="top" constant="-3" id="HKK-tu-Mkv"/>
                     <constraint firstItem="CV2-1F-Bli" firstAttribute="leading" secondItem="haU-mA-Ce7" secondAttribute="trailing" constant="5" id="K8Y-Rj-Oc6"/>
                     <constraint firstItem="P2u-0g-011" firstAttribute="leading" secondItem="MGf-Et-IYi" secondAttribute="trailing" constant="5" id="LiK-r2-4jw"/>
                     <constraint firstItem="Yhh-M5-M6C" firstAttribute="leading" secondItem="hnn-XP-M9a" secondAttribute="trailing" constant="6" id="MAW-9r-EZ9"/>
@@ -220,15 +226,20 @@
                     <constraint firstItem="rtP-Xd-KSa" firstAttribute="leading" secondItem="KjG-vB-MAo" secondAttribute="leading" constant="10" id="RfI-tr-zDo"/>
                     <constraint firstItem="hnn-XP-M9a" firstAttribute="leading" secondItem="rtP-Xd-KSa" secondAttribute="trailing" constant="6" id="TUn-C1-EGb"/>
                     <constraint firstItem="GJR-w2-5tc" firstAttribute="centerY" secondItem="P2u-0g-011" secondAttribute="centerY" id="ZHt-gm-P2V"/>
+                    <constraint firstItem="J9V-Xz-uvJ" firstAttribute="leading" secondItem="Yhh-M5-M6C" secondAttribute="trailing" constant="10" placeholder="YES" id="Zfq-XO-bxI"/>
+                    <constraint firstItem="rb3-9F-LEf" firstAttribute="leading" secondItem="yL3-k5-tgV" secondAttribute="leading" constant="1" id="aq5-nG-TnW"/>
                     <constraint firstItem="CV2-1F-Bli" firstAttribute="centerY" secondItem="Twy-6v-YbQ" secondAttribute="centerY" id="eiG-Ow-thS"/>
                     <constraint firstItem="Twy-6v-YbQ" firstAttribute="top" secondItem="KjG-vB-MAo" secondAttribute="top" constant="6" id="gqi-JO-x1d"/>
+                    <constraint firstItem="aQd-2w-Viv" firstAttribute="bottom" secondItem="yL3-k5-tgV" secondAttribute="bottom" constant="1" id="h6K-sb-lQP"/>
                     <constraint firstAttribute="bottom" secondItem="yL3-k5-tgV" secondAttribute="bottom" constant="6" id="leB-HQ-ARi"/>
                     <constraint firstItem="yL3-k5-tgV" firstAttribute="leading" secondItem="KjG-vB-MAo" secondAttribute="leading" constant="10" id="lfo-zb-mh3"/>
+                    <constraint firstItem="akD-e9-ZL2" firstAttribute="trailing" secondItem="yL3-k5-tgV" secondAttribute="trailing" constant="-1" id="qML-RV-LKd"/>
                     <constraint firstItem="Twy-6v-YbQ" firstAttribute="leading" secondItem="GJR-w2-5tc" secondAttribute="trailing" constant="10" id="qyE-yY-4KS"/>
-                    <constraint firstItem="J9V-Xz-uvJ" firstAttribute="leading" secondItem="CNQ-HC-CVe" secondAttribute="trailing" constant="5" id="s8q-EI-CfO"/>
+                    <constraint firstItem="rb3-9F-LEf" firstAttribute="bottom" secondItem="yL3-k5-tgV" secondAttribute="bottom" constant="1" id="rwE-Qg-fGN"/>
                     <constraint firstItem="haU-mA-Ce7" firstAttribute="centerY" secondItem="CV2-1F-Bli" secondAttribute="centerY" id="vFC-fg-jIR"/>
                     <constraint firstItem="GJR-w2-5tc" firstAttribute="leading" secondItem="P2u-0g-011" secondAttribute="trailing" constant="5" id="vrZ-Wj-McK"/>
-                    <constraint firstItem="CNQ-HC-CVe" firstAttribute="leading" secondItem="Yhh-M5-M6C" secondAttribute="trailing" constant="10" placeholder="YES" id="wit-ms-Hp3"/>
+                    <constraint firstItem="mo7-tU-2xj" firstAttribute="top" secondItem="yL3-k5-tgV" secondAttribute="top" constant="-3" id="xF7-aA-Ovh"/>
+                    <constraint firstItem="aQd-2w-Viv" firstAttribute="trailing" secondItem="yL3-k5-tgV" secondAttribute="trailing" constant="-1" id="yr9-GO-21K"/>
                 </constraints>
             </view>
             <point key="canvasLocation" x="243.5" y="-177"/>
@@ -243,11 +254,13 @@
         <image name="icon_text_italic_alt" width="19" height="19"/>
         <image name="icon_text_left" width="19" height="19"/>
         <image name="icon_text_left_alt" width="19" height="19"/>
-        <image name="icon_text_regular" width="19" height="19"/>
-        <image name="icon_text_regular_alt" width="19" height="19"/>
         <image name="icon_text_right" width="19" height="19"/>
         <image name="icon_text_right_alt" width="19" height="19"/>
         <image name="icon_text_underline" width="19" height="19"/>
         <image name="icon_text_underline_alt" width="19" height="19"/>
+        <image name="image_corner_1" width="21" height="21"/>
+        <image name="image_corner_2" width="21" height="21"/>
+        <image name="image_corner_3" width="21" height="21"/>
+        <image name="image_corner_4" width="21" height="21"/>
     </resources>
 </document>

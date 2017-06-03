@@ -183,8 +183,8 @@ class CalendarViewController: NSViewController {
             noCourseLabel.stringValue = "No Course Data"
             noCourseSubLabel.stringValue = "Add a course in the left sidebar."
         } else {
-            noCourseLabel.stringValue = "Drag to Here"
-            noCourseSubLabel.stringValue = "Mouse over course color."
+            noCourseLabel.stringValue = "Place Course Here"
+            noCourseSubLabel.stringValue = "Drag the course color icon."
         }
     }
     
@@ -317,11 +317,9 @@ class CalendarViewController: NSViewController {
     // HXGridBox - Mouse Enter:
     func mouseEntered_gridBox(atX: Int, atY: Int) {
         if dragging {
-            print("Dragging")
             // User is not extending so do full visual update for dragging course
             lastGrid(atX, atY)
         } else if lowestDragExtendIndex != -1 {
-            print("Extending")
             // User is extending so only update labels on border of calendar
             if lastGridX != -1 {
                 dayLabels[lastGridX].textColor = NSColor.lightGray

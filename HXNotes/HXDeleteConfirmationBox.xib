@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11762" systemVersion="16F73" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11762"/>
+        <capability name="box content view" minToolsVersion="7.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner"/>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="tsk-i3-1fm" customClass="HXDeleteConfirmationBox" customModule="HXNotes" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="402" height="231"/>
+            <view key="contentView" id="stm-bV-WiN">
+                <rect key="frame" x="0.0" y="0.0" width="402" height="231"/>
+                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                <subviews>
+                    <box boxType="custom" cornerRadius="4" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="1lr-d9-biO">
+                        <rect key="frame" x="41" y="50" width="320" height="131"/>
+                        <view key="contentView" id="dB1-Uf-Mex">
+                            <rect key="frame" x="1" y="1" width="318" height="129"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <subviews>
+                                <button identifier="button_delete_id" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="7QL-Ha-G0X">
+                                    <rect key="frame" x="34" y="5" width="67" height="27"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="27" id="WSR-Dx-cfG"/>
+                                    </constraints>
+                                    <buttonCell key="cell" type="bevel" title="Delete" bezelStyle="rounded" alignment="center" imageScaling="proportionallyDown" inset="2" id="gkg-7H-wRS">
+                                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                        <font key="font" metaFont="systemBold" size="20"/>
+                                    </buttonCell>
+                                </button>
+                                <textField identifier="text_copy_id" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="NjX-6Y-bLi">
+                                    <rect key="frame" x="14" y="46" width="290" height="51"/>
+                                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="justified" title="Are you sure you wish to delete course NAME? NUMBER lectures are associated with this course and will be lost if you proceed." id="eZQ-fc-wsv">
+                                        <font key="font" metaFont="system"/>
+                                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                    </textFieldCell>
+                                </textField>
+                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bf6-3s-uQZ">
+                                    <rect key="frame" x="56" y="98" width="207" height="22"/>
+                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Confirm Course Deletion" id="UCs-tF-kcG">
+                                        <font key="font" metaFont="system" size="18"/>
+                                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                    </textFieldCell>
+                                </textField>
+                                <button identifier="button_cancel_id" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="OAU-Im-3MS">
+                                    <rect key="frame" x="217" y="5" width="67" height="27"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="27" id="yFL-As-xWm"/>
+                                    </constraints>
+                                    <buttonCell key="cell" type="bevel" title="Cancel" bezelStyle="rounded" alignment="center" imageScaling="proportionallyDown" inset="2" id="euf-QJ-ooj">
+                                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                        <font key="font" metaFont="system" size="20"/>
+                                    </buttonCell>
+                                </button>
+                            </subviews>
+                            <constraints>
+                                <constraint firstItem="7QL-Ha-G0X" firstAttribute="top" secondItem="NjX-6Y-bLi" secondAttribute="bottom" constant="14" id="2zm-vS-LEy"/>
+                                <constraint firstItem="NjX-6Y-bLi" firstAttribute="top" secondItem="bf6-3s-uQZ" secondAttribute="bottom" constant="1" id="3H2-LN-GY6"/>
+                                <constraint firstItem="bf6-3s-uQZ" firstAttribute="centerX" secondItem="dB1-Uf-Mex" secondAttribute="centerX" id="3rF-ZF-5eH"/>
+                                <constraint firstItem="7QL-Ha-G0X" firstAttribute="leading" secondItem="dB1-Uf-Mex" secondAttribute="leading" constant="34" id="GvR-yl-rVJ"/>
+                                <constraint firstItem="bf6-3s-uQZ" firstAttribute="top" secondItem="dB1-Uf-Mex" secondAttribute="top" constant="9" id="HVZ-wR-b5C"/>
+                                <constraint firstAttribute="trailing" secondItem="OAU-Im-3MS" secondAttribute="trailing" constant="34" id="PKt-Uw-lQK"/>
+                                <constraint firstItem="OAU-Im-3MS" firstAttribute="top" secondItem="NjX-6Y-bLi" secondAttribute="bottom" constant="14" id="Zn0-cT-qXC"/>
+                                <constraint firstAttribute="bottom" secondItem="7QL-Ha-G0X" secondAttribute="bottom" constant="5" id="a54-Pc-9NB"/>
+                                <constraint firstItem="NjX-6Y-bLi" firstAttribute="leading" secondItem="dB1-Uf-Mex" secondAttribute="leading" constant="16" id="sma-GC-7hQ"/>
+                                <constraint firstAttribute="trailing" secondItem="NjX-6Y-bLi" secondAttribute="trailing" constant="16" id="tH6-Fg-6U2"/>
+                                <constraint firstAttribute="bottom" secondItem="OAU-Im-3MS" secondAttribute="bottom" constant="5" id="we8-Ek-FD7"/>
+                            </constraints>
+                        </view>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="320" id="uZo-Kd-qb3"/>
+                        </constraints>
+                        <color key="fillColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    </box>
+                </subviews>
+            </view>
+            <constraints>
+                <constraint firstItem="1lr-d9-biO" firstAttribute="centerX" secondItem="tsk-i3-1fm" secondAttribute="centerX" id="9uf-mn-QZI"/>
+                <constraint firstItem="1lr-d9-biO" firstAttribute="centerY" secondItem="tsk-i3-1fm" secondAttribute="centerY" id="MMZ-P5-jTZ"/>
+            </constraints>
+            <color key="borderColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+            <color key="fillColor" red="1" green="1" blue="1" alpha="0.74721891983695654" colorSpace="custom" customColorSpace="sRGB"/>
+            <point key="canvasLocation" x="238" y="88.5"/>
+        </box>
+    </objects>
+</document>

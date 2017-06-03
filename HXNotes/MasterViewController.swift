@@ -188,6 +188,7 @@ class MasterViewController: NSViewController {
                 editorViewController.removeFromParentViewController()
                 editorViewController = nil
             }
+            topBarShown(false)
         }
     }
     
@@ -227,6 +228,14 @@ class MasterViewController: NSViewController {
         } else {
             topBarShown(false)
         }
+    }
+    ///
+    func notifyCourseDeletionConfirmation(_ dialog: HXDeleteConfirmationBox) {
+        view.addSubview(dialog)
+        dialog.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        dialog.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        dialog.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        dialog.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
     }
     /// Notfy MasterViewController that a course has been removed.
     /// Currently used to remove time slot grid spaces in Calendar.
@@ -277,7 +286,11 @@ class MasterViewController: NSViewController {
     }
     /// 
     func notifyLectureSelection(lecture: String) {
-        editorViewController.scrollToLecture(lecture)
+        editorViewController.notifyLectureSelection(lecture: lecture)
+    }
+    ///
+    func notifyLectureAddition(lecture: Lecture) {
+        editorViewController.notifyLectureAddition(lecture: lecture)
     }
     ///
     func notifySemesterEditing(semester: Semester) {

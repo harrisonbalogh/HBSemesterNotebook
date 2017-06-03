@@ -25,7 +25,9 @@ class SidebarViewController: NSViewController {
         }
     }
     @IBAction func tempAction_addLec(_ sender: NSButton) {
-        addLecture()
+        let newLec = newLecture()
+        addLecture(newLec)
+        masterViewController.notifyLectureAddition(lecture: newLec)
     }
     
     @IBOutlet weak var semesterButton: NSButton!
@@ -114,6 +116,8 @@ class SidebarViewController: NSViewController {
             masterViewController.notifyCourseSelection(course: selectedCourse)
         }
     }
+    var deleteConfirmationBox: HXDeleteConfirmationBox!
+    var courseToBeRemoved: HXCourseEditBox!
     
     // MARK: Initialization
     override func viewDidLoad() {
@@ -143,6 +147,12 @@ class SidebarViewController: NSViewController {
             semesterButton.title = "Spring"
         }
         tempAction_date()
+        
+        print("Let's print the current schedule.")
+        for case let course as Course in selectedSemester.courses! {
+            print("    \(course.title!)")
+            print("        \(printSchedule(for: course))")
+        }
     }
     
     // MARK: Course Data Model Functions
@@ -256,6 +266,7 @@ class SidebarViewController: NSViewController {
         newBox?.widthAnchor.constraint(equalTo: ledgerStackView.widthAnchor).isActive = true
         let theColor = NSColor(red: CGFloat(course.colorRed), green: CGFloat(course.colorGreen), blue: CGFloat(course.colorBlue), alpha: 1)
         useColor(color: theColor)
+        newBox!.labelDays.stringValue = daysPerWeek(for: course)
     }
     /// Handles purely the visual aspect of editable courses. Internal use only. Adds a new HXCourseEditBox to the ledgerStackView.
     private func pushEditableCourse(_ course: Course) {
@@ -320,7 +331,9 @@ class SidebarViewController: NSViewController {
             lectureStackView.addArrangedSubview(HXWeekBox.instance(withNumber: (weekCount+1)))
             weekCount += 1
         }
-        lectureStackView.addArrangedSubview(HXLectureBox.instance(numbered: lecture.number, dated: "\(lecture.month)/\(lecture.day)/\(lecture.year % 100)", owner: self))
+        let newBox = HXLectureBox.instance(numbered: lecture.number, dated: "\(lecture.month)/\(lecture.day)/\(lecture.year % 100)", owner: self)
+        lectureStackView.addArrangedSubview(newBox!)
+        newBox?.widthAnchor.constraint(equalTo: ledgerStackView.widthAnchor).isActive = true
         lectureCount += 1
     }
     /// Handles purely the visual aspect of lectures. Internal use only. Removes all HXLectureBox's and HXWeekBox's from the ledgerStackView.
@@ -355,10 +368,20 @@ class SidebarViewController: NSViewController {
         // Creates new course data model and puts new view in ledgerStackView
         pushEditableCourse( newCourse() )
     }
-    /// Removes all information associated with a course object. Model and Views
+    /// Displays the confirmation delete box before proceeding with course removal.
     internal func removeCourse(_ course: HXCourseEditBox) {
+        print("REMOVE COURSE FUCKER")
+        if deleteConfirmationBox == nil {
+            course.buttonTrash.isEnabled = false
+            courseToBeRemoved = course
+            deleteConfirmationBox = HXDeleteConfirmationBox.instance(with: course.course, for: self)
+            masterViewController.notifyCourseDeletionConfirmation(deleteConfirmationBox)
+        }
+    }
+    /// Confirms removal of all information associated with a course object. Model and Views
+    internal func removeCourseConfirmed() {
         // Remove course from ledgerStackView, reset grid spaces of timeSlots, delete data model
-        popEditableCourse( course )
+        popEditableCourse( courseToBeRemoved )
         // Prevent user from accessing lecture view if there are no courses
         if selectedSemester.courses!.count == 0 {
             editSemesterButton.isEnabled = false
@@ -369,12 +392,27 @@ class SidebarViewController: NSViewController {
                 if course.timeSlots!.count == 0 {
                     editSemesterButton.isEnabled = false
                     editSemesterButton.title = "Set Course Schedule"
+                    deleteConfirmationBox.removeFromSuperview()
+                    deleteConfirmationBox = nil
+                    courseToBeRemoved = nil
                     return
                 }
             }
             editSemesterButton.isEnabled = true
             editSemesterButton.title = "Finish Editing Semester"
         }
+        deleteConfirmationBox.removeFromSuperview()
+        deleteConfirmationBox = nil
+        courseToBeRemoved = nil
+    }
+    /// Cancels removal of a course from the HXDeleteConfirmationBox
+    internal func removeCourseCanceled() {
+
+        courseToBeRemoved.buttonTrash.isEnabled = true
+        
+        deleteConfirmationBox.removeFromSuperview()
+        deleteConfirmationBox = nil
+        courseToBeRemoved = nil
     }
     /// Apply course selection visuals. Nil value is appropriate when clearing selection.
     /// See selectedCourse didSet method for more details.
@@ -391,7 +429,7 @@ class SidebarViewController: NSViewController {
         } else {
             // Unfocus all other buttons except focused on.
             for case let box as HXLectureBox in lectureStackView.arrangedSubviews {
-                if box.labelTitle.title != "Lecture \(lecture!.number)" {
+                if box.labelTitle.stringValue != "Lecture \(lecture!.number)" {
                     box.unfocus()
                 } else {
                     box.focus()
@@ -436,9 +474,9 @@ class SidebarViewController: NSViewController {
     // MARK: Control Lecture Ledger Functions
     /// For external and internal usage. Creates a new Lecture data object and updates
     /// ledgerStackView visuals with a new HXLectureBox.
-    private func addLecture() {
+    private func addLecture(_ lecture: Lecture) {
         
-        pushLecture( newLecture() )
+        pushLecture( lecture )
         
     }
     
@@ -523,6 +561,75 @@ class SidebarViewController: NSViewController {
             }
         } while(seekingNumber)
         return nextCourseNumber
+    }
+    /// Will return a printable version of the days that the course occupies.
+    private func daysPerWeek(for course: Course) -> String {
+        var daysOfWeek = [0, 0, 0, 0, 0]
+        let dayNames = ["M", "T", "W", "Th", "F"]
+        for case let time as TimeSlot in course.timeSlots! {
+            daysOfWeek[Int(time.day)] += 1
+        }
+        var constructedString = ""
+        // Consecutive additions need a comma
+        for d in 0..<daysOfWeek.count {
+            if daysOfWeek[d] > 0 {
+                if constructedString == "" {
+                    constructedString = (dayNames[d])
+                }else {
+                    constructedString += ("," + dayNames[d])
+                }
+            }
+        }
+        return constructedString
+    }
+    ///
+    private func printSchedule(for course: Course) -> String {
+        var constructedString = ""
+        
+        var daysOfWeek = [0, 0, 0, 0, 0]
+        let dayNames = ["M", "T", "W", "Th", "F"]
+        for d in 0...4 {
+            var times = [Int16]()
+            for case let time as TimeSlot in course.timeSlots! {
+                if time.day == Int16(d) {
+                    // Insert day name first time
+                    if daysOfWeek[d] == 0 {
+                        daysOfWeek[d] = 1
+                        constructedString += dayNames[d] + ":"
+                    }
+                    //
+                    times.append(time.hour)
+                }
+            }
+            times.sort()
+            var prevTime: Int16 = 0
+            var timeSpan: Int16 = 1
+            for t in 0..<times.count {
+                if (times[t]+8) == (prevTime + 1) {
+                    // Adjacent time
+                    timeSpan += 1
+                } else {
+                    // Reset time span
+                    if t > 0 {
+                        constructedString += "\(prevTime+1):00"
+                    }
+                    constructedString += " \(times[t]+8):00-"
+                    timeSpan = 1
+                }
+                // Update previous time
+                prevTime = times[t] + 8
+                if t == times.count - 1 && times.count != 1 {
+                    if timeSpan == 1 {
+                        constructedString += " \(times[t]+8):00-\(times[t]+9):00"
+                    } else {
+                        constructedString += "\(times[t]+9):00"
+                    }
+                }
+            }
+            constructedString += " | "
+        }
+        
+        return constructedString
     }
     
     // MARK: Notifiers - from MasterViewController
