@@ -10,9 +10,8 @@
         <customObject id="-2" userLabel="File's Owner"/>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <box boxType="custom" title="Box" id="BPW-NN-zUZ" customClass="HXCourseDragBox" customModule="HXNotes" customModuleProvider="target">
+        <box boxType="custom" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="BPW-NN-zUZ" customClass="HXCourseDragBox" customModule="HXNotes" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="200" height="30"/>
-            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <view key="contentView" id="YDa-OZ-XX0">
                 <rect key="frame" x="1" y="1" width="198" height="28"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -31,7 +30,7 @@
                             <constraint firstAttribute="height" constant="18" id="nTv-3w-BtK"/>
                             <constraint firstAttribute="width" constant="18" id="rck-dS-zik"/>
                         </constraints>
-                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="E1DFE5EA-0C3B-4B7A-81AB-E1233AA03091" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="UGl-N7-HDd">
+                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="74E928F1-4DF2-48F7-90BB-3868AA7F3C45" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="UGl-N7-HDd">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -70,7 +69,7 @@
         </box>
     </objects>
     <resources>
-        <image name="E1DFE5EA-0C3B-4B7A-81AB-E1233AA03091" width="25" height="25">
+        <image name="74E928F1-4DF2-48F7-90BB-3868AA7F3C45" width="25" height="25">
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGOjtYJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK0HCBEW
 GxwgISgrLjQ3VSRudWxs1AkKCwwNDg8QViRjbGFzc1xOU0ltYWdlRmxhZ3NWTlNSZXBzV05TQ29sb3KA

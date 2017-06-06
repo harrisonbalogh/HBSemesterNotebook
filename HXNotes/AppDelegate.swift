@@ -11,10 +11,8 @@ import Cocoa
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
-
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         // Insert code here to initialize your application
-
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
@@ -120,6 +118,31 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
         }
     }
+    ///
+    @IBAction func findFunction(_ sender: NSMenuItem) {
+        if let content = NSApp.keyWindow?.contentViewController as? MasterViewController {
+            content.notifyFind()
+        }
+    }
+    ///
+    @IBAction func findAndReplaceFunction(_ sender: NSMenuItem) {
+        if let content = NSApp.keyWindow?.contentViewController as? MasterViewController {
+            content.notifyFindAndReplace()
+        }
+    }
+    ///
+    @IBAction func exportFunction(_ sender: NSMenuItem) {
+        if let content = NSApp.keyWindow?.contentViewController as? MasterViewController {
+            content.notifyExport()
+        }
+    }
+    ///
+    @IBAction func printFunction(_ sender: NSMenuItem) {
+        if let content = NSApp.keyWindow?.contentViewController as? MasterViewController {
+            content.notifyPrint()
+        }
+    }
+    
 
     func windowWillReturnUndoManager(window: NSWindow) -> UndoManager? {
         // Returns the NSUndoManager for the application. In this case, the manager returned is that of the managed object context for the application.

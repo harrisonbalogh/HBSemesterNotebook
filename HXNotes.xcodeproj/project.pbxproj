@@ -17,7 +17,13 @@
 		C03778501EE27B8700F099E4 /* HXDeleteConfirmationBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C037784F1EE27B8700F099E4 /* HXDeleteConfirmationBox.swift */; };
 		C03AF8161EB856860028BA68 /* MasterWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C03AF8151EB856860028BA68 /* MasterWindowController.swift */; };
 		C03FA6781ED2A6D900D8FA0B /* HXLectureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C03FA6771ED2A6D900D8FA0B /* HXLectureView.swift */; };
+		C057FD151EE4A00300A62D9F /* HXFindView.xib in Resources */ = {isa = PBXBuildFile; fileRef = C057FD141EE4A00300A62D9F /* HXFindView.xib */; };
+		C057FD171EE4A00F00A62D9F /* HXPrintView.xib in Resources */ = {isa = PBXBuildFile; fileRef = C057FD161EE4A00F00A62D9F /* HXPrintView.xib */; };
+		C057FD191EE4A01800A62D9F /* HXExportView.xib in Resources */ = {isa = PBXBuildFile; fileRef = C057FD181EE4A01800A62D9F /* HXExportView.xib */; };
+		C057FD1D1EE4B0BC00A62D9F /* HXFindViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C057FD1C1EE4B0BC00A62D9F /* HXFindViewController.swift */; };
+		C057FD201EE4B0CA00A62D9F /* HXExportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C057FD1E1EE4B0CA00A62D9F /* HXExportViewController.swift */; };
 		C07953841EA721B90022BFCF /* HXGridBox.xib in Resources */ = {isa = PBXBuildFile; fileRef = C07953831EA721B90022BFCF /* HXGridBox.xib */; };
+		C08CF4981EE340600074D104 /* TopbarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C08CF4971EE340600074D104 /* TopbarViewController.swift */; };
 		C095D7811EB9461900BBE7CB /* EditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C095D7801EB9461900BBE7CB /* EditorViewController.swift */; };
 		C095D7831EB9578700BBE7CB /* HXCourseEditBox.xib in Resources */ = {isa = PBXBuildFile; fileRef = C095D7821EB9578700BBE7CB /* HXCourseEditBox.xib */; };
 		C09B45261EDFADCB007CCC05 /* HXCourseAddBox.xib in Resources */ = {isa = PBXBuildFile; fileRef = C09B45251EDFADCB007CCC05 /* HXCourseAddBox.xib */; };
@@ -77,7 +83,13 @@
 		C03FA6771ED2A6D900D8FA0B /* HXLectureView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXLectureView.swift; sourceTree = "<group>"; };
 		C052EC831EB8E35C00C1FBC8 /* HXNotes 1.1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HXNotes 1.1.xcdatamodel"; sourceTree = "<group>"; };
 		C052EC841EB8EB1A00C1FBC8 /* HXNotes 1.11.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HXNotes 1.11.xcdatamodel"; sourceTree = "<group>"; };
+		C057FD141EE4A00300A62D9F /* HXFindView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXFindView.xib; sourceTree = "<group>"; };
+		C057FD161EE4A00F00A62D9F /* HXPrintView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXPrintView.xib; sourceTree = "<group>"; };
+		C057FD181EE4A01800A62D9F /* HXExportView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXExportView.xib; sourceTree = "<group>"; };
+		C057FD1C1EE4B0BC00A62D9F /* HXFindViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXFindViewController.swift; sourceTree = "<group>"; };
+		C057FD1E1EE4B0CA00A62D9F /* HXExportViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXExportViewController.swift; sourceTree = "<group>"; };
 		C07953831EA721B90022BFCF /* HXGridBox.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXGridBox.xib; sourceTree = "<group>"; };
+		C08CF4971EE340600074D104 /* TopbarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopbarViewController.swift; sourceTree = "<group>"; };
 		C095D7801EB9461900BBE7CB /* EditorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditorViewController.swift; sourceTree = "<group>"; };
 		C095D7821EB9578700BBE7CB /* HXCourseEditBox.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXCourseEditBox.xib; sourceTree = "<group>"; };
 		C09B45251EDFADCB007CCC05 /* HXCourseAddBox.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXCourseAddBox.xib; sourceTree = "<group>"; };
@@ -157,6 +169,14 @@
 			name = "NIB Templates";
 			sourceTree = "<group>";
 		};
+		C08CF4961EE340460074D104 /* Topbar */ = {
+			isa = PBXGroup;
+			children = (
+				C08CF4971EE340600074D104 /* TopbarViewController.swift */,
+			);
+			name = Topbar;
+			sourceTree = "<group>";
+		};
 		C095D77F1EB945EA00BBE7CB /* Editor Functionality */ = {
 			isa = PBXGroup;
 			children = (
@@ -231,6 +251,7 @@
 				C0D68CFE1EA6C8CF009B06E3 /* HXCourseDragBox.swift */,
 				C0D68CFC1EA6943F009B06E3 /* HXCourseDragBox.xib */,
 				C0AAE13E1EA2BD12002939B6 /* Main.storyboard */,
+				C08CF4961EE340460074D104 /* Topbar */,
 				C0A156FB1ED911E600F4DBC1 /* Sidebar */,
 				C095D77F1EB945EA00BBE7CB /* Editor Functionality */,
 				C0D687BE1EA4948A00BF1D05 /* Calendar Functionality */,
@@ -277,6 +298,8 @@
 				C0E96E731ED7641000705A35 /* HXTextView.swift */,
 				C0A156F81ED9096A00F4DBC1 /* HXCustomTitleField.swift */,
 				C0DED0E51EDCBEE3001A406B /* HXStickyCustomTitleField.swift */,
+				C057FD1C1EE4B0BC00A62D9F /* HXFindViewController.swift */,
+				C057FD1E1EE4B0CA00A62D9F /* HXExportViewController.swift */,
 				C0150EE71EA5AD6800BBBFA6 /* CourseLabel.swift */,
 				C0FD6C241EC273C600338F1C /* NIB Templates */,
 			);
@@ -288,6 +311,9 @@
 			children = (
 				C0009E2A1EC43BE200C80642 /* HXLectureView.xib */,
 				C0E8819F1ED66E30004974DE /* HXLectureConfirmationBox.xib */,
+				C057FD141EE4A00300A62D9F /* HXFindView.xib */,
+				C057FD161EE4A00F00A62D9F /* HXPrintView.xib */,
+				C057FD181EE4A01800A62D9F /* HXExportView.xib */,
 			);
 			name = "NIB Templates";
 			sourceTree = "<group>";
@@ -402,12 +428,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C057FD171EE4A00F00A62D9F /* HXPrintView.xib in Resources */,
 				C0D68CFD1EA6943F009B06E3 /* HXCourseDragBox.xib in Resources */,
 				C037784E1EE279D900F099E4 /* HXDeleteConfirmationBox.xib in Resources */,
 				C025FD9D1EC2A68F0090A287 /* HXWeekBox.xib in Resources */,
+				C057FD151EE4A00300A62D9F /* HXFindView.xib in Resources */,
 				C025FD9B1EC2A4970090A287 /* HXLectureBox.xib in Resources */,
 				C07953841EA721B90022BFCF /* HXGridBox.xib in Resources */,
 				C09B45261EDFADCB007CCC05 /* HXCourseAddBox.xib in Resources */,
+				C057FD191EE4A01800A62D9F /* HXExportView.xib in Resources */,
 				C0AAE13D1EA2BD12002939B6 /* Assets.xcassets in Resources */,
 				C0009E2B1EC43BE200C80642 /* HXLectureView.xib in Resources */,
 				C0AAE1401EA2BD12002939B6 /* Main.storyboard in Resources */,
@@ -438,6 +467,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C08CF4981EE340600074D104 /* TopbarViewController.swift in Sources */,
+				C057FD1D1EE4B0BC00A62D9F /* HXFindViewController.swift in Sources */,
 				C0FD6C231EC273C200338F1C /* HXCourseBox.swift in Sources */,
 				C0B68EF71EC3EA1E00E86439 /* HXWeekBox.swift in Sources */,
 				C03AF8161EB856860028BA68 /* MasterWindowController.swift in Sources */,
@@ -459,6 +490,7 @@
 				C0AAE1361EA2BD12002939B6 /* AppDelegate.swift in Sources */,
 				C0E96E741ED7641000705A35 /* HXTextView.swift in Sources */,
 				C0A156F91ED9096A00F4DBC1 /* HXCustomTitleField.swift in Sources */,
+				C057FD201EE4B0CA00A62D9F /* HXExportViewController.swift in Sources */,
 				C0D687BD1EA4948400BF1D05 /* HXGridBox.swift in Sources */,
 				C095D7811EB9461900BBE7CB /* EditorViewController.swift in Sources */,
 				C0D68CFF1EA6C8CF009B06E3 /* HXCourseDragBox.swift in Sources */,

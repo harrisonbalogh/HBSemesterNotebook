@@ -18,6 +18,7 @@ class MasterViewController: NSViewController {
     
     // Children controllers
     var sidebarViewController: SidebarViewController!
+    var topbarViewController: TopbarViewController!
     // The following 2 controllers fill container_content as is needed
     private var calendarViewController: CalendarViewController!
     private var editorViewController: EditorViewController!
@@ -28,124 +29,129 @@ class MasterViewController: NSViewController {
     var dragBoxConstraintLead: NSLayoutConstraint!
     var dragBoxConstraintTop: NSLayoutConstraint!
     
-    var topBarConstraintTop: NSLayoutConstraint!
-    var sideBarConstraintLead: NSLayoutConstraint!
+    @IBOutlet weak var topbarConstraintTop: NSLayoutConstraint!
+    @IBOutlet weak var sidebarConstraintLead: NSLayoutConstraint!
     
-    // Mark: Object models informed by TimelineViewController
     let appDelegate = NSApplication.shared().delegate as! AppDelegate
+    
+    // MARK: Handle top bar controlling
+    var isPrinting = false {
+        didSet {
+            
+        }
+    }
+    var isFinding = false {
+        didSet {
+            if isFinding && (isExporting || isPrinting) {
+                if isExporting {
+                    isExporting = false
+                } else {
+                    isPrinting = false
+                }
+            } else if isFinding {
+                topbarViewController.view.addSubview(topbarViewController.findViewController.view)
+                topbarViewController.findViewController.view.leadingAnchor.constraint(equalTo: topbarViewController.view.leadingAnchor).isActive = true
+                topbarViewController.findViewController.view.trailingAnchor.constraint(equalTo: topbarViewController.view.trailingAnchor).isActive = true
+                topbarViewController.findViewController.view.topAnchor.constraint(equalTo: topbarViewController.view.topAnchor).isActive = true
+                topbarViewController.findViewController.view.bottomAnchor.constraint(equalTo: topbarViewController.view.bottomAnchor).isActive = true
+
+                NSAnimationContext.beginGrouping()
+                NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
+                NSAnimationContext.current().completionHandler = {
+                    NSApp.keyWindow?.makeFirstResponder(self.topbarViewController.findViewController.textField_find)
+                }
+                NSAnimationContext.current().duration = 0.25
+                topbarConstraintTop.animator().constant = 0
+                NSAnimationContext.endGrouping()
+            } else {
+                if NSApp.keyWindow?.firstResponder == topbarViewController.findViewController.textField_find {
+                    NSApp.keyWindow?.makeFirstResponder(self)
+                }
+                NSAnimationContext.beginGrouping()
+                NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
+                NSAnimationContext.current().completionHandler = {
+                    self.topbarViewController.findViewController.view.removeFromSuperview()
+                    if self.isExporting {
+                        self.isExporting = true
+                    } else if self.isPrinting {
+                        self.isPrinting = true
+                    }
+                }
+                NSAnimationContext.current().duration = 0.25
+                topbarConstraintTop.animator().constant = -container_topBar.frame.height
+                NSAnimationContext.endGrouping()
+            }
+        }
+    }
+    var isExporting = false {
+        didSet {
+            if isExporting && (isFinding || isPrinting) {
+                if isFinding {
+                    isFinding = false
+                } else {
+                    isPrinting = false
+                }
+            } else if isExporting {
+                topbarViewController.view.addSubview(topbarViewController.exportViewController.view)
+                topbarViewController.exportViewController.view.leadingAnchor.constraint(equalTo: topbarViewController.view.leadingAnchor).isActive = true
+                topbarViewController.exportViewController.view.trailingAnchor.constraint(equalTo: topbarViewController.view.trailingAnchor).isActive = true
+                topbarViewController.exportViewController.view.topAnchor.constraint(equalTo: topbarViewController.view.topAnchor).isActive = true
+                topbarViewController.exportViewController.view.bottomAnchor.constraint(equalTo: topbarViewController.view.bottomAnchor).isActive = true
+                
+                NSAnimationContext.beginGrouping()
+                NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
+                NSAnimationContext.current().duration = 0.25
+                topbarConstraintTop.animator().constant = 0
+                NSAnimationContext.endGrouping()
+            } else {
+                if NSApp.keyWindow?.firstResponder == topbarViewController.exportViewController.textField_name {
+                    NSApp.keyWindow?.makeFirstResponder(self)
+                }
+                NSAnimationContext.beginGrouping()
+                NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
+                NSAnimationContext.current().completionHandler = {
+                    self.topbarViewController.exportViewController.view.removeFromSuperview()
+                    if self.isFinding {
+                        self.isFinding = true
+                    } else if self.isPrinting {
+                        self.isPrinting = true
+                    }
+                }
+                NSAnimationContext.current().duration = 0.25
+                topbarConstraintTop.animator().constant = -container_topBar.frame.height
+                NSAnimationContext.endGrouping()
+            }
+        }
+    }
+    ///
+    func export(to url: URL) {
+        if editorViewController != nil {
+            editorViewController.exportLectures(to: url)
+        } else if calendarViewController != nil {
+            // NYI
+        }
+    }
+    
     
     // Mark: Initialize the viewController ..................................................................
     override func viewDidLoad() {
         super.viewDidLoad()
+        topbarConstraintTop.constant = -container_topBar.frame.height
         
-        topBarConstraintTop = container_topBar.topAnchor.constraint(equalTo: self.view.topAnchor)
-        topBarConstraintTop.isActive = true
-        
-        sideBarConstraintLead = container_sideBar.leadingAnchor.constraint(equalTo: self.view.leadingAnchor)
-        sideBarConstraintLead.isActive = true
-        
-        courseDragBox.translatesAutoresizingMaskIntoConstraints = false
-        
-        topBarConstraintTop.constant = -container_topBar.frame.height
+        NSApp.keyWindow?.makeFirstResponder(self)
+        NSApp.keyWindow?.initialFirstResponder = self.view
     }
     override func viewDidAppear() {
+        super.viewDidAppear()
         for case let sidebarVC as SidebarViewController in self.childViewControllers {
             self.sidebarViewController = sidebarVC
             self.sidebarViewController.masterViewController = self
         }
+        for case let topbarVC as TopbarViewController in self.childViewControllers {
+            self.topbarViewController = topbarVC
+            self.topbarViewController.masterViewController = self
+        }
     }
-    
-    // MARK: Login Logic ....................................................................................
-    /// Default UI setup when app loads
-    // MOVING OUT OF MASTER VIEW CONTROLLER
-//    private func checkWhatCourses() {
-//        print("Running the open check.")
-//        // Default to current year
-//        let yr = NSCalendar.current.component(.year, from: NSDate() as Date)
-//        selectYear(yr)
-//        timelineViewController.selectYear(yr)
-//        print("    Year is \(yr)")
-//        // Default to current semester by assuming Fall: [July, December]
-//        let month = NSCalendar.current.component(.month, from: NSDate() as Date)
-//        print("    Month is \(month)")
-//        if month >= 7 && month <= 12 {
-//            timelineViewController.action_selectFall(self)
-//        } else {
-//            timelineViewController.action_selectSpring(self)
-//        }
-//        // Find lecture happening in current time
-//        let dayOfWeek = NSCalendar.current.component(.weekday, from: NSDate() as Date)
-//        print("    Day of week is \(dayOfWeek)")
-//        if dayOfWeek == 1 || dayOfWeek == 7 {
-//            // Stop here if opening app on weekend since we assume no classes are on weekend.
-//            print("        Dumping here. It's the weekend!")
-//            return
-//        }
-//        let hour = NSCalendar.current.component(.hour, from: NSDate() as Date)
-//        let minute = NSCalendar.current.component(.minute, from: NSDate() as Date)
-//        print("    Hour is \(hour)")
-//        print("    Minute is \(minute)")
-//        // Get all courses in this semester
-//        for case let course as Course in semesterSelected.courses! {
-//            for case let timeSlot as TimeSlot in course.timeSlots! {
-//                if timeSlot.day + 2 == Int16(dayOfWeek) {
-//                    // timeSlot.day has range [2,6] and dayOfWeek is [1,7]
-//                    if timeSlot.hour == Int16(hour - 8) {
-//                        // Check if in the hour of a course
-//                    } else if timeSlot.hour - 1 + 8 == Int16(hour) && minute >= 55 {
-//                        // Check if its close enough before the start of a lecture
-//                        
-//                    }
-//                }
-//            }
-//        }
-//    }
-//    
-//    private func checkWhatCourses(month: Int, year: Int, dayOfWeek: Int, hour: Int, minute: Int) {
-//        print("Running the open check.")
-//        print("    Year is \(year)")
-//        selectYear(year)
-//        timelineViewController.selectYear(year)
-//        if month >= 7 && month <= 12 {
-//            timelineViewController.action_selectFall(self)
-//        } else {
-//            timelineViewController.action_selectSpring(self)
-//        }
-//        print("    Month is \(month)")
-//        // Find lecture happening in current time
-//        print("    Day of week is \(dayOfWeek)")
-//        if dayOfWeek == 1 || dayOfWeek == 7 {
-//            // Stop here if opening app on weekend since we assume no classes are on weekend.
-//            print("        Dumping here. It's the weekend!")
-//            return
-//        }
-//        print("    Hour is \(hour)")
-//        print("    Minute is \(minute)")
-//        // Get all courses in this semester
-//        for case let course as Course in semesterSelected.courses! {
-//            for case let timeSlot as TimeSlot in course.timeSlots! {
-//                if timeSlot.day + 2 == Int16(dayOfWeek) {
-//                    print("        \(course.title!) is today.")
-//                    // timeSlot.day has range [2,6] and dayOfWeek is [1,7]
-//                    if timeSlot.hour == Int16(hour - 8) {
-//                        print("            Class is happening now. \(hour):00")
-//                        courseViewController.select(course: course)
-//                        editorViewController.action_addLecture(self)
-//                        break
-//                        // Check if in the hour of a course
-//                    } else if timeSlot.hour - 1 + 8 == Int16(hour) && minute >= 55 {
-//                        print("            Class is about to happen. \(60 - minute) minutes 'till.")
-//                        courseViewController.select(course: course)
-//                        editorViewController.action_addLecture(self)
-//                        break
-//                        // Check if its close enough before the start of a lecture
-//                    } else {
-//                        print("            No class at the moment.")
-//                    }
-//                }
-//            }
-//        }
-//    }
     
     // MARK: Handle content container changes ................................................................    
     private func pushCalendar(semester: Semester) {
@@ -178,8 +184,8 @@ class MasterViewController: NSViewController {
                 calendarViewController.removeFromParentViewController()
                 calendarViewController = nil
             }
+            topBarShown(false)
         }
-        topBarShown(false)
     }
     private func popEditor() {
         if editorViewController != nil {
@@ -199,11 +205,19 @@ class MasterViewController: NSViewController {
         NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
         NSAnimationContext.current().duration = 0.25
         if visible {
-            topBarConstraintTop.animator().constant = 0
+            topbarConstraintTop.animator().constant = 0
         } else {
-            topBarConstraintTop.animator().constant = -container_topBar.frame.height
+            topbarConstraintTop.animator().constant = -container_topBar.frame.height
         }
         NSAnimationContext.endGrouping()
+    }
+    /// Toggles reveal or hide of top bar container.
+    func topBarShown() {
+        if topbarConstraintTop.constant == 0 {
+            topBarShown(false)
+        } else {
+            topBarShown(true)
+        }
     }
     
     func sideBarShown(_ visible: Bool) {
@@ -211,9 +225,9 @@ class MasterViewController: NSViewController {
         NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
         NSAnimationContext.current().duration = 0.25
         if visible {
-            sideBarConstraintLead.animator().constant = 0
+            sidebarConstraintLead.animator().constant = 0
         } else {
-            sideBarConstraintLead.animator().constant = -container_sideBar.frame.width
+            sidebarConstraintLead.animator().constant = -container_sideBar.frame.width
         }
         NSAnimationContext.endGrouping()
     }
@@ -223,11 +237,6 @@ class MasterViewController: NSViewController {
     /// Passes on course selection to EditorViewController
     func notifyCourseSelection(course: Course?) {
         editorViewController.selectedCourse = course
-        if course != nil {
-            topBarShown(true)
-        } else {
-            topBarShown(false)
-        }
     }
     ///
     func notifyCourseDeletionConfirmation(_ dialog: HXDeleteConfirmationBox) {
@@ -237,7 +246,7 @@ class MasterViewController: NSViewController {
         dialog.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         dialog.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
     }
-    /// Notfy MasterViewController that a course has been removed.
+    /// Notify MasterViewController that a course has been removed.
     /// Currently used to remove time slot grid spaces in Calendar.
     func notifyCourseDeletion(named course: String) {
         calendarViewController.clearTimeSlots(named: course)
@@ -280,11 +289,11 @@ class MasterViewController: NSViewController {
         self.courseDragBox.removeFromSuperview()
         calendarViewController.drop(course: course, at: loc)
     }
-    ///
+    /// From EditorVC to SidebarVC
     func notifyLectureFocus(is lecture: Lecture?) {
         sidebarViewController.focus(lecture: lecture)
     }
-    /// 
+    /// from SidebarVC to EditorVC
     func notifyLectureSelection(lecture: String) {
         editorViewController.notifyLectureSelection(lecture: lecture)
     }
@@ -319,5 +328,29 @@ class MasterViewController: NSViewController {
     ///
     func notifyTimeSlotDeletion() {
         sidebarViewController.notifyTimeSlotRemoved()
+    }
+    ///
+    func notifyExport() {
+        if editorViewController != nil {
+            editorViewController.notifyExport()
+        }
+    }
+    ///
+    func notifyPrint() {
+        if editorViewController != nil {
+            editorViewController.notifyPrint()
+        }
+    }
+    ///
+    func notifyFind() {
+        if editorViewController != nil {
+            editorViewController.notifyFind()
+        }
+    }
+    ///
+    func notifyFindAndReplace() {
+        if editorViewController != nil {
+            editorViewController.notifyFindAndReplace()
+        }
     }
 }

@@ -21,26 +21,31 @@ class EditorViewController: NSViewController {
     var oldClipperHeight: CGFloat = 0
     // These 2 labels are displayed when no course is selected
     @IBOutlet weak var labelNoCourse: NSTextField!
-    @IBOutlet weak var subLabelNoCourse: NSTextField!
+    @IBOutlet weak var subLabelNoCourse: NSTextField!    
     
     // This constraint is for an invisible view at the bottom of lecture stack to allow user to scroll
     // enough for the last lecture's textView to be in middle of screen.
     private var lectureBottomConstraint: NSLayoutConstraint!
     // MARK: Object models
+    
     let appDelegate = NSApplication.shared().delegate as! AppDelegate
     let sharedFontManager = NSFontManager.shared()
     var selectedCourse: Course! {
         didSet {
+            if masterViewController.isExporting {
+                masterViewController.isExporting = false
+            } else if masterViewController.isPrinting {
+                masterViewController.isPrinting = false
+            } else if masterViewController.isFinding {
+                masterViewController.isFinding = false
+            }
             // Setting selectedCourse, immediately updates visuals
             if selectedCourse != nil {
                 // Populate new lecture visuals
                 loadLectures(from: selectedCourse)
-                NSAnimationContext.beginGrouping()
-                NSAnimationContext.current().duration = 0.4
-                labelNoCourse.animator().alphaValue = 0
-                subLabelNoCourse.animator().alphaValue = 0
-                NSAnimationContext.endGrouping()
             } else {
+                labelNoCourse.stringValue = "No Course Selected"
+                subLabelNoCourse.stringValue = "Courses are selectable to the left."
                 // Animate hiding the lecture
                 NSAnimationContext.beginGrouping()
                 NSAnimationContext.current().completionHandler = {self.popLectures()}
@@ -89,14 +94,20 @@ class EditorViewController: NSViewController {
         button_style_left.alphaValue = 0
         button_style_center.alphaValue = 0
         button_style_right.alphaValue = 0
+        
+        NSApp.keyWindow?.makeFirstResponder(self)
+        NSApp.keyWindow?.initialFirstResponder = self.view
     }
     override func viewDidAppear() {
         super.viewDidAppear()
+        
+        NSApp.keyWindow?.makeFirstResponder(nil)
+        
         lectureBottomBufferView.initialize(owner: self)
     }
     override func viewDidLayout() {
         super.viewDidLayout()
-        
+
         didScroll()
     }
     // MARK: Load object models ..........................................................................................
@@ -107,15 +118,25 @@ class EditorViewController: NSViewController {
             pushLecture( lecture )
         }
         if course.lectures!.count == 0 {
-            stickyHeaderBox.alphaValue = 0
-            lectureScroller.alphaValue = 0
-        } else {
-            // Animate showing the lecture
+            labelNoCourse.stringValue = "No Lecture Data"
+            subLabelNoCourse.stringValue = "Open HXNotes during an input class period."
+            
             NSAnimationContext.beginGrouping()
-            NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+            NSAnimationContext.current().duration = 0.4
+            labelNoCourse.animator().alphaValue = 1
+            subLabelNoCourse.animator().alphaValue = 1
+            stickyHeaderBox.animator().alphaValue = 0
+            lectureScroller.animator().alphaValue = 0
+            NSAnimationContext.endGrouping()
+        } else {
+            notifyHeightUpdate()
+            
+            NSAnimationContext.beginGrouping()
             NSAnimationContext.current().duration = 0.5
             stickyHeaderBox.animator().alphaValue = 1
             lectureScroller.animator().alphaValue = 1
+            labelNoCourse.animator().alphaValue = 0
+            subLabelNoCourse.animator().alphaValue = 0
             NSAnimationContext.endGrouping()
         }
     }
@@ -139,6 +160,8 @@ class EditorViewController: NSViewController {
         NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
         NSAnimationContext.current().duration = 0.5
         lectureScroller.animator().alphaValue = 1
+        labelNoCourse.animator().alphaValue = 0
+        subLabelNoCourse.animator().alphaValue = 0
         NSAnimationContext.endGrouping()
     }
     /// Handles purely the visual aspect of lectures. Resets lectureLedgerStack, lectureStack, selectedCourse.lectures!.count, and weekCount
@@ -149,6 +172,8 @@ class EditorViewController: NSViewController {
         }
         lectureClipper.bounds.origin.y = 0
     }
+    
+    // MARK: Scroll functionality
     /// Comes from the LectureLedger stack, scrolls to supplied lecture number. Lecture guaranteed to exist.
     private func scrollToLecture(_ lecture: String) {
         for case let lectureController as LectureViewController in self.childViewControllers {
@@ -240,15 +265,19 @@ class EditorViewController: NSViewController {
         NSApp.keyWindow?.makeFirstResponder(self)
     }
     
+    // MARK: Notifiers
     func notifyCustomTitleStartEditing() {
-        if !stickyHeaderLectureViewController.isTitling {
-            stickyHeaderLectureViewController.isTitling = true
+        if stickyHeaderLectureViewController != nil {
+            if !stickyHeaderLectureViewController.isTitling {
+                stickyHeaderLectureViewController.isTitling = true
+            }
         }
     }
     
     func notifyCustomTitleChange() {
         if customTitleFocused != nil {
             customTitleFocused.label_customTitle.stringValue = stickyHeaderCustomTitle.stringValue
+        } else {
         }
         if stickyHeaderCustomTitle.stringValue == "" {
             stickyHeaderDivider.alphaValue = 0.3
@@ -258,32 +287,34 @@ class EditorViewController: NSViewController {
     }
     
     func notifyCustomTitleUpdate() {
-        stickyHeaderLectureViewController.isTitling = false
-        stickyHeaderCustomTitle.stringValue = stickyHeaderCustomTitle.stringValue.trimmingCharacters(in: .whitespaces)
-        // If customTitleFocused is nil and this function just got called, it implies that the StickyHeader's
-        // customTitle textfield has just finished editing. Need to find current stickyheadered lecture.
-        if customTitleFocused == nil {
-            for case let lectureController as LectureViewController in self.childViewControllers {
-                if lectureController.label_lectureTitle.stringValue == stickyHeaderTitle.stringValue {
-                    lectureController.label_customTitle.stringValue = stickyHeaderCustomTitle.stringValue
+        if stickyHeaderLectureViewController != nil {
+            stickyHeaderLectureViewController.isTitling = false
+            stickyHeaderCustomTitle.stringValue = stickyHeaderCustomTitle.stringValue.trimmingCharacters(in: .whitespaces)
+            // If customTitleFocused is nil and this function just got called, it implies that the StickyHeader's
+            // customTitle textfield has just finished editing. Need to find current stickyheadered lecture.
+            if customTitleFocused == nil {
+                for case let lectureController as LectureViewController in self.childViewControllers {
+                    if lectureController.label_lectureTitle.stringValue == stickyHeaderTitle.stringValue {
+                        lectureController.label_customTitle.stringValue = stickyHeaderCustomTitle.stringValue
+                        lectureController.notifyCustomTitleEndEditing()
+                    }
                 }
+            } else {
+                customTitleFocused.label_customTitle.stringValue = stickyHeaderCustomTitle.stringValue
+                customTitleFocused.notifyCustomTitleEndEditing()
+                customTitleFocused = nil
             }
-        } else {
-            customTitleFocused.label_customTitle.stringValue = stickyHeaderCustomTitle.stringValue
-            customTitleFocused.notifyCustomTitleEndEditing()
-            customTitleFocused = nil
-        }
-        // Check if it has content
-        if stickyHeaderCustomTitle.stringValue == "" {
-            stickyHeaderDivider.alphaValue = 0.3
-        } else {
-            stickyHeaderDivider.alphaValue = 1
+            // Check if it has content
+            if stickyHeaderCustomTitle.stringValue == "" {
+                stickyHeaderDivider.alphaValue = 0.3
+            } else {
+                stickyHeaderDivider.alphaValue = 1
+            }
         }
     }
     
-    /// Received from LectureViewController on any change to a given lecture text view. 
-    /// Is responsible for auto scrolling the lectureScroller.
-    internal func notifyHeightUpdate(from sender: LectureViewController) {
+    /// Received from LectureViewController on any change to a given lecture text view. Resizes last lectureVC view
+    internal func notifyHeightUpdate() {
         // Get last view in lectureStack
         if let lectureController = childViewControllers.filter({$0 is LectureViewController})[selectedCourse.lectures!.count - 1] as?LectureViewController {
             // Resize last lecture to keep text in the center of screen.
@@ -292,19 +323,21 @@ class EditorViewController: NSViewController {
             } else {
                 lectureBottomConstraint.constant = -lectureScroller.frame.height/2 - 3
             }
-            // AUTO SCROLL FEATURE: Smooth scroll to center on text line.
-            if sender.isStyling {
-                let selectionY = sender.textSelectionHeight()
-                // Center current typing position to center of lecture scroller
-                let yPos = lectureStack.frame.height - selectionY // - lectureScroller.frame.height/2
-                // Don't auto-scroll if selection is already visible and above center line of window
-                if yPos < (lectureClipper.bounds.origin.y + stickyHeaderBox.frame.height) || yPos > (lectureClipper.bounds.origin.y + lectureScroller.frame.height/2) {
-                    NSAnimationContext.beginGrouping()
-                    NSAnimationContext.current().duration = 0.5
-                    // Get clipper to center selection in scroller
-                    lectureClipper.animator().setBoundsOrigin(NSPoint(x: 0, y: yPos - lectureScroller.frame.height/2))
-                    NSAnimationContext.endGrouping()
-                }
+        }
+    }
+    /// Auto scrolling whenever user types. Smoothly scroll clipper until text typing location is centered.
+    internal func checkScrollLevel(from sender: LectureViewController) {
+        if sender.isStyling {
+            let selectionY = sender.textSelectionHeight()
+            // Center current typing position to center of lecture scroller
+            let yPos = lectureStack.frame.height - selectionY // - lectureScroller.frame.height/2
+            // Don't auto-scroll if selection is already visible and above center line of window
+            if yPos < (lectureClipper.bounds.origin.y + stickyHeaderBox.frame.height) || yPos > (lectureClipper.bounds.origin.y + lectureScroller.frame.height/2) {
+                NSAnimationContext.beginGrouping()
+                NSAnimationContext.current().duration = 0.5
+                // Get clipper to center selection in scroller
+                lectureClipper.animator().setBoundsOrigin(NSPoint(x: 0, y: yPos - lectureScroller.frame.height/2))
+                NSAnimationContext.endGrouping()
             }
         }
     }
@@ -312,10 +345,49 @@ class EditorViewController: NSViewController {
     func notifyLectureAddition(lecture: Lecture) {
         addLecture(lecture)
         
+        notifyHeightUpdate()
+        
         scrollToLecture("Lecture \(lecture.number)")
     }
     func notifyLectureSelection(lecture: String) {
         scrollToLecture(lecture)
+    }
+    
+    func notifyFind() {
+        if selectedCourse != nil {
+            if lectureFocused != nil {
+                lectureFocused.isFinding = !lectureFocused.isFinding
+            } else {
+                masterViewController.isFinding = !masterViewController.isFinding
+            }
+        }
+    }
+    func notifyFindAndReplace() {
+        if selectedCourse != nil {
+            if lectureFocused != nil {
+                
+            } else {
+                
+            }
+        }
+    }
+    func notifyPrint() {
+        if selectedCourse != nil {
+            if lectureFocused != nil {
+                
+            } else {
+                masterViewController.isPrinting = !masterViewController.isPrinting
+            }
+        }
+    }
+    func notifyExport() {
+        if selectedCourse != nil {
+            if lectureFocused != nil {
+                lectureFocused.isExporting = !lectureFocused.isExporting
+            } else {
+                masterViewController.isExporting = !masterViewController.isExporting
+            }
+        }
     }
     
     // MARK: Find, Print, Export Functions
@@ -345,55 +417,53 @@ class EditorViewController: NSViewController {
             
         }
     }
-    // MARK: Print functionality
-    @IBAction func actionTest_print(_ sender: Any) {
-//        print("print test \n\(printableFormat().string)")
-//        exportAllLectures()
-        printAllLectures()
-    }
-    func exportAllLectures(){
+    ///
+    func exportLectures(to url: URL){
         let attribString = NSMutableAttributedString()
+        // Combine all data from every lecture
         for case let lectureController as LectureViewController in self.childViewControllers {
-            attribString.append(NSAttributedString(string: lectureController.label_lectureTitle.stringValue + "\n"))
+            attribString.append(lectureController.label_lectureTitle.attributedStringValue)
+            if lectureController.label_customTitle.stringValue != "" {
+                attribString.append(NSAttributedString(string: "  -  " + lectureController.label_customTitle.stringValue + "\n"))
+            } else {
+                attribString.append(NSAttributedString(string: "\n"))
+            }
             attribString.append(NSAttributedString(string: lectureController.label_lectureDate.stringValue + "\n\n"))
             attribString.append(lectureController.textView_lecture.attributedString())
+            attribString.append(NSAttributedString(string: "\n\n\n"))
+        }
+        export(content: attribString, to: url)
+    }
+    ///
+    func exportLecture(from lecture: LectureViewController, to url: URL) {
+        let attribString = NSMutableAttributedString()
+        // Use currently focused lecture
+        attribString.append(lecture.label_lectureTitle.attributedStringValue)
+        if lecture.label_customTitle.stringValue != "" {
+            attribString.append(NSAttributedString(string: "  -  " + lecture.label_customTitle.stringValue + "\n"))
+        } else {
             attribString.append(NSAttributedString(string: "\n"))
         }
-        let fullRange = NSRange(location: 0, length: attribString.length)
+        attribString.append(NSAttributedString(string: lecture.label_lectureDate.stringValue + "\n\n"))
+        attribString.append(lecture.textView_lecture.attributedString())
+        export(content: attribString, to: url)
+    }
+    ///
+    private func export(content: NSAttributedString, to url: URL) {
+        let fullRange = NSRange(location: 0, length: content.length)
         do {
-//            let data1 = try attribString.data(from: fullRange, documentAttributes: [NSDocumentTypeDocumentAttribute: NSRTFDTextDocumentType])
-            let data3 = attribString.rtfd(from: fullRange, documentAttributes: [NSDocumentTypeDocumentAttribute: NSRTFDTextDocumentType])
-            let savePanel = NSSavePanel()
-            savePanel.nameFieldLabel = "Export As:"
-            savePanel.canSelectHiddenExtension = true
-            savePanel.nameFieldStringValue = "\(selectedCourse.title!) Lectures - \(selectedCourse.semester!.title!.capitalized) \(selectedCourse.semester!.year!.year)"
-            savePanel.prompt = "Export"
-            savePanel.allowedFileTypes = [NSRTFDTextDocumentType]
-            savePanel.beginSheetModal(for: NSApp.keyWindow!, completionHandler: {result in
-                if result == NSFileHandlingPanelOKButton {
-                    do {
-                        print("File extension: \(savePanel.url!)")
-//                        try writableData.write(to: savePanel.url!)
-                        try data3!.write(to: savePanel.url!, options: .atomic)
-                    } catch {
-                    }
-                }
-            })
+            let data = try content.fileWrapper(from: fullRange, documentAttributes: [NSDocumentTypeDocumentAttribute: NSRTFDTextDocumentType])
+            try data.write(to: url, options: .atomic, originalContentsURL: nil) // this for rtfd
         } catch {
+            print("Something went wrong.")
         }
     }
-    // EXPORT AND PRINT should get file data from
+    // EXPORT AND PRINT should get file data from same place
     func printAllLectures() {
         if lectureFocused != nil {
             lectureFocused.textView_lecture.print(self)
+            
         }
-    }
-    /// Assumes all lectures will be included
-    func exportRTF() {
-        
-    }
-    func exportRTF(for lecture: LectureViewController) {
-        
     }
     
     // MARK: Sticky Header Functionality ....................................................................
@@ -583,7 +653,7 @@ class EditorViewController: NSViewController {
         
         sharedFontManager.convert(sharedFontManager.selectedFont!)
         
-        print("traits: \(traits)")
+//        print("traits: \(traits)")
         if traits == NSFontTraitMask.boldFontMask {
             button_style_bold.state = NSOnState
             button_style_italicize.state = NSOffState

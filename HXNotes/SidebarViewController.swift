@@ -71,6 +71,8 @@ class SidebarViewController: NSViewController {
         }
     }
     @IBOutlet weak var ledgerStackView: NSStackView!
+    @IBOutlet weak var ledgerClipView: HXFlippedClipView!
+    @IBOutlet weak var ledgerScrollView: NSScrollView!
     var lectureStackView: NSStackView!
     var masterViewController: MasterViewController!
     
@@ -199,7 +201,7 @@ class SidebarViewController: NSViewController {
         return newCourse
     }
     /// Retrieves the course with unique name for this semester. Can return nil if
-    /// course not found.
+    /// course not found or if more than one course has that name.
     private func retrieveCourse(withName: String) -> Course! {
         for case let course as Course in selectedSemester.courses! {
             if course.title! == withName {
@@ -350,11 +352,15 @@ class SidebarViewController: NSViewController {
     
     // MARK: Control Course Ledger Functions
     /// CourseLabel in HXCourseEditBox - on Enter
-    /// Notifies that
+    /// Finds the course with the given name and renames it if possible
     internal func renameCourse(_ courseBox: HXCourseEditBox) {
-        retrieveCourse(withName: courseBox.oldName).title = courseBox.labelCourse.stringValue
-        (self.parent! as! MasterViewController).notifyCourseRename(from: courseBox.oldName)
-        courseBox.oldName = courseBox.labelCourse.stringValue
+        if retrieveCourse(withName: courseBox.labelCourse.stringValue) == nil {
+            retrieveCourse(withName: courseBox.oldName).title = courseBox.labelCourse.stringValue
+            (self.parent! as! MasterViewController).notifyCourseRename(from: courseBox.oldName)
+            courseBox.oldName = courseBox.labelCourse.stringValue
+        } else {
+            courseBox.revokeNameChange()
+        }
     }
     /// For external and internal usage. Creates a new Course data object and updates
     /// ledgerStackView visuals with a new HXCourseBox.
@@ -370,7 +376,6 @@ class SidebarViewController: NSViewController {
     }
     /// Displays the confirmation delete box before proceeding with course removal.
     internal func removeCourse(_ course: HXCourseEditBox) {
-        print("REMOVE COURSE FUCKER")
         if deleteConfirmationBox == nil {
             course.buttonTrash.isEnabled = false
             courseToBeRemoved = course
@@ -427,21 +432,36 @@ class SidebarViewController: NSViewController {
                 box.unfocus()
             }
         } else {
-            // Unfocus all other buttons except focused on.
+            // Unfocus all other buttons except new focus.
             for case let box as HXLectureBox in lectureStackView.arrangedSubviews {
                 if box.labelTitle.stringValue != "Lecture \(lecture!.number)" {
                     box.unfocus()
                 } else {
                     box.focus()
+                    scrollToLectureBox(box)
                 }
             }
+            
         }
     }
     /// Notify Sidebar from a HXLectureBox that a lecture has been clicked.
     func select(lecture: String) {
         masterViewController.notifyLectureSelection(lecture: lecture)
     }
-    /// Access this function by setting SidebarViewController's selectedSemester. 
+    /// Visually scrolls the sidebar's ledger so the lecture box is visible
+    private func scrollToLectureBox(_ box: HXLectureBox) {
+        let lectureY = ledgerStackView.frame.height - (lectureStackView.frame.origin.y + box.frame.origin.y + box.frame.height)
+        let clipperY = ledgerClipView.bounds.origin.y
+        // Scroll only if not visible
+        if lectureY > (ledgerScrollView.frame.height + clipperY) || lectureY < clipperY {
+            // Animate scroll to lecture
+            NSAnimationContext.beginGrouping()
+            NSAnimationContext.current().duration = 1
+            ledgerClipView.animator().setBoundsOrigin(NSPoint(x: 0, y: lectureY))
+            NSAnimationContext.endGrouping()
+        }
+    }
+    /// Access this function by setting SidebarViewController's selectedSemester.
     /// Repopulates the ledgerStackView and Sidebar visuals to display HXCourseEditBox's.
     private func editingMode() {
         loadEditableCourses(fromSemester: selectedSemester)

@@ -18,6 +18,10 @@ class LectureViewController: NSViewController {
     @IBOutlet weak var image_corner2: NSImageView!
     @IBOutlet weak var image_corner3: NSImageView!
     @IBOutlet weak var image_corner4: NSImageView!
+    @IBOutlet weak var box_dropdown: NSBox!
+    
+    var findViewController: HXFindViewController!
+    var exportViewController: HXExportViewController!
     
     // Set the when user sets or remove focus to the customTitle textField.
     var isTitling = false {
@@ -93,6 +97,74 @@ class LectureViewController: NSViewController {
             customTitleTrailingConstraint.isActive = true
         }
     }
+    var isFinding = false {
+        didSet {
+            NSAnimationContext.beginGrouping()
+            NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
+            NSAnimationContext.current().duration = 0.25
+            if isFinding && isExporting {
+                isExporting = false
+            } else if isFinding {
+                box_dropdown.addSubview(findViewController.view)
+                findViewController.view.leadingAnchor.constraint(equalTo: box_dropdown.leadingAnchor).isActive = true
+                findViewController.view.trailingAnchor.constraint(equalTo: box_dropdown.trailingAnchor).isActive = true
+                findViewController.view.topAnchor.constraint(equalTo: box_dropdown.topAnchor).isActive = true
+                findViewController.view.bottomAnchor.constraint(equalTo: box_dropdown.bottomAnchor).isActive = true
+                
+                NSAnimationContext.current().completionHandler = {
+                    NSApp.keyWindow?.makeFirstResponder(self.findViewController.textField_find)
+                }
+                dropdownTopConstraint.animator().constant = box_dropdown.frame.height
+                
+                owner.notifyLectureSelection(lecture: label_lectureTitle.stringValue)
+            } else {
+                if NSApp.keyWindow?.firstResponder == findViewController.textField_find {
+                    NSApp.keyWindow?.makeFirstResponder(self)
+                }
+                NSAnimationContext.current().completionHandler = {
+                    self.findViewController.view.removeFromSuperview()
+                    if self.isExporting {
+                        self.isExporting = true
+                    }
+                }
+                dropdownTopConstraint.animator().constant = 0
+            }
+            NSAnimationContext.endGrouping()
+        }
+    }
+    var isExporting = false {
+        didSet {
+            NSAnimationContext.beginGrouping()
+            NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
+            NSAnimationContext.current().duration = 0.25
+            if isExporting && isFinding {
+                isFinding = false
+            } else if isExporting {
+                box_dropdown.addSubview(exportViewController.view)
+                exportViewController.view.leadingAnchor.constraint(equalTo: box_dropdown.leadingAnchor).isActive = true
+                exportViewController.view.trailingAnchor.constraint(equalTo: box_dropdown.trailingAnchor).isActive = true
+                exportViewController.view.topAnchor.constraint(equalTo: box_dropdown.topAnchor).isActive = true
+                exportViewController.view.bottomAnchor.constraint(equalTo: box_dropdown.bottomAnchor).isActive = true
+
+                dropdownTopConstraint.animator().constant = box_dropdown.frame.height
+                
+                owner.notifyLectureSelection(lecture: label_lectureTitle.stringValue)
+            } else {
+                if NSApp.keyWindow?.firstResponder == exportViewController.textField_name {
+                    NSApp.keyWindow?.makeFirstResponder(self)
+                }
+                NSAnimationContext.current().completionHandler = {
+                    self.exportViewController.view.removeFromSuperview()
+                    if self.isFinding {
+                        self.isFinding = true
+                    }
+                }
+                dropdownTopConstraint.animator().constant = 0
+            }
+            NSAnimationContext.endGrouping()
+        }
+    }
+    
     @IBOutlet weak var button_style_underline: NSButton!
     @IBOutlet weak var button_style_italicize: NSButton!
     @IBOutlet weak var button_style_bold: NSButton!
@@ -104,10 +176,27 @@ class LectureViewController: NSViewController {
     
     var textHeightConstraint: NSLayoutConstraint!
     var customTitleTrailingConstraint: NSLayoutConstraint!
+    var dropdownTopConstraint: NSLayoutConstraint!
     
     var lecture: Lecture!
     
     var owner: EditorViewController!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        findViewController = HXFindViewController(nibName: "HXFindView", bundle: nil)
+        self.addChildViewController(findViewController)
+        exportViewController = HXExportViewController(nibName: "HXExportView", bundle: nil)
+        self.addChildViewController(exportViewController)
+        
+    }
+    
+    override func viewDidAppear() {
+        super.viewDidAppear()
+        
+        owner.notifyHeightUpdate()
+    }
     
     func initialize(with lecture: Lecture) {
         if let parentVC = self.parent as? EditorViewController {
@@ -125,9 +214,11 @@ class LectureViewController: NSViewController {
         textHeightConstraint = scrollView_lecture.heightAnchor.constraint(equalToConstant: 31)
         textHeightConstraint.isActive = true
         
+        dropdownTopConstraint = box_dropdown.topAnchor.constraint(equalTo: self.view.topAnchor)
+        dropdownTopConstraint.isActive = true
+        
         if lecture.content != nil {
             textView_lecture.textStorage?.setAttributedString(lecture.content!)
-            textHeightConstraint.constant = textHeight()
         }
         
         self.lecture = lecture
@@ -136,13 +227,11 @@ class LectureViewController: NSViewController {
             label_customTitle.stringValue = lecture.title!
             if label_customTitle.stringValue == "" {
                 label_titleDivider.alphaValue = 0.3
-                lecture.title = nil
             } else {
                 label_titleDivider.alphaValue = 1
             }
         } else {
             label_titleDivider.alphaValue = 0.3
-            lecture.title = nil
         }
         
         customTitleTrailingConstraint = label_customTitle.trailingAnchor.constraint(equalTo: label_lectureDate.leadingAnchor)
@@ -175,9 +264,7 @@ class LectureViewController: NSViewController {
         super.viewDidLayout()
         
         // Update height of view
-//        textHeightConstraint.constant = textHeight()
-        
-        notifyTextViewChange()
+        textHeightConstraint.constant = textHeight()
     }
     
     // MARK: Notifiers
@@ -185,7 +272,6 @@ class LectureViewController: NSViewController {
     func notifyCustomTitleChange() {
         if label_customTitle.stringValue == "" {
             label_titleDivider.alphaValue = 0.3
-            lecture.title = nil
         } else {
             label_titleDivider.alphaValue = 1
         }
@@ -217,7 +303,8 @@ class LectureViewController: NSViewController {
         textHeightConstraint.constant = textHeight()
         // Save to Model
         lecture.content = textView_lecture.attributedString()
-        owner.notifyHeightUpdate(from: self)
+        owner.notifyHeightUpdate()
+        owner.checkScrollLevel(from: self)
         // Update styling buttons
         selectionChange()
     }
@@ -322,7 +409,7 @@ class LectureViewController: NSViewController {
         
         let traits = sharedFontManager.traits(of: sharedFontManager.selectedFont!)
         
-        print("traits: \(traits)")
+//        print("traits: \(traits)")
         if traits == NSFontTraitMask.boldFontMask {
             button_style_bold.state = NSOnState
             button_style_italicize.state = NSOffState
@@ -342,11 +429,4 @@ class LectureViewController: NSViewController {
         
         owner.textSelectionChange()
     }
-    
-    
-    
-    
-    
-
-    
 }

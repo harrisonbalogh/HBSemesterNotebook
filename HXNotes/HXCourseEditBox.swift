@@ -102,6 +102,10 @@ class HXCourseEditBox: NSView {
             parentController.renameCourse(self)
         }
     }
+    /// Reset name to old name since that name is already taken.
+    func revokeNameChange() {
+        labelCourse.stringValue = oldName
+    }
     
     override func mouseMoved(with event: NSEvent) {
         var insideACursorArea = false

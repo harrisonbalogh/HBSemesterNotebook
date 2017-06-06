@@ -61,7 +61,6 @@ class HXDeleteConfirmationBox: NSBox {
         buttonDelete.action = #selector(self.confirmDelete)
         buttonCancel.target = self
         buttonCancel.action = #selector(self.cancelDelete)
-        
     }
     
     func confirmDelete() {
