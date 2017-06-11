@@ -174,9 +174,9 @@ class LectureViewController: NSViewController {
     
     let sharedFontManager = NSFontManager.shared()
     
-    var textHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var textHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var dropdownTopConstraint: NSLayoutConstraint!
     var customTitleTrailingConstraint: NSLayoutConstraint!
-    var dropdownTopConstraint: NSLayoutConstraint!
     
     var lecture: Lecture!
     
@@ -210,12 +210,6 @@ class LectureViewController: NSViewController {
         scrollView_lecture.parentController = self
         textView_lecture.parentController = self
         label_customTitle.parentController = self
-        
-        textHeightConstraint = scrollView_lecture.heightAnchor.constraint(equalToConstant: 31)
-        textHeightConstraint.isActive = true
-        
-        dropdownTopConstraint = box_dropdown.topAnchor.constraint(equalTo: self.view.topAnchor)
-        dropdownTopConstraint.isActive = true
         
         if lecture.content != nil {
             textView_lecture.textStorage?.setAttributedString(lecture.content!)
@@ -263,8 +257,21 @@ class LectureViewController: NSViewController {
     override func viewDidLayout() {
         super.viewDidLayout()
         
-        // Update height of view
-        textHeightConstraint.constant = textHeight()
+        // Update height of view - Distinguish this from textHeight() method
+        // Important to calculate height when text container is given a very large height to work with (99999)
+        // when laying out. textHeight() should be faster (untested) as it creates far fewer temp objects
+        let txtStorage = NSTextStorage(attributedString: textView_lecture.attributedString())
+        let txtContainer = NSTextContainer(containerSize: NSSize(width: textView_lecture.frame.width, height: 99999))
+        let layoutManager = NSLayoutManager()
+        layoutManager.addTextContainer(txtContainer)
+        txtStorage.addLayoutManager(layoutManager)
+        txtStorage.addAttributes([NSFontAttributeName: textView_lecture.font!], range: NSRange(location: 0, length: txtStorage.length))
+        txtContainer.lineFragmentPadding = 0
+        layoutManager.glyphRange(for: txtContainer)
+        // 3 is arbitrary bottom buffer space added
+        let textHeight = layoutManager.usedRect(for: txtContainer).size.height + 3
+        
+        textHeightConstraint.constant = textHeight
     }
     
     // MARK: Notifiers
@@ -300,10 +307,13 @@ class LectureViewController: NSViewController {
     /// stack height. Will also update the object model with the new attributed string.
     func notifyTextViewChange() {
         // Update height of view
-        textHeightConstraint.constant = textHeight()
+        let newHeight = textHeight()
+        if newHeight != textHeightConstraint.constant {
+            textHeightConstraint.constant = newHeight
+            owner.notifyHeightUpdate()
+        }
         // Save to Model
         lecture.content = textView_lecture.attributedString()
-        owner.notifyHeightUpdate()
         owner.checkScrollLevel(from: self)
         // Update styling buttons
         selectionChange()
@@ -323,7 +333,7 @@ class LectureViewController: NSViewController {
     
     // MARK: Auto Scroll and Resizing Helper Functions
     /// Return the height to the selected character in the textView
-    func textSelectionHeight() -> CGFloat {
+    internal func textSelectionHeight() -> CGFloat {
         if !self.isStyling {
             // If user is not actively editing this lecture's textView, then the request to get selection
             // height came from a clipView resize, not from the user changing the textView text.
@@ -343,16 +353,9 @@ class LectureViewController: NSViewController {
         return view.frame.origin.y + view.frame.height - (layoutManager.usedRect(for: txtContainer).size.height + 39) // height from top of lecture view to top of text
     }
     /// Return the height of all the text in the textView
-    func textHeight() -> CGFloat {
-        let txtStorage = NSTextStorage(attributedString: textView_lecture.attributedString())
-        let txtContainer = NSTextContainer(containerSize: NSSize(width: textView_lecture.frame.width, height: 10000))
-        let layoutManager = NSLayoutManager()
-        layoutManager.addTextContainer(txtContainer)
-        txtStorage.addLayoutManager(layoutManager)
-        txtStorage.addAttributes([NSFontAttributeName: textView_lecture.font!], range: NSRange(location: 0, length: txtStorage.length))
-        txtContainer.lineFragmentPadding = 0
-        layoutManager.glyphRange(for: txtContainer)
-        return layoutManager.usedRect(for: txtContainer).size.height + 3 // 3 is arbitrary bottom buffer space added
+    private func textHeight() -> CGFloat {
+        return textView_lecture.layoutManager!.usedRect(for: textView_lecture.textContainer!).size.height + 3
+        // 3 is arbitrary bottom buffer space added
     }
     
     // MARK: Styling Functionality

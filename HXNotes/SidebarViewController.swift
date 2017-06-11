@@ -16,11 +16,17 @@ class SidebarViewController: NSViewController {
     var weekCount = 0
     var lectureCount = 0
     func tempAction_date() {
-        if Int(yearButton.title) != nil {
-            if semesterButton.title == "Spring" {
-                selectedSemester = produceSemester(titled: "spring", in: produceYear(Int(yearButton.title)!))
-            } else if semesterButton.title == "Fall" {
-                selectedSemester = produceSemester(titled: "fall", in: produceYear(Int(yearButton.title)!))
+        if let yr = Int(yearLabel.stringValue) {
+            lastYearUsed = yr
+        } else {
+            yearLabel.stringValue = "\(lastYearUsed)"
+        }
+
+        if Int(yearLabel.stringValue) != nil {
+            if semesterLabel.stringValue == "Spring" {
+                selectedSemester = produceSemester(titled: "spring", in: produceYear(Int(yearLabel.stringValue)!))
+            } else {
+                selectedSemester = produceSemester(titled: "fall", in: produceYear(Int(yearLabel.stringValue)!))
             }
         }
     }
@@ -30,46 +36,95 @@ class SidebarViewController: NSViewController {
         masterViewController.notifyLectureAddition(lecture: newLec)
     }
     
+    @IBOutlet weak var semesterButtonAnimated: NSButton!
+    @IBOutlet weak var semButtonAnimBotConstraint: NSLayoutConstraint!
+    @IBOutlet weak var semesterLabel: NSTextField!
     @IBOutlet weak var semesterButton: NSButton!
-    @IBOutlet weak var yearButton: NSButton!
+    
+    @IBOutlet weak var yearButtonAnimated: NSButton!
+    @IBOutlet weak var yrButtonAnimBotConstraint: NSLayoutConstraint!
+    
+    @IBOutlet weak var yearLabel: NSTextField!
+    var lastYearUsed = 0
+    
     @IBAction func action_incrementTime(_ sender: NSButton) {
-        if semesterButton.title == "Spring" {
-            semesterButton.title = "Fall"
-            tempAction_date()
-        } else {
-            semesterButton.title = "Spring"
-            yearButton.title = "\(Int(yearButton.title)! + 1)"
-            tempAction_date()
-        }
+        NSAnimationContext.runAnimationGroup({context in
+            context.duration = 0.3
+            if semesterLabel.stringValue == "Spring" {
+                semesterButtonAnimated.title = "Fall"
+            } else {
+                semesterButtonAnimated.title = "Spring"
+                yearButtonAnimated.title = "\(Int(self.yearLabel.stringValue)! + 1)"
+                yrButtonAnimBotConstraint.animator().constant = semesterButtonAnimated.bounds.height
+                yearLabel.animator().setBoundsOrigin(NSPoint(x: 0, y: -semesterButton.bounds.height))
+            }
+            semButtonAnimBotConstraint.animator().constant = semesterButtonAnimated.bounds.height
+            semesterLabel.animator().setBoundsOrigin(NSPoint(x: 0, y: -semesterButton.bounds.height))
+        }, completionHandler: {
+            if self.semesterLabel.stringValue == "Spring" {
+                self.semesterLabel.stringValue = "Fall"
+            } else {
+                self.semesterLabel.stringValue = "Spring"
+                self.yearLabel.stringValue = "\(Int(self.yearLabel.stringValue)! + 1)"
+                self.yearLabel.setBoundsOrigin(NSPoint(x: 0, y: 0))
+            }
+            self.semesterLabel.setBoundsOrigin(NSPoint(x: 0, y: 0))
+            self.tempAction_date()
+            self.semButtonAnimBotConstraint.constant = 0
+            self.yrButtonAnimBotConstraint.constant = 0
+        })
     }
     @IBAction func action_decrementTime(_ sender: NSButton) {
-        if semesterButton.title == "Fall" {
-            semesterButton.title = "Spring"
-            tempAction_date()
-        } else {
-            semesterButton.title = "Fall"
-            yearButton.title = "\(Int(yearButton.title)! - 1)"
-            tempAction_date()
-        }
+        NSAnimationContext.runAnimationGroup({context in
+            semButtonAnimBotConstraint.constant = 2 * semesterButtonAnimated.bounds.height
+            yrButtonAnimBotConstraint.constant = 2 * semesterButtonAnimated.bounds.height
+            context.duration = 0.3
+            if semesterLabel.stringValue == "Fall" {
+                semesterButtonAnimated.title = "Spring"
+            } else {
+                semesterButtonAnimated.title = "Fall"
+                yearButtonAnimated.title = "\(Int(self.yearLabel.stringValue)! - 1)"
+                yrButtonAnimBotConstraint.animator().constant = semesterButtonAnimated.bounds.height
+                yearLabel.animator().setBoundsOrigin(NSPoint(x: 0, y: semesterButton.bounds.height))
+            }
+            semButtonAnimBotConstraint.animator().constant = semesterButtonAnimated.bounds.height
+            semesterLabel.animator().setBoundsOrigin(NSPoint(x: 0, y: semesterButton.bounds.height))
+        }, completionHandler: {
+            if self.semesterLabel.stringValue == "Fall" {
+                self.semesterLabel.stringValue = "Spring"
+            } else {
+                self.semesterLabel.stringValue = "Fall"
+                self.yearLabel.stringValue = "\(Int(self.yearLabel.stringValue)! - 1)"
+                self.yearLabel.setBoundsOrigin(NSPoint(x: 0, y: 0))
+            }
+            self.semesterLabel.setBoundsOrigin(NSPoint(x: 0, y: 0))
+            self.tempAction_date()
+            self.semButtonAnimBotConstraint.constant = 0
+            self.yrButtonAnimBotConstraint.constant = 0
+        })
     }
     
-    
     @IBAction func action_semesterButton(_ sender: NSButton) {
-        if semesterButton.title == "Spring" {
-            semesterButton.title = "Fall"
+        if semesterLabel.stringValue == "Fall" {
+            action_decrementTime(sender)
         } else {
-            semesterButton.title = "Spring"
+            action_incrementTime(sender)
         }
+    }
+    @IBAction func action_editYear(_ sender: Any) {
+        NSApp.keyWindow?.makeFirstResponder(self)
         tempAction_date()
     }
     @IBOutlet weak var editSemesterButton: NSButton!
     @IBAction func action_editSemester(_ sender: NSButton) {
-        if sender.title == "Edit Semester Schedule" {
+        if sender.state == NSOnState {
             editingMode()
         } else {
             viewingMode()
         }
     }
+    var bottomBufferView: NSView!
+    var bottomBufferHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var ledgerStackView: NSStackView!
     @IBOutlet weak var ledgerClipView: HXFlippedClipView!
     @IBOutlet weak var ledgerScrollView: NSScrollView!
@@ -91,6 +146,11 @@ class SidebarViewController: NSViewController {
                     }
                 }
                 viewingMode()
+                if let courseHappening = duringCourse(for: selectedSemester) {
+                    print("Course is happening!")
+                } else {
+                    print("No course...")
+                }
             } else {
                 editingMode()
             }
@@ -99,20 +159,32 @@ class SidebarViewController: NSViewController {
     var selectedCourse: Course! {
         didSet {
             if selectedCourse != nil {
+                // Create sticky header
+                if stickyHeader != nil {
+                    stickyHeader.removeFromSuperview()
+                    stickyHeader = nil
+                }
+                stickyHeader = HXCourseBox.instance(with: selectedCourse, owner: self)
                 // Populate ledgerStackView
                 loadLectures(from: selectedCourse)
                 // Deselect all other buttons excepts selected one.
                 for case let courseButton as HXCourseBox in ledgerStackView.arrangedSubviews {
-                    if courseButton.buttonTitle.title != selectedCourse.title {
+                    if courseButton.labelTitle.stringValue != selectedCourse.title {
                         courseButton.deselect()
+                    } else {
+                        scrollToCourse(courseButton)
                     }
                 }
             } else {
+                // Remove sticky header
+                stickyHeader.removeFromSuperview()
+                stickyHeader = nil
                 popLectures()
                 // Deselect all other buttons
                 for case let courseButton as HXCourseBox in ledgerStackView.arrangedSubviews {
                     courseButton.deselect()
                 }
+                bottomBufferHeightConstraint.constant = 0
             }
             // Notify masterViewController that a course was selected
             masterViewController.notifyCourseSelection(course: selectedCourse)
@@ -130,23 +202,23 @@ class SidebarViewController: NSViewController {
             colorAvailability[x] = true
         }
         
-        // EVENTUALLY IMPLEMENT STICKY HEADER FOR SIDEBAR
         // Setup observers
-//        NotificationCenter.default.addObserver(self, selector: #selector(EditorViewController.didLiveScroll),
-//                                               name: .NSScrollViewDidLiveScroll, object: lectureScroller)
-//        NotificationCenter.default.addObserver(self, selector: #selector(EditorViewController.didScroll),
+        NotificationCenter.default.addObserver(self, selector: #selector(SidebarViewController.didLiveScroll),
+                                               name: .NSScrollViewDidLiveScroll, object: ledgerClipView)
+        NotificationCenter.default.addObserver(self, selector: #selector(SidebarViewController.didScroll),
+                                               name: .NSViewBoundsDidChange, object: ledgerClipView)
     }
     
     override func viewDidAppear() {
         // Default to current year
         let yr = NSCalendar.current.component(.year, from: NSDate() as Date)
-        yearButton.title = "\(yr)"
+        yearLabel.stringValue = "\(yr)"
         // Default to current semester by assuming Fall: [July, December]
         let month = NSCalendar.current.component(.month, from: NSDate() as Date)
         if month >= 7 && month <= 12 {
-            semesterButton.title = "Fall"
+            semesterLabel.stringValue = "Fall"
         } else {
-            semesterButton.title = "Spring"
+            semesterLabel.stringValue = "Spring"
         }
         tempAction_date()
         
@@ -154,6 +226,15 @@ class SidebarViewController: NSViewController {
         for case let course as Course in selectedSemester.courses! {
             print("    \(course.title!)")
             print("        \(printSchedule(for: course))")
+        }
+    }
+    
+    override func viewDidLayout() {
+        super.viewDidLayout()
+        
+        if selectedCourse != nil {
+            print("Laying out")
+//            notifyHeightUpdate()
         }
     }
     
@@ -224,6 +305,23 @@ class SidebarViewController: NSViewController {
         }
         return numberOfDaysInWeek
     }
+    
+    private func duringCourse(for semester: Semester) -> Course? {
+        let hour = NSCalendar.current.component(.hour, from: NSDate() as Date)
+        let minute = NSCalendar.current.component(.minute, from: NSDate() as Date)
+        let day = NSCalendar.current.component(.weekday, from: NSDate() as Date)
+        
+        for case let course as Course in semester.courses! {
+            for case let time as TimeSlot in course.timeSlots! {
+                if Int16(day) == time.day && (Int16(hour) == time.hour || (Int16(hour) == (time.hour - 1) && Int16(minute) > 55)) {
+                    // during class
+                    return time.course
+                }
+            }
+        }
+        // no class
+        return nil
+    }
 
     // MARK: Lecture Data Model Functions
     /// Returns a newly created Lecture data model object following the previous lecture.
@@ -242,6 +340,14 @@ class SidebarViewController: NSViewController {
     /// Populates ledgerStackView with all course data from given semester as HXCourseBox's.
     private func loadCourses(fromSemester semester: Semester) {
         popCourses()
+        // Add the buffer region for the course list
+        bottomBufferView = NSView()
+        ledgerStackView.addArrangedSubview(bottomBufferView)
+        bottomBufferView.translatesAutoresizingMaskIntoConstraints = false
+        bottomBufferView.widthAnchor.constraint(equalTo: ledgerStackView.widthAnchor).isActive = true
+        bottomBufferHeightConstraint = bottomBufferView.heightAnchor.constraint(equalToConstant: 0)
+        bottomBufferHeightConstraint.isActive = true
+        // Add the courses in this semester
         for case let course as Course in semester.courses! {
             pushCourse( course )
         }
@@ -249,6 +355,7 @@ class SidebarViewController: NSViewController {
     /// Populates ledgerStackView with all course data from given semester as HXCourseEditBox's.
     private func loadEditableCourses(fromSemester semester: Semester) {
         popCourses()
+        bottomBufferHeightConstraint.constant = 0
         // When first loading editable courses, append the 'New Course' button at end of ledgerStackView
         let addBox = HXCourseAddBox.instance(target: self, action: #selector(SidebarViewController.addEditableCourse))
         ledgerStackView.addArrangedSubview(addBox!)
@@ -264,11 +371,11 @@ class SidebarViewController: NSViewController {
     /// Handles purely the visual aspect of courses. Internal use only. Adds a new HXCourseBox to the ledgerStackView.
     private func pushCourse(_ course: Course) {
         let newBox = HXCourseBox.instance(with: course, owner: self)
-        ledgerStackView.addArrangedSubview(newBox!)
+//        ledgerStackView.addArrangedSubview(newBox!)
+        ledgerStackView.insertArrangedSubview(newBox!, at: ledgerStackView.arrangedSubviews.count - 1)
         newBox?.widthAnchor.constraint(equalTo: ledgerStackView.widthAnchor).isActive = true
         let theColor = NSColor(red: CGFloat(course.colorRed), green: CGFloat(course.colorGreen), blue: CGFloat(course.colorBlue), alpha: 1)
         useColor(color: theColor)
-        newBox!.labelDays.stringValue = daysPerWeek(for: course)
     }
     /// Handles purely the visual aspect of editable courses. Internal use only. Adds a new HXCourseEditBox to the ledgerStackView.
     private func pushEditableCourse(_ course: Course) {
@@ -280,7 +387,8 @@ class SidebarViewController: NSViewController {
         masterViewController.notifyCourseAddition()
         if course.timeSlots!.count == 0 {
             editSemesterButton.isEnabled = false
-            editSemesterButton.title = "Set Course Schedule"
+            editSemesterButton.state = NSOnState
+//            editSemesterButton.title = "Set Course Schedule"
         }
     }
     /// Handles purely the visual aspect of editable courses. Internal use only. Removes the given HXCourseEditBox from the ledgerStackView
@@ -314,11 +422,12 @@ class SidebarViewController: NSViewController {
         var index = 0
         for case let c as HXCourseBox in ledgerStackView.arrangedSubviews {
             index += 1
-            if c.buttonTitle.title == course.title! {
+            if c.labelTitle.stringValue == course.title! {
                 break
             }
         }
         if ledgerStackView.arrangedSubviews.count == index {
+            print("This... never happens...")
             ledgerStackView.addArrangedSubview(lectureStackView)
         } else {
             ledgerStackView.insertArrangedSubview(lectureStackView, at: index)
@@ -326,6 +435,7 @@ class SidebarViewController: NSViewController {
         for case let lecture as Lecture in course.lectures! {
             pushLecture( lecture )
         }
+        notifyHeightUpdate()
     }
     /// Handles purely the visual aspect of lectures. Internal use only. Adds a new HXLectureBox and possibly HXWeekBox to the ledgerStackView.
     private func pushLecture(_ lecture: Lecture) {
@@ -390,13 +500,15 @@ class SidebarViewController: NSViewController {
         // Prevent user from accessing lecture view if there are no courses
         if selectedSemester.courses!.count == 0 {
             editSemesterButton.isEnabled = false
-            editSemesterButton.title = "Add Course Above"
+            editSemesterButton.state = NSOnState
+//            editSemesterButton.title = "Add Course Above"
         } else {
             // Check if the remaining courses have any TimeSlots
             for case let course as Course in selectedSemester.courses! {
                 if course.timeSlots!.count == 0 {
                     editSemesterButton.isEnabled = false
-                    editSemesterButton.title = "Set Course Schedule"
+                    editSemesterButton.state = NSOnState
+//                    editSemesterButton.title = "Set Course Schedule"
                     deleteConfirmationBox.removeFromSuperview()
                     deleteConfirmationBox = nil
                     courseToBeRemoved = nil
@@ -404,7 +516,8 @@ class SidebarViewController: NSViewController {
                 }
             }
             editSemesterButton.isEnabled = true
-            editSemesterButton.title = "Finish Editing Semester"
+            editSemesterButton.state = NSOnState
+//            editSemesterButton.title = "Finish Editing Semester"
         }
         deleteConfirmationBox.removeFromSuperview()
         deleteConfirmationBox = nil
@@ -450,8 +563,11 @@ class SidebarViewController: NSViewController {
     }
     /// Visually scrolls the sidebar's ledger so the lecture box is visible
     private func scrollToLectureBox(_ box: HXLectureBox) {
-        let lectureY = ledgerStackView.frame.height - (lectureStackView.frame.origin.y + box.frame.origin.y + box.frame.height)
+        var lectureY = ledgerStackView.frame.height - (lectureStackView.frame.origin.y + box.frame.origin.y + box.frame.height)
         let clipperY = ledgerClipView.bounds.origin.y
+        if stickyHeader != nil {
+            lectureY -= stickyHeader.frame.height
+        }
         // Scroll only if not visible
         if lectureY > (ledgerScrollView.frame.height + clipperY) || lectureY < clipperY {
             // Animate scroll to lecture
@@ -461,24 +577,39 @@ class SidebarViewController: NSViewController {
             NSAnimationContext.endGrouping()
         }
     }
+    /// Visually scrolls the sidebar's ledger so the course box is at the top
+    private func scrollToCourse(_ box: HXCourseBox) {
+        let lectureY = ledgerStackView.frame.height - (box.frame.origin.y + box.frame.height) + 2
+        // Animate scroll to course
+        NSAnimationContext.beginGrouping()
+        NSAnimationContext.current().duration = 0.5
+        ledgerClipView.animator().setBoundsOrigin(NSPoint(x: 0, y: lectureY))
+        NSAnimationContext.endGrouping()
+    }
     /// Access this function by setting SidebarViewController's selectedSemester.
     /// Repopulates the ledgerStackView and Sidebar visuals to display HXCourseEditBox's.
     private func editingMode() {
         loadEditableCourses(fromSemester: selectedSemester)
+        // Remove sticky header
+        if stickyHeader != nil {
+            stickyHeader.removeFromSuperview()
+            stickyHeader = nil
+        }
         masterViewController.notifySemesterEditing(semester: selectedSemester)
         // UI control flow update - Note the RETURN call
+        editSemesterButton.state = NSOnState
         if selectedSemester.courses!.count == 0 {
             editSemesterButton.isEnabled = false
-            editSemesterButton.title = "Add Course Above"
+//            editSemesterButton.title = "Add Course Above"
         } else {
             for case let course as Course in selectedSemester.courses! {
                 if course.timeSlots!.count == 0 {
                     editSemesterButton.isEnabled = false
-                    editSemesterButton.title = "Set Course Schedule"
+//                    editSemesterButton.title = "Set Course Schedule"
                     return
                 }
             }
-            editSemesterButton.title = "Finish Editing Semester"
+//            editSemesterButton.title = "Finish Editing Semester"
             editSemesterButton.isEnabled = true
         }
     }
@@ -486,7 +617,8 @@ class SidebarViewController: NSViewController {
     /// Repopulates the ledgerStackView and Sidebar visuals to display HXCourseBox's.
     private func viewingMode() {
         editSemesterButton.isEnabled = true
-        editSemesterButton.title = "Edit Semester Schedule"
+        editSemesterButton.state = NSOffState
+//        editSemesterButton.title = "Edit Semester Schedule"
         loadCourses(fromSemester: selectedSemester)
         masterViewController.notifySemesterViewing(semester: selectedSemester)
     }
@@ -583,7 +715,7 @@ class SidebarViewController: NSViewController {
         return nextCourseNumber
     }
     /// Will return a printable version of the days that the course occupies.
-    private func daysPerWeek(for course: Course) -> String {
+    func daysPerWeek(for course: Course) -> String {
         var daysOfWeek = [0, 0, 0, 0, 0]
         let dayNames = ["M", "T", "W", "Th", "F"]
         for case let time as TimeSlot in course.timeSlots! {
@@ -602,7 +734,7 @@ class SidebarViewController: NSViewController {
         }
         return constructedString
     }
-    ///
+    /// Indev
     private func printSchedule(for course: Course) -> String {
         var constructedString = ""
         
@@ -662,8 +794,9 @@ class SidebarViewController: NSViewController {
                 return
             }
         }
-        editSemesterButton.title = "Finish Editing Semester"
+//        editSemesterButton.title = "Finish Editing Semester"
         editSemesterButton.isEnabled = true
+        editSemesterButton.state = NSOnState
     }
     /// Notify sidebar that user has removed a time slot from a course and should
     /// check if that was the only time slot for course
@@ -672,8 +805,73 @@ class SidebarViewController: NSViewController {
         for case let course as Course in selectedSemester.courses! {
             if course.timeSlots!.count == 0 {
                 editSemesterButton.isEnabled = false
-                editSemesterButton.title = "Set Course Schedule"
+                editSemesterButton.state = NSOnState
+//                editSemesterButton.title = "Set Course Schedule"
                 break
+            }
+        }
+    }
+    
+    // MARK: Sticky Header Functionality
+    var stickyHeader: HXCourseBox!
+    
+    /// Called when bottom buffere space needs to reevaluate its height to allow selected course
+    /// to be scrollable to the top.
+    private func notifyHeightUpdate() {
+        
+        bottomBufferHeightConstraint.constant = 0
+        ledgerScrollView.layoutSubtreeIfNeeded()
+        
+        for case let courseButton as HXCourseBox in ledgerStackView.arrangedSubviews {
+            if courseButton.labelTitle.stringValue == selectedCourse.title {
+                let y = ledgerStackView.frame.height - (courseButton.frame.origin.y + courseButton.frame.height) + 2
+                if (ledgerStackView.frame.height - bottomBufferHeightConstraint.constant) < (ledgerScrollView.frame.height + y) {
+                    bottomBufferHeightConstraint.constant = (ledgerScrollView.frame.height + y) - ledgerStackView.frame.height
+                } else {
+                    bottomBufferHeightConstraint.constant = 0
+                }
+                break
+            }
+        }
+    }
+    /// This is called by the users scrolling versus didScroll is called by ledgerClipView bounds change.
+    /// Distinguished here since user scrolling should cancel any scroll animations. Else the clipper stutters.
+    func didLiveScroll() {
+        // Stop any scrolling animations currently happening on the clipper
+        NSAnimationContext.beginGrouping()
+        NSAnimationContext.current().duration = 0 // This overwrites animator proxy object with 0 duration aimation
+        ledgerClipView.animator().setBoundsOrigin(NSPoint(x: 0, y: ledgerClipView.bounds.origin.y))
+        NSAnimationContext.endGrouping()
+        // Then call didScroll as normal to produce stickyheader effect
+        didScroll()
+    }
+    /// Receives scrolling from lectureScroller NSScrollView and any time clipper changes its bounds.
+    /// Is responsible for updating the StickyHeaderBox to simulate the iOS effect of lecture titles
+    /// staying at the top of scrollView.
+    func didScroll() {
+        if stickyHeader != nil {
+            var box: HXCourseBox!
+            for case let courseButton as HXCourseBox in ledgerStackView.arrangedSubviews {
+                if courseButton.labelTitle.stringValue == selectedCourse.title {
+                    box = courseButton
+                    break
+                }
+            }
+            if box == nil {
+                return
+            }
+            let y = ledgerStackView.frame.height - (box.frame.origin.y + box.frame.height) + 2
+            if ledgerClipView.bounds.origin.y >= y {
+                if stickyHeader.superview == nil {
+                    self.view.addSubview(stickyHeader)
+                    stickyHeader.leadingAnchor.constraint(equalTo: ledgerScrollView.leadingAnchor).isActive = true
+                    stickyHeader.trailingAnchor.constraint(equalTo: ledgerScrollView.trailingAnchor).isActive = true
+                    stickyHeader.topAnchor.constraint(equalTo: ledgerScrollView.topAnchor).isActive = true
+                    stickyHeader.select()
+                }
+                
+            } else if stickyHeader.superview != nil {
+                stickyHeader.removeFromSuperview()
             }
         }
     }

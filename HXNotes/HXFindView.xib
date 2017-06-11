@@ -5,11 +5,14 @@
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11762"/>
         <capability name="box content view" minToolsVersion="7.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+        <capability name="system font weights other than Regular or Bold" minToolsVersion="7.0"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="HXFindViewController" customModule="HXNotes" customModuleProvider="target">
             <connections>
+                <outlet property="button_right" destination="hnq-MQ-xGe" id="wsY-g6-jzN"/>
                 <outlet property="label_lectureSelection" destination="ROQ-7f-3VP" id="0hX-i9-TE3"/>
+                <outlet property="label_result" destination="0ig-UT-9SM" id="Zgj-Ac-SbE"/>
                 <outlet property="textField_find" destination="8cf-Je-tHO" id="aHl-YC-K7p"/>
                 <outlet property="view" destination="c22-O7-iKe" id="qIN-23-L9B"/>
             </connections>
@@ -30,6 +33,14 @@
                 <box identifier="line1" verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="Uri-J9-XjF">
                     <rect key="frame" x="0.0" y="-2" width="502" height="5"/>
                 </box>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0ig-UT-9SM" userLabel="Result Label">
+                    <rect key="frame" x="182" y="6.5" width="51" height="16"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="# Found" id="U5x-yI-eDb">
+                        <font key="font" metaFont="systemThin" size="12"/>
+                        <color key="textColor" name="headerColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
                 <textField horizontalHuggingPriority="249" verticalHuggingPriority="750" horizontalCompressionResistancePriority="749" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8cf-Je-tHO">
                     <rect key="frame" x="21" y="6" width="212" height="17"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" state="on" alignment="left" placeholderString="Find" id="5TR-kY-sN2">
@@ -133,6 +144,7 @@
                 <constraint firstItem="khP-e7-vXt" firstAttribute="leading" secondItem="ROQ-7f-3VP" secondAttribute="leading" id="7ND-T7-ERP"/>
                 <constraint firstItem="khP-e7-vXt" firstAttribute="top" secondItem="ROQ-7f-3VP" secondAttribute="bottom" id="7VC-6Y-aHd"/>
                 <constraint firstItem="ZaT-PU-v0v" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" constant="6" id="9H9-7L-oJJ"/>
+                <constraint firstItem="0ig-UT-9SM" firstAttribute="centerY" secondItem="8cf-Je-tHO" secondAttribute="centerY" id="AKW-a8-32P"/>
                 <constraint firstItem="TRz-66-pes" firstAttribute="top" secondItem="8cf-Je-tHO" secondAttribute="bottom" constant="-1" id="H7Q-bE-6zu"/>
                 <constraint firstItem="KvC-Ab-bJH" firstAttribute="centerY" secondItem="c22-O7-iKe" secondAttribute="centerY" id="KFt-my-KcW"/>
                 <constraint firstItem="wS4-p5-Yb7" firstAttribute="leading" secondItem="ROQ-7f-3VP" secondAttribute="leading" id="Kj1-t9-N6d"/>
@@ -159,6 +171,7 @@
                 <constraint firstItem="hnq-MQ-xGe" firstAttribute="leading" secondItem="KvC-Ab-bJH" secondAttribute="trailing" constant="2" id="sTz-Zf-R9E"/>
                 <constraint firstItem="QUw-RE-9TQ" firstAttribute="leading" secondItem="hnq-MQ-xGe" secondAttribute="trailing" constant="6" id="tsl-dc-Nge"/>
                 <constraint firstItem="ZaT-PU-v0v" firstAttribute="centerY" secondItem="c22-O7-iKe" secondAttribute="centerY" id="uvK-IA-xdQ"/>
+                <constraint firstItem="0ig-UT-9SM" firstAttribute="trailing" secondItem="8cf-Je-tHO" secondAttribute="trailing" id="wsc-yi-ME5"/>
                 <constraint firstAttribute="bottom" secondItem="vZG-U2-SnF" secondAttribute="bottom" id="zWA-HG-5zQ"/>
             </constraints>
             <point key="canvasLocation" x="150" y="48"/>

@@ -25,7 +25,8 @@ class EditorViewController: NSViewController {
     
     // This constraint is for an invisible view at the bottom of lecture stack to allow user to scroll
     // enough for the last lecture's textView to be in middle of screen.
-    private var lectureBottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var lectureBottomConstraint: NSLayoutConstraint!
+    
     // MARK: Object models
     
     let appDelegate = NSApplication.shared().delegate as! AppDelegate
@@ -48,7 +49,11 @@ class EditorViewController: NSViewController {
                 subLabelNoCourse.stringValue = "Courses are selectable to the left."
                 // Animate hiding the lecture
                 NSAnimationContext.beginGrouping()
-                NSAnimationContext.current().completionHandler = {self.popLectures()}
+                NSAnimationContext.current().completionHandler = {
+                    if self.selectedCourse == nil {
+                        self.popLectures()
+                    }
+                }
                 NSAnimationContext.current().duration = 0.25
                 stickyHeaderBox.animator().alphaValue = 0
                 lectureScroller.animator().alphaValue = 0
@@ -67,12 +72,6 @@ class EditorViewController: NSViewController {
         stickyHeaderBox.alphaValue = 0
         lectureScroller.alphaValue = 0
         
-        lectureBottomConstraint = lectureBottomBufferView.heightAnchor.constraint(equalTo: lectureScroller.heightAnchor)
-        lectureBottomConstraint.isActive = true
-        
-        stickyHeaderTopConstraint = stickyHeaderBox.topAnchor.constraint(equalTo: lectureScroller.topAnchor)
-        stickyHeaderTopConstraint.isActive = true
-        
         // Setup observers for scrolling lectures
         NotificationCenter.default.addObserver(self, selector: #selector(EditorViewController.didLiveScroll),
                                                name: .NSScrollViewDidLiveScroll, object: lectureScroller)
@@ -82,9 +81,6 @@ class EditorViewController: NSViewController {
                                                name: .NSControlTextDidEndEditing, object: stickyHeaderCustomTitle)
         NotificationCenter.default.addObserver(self, selector: #selector(EditorViewController.notifyCustomTitleChange),
                                                name: .NSControlTextDidChange, object: stickyHeaderCustomTitle)
-        
-        stickyHeaderCustomTitleTrailingConstraint = stickyHeaderCustomTitle.trailingAnchor.constraint(equalTo: stickyHeaderDate.leadingAnchor)
-        stickyHeaderCustomTitleTrailingConstraint.isActive = true
         
         stickyHeaderCustomTitle.parentController = self
         
@@ -254,9 +250,10 @@ class EditorViewController: NSViewController {
         }
     }
     func bottomBufferClicked() {
-        for case let lectureController as LectureViewController in self.childViewControllers {
-            if lectureController.label_lectureTitle.stringValue == "Lecture \(selectedCourse.lectures!.count)" {
-                NSApp.keyWindow?.makeFirstResponder(lectureController.textView_lecture)
+        for case let lectureVC as LectureViewController in self.childViewControllers {
+            if lectureVC.label_lectureTitle.stringValue == "Lecture \(selectedCourse.lectures!.count)" {
+                NSApp.keyWindow?.makeFirstResponder(lectureVC.textView_lecture)
+                lectureVC.textView_lecture.setSelectedRange(NSMakeRange((lectureVC.textView_lecture.string?.characters.count)!, 0))
             }
         }
     }
@@ -312,8 +309,7 @@ class EditorViewController: NSViewController {
             }
         }
     }
-    
-    /// Received from LectureViewController on any change to a given lecture text view. Resizes last lectureVC view
+    /// Received from LectureViewController on any change to a given lecture text view. Resizes the bottom buffer box
     internal func notifyHeightUpdate() {
         // Get last view in lectureStack
         if let lectureController = childViewControllers.filter({$0 is LectureViewController})[selectedCourse.lectures!.count - 1] as?LectureViewController {
@@ -520,9 +516,11 @@ class EditorViewController: NSViewController {
     }
     
     // When a textView is focused, the styling buttons appear which should truncate the lecture's custom title.
-    var stickyHeaderCustomTitleTrailingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var stickyHeaderCustomTitleTrailingConstraint: NSLayoutConstraint!
     // StickyHeader can be shifted as the next/previous lecture encroaches on the stickyHeader.
-    private var stickyHeaderTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var stickyHeaderTopConstraint: NSLayoutConstraint!
+    
+    
     var lectureFocused: LectureViewController! {
         didSet {
             stickyHeaderCustomTitleTrailingConstraint.isActive = false
@@ -544,6 +542,8 @@ class EditorViewController: NSViewController {
                         button_style_right.animator().alphaValue = 1
                         NSAnimationContext.endGrouping()
                         stickyHeaderCustomTitleTrailingConstraint = stickyHeaderCustomTitle.trailingAnchor.constraint(equalTo: button_style_underline.leadingAnchor)
+                    } else {
+                        stickyHeaderCustomTitleTrailingConstraint = stickyHeaderCustomTitle.trailingAnchor.constraint(equalTo: stickyHeaderDate.leadingAnchor)
                     }
                 } else {
                     // StickyHeaders LectureVC is not focused, hide styling buttons

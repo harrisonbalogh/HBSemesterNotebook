@@ -21,7 +21,7 @@ class MasterViewController: NSViewController {
     var topbarViewController: TopbarViewController!
     // The following 2 controllers fill container_content as is needed
     private var calendarViewController: CalendarViewController!
-    private var editorViewController: EditorViewController!
+    var editorViewController: EditorViewController!
     
     // Course drag box for moving courses
     var courseDragBox: HXCourseDragBox = HXCourseDragBox.instance()

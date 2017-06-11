@@ -16,6 +16,7 @@
                 <outlet property="button_style_left" destination="MGf-Et-IYi" id="LRj-SP-ULH"/>
                 <outlet property="button_style_right" destination="GJR-w2-5tc" id="unK-Aa-O82"/>
                 <outlet property="button_style_underline" destination="J9V-Xz-uvJ" id="2Ug-C1-j7a"/>
+                <outlet property="dropdownTopConstraint" destination="fuh-hG-C31" id="b9t-v2-Qmr"/>
                 <outlet property="image_corner1" destination="mo7-tU-2xj" id="9ls-LV-oIs"/>
                 <outlet property="image_corner2" destination="akD-e9-ZL2" id="6UZ-iJ-WTL"/>
                 <outlet property="image_corner3" destination="aQd-2w-Viv" id="MPK-Bt-7bv"/>
@@ -25,6 +26,7 @@
                 <outlet property="label_lectureTitle" destination="rtP-Xd-KSa" id="GqV-L9-FqK"/>
                 <outlet property="label_titleDivider" destination="hnn-XP-M9a" id="1Ld-JL-RYx"/>
                 <outlet property="scrollView_lecture" destination="yL3-k5-tgV" id="Fvf-S1-cPn"/>
+                <outlet property="textHeightConstraint" destination="T6U-X4-dHK" id="hsJ-fy-sYM"/>
                 <outlet property="textView_lecture" destination="N8V-sZ-F2n" id="IIH-bl-Wjq"/>
                 <outlet property="view" destination="0Hk-u4-N0i" id="yr0-Jx-Een"/>
             </connections>
@@ -65,7 +67,7 @@
                         <rect key="frame" x="8" y="50" width="92" height="24"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="Lecture 1" id="wLv-sP-Biu">
                             <font key="font" metaFont="systemBold" size="20"/>
-                            <color key="textColor" red="0.27931640619999998" green="0.27931640619999998" blue="0.27931640619999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <color key="textColor" red="0.35308140519999998" green="0.34494185449999998" blue="0.3531225026" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
@@ -115,7 +117,7 @@
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         </clipView>
                         <constraints>
-                            <constraint firstAttribute="height" constant="31" placeholder="YES" id="T6U-X4-dHK"/>
+                            <constraint firstAttribute="height" constant="31" id="T6U-X4-dHK"/>
                         </constraints>
                         <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="Fkx-nP-faY">
                             <rect key="frame" x="-100" y="-100" width="87" height="18"/>
@@ -255,7 +257,7 @@
                     <constraint firstItem="rb3-9F-LEf" firstAttribute="leading" secondItem="yL3-k5-tgV" secondAttribute="leading" constant="1" id="aq5-nG-TnW"/>
                     <constraint firstItem="6Un-NX-ng7" firstAttribute="leading" secondItem="KjG-vB-MAo" secondAttribute="leading" id="cWW-ik-g02"/>
                     <constraint firstItem="CV2-1F-Bli" firstAttribute="centerY" secondItem="Twy-6v-YbQ" secondAttribute="centerY" id="eiG-Ow-thS"/>
-                    <constraint firstItem="6Un-NX-ng7" firstAttribute="top" secondItem="KjG-vB-MAo" secondAttribute="top" placeholder="YES" id="fuh-hG-C31"/>
+                    <constraint firstItem="6Un-NX-ng7" firstAttribute="top" secondItem="KjG-vB-MAo" secondAttribute="top" id="fuh-hG-C31"/>
                     <constraint firstItem="Twy-6v-YbQ" firstAttribute="top" secondItem="KjG-vB-MAo" secondAttribute="top" constant="6" id="gqi-JO-x1d"/>
                     <constraint firstItem="aQd-2w-Viv" firstAttribute="bottom" secondItem="yL3-k5-tgV" secondAttribute="bottom" constant="1" id="h6K-sb-lQP"/>
                     <constraint firstItem="oE3-bk-0Xg" firstAttribute="top" secondItem="KjG-vB-MAo" secondAttribute="top" id="kcQ-v8-hZt"/>

@@ -37,10 +37,12 @@ class HXCourseEditBox: NSView {
     let ID_BUTTON_TRASH     = "course_button_trash"
     let ID_LABEL_TITLE      = "course_label_title"
     let ID_BOX_DRAG         = "course_box_drag"
+    let ID_BOX_BACK         = "course_box_back"
     // Elements of course box
     var boxDrag: NSBox!
     var labelCourse: CourseLabel!
     var buttonTrash: NSButton!
+    var boxBack: NSBox!
     
     /// Initialize the color, index, and tracking area of the CourseBox view
     private func initialize(with course: Course, withCourseIndex index: Int, withParent parent: SidebarViewController) {
@@ -54,6 +56,8 @@ class HXCourseEditBox: NSView {
                 buttonTrash = v as! NSButton
             case ID_LABEL_TITLE:
                 labelCourse = v as! CourseLabel
+            case ID_BOX_BACK:
+                boxBack = v as! NSBox
             default: continue
             }
         }
@@ -161,6 +165,7 @@ class HXCourseEditBox: NSView {
             buttonTrash.alphaValue = 0
             boxDrag.alphaValue = 0
             labelCourse.alphaValue = 0
+            boxBack.fillColor = NSColor(red: 0.92, green: 0.92, blue: 0.92, alpha: 1)
             NSCursor.closedHand().push()
         }
         parentController.mouseDrag_courseBox(with: self, to: event.locationInWindow)
@@ -173,6 +178,7 @@ class HXCourseEditBox: NSView {
             buttonTrash.alphaValue = 1
             boxDrag.alphaValue = 1
             labelCourse.alphaValue = 1
+            boxBack.fillColor = NSColor.white
             NSCursor.closedHand().pop()
             let origin = boxDrag.superview!.convert(boxDrag.frame.origin, to: nil) as NSPoint
             let loc = event.locationInWindow

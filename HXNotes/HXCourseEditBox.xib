@@ -14,8 +14,16 @@
             <rect key="frame" x="0.0" y="0.0" width="124" height="30"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
+                <box identifier="course_box_back" boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="vI3-fS-90z">
+                    <rect key="frame" x="0.0" y="0.0" width="124" height="30"/>
+                    <view key="contentView" id="BBa-hN-Z9S">
+                        <rect key="frame" x="0.0" y="0.0" width="124" height="30"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    </view>
+                    <color key="fillColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                </box>
                 <textField identifier="course_label_title" horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kzF-F0-7SU" customClass="CourseLabel" customModule="HXNotes" customModuleProvider="target">
-                    <rect key="frame" x="6" y="6" width="78" height="17"/>
+                    <rect key="frame" x="4" y="6" width="80" height="17"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="17" id="esH-BJ-7BW"/>
                     </constraints>
@@ -70,9 +78,13 @@
                 <constraint firstAttribute="trailing" secondItem="7zU-te-0AV" secondAttribute="trailing" constant="2" id="FB6-lE-d0O"/>
                 <constraint firstItem="kzF-F0-7SU" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" constant="7" id="GXu-8X-Yy2"/>
                 <constraint firstItem="7zU-te-0AV" firstAttribute="leading" secondItem="jqd-gm-tjw" secondAttribute="trailing" id="HLR-yD-n0n"/>
+                <constraint firstAttribute="bottom" secondItem="vI3-fS-90z" secondAttribute="bottom" id="K1j-xH-BUS"/>
+                <constraint firstAttribute="trailing" secondItem="vI3-fS-90z" secondAttribute="trailing" id="Lf7-tb-K9g"/>
                 <constraint firstItem="7zU-te-0AV" firstAttribute="centerY" secondItem="kzF-F0-7SU" secondAttribute="centerY" id="WuM-xT-7OY"/>
                 <constraint firstAttribute="bottom" secondItem="zzh-eW-hNw" secondAttribute="bottom" id="ZwE-xn-DSP"/>
-                <constraint firstItem="kzF-F0-7SU" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" constant="8" id="bGE-cW-4hY"/>
+                <constraint firstItem="kzF-F0-7SU" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" constant="6" id="bGE-cW-4hY"/>
+                <constraint firstItem="vI3-fS-90z" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" id="cCd-Wf-lvh"/>
+                <constraint firstItem="vI3-fS-90z" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" id="qmz-VC-ghb"/>
                 <constraint firstItem="zzh-eW-hNw" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" id="s5o-Ia-aXC"/>
                 <constraint firstItem="jqd-gm-tjw" firstAttribute="leading" secondItem="kzF-F0-7SU" secondAttribute="trailing" constant="4" id="yXM-ir-UQq"/>
             </constraints>

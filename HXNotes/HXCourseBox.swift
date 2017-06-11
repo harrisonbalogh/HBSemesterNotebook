@@ -26,14 +26,16 @@ class HXCourseBox: NSBox {
     var course: Course!
     
     // Manually connect course box child elements using identifiers
-    let ID_BUTTON_TITLE = "course_button_title"
-    let ID_LABEL_DAYS   = "course_days_label"
+    let ID_BUTTON_OVERLAY = "course_overlay_button"
+    let ID_LABEL_DAYS     = "course_days_label"
+    let ID_LABEL_TITLE    = "course_title_label"
     // Elements of course box
-    var buttonTitle: NSButton!
+    var buttonOverlay: NSButton!
     var labelDays: NSTextField!
+    var labelTitle: NSTextField!
     
     /// Initialize the color, index, and tracking area of the CourseBox view
-    func initialize(with course: Course, owner parent: SidebarViewController) {
+    private func initialize(with course: Course, owner parent: SidebarViewController) {
         
         self.parent = parent
         self.course = course
@@ -41,18 +43,21 @@ class HXCourseBox: NSBox {
         // Initialize child elements
         for v in self.subviews {
             switch v.identifier! {
-            case ID_BUTTON_TITLE:
-                buttonTitle = v as! NSButton
+            case ID_LABEL_TITLE:
+                labelTitle = v as! NSTextField
+            case ID_BUTTON_OVERLAY:
+                buttonOverlay = v as! NSButton
             case ID_LABEL_DAYS:
                 labelDays = v as! NSTextField
             default: continue
             }
         }
         
-        buttonTitle.title = course.title!
+        labelTitle.stringValue = course.title!
+        labelDays.stringValue = parent.daysPerWeek(for: course)
         // Initialize course label functionality
-        buttonTitle.target = self
-        buttonTitle.action = #selector(self.goToNotes)
+        buttonOverlay.target = self
+        buttonOverlay.action = #selector(self.goToNotes)
         
         let trackArea = NSTrackingArea(
             rect: self.bounds,
@@ -63,7 +68,7 @@ class HXCourseBox: NSBox {
     }
     
     func goToNotes() {
-        if buttonTitle.state == NSOnState {
+        if buttonOverlay.state == NSOnState {
             self.select()
             parent.select(course: self.course)
         } else {
@@ -73,19 +78,26 @@ class HXCourseBox: NSBox {
     }
     
     func select() {
-        buttonTitle.state = NSOnState
+        buttonOverlay.state = NSOnState
+        labelTitle.font = NSFont.boldSystemFont(ofSize: 16)
+        alphaValue = 1
     }
     
     func deselect() {
-        buttonTitle.state = NSOffState
+        buttonOverlay.state = NSOffState
+        labelTitle.font = NSFont.systemFont(ofSize: 12)
+        alphaValue = 0.5
     }
     
     override func mouseEntered(with event: NSEvent) {
+        alphaValue = 1
         NSCursor.pointingHand().push()
     }
     
     override func mouseExited(with event: NSEvent) {
+        if buttonOverlay.state != NSOnState {
+            alphaValue = 0.5
+        }
         NSCursor.pointingHand().pop()
     }
-    
 }

@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11762"/>
+        <capability name="box content view" minToolsVersion="7.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -13,6 +14,14 @@
             <rect key="frame" x="0.0" y="0.0" width="130" height="30"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
+                <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="NXk-Y6-37E">
+                    <rect key="frame" x="0.0" y="0.0" width="130" height="30"/>
+                    <view key="contentView" id="GUw-OY-ZjR">
+                        <rect key="frame" x="0.0" y="0.0" width="130" height="30"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    </view>
+                    <color key="fillColor" red="0.97737699468085104" green="0.97737699468085104" blue="0.97737699468085104" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                </box>
                 <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="Jks-JN-wya">
                     <rect key="frame" x="0.0" y="-2" width="130" height="5"/>
                 </box>
@@ -34,8 +43,12 @@
                 <constraint firstAttribute="trailing" secondItem="Jks-JN-wya" secondAttribute="trailing" id="0Nf-gj-BW4"/>
                 <constraint firstItem="BFf-6y-M4q" firstAttribute="leading" secondItem="ImR-CX-SWb" secondAttribute="leading" id="0eI-75-Mcf"/>
                 <constraint firstItem="Jks-JN-wya" firstAttribute="leading" secondItem="ImR-CX-SWb" secondAttribute="leading" id="B8Q-5i-um0"/>
+                <constraint firstItem="NXk-Y6-37E" firstAttribute="leading" secondItem="ImR-CX-SWb" secondAttribute="leading" id="Bw9-9t-NJO"/>
+                <constraint firstAttribute="trailing" secondItem="NXk-Y6-37E" secondAttribute="trailing" id="Hdb-db-c5i"/>
                 <constraint firstAttribute="bottom" secondItem="TsE-FB-3z4" secondAttribute="bottom" id="JjI-oo-gPX"/>
                 <constraint firstAttribute="trailing" secondItem="BFf-6y-M4q" secondAttribute="trailing" id="MD0-E1-zoW"/>
+                <constraint firstAttribute="bottom" secondItem="NXk-Y6-37E" secondAttribute="bottom" id="Utt-J2-Z9C"/>
+                <constraint firstItem="NXk-Y6-37E" firstAttribute="top" secondItem="ImR-CX-SWb" secondAttribute="top" id="Vcy-Nt-gp0"/>
                 <constraint firstAttribute="bottom" secondItem="Jks-JN-wya" secondAttribute="bottom" id="YqA-mC-L1O"/>
                 <constraint firstItem="BFf-6y-M4q" firstAttribute="top" secondItem="ImR-CX-SWb" secondAttribute="top" id="c38-9s-PIZ"/>
                 <constraint firstItem="BFf-6y-M4q" firstAttribute="centerX" secondItem="ImR-CX-SWb" secondAttribute="centerX" id="grf-aU-epx"/>

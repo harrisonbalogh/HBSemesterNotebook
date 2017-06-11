@@ -15,6 +15,8 @@ class HXExportViewController: NSViewController {
     @IBOutlet weak var label_lectureSelection: NSTextField!
     @IBOutlet weak var label_path: NSTextField!
     @IBOutlet weak var textField_name: NSTextField!
+    @IBOutlet weak var button_confirm: NSButton!
+    @IBOutlet weak var label_error: NSTextField!
     
     override func viewDidAppear() {
         super.viewDidAppear()
@@ -39,6 +41,32 @@ class HXExportViewController: NSViewController {
             
             textField_name.stringValue = parent.masterViewController.sidebarViewController.selectedCourse.title! + " Lectures - \(parent.masterViewController.sidebarViewController.selectedCourse.semester!.title!.capitalized) \(parent.masterViewController.sidebarViewController.selectedCourse.semester!.year!.year)"
             
+        }
+        
+        // Listen to textField changing to update confirm button
+        NotificationCenter.default.addObserver(self, selector: #selector(HXExportViewController.textField_textChange),
+                                               name: .NSControlTextDidChange, object: textField_name)
+    }
+    /// Check if the text in the name field is appropriate for saving a file.
+    func textField_textChange() {
+        let input = textField_name.stringValue.trimmingCharacters(in: .whitespaces)
+        if input.contains("/") || input.contains(".") || input == "" || input.contains(":") {
+            button_confirm.isEnabled = false
+            if input.contains("/") {
+                label_error.stringValue = "Cannot contain '/'"
+            }
+            if input.contains(".") {
+                label_error.stringValue = "Cannot contain '.'"
+            }
+            if input.contains(":") {
+                label_error.stringValue = "Cannot contain ':'"
+            }
+            if input == "" {
+                label_error.stringValue = "Empty file name."
+            }
+        } else {
+            button_confirm.isEnabled = true
+            label_error.stringValue = ""
         }
     }
     
@@ -67,7 +95,9 @@ class HXExportViewController: NSViewController {
             parent.owner.masterViewController.isExporting = true
         } else if let parent = self.parent as? TopbarViewController {
             parent.masterViewController.isExporting = false
-            parent.masterViewController.notifyExport()
+            if parent.masterViewController.editorViewController.lectureFocused != nil {
+                parent.masterViewController.editorViewController.lectureFocused.isExporting = true
+            }
         }
     }
     @IBAction func action_path(_ sender: NSButton) {
@@ -85,7 +115,6 @@ class HXExportViewController: NSViewController {
             }
         })
     }
-    
     @IBAction func action_inputField(_ sender: NSTextField) {
         let input = textField_name.stringValue.trimmingCharacters(in: .whitespaces)
         
@@ -100,5 +129,6 @@ class HXExportViewController: NSViewController {
         } else {
             textField_name.stringValue = input
         }
+        textField_textChange()
     }
 }
