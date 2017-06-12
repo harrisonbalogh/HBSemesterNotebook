@@ -645,30 +645,48 @@ class EditorViewController: NSViewController {
         }
     }
     
-    func textSelectionChange() {
-        if sharedFontManager.selectedFont == nil {
-            return
+    func textSelectionChange(with traits: NSFontTraitMask, underlined: Bool, alignment: Int) {
+        if underlined {
+            button_style_underline.state = NSOnState
+        } else {
+            button_style_underline.state = NSOffState
         }
-        let traits = sharedFontManager.traits(of: sharedFontManager.selectedFont!)
         
-        sharedFontManager.convert(sharedFontManager.selectedFont!)
+        button_style_left.state = NSOffState
+        button_style_center.state = NSOffState
+        button_style_right.state = NSOffState
         
-//        print("traits: \(traits)")
+        if alignment == 0 {
+            button_style_left.state = NSOnState
+        } else if alignment == 1 {
+            button_style_right.state = NSOnState
+        } else if alignment == 2 {
+            button_style_center.state = NSOnState
+        }
+        
         if traits == NSFontTraitMask.boldFontMask {
             button_style_bold.state = NSOnState
+            button_style_bold.tag = Int(NSFontTraitMask.unboldFontMask.rawValue)
             button_style_italicize.state = NSOffState
+            button_style_italicize.tag = Int(NSFontTraitMask.italicFontMask.rawValue)
         }
         if traits == NSFontTraitMask.italicFontMask {
             button_style_bold.state = NSOffState
+            button_style_bold.tag = Int(NSFontTraitMask.boldFontMask.rawValue)
+            button_style_italicize.tag = Int(NSFontTraitMask.unitalicFontMask.rawValue)
             button_style_italicize.state = NSOnState
         }
         if traits == NSFontTraitMask.init(rawValue: 0) {
             button_style_bold.state = NSOffState
+            button_style_bold.tag = Int(NSFontTraitMask.boldFontMask.rawValue)
             button_style_italicize.state = NSOffState
+            button_style_italicize.tag = Int(NSFontTraitMask.italicFontMask.rawValue)
         }
         if traits == NSFontTraitMask.init(rawValue: 3) {
             button_style_bold.state = NSOnState
+            button_style_bold.tag = Int(NSFontTraitMask.unboldFontMask.rawValue)
             button_style_italicize.state = NSOnState
+            button_style_italicize.tag = Int(NSFontTraitMask.unitalicFontMask.rawValue)
         }
     }
 }

@@ -753,30 +753,28 @@ class SidebarViewController: NSViewController {
                     times.append(time.hour)
                 }
             }
+            if times.count == 0 {
+                continue
+            } else if times.count == 1 {
+                constructedString += " \(times[0]+8):00-\(times[0]+9):00 | "
+                continue
+            }
             times.sort()
-            var prevTime: Int16 = 0
-            var timeSpan: Int16 = 1
-            for t in 0..<times.count {
-                if (times[t]+8) == (prevTime + 1) {
+            var prevTime: Int16 = times[0] + 8
+            var timeSpan: Int16 = 0
+            for t in 1..<times.count {
+                if (times[t]+8) == (prevTime + 1) && t != times.count - 1 {
                     // Adjacent time
                     timeSpan += 1
+                } else if t == times.count - 1 {
+                    constructedString += " \(times[t] + 8 - timeSpan):00-\(times[t] + 9):00"
                 } else {
+                    constructedString += " \(prevTime - timeSpan):00-\(prevTime + 1):00"
                     // Reset time span
-                    if t > 0 {
-                        constructedString += "\(prevTime+1):00"
-                    }
-                    constructedString += " \(times[t]+8):00-"
-                    timeSpan = 1
+                    timeSpan = 0
                 }
                 // Update previous time
                 prevTime = times[t] + 8
-                if t == times.count - 1 && times.count != 1 {
-                    if timeSpan == 1 {
-                        constructedString += " \(times[t]+8):00-\(times[t]+9):00"
-                    } else {
-                        constructedString += "\(times[t]+9):00"
-                    }
-                }
             }
             constructedString += " | "
         }

@@ -143,7 +143,7 @@
                         </connections>
                     </button>
                     <button translatesAutoresizingMaskIntoConstraints="NO" id="P2u-0g-011" userLabel="Button Center">
-                        <rect key="frame" x="376" y="52" width="19" height="19"/>
+                        <rect key="frame" x="378" y="52" width="19" height="19"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="19" id="DTY-tE-j8z"/>
                             <constraint firstAttribute="height" constant="19" id="Vpr-Un-aro"/>
@@ -157,7 +157,7 @@
                         </connections>
                     </button>
                     <button translatesAutoresizingMaskIntoConstraints="NO" id="MGf-Et-IYi" userLabel="Button Left">
-                        <rect key="frame" x="352" y="52" width="19" height="19"/>
+                        <rect key="frame" x="356" y="52" width="19" height="19"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="19" id="6Uz-gD-LXu"/>
                             <constraint firstAttribute="width" constant="19" id="jsy-pn-Zwl"/>
@@ -171,7 +171,7 @@
                         </connections>
                     </button>
                     <button translatesAutoresizingMaskIntoConstraints="NO" id="CV2-1F-Bli" userLabel="Button Bold">
-                        <rect key="frame" x="328" y="52" width="19" height="19"/>
+                        <rect key="frame" x="322" y="52" width="19" height="19"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="19" id="6Lf-Ny-Mg5"/>
                             <constraint firstAttribute="height" constant="19" id="uYg-BD-y1i"/>
@@ -185,7 +185,7 @@
                         </connections>
                     </button>
                     <button translatesAutoresizingMaskIntoConstraints="NO" id="haU-mA-Ce7" userLabel="Button Italic">
-                        <rect key="frame" x="304" y="52" width="19" height="19"/>
+                        <rect key="frame" x="300" y="52" width="19" height="19"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="19" id="6yu-OA-sCj"/>
                             <constraint firstAttribute="height" constant="19" id="e53-5m-DRr"/>
@@ -199,7 +199,7 @@
                         </connections>
                     </button>
                     <button translatesAutoresizingMaskIntoConstraints="NO" id="J9V-Xz-uvJ" userLabel="Button Underline">
-                        <rect key="frame" x="280" y="52" width="19" height="19"/>
+                        <rect key="frame" x="278" y="52" width="19" height="19"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="19" id="HbO-Cv-9L1"/>
                             <constraint firstAttribute="width" constant="19" id="QTi-Fi-oiF"/>
@@ -213,7 +213,7 @@
                         </connections>
                     </button>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yhh-M5-M6C" customClass="HXCustomTitleField" customModule="HXNotes" customModuleProvider="target">
-                        <rect key="frame" x="115" y="53" width="157" height="17"/>
+                        <rect key="frame" x="115" y="53" width="155" height="17"/>
                         <textFieldCell key="cell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" alignment="left" placeholderString="Untitled" usesSingleLineMode="YES" id="6kC-Ke-RFL">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" red="0.27931640619999998" green="0.27931640619999998" blue="0.27931640619999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -235,16 +235,16 @@
                 <constraints>
                     <constraint firstItem="rtP-Xd-KSa" firstAttribute="top" secondItem="KjG-vB-MAo" secondAttribute="top" constant="2" id="0r8-Og-cIH"/>
                     <constraint firstItem="Yhh-M5-M6C" firstAttribute="centerY" secondItem="hnn-XP-M9a" secondAttribute="centerY" constant="2" id="2Pm-8u-bVq"/>
-                    <constraint firstItem="haU-mA-Ce7" firstAttribute="leading" secondItem="J9V-Xz-uvJ" secondAttribute="trailing" constant="5" id="2qR-hH-rCe"/>
+                    <constraint firstItem="haU-mA-Ce7" firstAttribute="leading" secondItem="J9V-Xz-uvJ" secondAttribute="trailing" constant="3" id="2qR-hH-rCe"/>
                     <constraint firstAttribute="trailing" secondItem="yL3-k5-tgV" secondAttribute="trailing" constant="18" id="5vh-E0-6fk"/>
                     <constraint firstItem="yL3-k5-tgV" firstAttribute="top" secondItem="6Un-NX-ng7" secondAttribute="bottom" constant="9" id="CKo-md-xDh"/>
                     <constraint firstItem="P2u-0g-011" firstAttribute="centerY" secondItem="MGf-Et-IYi" secondAttribute="centerY" id="F61-pq-r9L"/>
                     <constraint firstItem="mo7-tU-2xj" firstAttribute="leading" secondItem="yL3-k5-tgV" secondAttribute="leading" constant="1" id="Fpd-Uk-T89"/>
                     <constraint firstItem="akD-e9-ZL2" firstAttribute="top" secondItem="yL3-k5-tgV" secondAttribute="top" constant="-3" id="HKK-tu-Mkv"/>
-                    <constraint firstItem="CV2-1F-Bli" firstAttribute="leading" secondItem="haU-mA-Ce7" secondAttribute="trailing" constant="5" id="K8Y-Rj-Oc6"/>
-                    <constraint firstItem="P2u-0g-011" firstAttribute="leading" secondItem="MGf-Et-IYi" secondAttribute="trailing" constant="5" id="LiK-r2-4jw"/>
+                    <constraint firstItem="CV2-1F-Bli" firstAttribute="leading" secondItem="haU-mA-Ce7" secondAttribute="trailing" constant="3" id="K8Y-Rj-Oc6"/>
+                    <constraint firstItem="P2u-0g-011" firstAttribute="leading" secondItem="MGf-Et-IYi" secondAttribute="trailing" constant="3" id="LiK-r2-4jw"/>
                     <constraint firstItem="Yhh-M5-M6C" firstAttribute="leading" secondItem="hnn-XP-M9a" secondAttribute="trailing" constant="6" id="MAW-9r-EZ9"/>
-                    <constraint firstItem="MGf-Et-IYi" firstAttribute="leading" secondItem="CV2-1F-Bli" secondAttribute="trailing" constant="5" id="NhA-aG-ux5"/>
+                    <constraint firstItem="MGf-Et-IYi" firstAttribute="leading" secondItem="CV2-1F-Bli" secondAttribute="trailing" constant="15" id="NhA-aG-ux5"/>
                     <constraint firstItem="MGf-Et-IYi" firstAttribute="centerY" secondItem="CV2-1F-Bli" secondAttribute="centerY" id="O44-UG-NtV"/>
                     <constraint firstAttribute="trailing" secondItem="Twy-6v-YbQ" secondAttribute="trailing" constant="18" id="PFu-pC-z7D"/>
                     <constraint firstItem="hnn-XP-M9a" firstAttribute="centerY" secondItem="rtP-Xd-KSa" secondAttribute="centerY" constant="-1" id="PVl-sU-pbq"/>
@@ -269,7 +269,7 @@
                     <constraint firstItem="oE3-bk-0Xg" firstAttribute="leading" secondItem="KjG-vB-MAo" secondAttribute="leading" id="rEK-ug-BmQ"/>
                     <constraint firstItem="rb3-9F-LEf" firstAttribute="bottom" secondItem="yL3-k5-tgV" secondAttribute="bottom" constant="1" id="rwE-Qg-fGN"/>
                     <constraint firstItem="haU-mA-Ce7" firstAttribute="centerY" secondItem="CV2-1F-Bli" secondAttribute="centerY" id="vFC-fg-jIR"/>
-                    <constraint firstItem="GJR-w2-5tc" firstAttribute="leading" secondItem="P2u-0g-011" secondAttribute="trailing" constant="5" id="vrZ-Wj-McK"/>
+                    <constraint firstItem="GJR-w2-5tc" firstAttribute="leading" secondItem="P2u-0g-011" secondAttribute="trailing" constant="3" id="vrZ-Wj-McK"/>
                     <constraint firstItem="mo7-tU-2xj" firstAttribute="top" secondItem="yL3-k5-tgV" secondAttribute="top" constant="-3" id="xF7-aA-Ovh"/>
                     <constraint firstItem="aQd-2w-Viv" firstAttribute="trailing" secondItem="yL3-k5-tgV" secondAttribute="trailing" constant="-1" id="yr9-GO-21K"/>
                 </constraints>

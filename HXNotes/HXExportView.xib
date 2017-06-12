@@ -85,7 +85,7 @@
                 <textField horizontalHuggingPriority="243" verticalHuggingPriority="750" horizontalCompressionResistancePriority="743" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nSd-Cn-6oA" userLabel="Error Label">
                     <rect key="frame" x="280" y="8" width="248" height="16"/>
                     <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="right" id="EkJ-id-HLl">
-                        <font key="font" metaFont="system" size="12"/>
+                        <font key="font" metaFont="cellTitle"/>
                         <color key="textColor" red="0.63859707446808511" green="0.077197814337234577" blue="0.0" alpha="0.45522673233695654" colorSpace="custom" customColorSpace="sRGB"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>

@@ -252,6 +252,8 @@ class LectureViewController: NSViewController {
         
         NotificationCenter.default.addObserver(self, selector: #selector(LectureViewController.selectionChange),
                                                name: .NSTextViewDidChangeSelection, object: textView_lecture)
+        NotificationCenter.default.addObserver(self, selector: #selector(LectureViewController.traitChange),
+                                               name: .NSTextViewDidChangeTypingAttributes, object: textView_lecture)
     }
     
     override func viewDidLayout() {
@@ -412,24 +414,66 @@ class LectureViewController: NSViewController {
         
         let traits = sharedFontManager.traits(of: sharedFontManager.selectedFont!)
         
-//        print("traits: \(traits)")
+        let positionOfSelection = textView_lecture.selectedRanges.first!.rangeValue.location
+        var rangeToSelection = NSRange(location: 0, length: positionOfSelection)
+        
+        var isUnderlined = false
+        if textView_lecture.attributedString().attribute("NSUnderline", at: positionOfSelection, effectiveRange: &rangeToSelection) != nil {
+            button_style_underline.state = NSOnState
+            isUnderlined = true
+        } else {
+            button_style_underline.state = NSOffState
+            isUnderlined = false
+        }
+        
+        var theAlignment = 0
+        if let parStyle = textView_lecture.attributedString().attribute("NSParagraphStyle", at: positionOfSelection, effectiveRange: &rangeToSelection) as? NSParagraphStyle {
+            
+            button_style_left.state = NSOffState
+            button_style_center.state = NSOffState
+            button_style_right.state = NSOffState
+            
+            if parStyle.alignment.rawValue == 0 {
+                theAlignment = 0
+                button_style_left.state = NSOnState
+            } else if parStyle.alignment.rawValue == 1 {
+                theAlignment = 1
+                button_style_right.state = NSOnState
+            } else if parStyle.alignment.rawValue == 2 {
+                theAlignment = 2
+                button_style_center.state = NSOnState
+            }
+        }
+        
+        
         if traits == NSFontTraitMask.boldFontMask {
             button_style_bold.state = NSOnState
+            button_style_bold.tag = Int(NSFontTraitMask.unboldFontMask.rawValue)
             button_style_italicize.state = NSOffState
+            button_style_italicize.tag = Int(NSFontTraitMask.italicFontMask.rawValue)
         }
         if traits == NSFontTraitMask.italicFontMask {
             button_style_bold.state = NSOffState
+            button_style_bold.tag = Int(NSFontTraitMask.boldFontMask.rawValue)
+            button_style_italicize.tag = Int(NSFontTraitMask.unitalicFontMask.rawValue)
             button_style_italicize.state = NSOnState
         }
         if traits == NSFontTraitMask.init(rawValue: 0) {
             button_style_bold.state = NSOffState
+            button_style_bold.tag = Int(NSFontTraitMask.boldFontMask.rawValue)
             button_style_italicize.state = NSOffState
+            button_style_italicize.tag = Int(NSFontTraitMask.italicFontMask.rawValue)
         }
         if traits == NSFontTraitMask.init(rawValue: 3) {
             button_style_bold.state = NSOnState
+            button_style_bold.tag = Int(NSFontTraitMask.unboldFontMask.rawValue)
             button_style_italicize.state = NSOnState
+            button_style_italicize.tag = Int(NSFontTraitMask.unitalicFontMask.rawValue)
         }
         
-        owner.textSelectionChange()
+        owner.textSelectionChange(with: traits, underlined: isUnderlined, alignment: theAlignment)
+    }
+    func traitChange() {
+        selectionChange()
     }
 }
