@@ -14,6 +14,7 @@ class TopbarViewController: NSViewController {
     
     var findViewController: HXFindViewController!
     var exportViewController: HXExportViewController!
+    var replaceViewController: HXFindReplaceViewController!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,5 +23,7 @@ class TopbarViewController: NSViewController {
         self.addChildViewController(findViewController)
         exportViewController = HXExportViewController(nibName: "HXExportView", bundle: nil)
         self.addChildViewController(exportViewController)
+        replaceViewController = HXFindReplaceViewController(nibName: "HXFindReplaceView", bundle: nil)
+        self.addChildViewController(replaceViewController)
     }
 }

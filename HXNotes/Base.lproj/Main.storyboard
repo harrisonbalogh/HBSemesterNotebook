@@ -633,14 +633,14 @@
                                 <toolbarItem implicitItemIdentifier="NSToolbarShowFontsItem" id="fWg-bg-gea"/>
                                 <toolbarItem implicitItemIdentifier="NSToolbarSpaceItem" id="ekG-Et-nKt"/>
                                 <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="Z1c-L0-saZ"/>
-                                <toolbarItem implicitItemIdentifier="B2F098E5-7CEE-45AA-9D08-EB4A700C3B36" label="" paletteLabel="Custom View" image="icon_clock" id="i8u-gh-0rN" userLabel="Sidebar Button">
+                                <toolbarItem implicitItemIdentifier="B2F098E5-7CEE-45AA-9D08-EB4A700C3B36" label="" paletteLabel="Custom View" image="icon_notes" id="i8u-gh-0rN" userLabel="Sidebar Button">
                                     <nil key="toolTip"/>
                                     <size key="minSize" width="30" height="20"/>
                                     <size key="maxSize" width="60" height="40005"/>
                                     <button key="view" id="7yA-Le-art">
-                                        <rect key="frame" x="8" y="14" width="60" height="20"/>
+                                        <rect key="frame" x="18" y="14" width="40" height="40"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="icon_clock" imagePosition="only" alignment="center" state="on" imageScaling="proportionallyUpOrDown" inset="2" id="8o9-mZ-l5Q">
+                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="icon_notes" imagePosition="only" alignment="center" state="on" imageScaling="proportionallyUpOrDown" inset="2" id="8o9-mZ-l5Q">
                                             <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
                                             <font key="font" metaFont="system"/>
                                         </buttonCell>
@@ -649,9 +649,24 @@
                                         </connections>
                                     </button>
                                 </toolbarItem>
+                                <toolbarItem implicitItemIdentifier="5F92179D-393C-4AF5-AE85-BAE2648E3641" label="Custom View" paletteLabel="Custom View" tag="-1" id="RLP-el-LIo">
+                                    <nil key="toolTip"/>
+                                    <size key="minSize" width="100" height="20"/>
+                                    <size key="maxSize" width="400" height="114"/>
+                                    <box key="view" boxType="custom" cornerRadius="4" title="Box" id="RDG-QU-4We">
+                                        <rect key="frame" x="0.0" y="14" width="400" height="20"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <view key="contentView" id="hE8-rx-p3r">
+                                            <rect key="frame" x="1" y="1" width="398" height="18"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                        </view>
+                                    </box>
+                                </toolbarItem>
                             </allowedToolbarItems>
                             <defaultToolbarItems>
                                 <toolbarItem reference="i8u-gh-0rN"/>
+                                <toolbarItem reference="Z1c-L0-saZ"/>
+                                <toolbarItem reference="RLP-el-LIo"/>
                                 <toolbarItem reference="Z1c-L0-saZ"/>
                             </defaultToolbarItems>
                         </toolbar>
@@ -780,7 +795,7 @@
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <subviews>
                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="urZ-NJ-uJU">
-                                                                            <rect key="frame" x="12" y="12.5" width="27" height="13"/>
+                                                                            <rect key="frame" x="12" y="12" width="27" height="13"/>
                                                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="9:00" id="NNC-u5-veX">
                                                                                 <font key="font" metaFont="system" size="10"/>
                                                                                 <color key="textColor" name="scrollBarColor" catalog="System" colorSpace="catalog"/>
@@ -864,7 +879,7 @@
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <subviews>
                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3ab-p4-m72">
-                                                                            <rect key="frame" x="14" y="12.5" width="25" height="13"/>
+                                                                            <rect key="frame" x="14" y="12" width="25" height="13"/>
                                                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="1:00" id="BHm-Ws-wzf">
                                                                                 <font key="font" metaFont="system" size="10"/>
                                                                                 <color key="textColor" name="scrollBarColor" catalog="System" colorSpace="catalog"/>
@@ -948,7 +963,7 @@
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <subviews>
                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lnP-l1-boM">
-                                                                            <rect key="frame" x="12" y="12" width="27" height="13"/>
+                                                                            <rect key="frame" x="12" y="12.5" width="27" height="13"/>
                                                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="5:00" id="eFd-oD-mjW">
                                                                                 <font key="font" metaFont="system" size="10"/>
                                                                                 <color key="textColor" name="scrollBarColor" catalog="System" colorSpace="catalog"/>

@@ -148,8 +148,13 @@ class SidebarViewController: NSViewController {
                 viewingMode()
                 if let courseHappening = duringCourse(for: selectedSemester) {
                     print("Course is happening!")
-                } else {
-                    print("No course...")
+                    selectedCourse = courseHappening
+                    let newLec = newLecture()
+                    addLecture(newLec)
+                    masterViewController.notifyLectureAddition(lecture: newLec)
+                } else if selectedSemester.courses!.count == 1 {
+                    print("No course... but there's only one so select it")
+                    selectedCourse = (selectedSemester.courses![0] as! Course)
                 }
             } else {
                 editingMode()
@@ -225,7 +230,7 @@ class SidebarViewController: NSViewController {
         print("Let's print the current schedule.")
         for case let course as Course in selectedSemester.courses! {
             print("    \(course.title!)")
-            print("        \(printSchedule(for: course))")
+            print("        \(printableSchedule(for: course))")
         }
     }
     
@@ -308,13 +313,17 @@ class SidebarViewController: NSViewController {
     
     private func duringCourse(for semester: Semester) -> Course? {
         let hour = NSCalendar.current.component(.hour, from: NSDate() as Date)
+//        let hour = 13
         let minute = NSCalendar.current.component(.minute, from: NSDate() as Date)
         let day = NSCalendar.current.component(.weekday, from: NSDate() as Date)
         
         for case let course as Course in semester.courses! {
+            print("  Course is \(course.title!)")
             for case let time as TimeSlot in course.timeSlots! {
-                if Int16(day) == time.day && (Int16(hour) == time.hour || (Int16(hour) == (time.hour - 1) && Int16(minute) > 55)) {
+                print("    Time is \(time.day) at \(time.hour)")
+                if Int16(day - 2) == time.day && (Int16(hour - 8) == time.hour || (Int16(hour - 8) == (time.hour - 1) && Int16(minute) > 55)) {
                     // during class
+                    print("      During Class")
                     return time.course
                 }
             }
@@ -331,8 +340,10 @@ class SidebarViewController: NSViewController {
         newLecture.number = Int16(lectureCount + 1)
         newLecture.week = Int16(weekCount + 1)
         newLecture.day = Int16(NSCalendar.current.component(.day, from: NSDate() as Date))
+        newLecture.weekDay = Int16(NSCalendar.current.component(.weekday, from: NSDate() as Date))
         newLecture.month = Int16(NSCalendar.current.component(.month, from: NSDate() as Date))
         newLecture.year = Int16(NSCalendar.current.component(.year, from: NSDate() as Date))
+        print("newLecture()")
         return newLecture
     }
     
@@ -355,7 +366,9 @@ class SidebarViewController: NSViewController {
     /// Populates ledgerStackView with all course data from given semester as HXCourseEditBox's.
     private func loadEditableCourses(fromSemester semester: Semester) {
         popCourses()
-        bottomBufferHeightConstraint.constant = 0
+        if bottomBufferHeightConstraint != nil {
+            bottomBufferHeightConstraint.constant = 0
+        }
         // When first loading editable courses, append the 'New Course' button at end of ledgerStackView
         let addBox = HXCourseAddBox.instance(target: self, action: #selector(SidebarViewController.addEditableCourse))
         ledgerStackView.addArrangedSubview(addBox!)
@@ -439,6 +452,20 @@ class SidebarViewController: NSViewController {
     }
     /// Handles purely the visual aspect of lectures. Internal use only. Adds a new HXLectureBox and possibly HXWeekBox to the ledgerStackView.
     private func pushLecture(_ lecture: Lecture) {
+        if lectureCount == 0 {
+            lectureStackView.addArrangedSubview(HXWeekBox.instance(withNumber: (weekCount+1)))
+            weekCount += 1
+        } else {
+            
+        }
+        
+        if lectureStackView.superview == nil {
+            lectureStackView = NSStackView()
+            lectureStackView.orientation = NSUserInterfaceLayoutOrientation.vertical
+            lectureStackView.spacing = 0
+            ledgerStackView.addArrangedSubview(lectureStackView)
+        }
+        
         if Int(lectureCount % 2) == 0 {
             lectureStackView.addArrangedSubview(HXWeekBox.instance(withNumber: (weekCount+1)))
             weekCount += 1
@@ -735,7 +762,7 @@ class SidebarViewController: NSViewController {
         return constructedString
     }
     /// Indev
-    private func printSchedule(for course: Course) -> String {
+    func printableSchedule(for course: Course) -> String {
         var constructedString = ""
         
         var daysOfWeek = [0, 0, 0, 0, 0]
@@ -756,34 +783,52 @@ class SidebarViewController: NSViewController {
             if times.count == 0 {
                 continue
             } else if times.count == 1 {
-                constructedString += " \(times[0]+8):00-\(times[0]+9):00 | "
+                constructedString += " \(formatTime(times[0]+8))-\(formatTime(times[0]+9))      "
                 continue
             }
             times.sort()
             var prevTime: Int16 = times[0] + 8
             var timeSpan: Int16 = 0
             for t in 1..<times.count {
-                if (times[t]+8) == (prevTime + 1) && t != times.count - 1 {
+                if (times[t]+8) == (prevTime + 1){
                     // Adjacent time
+                    if t == times.count - 1 {
+                        constructedString += " \(formatTime(prevTime - timeSpan))-\(formatTime(prevTime + 2))"
+                    }
                     timeSpan += 1
-                } else if t == times.count - 1 {
-                    constructedString += " \(times[t] + 8 - timeSpan):00-\(times[t] + 9):00"
                 } else {
-                    constructedString += " \(prevTime - timeSpan):00-\(prevTime + 1):00"
+                    // Not adjacent time
+                    constructedString += " \(formatTime(prevTime - timeSpan))-\(formatTime(prevTime + 1))"
                     // Reset time span
                     timeSpan = 0
+                    if t == times.count - 1 {
+                        constructedString += " \(formatTime(times[t] + 8 - timeSpan))-\(formatTime(times[t] + 9))"
+                    }
+                    
                 }
                 // Update previous time
                 prevTime = times[t] + 8
             }
-            constructedString += " | "
+            constructedString += "      "
         }
         
         return constructedString
     }
+    /// Change 13 to 1 but keep 12 as 12. Also append AM or PM
+    private func formatTime(_ time: Int16) -> String {
+        let t_24 = Double(time)
+        let t_12 = t_24 - (ceil(Double(t_24/12)) - 1) * 12
+        var formattedTime = "\(Int(t_12)):00"
+        if floor(Double(t_24/12)) == 0 {
+            formattedTime += "AM"
+        } else {
+            formattedTime += "PM"
+        }
+        return formattedTime
+    }
     
     // MARK: Notifiers - from MasterViewController
-    /// Notify sidebar that user should be able to finish editing since the 
+    /// Notify sidebar that user should be able to finish editing since the
     /// minimum requirement of having at least 1 time established has been met.
     func notifyTimeSlotAdded() {
         // If any course don't have any TimeSlots, don't allow user to proceed to Editor

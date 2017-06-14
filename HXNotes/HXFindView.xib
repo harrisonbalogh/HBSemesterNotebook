@@ -34,7 +34,7 @@
                     <rect key="frame" x="0.0" y="-2" width="502" height="5"/>
                 </box>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0ig-UT-9SM" userLabel="Result Label">
-                    <rect key="frame" x="182" y="6.5" width="51" height="16"/>
+                    <rect key="frame" x="182" y="6" width="51" height="16"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="# Found" id="U5x-yI-eDb">
                         <font key="font" metaFont="systemThin" size="12"/>
                         <color key="textColor" name="headerColor" catalog="System" colorSpace="catalog"/>

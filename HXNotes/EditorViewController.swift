@@ -361,9 +361,9 @@ class EditorViewController: NSViewController {
     func notifyFindAndReplace() {
         if selectedCourse != nil {
             if lectureFocused != nil {
-                
+                lectureFocused.isReplacing = !lectureFocused.isReplacing
             } else {
-                
+                masterViewController.isReplacing = !masterViewController.isReplacing
             }
         }
     }

@@ -42,11 +42,13 @@ class MasterViewController: NSViewController {
     }
     var isFinding = false {
         didSet {
-            if isFinding && (isExporting || isPrinting) {
+            if isFinding && (isExporting || isPrinting || isReplacing) {
                 if isExporting {
                     isExporting = false
-                } else {
+                } else if isPrinting {
                     isPrinting = false
+                } else {
+                    isReplacing = false
                 }
             } else if isFinding {
                 topbarViewController.view.addSubview(topbarViewController.findViewController.view)
@@ -75,6 +77,55 @@ class MasterViewController: NSViewController {
                         self.isExporting = true
                     } else if self.isPrinting {
                         self.isPrinting = true
+                    } else if self.isReplacing {
+                        self.isReplacing = true
+                    }
+                }
+                NSAnimationContext.current().duration = 0.25
+                topbarConstraintTop.animator().constant = -container_topBar.frame.height
+                NSAnimationContext.endGrouping()
+            }
+        }
+    }
+    var isReplacing = false {
+        didSet {
+            if isReplacing && (isExporting || isPrinting || isFinding) {
+                if isExporting {
+                    isExporting = false
+                } else if isPrinting {
+                    isPrinting = false
+                } else {
+                    isFinding = false
+                }
+            } else if isReplacing {
+                topbarViewController.view.addSubview(topbarViewController.replaceViewController.view)
+                topbarViewController.replaceViewController.view.leadingAnchor.constraint(equalTo: topbarViewController.view.leadingAnchor).isActive = true
+                topbarViewController.replaceViewController.view.trailingAnchor.constraint(equalTo: topbarViewController.view.trailingAnchor).isActive = true
+                topbarViewController.replaceViewController.view.topAnchor.constraint(equalTo: topbarViewController.view.topAnchor).isActive = true
+                topbarViewController.replaceViewController.view.bottomAnchor.constraint(equalTo: topbarViewController.view.bottomAnchor).isActive = true
+                
+                NSAnimationContext.beginGrouping()
+                NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
+                NSAnimationContext.current().completionHandler = {
+//                    NSApp.keyWindow?.makeFirstResponder(self.topbarViewController.findViewController.textField_find)
+                }
+                NSAnimationContext.current().duration = 0.25
+                topbarConstraintTop.animator().constant = 0
+                NSAnimationContext.endGrouping()
+            } else {
+//                if NSApp.keyWindow?.firstResponder == topbarViewController.findViewController.textField_find {
+//                    NSApp.keyWindow?.makeFirstResponder(self)
+//                }
+                NSAnimationContext.beginGrouping()
+                NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
+                NSAnimationContext.current().completionHandler = {
+                    self.topbarViewController.findViewController.view.removeFromSuperview()
+                    if self.isExporting {
+                        self.isExporting = true
+                    } else if self.isPrinting {
+                        self.isPrinting = true
+                    } else if self.isFinding {
+                        self.isFinding = true
                     }
                 }
                 NSAnimationContext.current().duration = 0.25
@@ -85,11 +136,13 @@ class MasterViewController: NSViewController {
     }
     var isExporting = false {
         didSet {
-            if isExporting && (isFinding || isPrinting) {
+            if isExporting && (isFinding || isPrinting || isReplacing) {
                 if isFinding {
                     isFinding = false
-                } else {
+                } else if isPrinting {
                     isPrinting = false
+                } else {
+                    isReplacing = false
                 }
             } else if isExporting {
                 topbarViewController.view.addSubview(topbarViewController.exportViewController.view)
@@ -97,6 +150,8 @@ class MasterViewController: NSViewController {
                 topbarViewController.exportViewController.view.trailingAnchor.constraint(equalTo: topbarViewController.view.trailingAnchor).isActive = true
                 topbarViewController.exportViewController.view.topAnchor.constraint(equalTo: topbarViewController.view.topAnchor).isActive = true
                 topbarViewController.exportViewController.view.bottomAnchor.constraint(equalTo: topbarViewController.view.bottomAnchor).isActive = true
+                
+                editorViewController.notifyLectureSelection(lecture: "Lecture 1")
                 
                 NSAnimationContext.beginGrouping()
                 NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
@@ -115,6 +170,8 @@ class MasterViewController: NSViewController {
                         self.isFinding = true
                     } else if self.isPrinting {
                         self.isPrinting = true
+                    } else if self.isReplacing {
+                        self.isReplacing = true
                     }
                 }
                 NSAnimationContext.current().duration = 0.25

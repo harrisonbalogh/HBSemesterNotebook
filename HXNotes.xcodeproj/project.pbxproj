@@ -24,6 +24,7 @@
 		C057FD201EE4B0CA00A62D9F /* HXExportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C057FD1E1EE4B0CA00A62D9F /* HXExportViewController.swift */; };
 		C07953841EA721B90022BFCF /* HXGridBox.xib in Resources */ = {isa = PBXBuildFile; fileRef = C07953831EA721B90022BFCF /* HXGridBox.xib */; };
 		C0824D651EEE28C4007DC002 /* HXFindReplaceView.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0824D641EEE28C4007DC002 /* HXFindReplaceView.xib */; };
+		C087C2701EEFE8F300E70469 /* HXFindReplaceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C087C26E1EEFE8F300E70469 /* HXFindReplaceViewController.swift */; };
 		C08CF4981EE340600074D104 /* TopbarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C08CF4971EE340600074D104 /* TopbarViewController.swift */; };
 		C095D7811EB9461900BBE7CB /* EditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C095D7801EB9461900BBE7CB /* EditorViewController.swift */; };
 		C095D7831EB9578700BBE7CB /* HXCourseEditBox.xib in Resources */ = {isa = PBXBuildFile; fileRef = C095D7821EB9578700BBE7CB /* HXCourseEditBox.xib */; };
@@ -91,6 +92,7 @@
 		C057FD1E1EE4B0CA00A62D9F /* HXExportViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXExportViewController.swift; sourceTree = "<group>"; };
 		C07953831EA721B90022BFCF /* HXGridBox.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXGridBox.xib; sourceTree = "<group>"; };
 		C0824D641EEE28C4007DC002 /* HXFindReplaceView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXFindReplaceView.xib; sourceTree = "<group>"; };
+		C087C26E1EEFE8F300E70469 /* HXFindReplaceViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXFindReplaceViewController.swift; sourceTree = "<group>"; };
 		C08CF4971EE340600074D104 /* TopbarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopbarViewController.swift; sourceTree = "<group>"; };
 		C095D7801EB9461900BBE7CB /* EditorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditorViewController.swift; sourceTree = "<group>"; };
 		C095D7821EB9578700BBE7CB /* HXCourseEditBox.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXCourseEditBox.xib; sourceTree = "<group>"; };
@@ -301,6 +303,7 @@
 				C0A156F81ED9096A00F4DBC1 /* HXCustomTitleField.swift */,
 				C0DED0E51EDCBEE3001A406B /* HXStickyCustomTitleField.swift */,
 				C057FD1C1EE4B0BC00A62D9F /* HXFindViewController.swift */,
+				C087C26E1EEFE8F300E70469 /* HXFindReplaceViewController.swift */,
 				C057FD1E1EE4B0CA00A62D9F /* HXExportViewController.swift */,
 				C0150EE71EA5AD6800BBBFA6 /* CourseLabel.swift */,
 				C0FD6C241EC273C600338F1C /* NIB Templates */,
@@ -471,6 +474,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C087C2701EEFE8F300E70469 /* HXFindReplaceViewController.swift in Sources */,
 				C08CF4981EE340600074D104 /* TopbarViewController.swift in Sources */,
 				C057FD1D1EE4B0BC00A62D9F /* HXFindViewController.swift in Sources */,
 				C0FD6C231EC273C200338F1C /* HXCourseBox.swift in Sources */,

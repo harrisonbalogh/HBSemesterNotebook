@@ -82,10 +82,8 @@ class HXExportViewController: NSViewController {
         var url = URL(fileURLWithPath: self.label_path.stringValue)
         url.appendPathComponent("/" + textField_name.stringValue + ".rtfd")
         if let parent = self.parent as? LectureViewController {
-            print("Executing export of \(parent.label_lectureTitle.stringValue) to \(url)")
             parent.owner.exportLecture(from: parent, to: url)
         } else if let parent = self.parent as? TopbarViewController {
-            print("Executing export of all lectures to \(url)")
             parent.masterViewController.export(to: url)
         }
     }

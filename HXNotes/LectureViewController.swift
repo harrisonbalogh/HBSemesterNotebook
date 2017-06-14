@@ -21,6 +21,7 @@ class LectureViewController: NSViewController {
     @IBOutlet weak var box_dropdown: NSBox!
     
     var findViewController: HXFindViewController!
+    var replaceViewController: HXFindReplaceViewController!
     var exportViewController: HXExportViewController!
     
     // Set the when user sets or remove focus to the customTitle textField.
@@ -102,8 +103,12 @@ class LectureViewController: NSViewController {
             NSAnimationContext.beginGrouping()
             NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
             NSAnimationContext.current().duration = 0.25
-            if isFinding && isExporting {
-                isExporting = false
+            if isFinding && (isExporting || isReplacing) {
+                if isExporting {
+                    isExporting = false
+                } else {
+                    isReplacing = false
+                }
             } else if isFinding {
                 box_dropdown.addSubview(findViewController.view)
                 findViewController.view.leadingAnchor.constraint(equalTo: box_dropdown.leadingAnchor).isActive = true
@@ -125,6 +130,49 @@ class LectureViewController: NSViewController {
                     self.findViewController.view.removeFromSuperview()
                     if self.isExporting {
                         self.isExporting = true
+                    } else if self.isReplacing {
+                        self.isReplacing = true
+                    }
+                }
+                dropdownTopConstraint.animator().constant = 0
+            }
+            NSAnimationContext.endGrouping()
+        }
+    }
+    var isReplacing = false {
+        didSet {
+            NSAnimationContext.beginGrouping()
+            NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
+            NSAnimationContext.current().duration = 0.25
+            if isReplacing && (isExporting || isFinding) {
+                if isExporting {
+                    isExporting = false
+                } else {
+                    isFinding = false
+                }
+            } else if isReplacing {
+                box_dropdown.addSubview(replaceViewController.view)
+                replaceViewController.view.leadingAnchor.constraint(equalTo: box_dropdown.leadingAnchor).isActive = true
+                replaceViewController.view.trailingAnchor.constraint(equalTo: box_dropdown.trailingAnchor).isActive = true
+                replaceViewController.view.topAnchor.constraint(equalTo: box_dropdown.topAnchor).isActive = true
+                replaceViewController.view.bottomAnchor.constraint(equalTo: box_dropdown.bottomAnchor).isActive = true
+                
+                NSAnimationContext.current().completionHandler = {
+//                    NSApp.keyWindow?.makeFirstResponder(self.findViewController.textField_find)
+                }
+                dropdownTopConstraint.animator().constant = box_dropdown.frame.height
+                
+                owner.notifyLectureSelection(lecture: label_lectureTitle.stringValue)
+            } else {
+                if NSApp.keyWindow?.firstResponder == findViewController.textField_find {
+                    NSApp.keyWindow?.makeFirstResponder(self)
+                }
+                NSAnimationContext.current().completionHandler = {
+                    self.replaceViewController.view.removeFromSuperview()
+                    if self.isExporting {
+                        self.isExporting = true
+                    } else if self.isFinding {
+                        self.isFinding = true
                     }
                 }
                 dropdownTopConstraint.animator().constant = 0
@@ -157,6 +205,8 @@ class LectureViewController: NSViewController {
                     self.exportViewController.view.removeFromSuperview()
                     if self.isFinding {
                         self.isFinding = true
+                    } else if self.isReplacing {
+                        self.isReplacing = true
                     }
                 }
                 dropdownTopConstraint.animator().constant = 0
@@ -185,11 +235,13 @@ class LectureViewController: NSViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Laggy spot here?
         findViewController = HXFindViewController(nibName: "HXFindView", bundle: nil)
         self.addChildViewController(findViewController)
         exportViewController = HXExportViewController(nibName: "HXExportView", bundle: nil)
         self.addChildViewController(exportViewController)
-        
+        replaceViewController = HXFindReplaceViewController(nibName: "HXFindReplaceView", bundle: nil)
+        self.addChildViewController(replaceViewController)
     }
     
     override func viewDidAppear() {
@@ -393,32 +445,39 @@ class LectureViewController: NSViewController {
     @IBAction func action_styleLeft(_ sender: Any) {
         if isStyling {
             textView_lecture.alignLeft(self)
+            button_style_center.state = NSOffState
+            button_style_right.state = NSOffState
         }
     }
     ///
     @IBAction func action_styleCenter(_ sender: Any) {
         if isStyling {
             textView_lecture.alignCenter(self)
+            button_style_left.state = NSOffState
+            button_style_right.state = NSOffState
         }
     }
     ///
     @IBAction func action_styleRight(_ sender: Any) {
         if isStyling {
             textView_lecture.alignRight(self)
+            button_style_center.state = NSOffState
+            button_style_left.state = NSOffState
         }
     }
     func selectionChange() {
-        if sharedFontManager.selectedFont == nil {
+        if sharedFontManager.selectedFont == nil || textView_lecture.attributedString().length == 0 {
             return
         }
         
         let traits = sharedFontManager.traits(of: sharedFontManager.selectedFont!)
-        
-        let positionOfSelection = textView_lecture.selectedRanges.first!.rangeValue.location
-        var rangeToSelection = NSRange(location: 0, length: positionOfSelection)
-        
+        var positionOfSelection = textView_lecture.selectedRanges.first!.rangeValue.location
+        if positionOfSelection == textView_lecture.attributedString().length {
+            positionOfSelection = textView_lecture.attributedString().length - 1
+        }
         var isUnderlined = false
-        if textView_lecture.attributedString().attribute("NSUnderline", at: positionOfSelection, effectiveRange: &rangeToSelection) != nil {
+        
+        if textView_lecture.attributedString().attribute("NSUnderline", at: positionOfSelection, effectiveRange: nil) != nil {
             button_style_underline.state = NSOnState
             isUnderlined = true
         } else {
@@ -427,7 +486,7 @@ class LectureViewController: NSViewController {
         }
         
         var theAlignment = 0
-        if let parStyle = textView_lecture.attributedString().attribute("NSParagraphStyle", at: positionOfSelection, effectiveRange: &rangeToSelection) as? NSParagraphStyle {
+        if let parStyle = textView_lecture.attributedString().attribute("NSParagraphStyle", at: positionOfSelection, effectiveRange: nil) as? NSParagraphStyle {
             
             button_style_left.state = NSOffState
             button_style_center.state = NSOffState
@@ -436,12 +495,18 @@ class LectureViewController: NSViewController {
             if parStyle.alignment.rawValue == 0 {
                 theAlignment = 0
                 button_style_left.state = NSOnState
+                button_style_center.state = NSOffState
+                button_style_right.state = NSOffState
             } else if parStyle.alignment.rawValue == 1 {
                 theAlignment = 1
                 button_style_right.state = NSOnState
+                button_style_left.state = NSOffState
+                button_style_center.state = NSOffState
             } else if parStyle.alignment.rawValue == 2 {
                 theAlignment = 2
                 button_style_center.state = NSOnState
+                button_style_left.state = NSOffState
+                button_style_right.state = NSOffState
             }
         }
         

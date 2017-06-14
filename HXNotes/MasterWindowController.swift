@@ -16,7 +16,7 @@ class MasterWindowController: NSWindowController {
         super.windowDidLoad()
     
         // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
-//        self.window!.titleVisibility = NSWindowTitleVisibility.hidden
+        self.window!.titleVisibility = NSWindowTitleVisibility.hidden
         
         if let mVC = self.contentViewController as? MasterViewController {
             masterViewController = mVC
