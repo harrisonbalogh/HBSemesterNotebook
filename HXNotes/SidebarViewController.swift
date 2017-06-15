@@ -227,18 +227,17 @@ class SidebarViewController: NSViewController {
         }
         tempAction_date()
         
-        print("Let's print the current schedule.")
-        for case let course as Course in selectedSemester.courses! {
-            print("    \(course.title!)")
-            print("        \(printableSchedule(for: course))")
-        }
+//        print("Let's print the current schedule.")
+//        for case let course as Course in selectedSemester.courses! {
+//            print("    \(course.title!)")
+//            print("        \(printableSchedule(for: course))")
+//        }
     }
     
     override func viewDidLayout() {
         super.viewDidLayout()
         
         if selectedCourse != nil {
-            print("Laying out")
 //            notifyHeightUpdate()
         }
     }
@@ -318,12 +317,9 @@ class SidebarViewController: NSViewController {
         let day = NSCalendar.current.component(.weekday, from: NSDate() as Date)
         
         for case let course as Course in semester.courses! {
-            print("  Course is \(course.title!)")
             for case let time as TimeSlot in course.timeSlots! {
-                print("    Time is \(time.day) at \(time.hour)")
                 if Int16(day - 2) == time.day && (Int16(hour - 8) == time.hour || (Int16(hour - 8) == (time.hour - 1) && Int16(minute) > 55)) {
                     // during class
-                    print("      During Class")
                     return time.course
                 }
             }
@@ -452,12 +448,12 @@ class SidebarViewController: NSViewController {
     }
     /// Handles purely the visual aspect of lectures. Internal use only. Adds a new HXLectureBox and possibly HXWeekBox to the ledgerStackView.
     private func pushLecture(_ lecture: Lecture) {
-        if lectureCount == 0 {
-            lectureStackView.addArrangedSubview(HXWeekBox.instance(withNumber: (weekCount+1)))
-            weekCount += 1
-        } else {
-            
-        }
+//        if lectureCount == 0 {
+//            lectureStackView.addArrangedSubview(HXWeekBox.instance(withNumber: (weekCount+1)))
+//            weekCount += 1
+//        } else {
+//            
+//        }
         
         if lectureStackView.superview == nil {
             lectureStackView = NSStackView()

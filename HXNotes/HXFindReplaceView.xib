@@ -10,6 +10,10 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="HXFindReplaceViewController" customModule="HXNotes" customModuleProvider="target">
             <connections>
+                <outlet property="label_lectureSelection" destination="mZi-Qe-Upg" id="euh-oD-3rE"/>
+                <outlet property="label_result" destination="cQO-XX-G6m" id="pm8-H9-gzX"/>
+                <outlet property="textField_find" destination="30m-En-oag" id="euy-kO-CrH"/>
+                <outlet property="textField_replace" destination="GhM-f7-6oI" id="8QA-KB-gfn"/>
                 <outlet property="view" destination="Xcr-uQ-zlp" id="ani-Q6-nCe"/>
             </connections>
         </customObject>
@@ -36,6 +40,9 @@
                         <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
+                    <connections>
+                        <action selector="action_findField:" target="-2" id="CDb-6f-Mrb"/>
+                    </connections>
                 </textField>
                 <box identifier="line2" horizontalHuggingPriority="243" verticalHuggingPriority="750" horizontalCompressionResistancePriority="742" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="Hen-5E-Ao2">
                     <rect key="frame" x="23" y="4" width="144" height="5"/>
@@ -56,13 +63,16 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField horizontalHuggingPriority="248" verticalHuggingPriority="750" horizontalCompressionResistancePriority="748" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GhM-f7-6oI">
+                <textField horizontalHuggingPriority="248" verticalHuggingPriority="750" horizontalCompressionResistancePriority="748" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GhM-f7-6oI" userLabel="Text Field replace">
                     <rect key="frame" x="204" y="7" width="148" height="17"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" state="on" alignment="left" placeholderString="replace" id="8y6-1y-hYt">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
+                    <connections>
+                        <action selector="action_replaceField:" target="-2" id="0ud-7T-k4L"/>
+                    </connections>
                 </textField>
                 <box identifier="line2" horizontalHuggingPriority="243" verticalHuggingPriority="750" horizontalCompressionResistancePriority="742" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="FY0-Dc-Nec">
                     <rect key="frame" x="206" y="5" width="144" height="5"/>
@@ -96,6 +106,9 @@
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
+                    <connections>
+                        <action selector="action_close:" target="-2" id="SAB-Ee-r4h"/>
+                    </connections>
                 </button>
                 <button translatesAutoresizingMaskIntoConstraints="NO" id="xd2-L5-62E">
                     <rect key="frame" x="496" y="6" width="55" height="18"/>
@@ -107,6 +120,9 @@
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
+                    <connections>
+                        <action selector="action_confirm:" target="-2" id="BCr-3e-Nep"/>
+                    </connections>
                 </button>
                 <button verticalHuggingPriority="749" translatesAutoresizingMaskIntoConstraints="NO" id="mIi-sP-RNl" userLabel="Select Lecture Button">
                     <rect key="frame" x="377" y="0.0" width="113" height="30"/>
@@ -117,10 +133,13 @@
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
+                    <connections>
+                        <action selector="action_select:" target="-2" id="0zj-Rk-wOc"/>
+                    </connections>
                 </button>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cQO-XX-G6m" userLabel="Result Label">
-                    <rect key="frame" x="118" y="7" width="51" height="16"/>
-                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="# Found" id="EPx-f5-3oZ">
+                    <rect key="frame" x="285" y="7" width="67" height="16"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="# Replaced" id="EPx-f5-3oZ">
                         <font key="font" metaFont="systemThin" size="12"/>
                         <color key="textColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -133,6 +152,7 @@
                 <constraint firstItem="mIi-sP-RNl" firstAttribute="leading" secondItem="mZi-Qe-Upg" secondAttribute="leading" id="1n9-MW-iwg"/>
                 <constraint firstItem="GhM-f7-6oI" firstAttribute="leading" secondItem="maN-aF-y9Q" secondAttribute="trailing" constant="6" id="2PR-7W-4Q2"/>
                 <constraint firstItem="GhM-f7-6oI" firstAttribute="centerY" secondItem="Xcr-uQ-zlp" secondAttribute="centerY" id="7rM-oC-kjN"/>
+                <constraint firstItem="cQO-XX-G6m" firstAttribute="trailing" secondItem="GhM-f7-6oI" secondAttribute="trailing" id="7sr-O7-NOa"/>
                 <constraint firstItem="v90-qc-UU2" firstAttribute="leading" secondItem="Xcr-uQ-zlp" secondAttribute="leading" constant="6" id="8LC-P3-GQP"/>
                 <constraint firstItem="Hen-5E-Ao2" firstAttribute="leading" secondItem="30m-En-oag" secondAttribute="leading" id="8Ya-Md-AKF"/>
                 <constraint firstItem="GhM-f7-6oI" firstAttribute="width" secondItem="30m-En-oag" secondAttribute="width" id="AeT-V3-QsQ"/>
@@ -150,7 +170,6 @@
                 <constraint firstAttribute="bottom" secondItem="SZz-et-nP0" secondAttribute="bottom" id="Xqc-Ba-Acg"/>
                 <constraint firstItem="Hen-5E-Ao2" firstAttribute="top" secondItem="30m-En-oag" secondAttribute="bottom" constant="-1" id="a4a-J9-SiY"/>
                 <constraint firstAttribute="bottom" secondItem="fUF-3h-fyx" secondAttribute="bottom" id="ckt-Cx-Tpe"/>
-                <constraint firstItem="cQO-XX-G6m" firstAttribute="trailing" secondItem="30m-En-oag" secondAttribute="trailing" id="dGr-CX-BMp"/>
                 <constraint firstAttribute="trailing" secondItem="SZz-et-nP0" secondAttribute="trailing" id="e9w-3a-o4M"/>
                 <constraint firstItem="BsQ-PT-Myf" firstAttribute="leading" secondItem="GhM-f7-6oI" secondAttribute="trailing" constant="6" id="eme-DE-WK6"/>
                 <constraint firstItem="FY0-Dc-Nec" firstAttribute="trailing" secondItem="GhM-f7-6oI" secondAttribute="trailing" id="fH0-lW-JqD"/>

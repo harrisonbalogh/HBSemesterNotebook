@@ -86,17 +86,17 @@ class HXCourseBox: NSBox {
     func deselect() {
         buttonOverlay.state = NSOffState
         labelTitle.font = NSFont.systemFont(ofSize: 12)
-        alphaValue = 0.5
+//        alphaValue = 0.5
     }
     
     override func mouseEntered(with event: NSEvent) {
-        alphaValue = 1
+//        alphaValue = 1
         NSCursor.pointingHand().push()
     }
     
     override func mouseExited(with event: NSEvent) {
         if buttonOverlay.state != NSOnState {
-            alphaValue = 0.5
+//            alphaValue = 0.5
         }
         NSCursor.pointingHand().pop()
     }

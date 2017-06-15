@@ -107,15 +107,15 @@ class MasterViewController: NSViewController {
                 NSAnimationContext.beginGrouping()
                 NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
                 NSAnimationContext.current().completionHandler = {
-//                    NSApp.keyWindow?.makeFirstResponder(self.topbarViewController.findViewController.textField_find)
+                    NSApp.keyWindow?.makeFirstResponder(self.topbarViewController.replaceViewController.textField_find)
                 }
                 NSAnimationContext.current().duration = 0.25
                 topbarConstraintTop.animator().constant = 0
                 NSAnimationContext.endGrouping()
             } else {
-//                if NSApp.keyWindow?.firstResponder == topbarViewController.findViewController.textField_find {
-//                    NSApp.keyWindow?.makeFirstResponder(self)
-//                }
+                if NSApp.keyWindow?.firstResponder == topbarViewController.replaceViewController.textField_find || NSApp.keyWindow?.firstResponder == topbarViewController.replaceViewController.textField_replace {
+                    NSApp.keyWindow?.makeFirstResponder(self)
+                }
                 NSAnimationContext.beginGrouping()
                 NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
                 NSAnimationContext.current().completionHandler = {

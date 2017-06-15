@@ -150,6 +150,7 @@ class EditorViewController: NSViewController {
         let newController = LectureViewController(nibName: "HXLectureView", bundle: nil)!
         self.addChildViewController(newController)
         lectureStack.insertArrangedSubview(newController.view, at: lectureStack.arrangedSubviews.count - 1)
+        newController.view.widthAnchor.constraint(equalTo: lectureStack.widthAnchor).isActive = true
         newController.initialize(with: lecture)
         // Animate showing the lecture
         NSAnimationContext.beginGrouping()

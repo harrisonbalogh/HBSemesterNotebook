@@ -26,6 +26,7 @@
                 <outlet property="label_lectureTitle" destination="rtP-Xd-KSa" id="GqV-L9-FqK"/>
                 <outlet property="label_titleDivider" destination="hnn-XP-M9a" id="1Ld-JL-RYx"/>
                 <outlet property="scrollView_lecture" destination="yL3-k5-tgV" id="Fvf-S1-cPn"/>
+                <outlet property="shadow_top" destination="vMK-7l-sAD" id="Myg-kC-rcs"/>
                 <outlet property="textHeightConstraint" destination="T6U-X4-dHK" id="hsJ-fy-sYM"/>
                 <outlet property="textView_lecture" destination="N8V-sZ-F2n" id="IIH-bl-Wjq"/>
                 <outlet property="view" destination="0Hk-u4-N0i" id="yr0-Jx-Een"/>
@@ -33,9 +34,8 @@
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <box boxType="custom" borderWidth="0.0" title="Box" id="0Hk-u4-N0i">
+        <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="0Hk-u4-N0i">
             <rect key="frame" x="0.0" y="0.0" width="505" height="76"/>
-            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <view key="contentView" id="KjG-vB-MAo">
                 <rect key="frame" x="0.0" y="0.0" width="505" height="76"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -50,7 +50,7 @@
                             <constraint firstAttribute="height" constant="30" id="6yA-Og-F1P"/>
                         </constraints>
                         <color key="borderColor" name="controlDarkShadowColor" catalog="System" colorSpace="catalog"/>
-                        <color key="fillColor" red="0.99090909090909096" green="1" blue="1" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="fillColor" red="0.96460121870040894" green="0.96476620435714722" blue="0.96459084749221802" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </box>
                     <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="oE3-bk-0Xg" userLabel="Blocking Box">
                         <rect key="frame" x="0.0" y="46" width="505" height="30"/>
@@ -61,7 +61,7 @@
                         <constraints>
                             <constraint firstAttribute="height" constant="30" id="zUa-Rm-5VF"/>
                         </constraints>
-                        <color key="fillColor" name="windowBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        <color key="fillColor" red="0.96460121870040894" green="0.96476620435714722" blue="0.96459084749221802" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </box>
                     <textField identifier="content_label_lecture" horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rtP-Xd-KSa">
                         <rect key="frame" x="8" y="50" width="92" height="24"/>
@@ -213,7 +213,7 @@
                         </connections>
                     </button>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yhh-M5-M6C" customClass="HXCustomTitleField" customModule="HXNotes" customModuleProvider="target">
-                        <rect key="frame" x="115" y="53" width="155" height="17"/>
+                        <rect key="frame" x="115" y="52.5" width="155" height="17"/>
                         <textFieldCell key="cell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" alignment="left" placeholderString="Untitled" usesSingleLineMode="YES" id="6kC-Ke-RFL">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" red="0.27931640619999998" green="0.27931640619999998" blue="0.27931640619999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -224,13 +224,27 @@
                         </connections>
                     </textField>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hnn-XP-M9a">
-                        <rect key="frame" x="102" y="55" width="11" height="17"/>
+                        <rect key="frame" x="102" y="54.5" width="11" height="17"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="-" id="Uz7-jv-ctM">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" red="0.27931640619999998" green="0.27931640619999998" blue="0.27931640619999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
+                    <imageView horizontalHuggingPriority="240" verticalHuggingPriority="251" horizontalCompressionResistancePriority="740" translatesAutoresizingMaskIntoConstraints="NO" id="vMK-7l-sAD">
+                        <rect key="frame" x="0.0" y="38" width="505" height="8"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="8" id="kXA-MI-15g"/>
+                        </constraints>
+                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="axesIndependently" image="image_gradientDown" id="6OP-0o-Lnb"/>
+                    </imageView>
+                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="D9Z-4W-O27">
+                        <rect key="frame" x="0.0" y="0.0" width="505" height="8"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="8" id="EXu-lc-V0f"/>
+                        </constraints>
+                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="axesIndependently" image="image_gradientUp" id="w7s-zu-V3w"/>
+                    </imageView>
                 </subviews>
                 <constraints>
                     <constraint firstItem="rtP-Xd-KSa" firstAttribute="top" secondItem="KjG-vB-MAo" secondAttribute="top" constant="2" id="0r8-Og-cIH"/>
@@ -244,6 +258,7 @@
                     <constraint firstItem="CV2-1F-Bli" firstAttribute="leading" secondItem="haU-mA-Ce7" secondAttribute="trailing" constant="3" id="K8Y-Rj-Oc6"/>
                     <constraint firstItem="P2u-0g-011" firstAttribute="leading" secondItem="MGf-Et-IYi" secondAttribute="trailing" constant="3" id="LiK-r2-4jw"/>
                     <constraint firstItem="Yhh-M5-M6C" firstAttribute="leading" secondItem="hnn-XP-M9a" secondAttribute="trailing" constant="6" id="MAW-9r-EZ9"/>
+                    <constraint firstAttribute="trailing" secondItem="vMK-7l-sAD" secondAttribute="trailing" id="NP3-k5-2Rf"/>
                     <constraint firstItem="MGf-Et-IYi" firstAttribute="leading" secondItem="CV2-1F-Bli" secondAttribute="trailing" constant="15" id="NhA-aG-ux5"/>
                     <constraint firstItem="MGf-Et-IYi" firstAttribute="centerY" secondItem="CV2-1F-Bli" secondAttribute="centerY" id="O44-UG-NtV"/>
                     <constraint firstAttribute="trailing" secondItem="Twy-6v-YbQ" secondAttribute="trailing" constant="18" id="PFu-pC-z7D"/>
@@ -256,25 +271,30 @@
                     <constraint firstItem="J9V-Xz-uvJ" firstAttribute="leading" secondItem="Yhh-M5-M6C" secondAttribute="trailing" constant="10" placeholder="YES" id="Zfq-XO-bxI"/>
                     <constraint firstItem="rb3-9F-LEf" firstAttribute="leading" secondItem="yL3-k5-tgV" secondAttribute="leading" constant="1" id="aq5-nG-TnW"/>
                     <constraint firstItem="6Un-NX-ng7" firstAttribute="leading" secondItem="KjG-vB-MAo" secondAttribute="leading" id="cWW-ik-g02"/>
+                    <constraint firstAttribute="bottom" secondItem="D9Z-4W-O27" secondAttribute="bottom" id="dx1-4z-fHh"/>
                     <constraint firstItem="CV2-1F-Bli" firstAttribute="centerY" secondItem="Twy-6v-YbQ" secondAttribute="centerY" id="eiG-Ow-thS"/>
                     <constraint firstItem="6Un-NX-ng7" firstAttribute="top" secondItem="KjG-vB-MAo" secondAttribute="top" id="fuh-hG-C31"/>
                     <constraint firstItem="Twy-6v-YbQ" firstAttribute="top" secondItem="KjG-vB-MAo" secondAttribute="top" constant="6" id="gqi-JO-x1d"/>
                     <constraint firstItem="aQd-2w-Viv" firstAttribute="bottom" secondItem="yL3-k5-tgV" secondAttribute="bottom" constant="1" id="h6K-sb-lQP"/>
                     <constraint firstItem="oE3-bk-0Xg" firstAttribute="top" secondItem="KjG-vB-MAo" secondAttribute="top" id="kcQ-v8-hZt"/>
                     <constraint firstAttribute="trailing" secondItem="6Un-NX-ng7" secondAttribute="trailing" id="kha-jJ-RM1"/>
+                    <constraint firstItem="D9Z-4W-O27" firstAttribute="leading" secondItem="KjG-vB-MAo" secondAttribute="leading" id="lCt-Qn-YQN"/>
                     <constraint firstAttribute="bottom" secondItem="yL3-k5-tgV" secondAttribute="bottom" constant="6" id="leB-HQ-ARi"/>
                     <constraint firstItem="yL3-k5-tgV" firstAttribute="leading" secondItem="KjG-vB-MAo" secondAttribute="leading" constant="10" id="lfo-zb-mh3"/>
+                    <constraint firstItem="vMK-7l-sAD" firstAttribute="leading" secondItem="KjG-vB-MAo" secondAttribute="leading" id="qKD-EE-QMx"/>
                     <constraint firstItem="akD-e9-ZL2" firstAttribute="trailing" secondItem="yL3-k5-tgV" secondAttribute="trailing" constant="-1" id="qML-RV-LKd"/>
                     <constraint firstItem="Twy-6v-YbQ" firstAttribute="leading" secondItem="GJR-w2-5tc" secondAttribute="trailing" constant="10" id="qyE-yY-4KS"/>
                     <constraint firstItem="oE3-bk-0Xg" firstAttribute="leading" secondItem="KjG-vB-MAo" secondAttribute="leading" id="rEK-ug-BmQ"/>
                     <constraint firstItem="rb3-9F-LEf" firstAttribute="bottom" secondItem="yL3-k5-tgV" secondAttribute="bottom" constant="1" id="rwE-Qg-fGN"/>
                     <constraint firstItem="haU-mA-Ce7" firstAttribute="centerY" secondItem="CV2-1F-Bli" secondAttribute="centerY" id="vFC-fg-jIR"/>
+                    <constraint firstItem="vMK-7l-sAD" firstAttribute="top" secondItem="oE3-bk-0Xg" secondAttribute="bottom" id="vl5-LT-zDX"/>
                     <constraint firstItem="GJR-w2-5tc" firstAttribute="leading" secondItem="P2u-0g-011" secondAttribute="trailing" constant="3" id="vrZ-Wj-McK"/>
                     <constraint firstItem="mo7-tU-2xj" firstAttribute="top" secondItem="yL3-k5-tgV" secondAttribute="top" constant="-3" id="xF7-aA-Ovh"/>
+                    <constraint firstAttribute="trailing" secondItem="D9Z-4W-O27" secondAttribute="trailing" id="xoP-CO-Lwn"/>
                     <constraint firstItem="aQd-2w-Viv" firstAttribute="trailing" secondItem="yL3-k5-tgV" secondAttribute="trailing" constant="-1" id="yr9-GO-21K"/>
                 </constraints>
             </view>
-            <point key="canvasLocation" x="243.5" y="-177.5"/>
+            <point key="canvasLocation" x="243.5" y="-178"/>
         </box>
     </objects>
     <resources>
@@ -294,5 +314,7 @@
         <image name="image_corner_2" width="21" height="21"/>
         <image name="image_corner_3" width="21" height="21"/>
         <image name="image_corner_4" width="21" height="21"/>
+        <image name="image_gradientDown" width="8" height="8"/>
+        <image name="image_gradientUp" width="8" height="8"/>
     </resources>
 </document>

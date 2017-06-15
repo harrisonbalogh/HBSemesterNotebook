@@ -24,6 +24,8 @@ class LectureViewController: NSViewController {
     var replaceViewController: HXFindReplaceViewController!
     var exportViewController: HXExportViewController!
     
+    @IBOutlet weak var shadow_top: NSImageView!
+    
     // Set the when user sets or remove focus to the customTitle textField.
     var isTitling = false {
         didSet {
@@ -158,7 +160,7 @@ class LectureViewController: NSViewController {
                 replaceViewController.view.bottomAnchor.constraint(equalTo: box_dropdown.bottomAnchor).isActive = true
                 
                 NSAnimationContext.current().completionHandler = {
-//                    NSApp.keyWindow?.makeFirstResponder(self.findViewController.textField_find)
+                    NSApp.keyWindow?.makeFirstResponder(self.replaceViewController.textField_find)
                 }
                 dropdownTopConstraint.animator().constant = box_dropdown.frame.height
                 
