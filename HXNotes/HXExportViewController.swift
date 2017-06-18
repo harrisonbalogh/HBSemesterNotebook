@@ -93,9 +93,9 @@ class HXExportViewController: NSViewController {
             parent.owner.masterViewController.isExporting = true
         } else if let parent = self.parent as? TopbarViewController {
             parent.masterViewController.isExporting = false
-            if parent.masterViewController.editorViewController.lectureFocused != nil {
-                parent.masterViewController.editorViewController.lectureFocused.isExporting = true
-            }
+//            if parent.masterViewController.editorViewController.lectureFocused != nil {
+//                parent.masterViewController.editorViewController.lectureFocused.isExporting = true
+//            }
         }
     }
     @IBAction func action_path(_ sender: NSButton) {

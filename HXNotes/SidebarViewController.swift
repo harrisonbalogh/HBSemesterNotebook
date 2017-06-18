@@ -35,18 +35,14 @@ class SidebarViewController: NSViewController {
         addLecture(newLec)
         masterViewController.notifyLectureAddition(lecture: newLec)
     }
-    
     @IBOutlet weak var semesterButtonAnimated: NSButton!
     @IBOutlet weak var semButtonAnimBotConstraint: NSLayoutConstraint!
     @IBOutlet weak var semesterLabel: NSTextField!
     @IBOutlet weak var semesterButton: NSButton!
-    
     @IBOutlet weak var yearButtonAnimated: NSButton!
     @IBOutlet weak var yrButtonAnimBotConstraint: NSLayoutConstraint!
-    
     @IBOutlet weak var yearLabel: NSTextField!
     var lastYearUsed = 0
-    
     @IBAction func action_incrementTime(_ sender: NSButton) {
         NSAnimationContext.runAnimationGroup({context in
             context.duration = 0.3
@@ -146,13 +142,7 @@ class SidebarViewController: NSViewController {
                     }
                 }
                 viewingMode()
-                if let courseHappening = duringCourse(for: selectedSemester) {
-                    print("Course is happening!")
-                    selectedCourse = courseHappening
-                    let newLec = newLecture()
-                    addLecture(newLec)
-                    masterViewController.notifyLectureAddition(lecture: newLec)
-                } else if selectedSemester.courses!.count == 1 {
+                if selectedSemester.courses!.count == 1 {
                     print("No course... but there's only one so select it")
                     selectedCourse = (selectedSemester.courses![0] as! Course)
                 }
@@ -164,12 +154,12 @@ class SidebarViewController: NSViewController {
     var selectedCourse: Course! {
         didSet {
             if selectedCourse != nil {
-                // Create sticky header
-                if stickyHeader != nil {
-                    stickyHeader.removeFromSuperview()
-                    stickyHeader = nil
-                }
-                stickyHeader = HXCourseBox.instance(with: selectedCourse, owner: self)
+//                // Create sticky header
+//                if stickyHeader != nil {
+//                    stickyHeader.removeFromSuperview()
+//                    stickyHeader = nil
+//                }
+//                stickyHeader = HXCourseBox.instance(with: selectedCourse, owner: self)
                 // Populate ledgerStackView
                 loadLectures(from: selectedCourse)
                 // Deselect all other buttons excepts selected one.
@@ -181,9 +171,9 @@ class SidebarViewController: NSViewController {
                     }
                 }
             } else {
-                // Remove sticky header
-                stickyHeader.removeFromSuperview()
-                stickyHeader = nil
+//                // Remove sticky header
+//                stickyHeader.removeFromSuperview()
+//                stickyHeader = nil
                 popLectures()
                 // Deselect all other buttons
                 for case let courseButton as HXCourseBox in ledgerStackView.arrangedSubviews {
@@ -202,16 +192,11 @@ class SidebarViewController: NSViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Initialize colorAvailability dictionary
-        for x in 0..<COLORS_ORDERED.count {
-            colorAvailability[x] = true
-        }
-        
         // Setup observers
         NotificationCenter.default.addObserver(self, selector: #selector(SidebarViewController.didLiveScroll),
                                                name: .NSScrollViewDidLiveScroll, object: ledgerClipView)
-        NotificationCenter.default.addObserver(self, selector: #selector(SidebarViewController.didScroll),
-                                               name: .NSViewBoundsDidChange, object: ledgerClipView)
+//        NotificationCenter.default.addObserver(self, selector: #selector(SidebarViewController.didScroll),
+//                                               name: .NSViewBoundsDidChange, object: ledgerClipView)
     }
     
     override func viewDidAppear() {
@@ -226,6 +211,17 @@ class SidebarViewController: NSViewController {
             semesterLabel.stringValue = "Spring"
         }
         tempAction_date()
+        
+        if let courseHappening = selectedSemester.duringCourse() {
+            print("Course is happening!")
+            selectedCourse = courseHappening
+            if selectedCourse != courseHappening {
+                selectedCourse = courseHappening
+            }
+            let newLec = newLecture()
+            addLecture(newLec)
+            masterViewController.notifyLectureAddition(lecture: newLec)
+        }
         
 //        print("Let's print the current schedule.")
 //        for case let course as Course in selectedSemester.courses! {
@@ -274,59 +270,6 @@ class SidebarViewController: NSViewController {
         newSemester.year = year
         return newSemester
     }
-    /// Creates and returns a new persistent Course object.
-    private func newCourse() -> Course {
-        let newCourse = NSEntityDescription.insertNewObject(forEntityName: "Course", into: appDelegate.managedObjectContext) as! Course
-        let assignedColor = nextColorAvailable()
-        newCourse.colorRed = Float(assignedColor.redComponent)
-        newCourse.colorGreen = Float(assignedColor.greenComponent)
-        newCourse.colorBlue = Float(assignedColor.blueComponent)
-        newCourse.title = "Untitled \(nextNumberAvailable())"
-        newCourse.semester = selectedSemester
-        return newCourse
-    }
-    /// Retrieves the course with unique name for this semester. Can return nil if
-    /// course not found or if more than one course has that name.
-    private func retrieveCourse(withName: String) -> Course! {
-        for case let course as Course in selectedSemester.courses! {
-            if course.title! == withName {
-                return course
-            }
-        }
-        return nil
-    }
-    /// Will return how many days in a week the passed course takes place on.
-    /// This does not take into account a course that may occur multiple times in
-    /// one day during the week. Any times found on a given day equates to incrementing the return by 1.
-    private func produceDaysPerWeek(for course: Course) -> Int {
-        var daysOfWeek = [0, 0, 0, 0, 0]
-        for case let time as TimeSlot in course.timeSlots! {
-            daysOfWeek[Int(time.day)] = 1
-        }
-        var numberOfDaysInWeek = 0
-        for day in daysOfWeek {
-            numberOfDaysInWeek = numberOfDaysInWeek + day
-        }
-        return numberOfDaysInWeek
-    }
-    
-    private func duringCourse(for semester: Semester) -> Course? {
-        let hour = NSCalendar.current.component(.hour, from: NSDate() as Date)
-//        let hour = 13
-        let minute = NSCalendar.current.component(.minute, from: NSDate() as Date)
-        let day = NSCalendar.current.component(.weekday, from: NSDate() as Date)
-        
-        for case let course as Course in semester.courses! {
-            for case let time as TimeSlot in course.timeSlots! {
-                if Int16(day - 2) == time.day && (Int16(hour - 8) == time.hour || (Int16(hour - 8) == (time.hour - 1) && Int16(minute) > 55)) {
-                    // during class
-                    return time.course
-                }
-            }
-        }
-        // no class
-        return nil
-    }
 
     // MARK: Lecture Data Model Functions
     /// Returns a newly created Lecture data model object following the previous lecture.
@@ -339,7 +282,6 @@ class SidebarViewController: NSViewController {
         newLecture.weekDay = Int16(NSCalendar.current.component(.weekday, from: NSDate() as Date))
         newLecture.month = Int16(NSCalendar.current.component(.month, from: NSDate() as Date))
         newLecture.year = Int16(NSCalendar.current.component(.year, from: NSDate() as Date))
-        print("newLecture()")
         return newLecture
     }
     
@@ -383,13 +325,9 @@ class SidebarViewController: NSViewController {
 //        ledgerStackView.addArrangedSubview(newBox!)
         ledgerStackView.insertArrangedSubview(newBox!, at: ledgerStackView.arrangedSubviews.count - 1)
         newBox?.widthAnchor.constraint(equalTo: ledgerStackView.widthAnchor).isActive = true
-        let theColor = NSColor(red: CGFloat(course.colorRed), green: CGFloat(course.colorGreen), blue: CGFloat(course.colorBlue), alpha: 1)
-        useColor(color: theColor)
     }
     /// Handles purely the visual aspect of editable courses. Internal use only. Adds a new HXCourseEditBox to the ledgerStackView.
     private func pushEditableCourse(_ course: Course) {
-        let courseColor = NSColor(red: CGFloat(course.colorRed), green: CGFloat(course.colorGreen), blue: CGFloat(course.colorBlue), alpha: 1)
-        useColor(color: courseColor)
         let newBox = HXCourseEditBox.instance(with: course, withCourseIndex: ledgerStackView.subviews.count-1, withParent: self)
         ledgerStackView.insertArrangedSubview(newBox!, at: ledgerStackView.subviews.count - 1)
         newBox?.widthAnchor.constraint(equalTo: ledgerStackView.widthAnchor).isActive = true
@@ -403,8 +341,7 @@ class SidebarViewController: NSViewController {
     /// Handles purely the visual aspect of editable courses. Internal use only. Removes the given HXCourseEditBox from the ledgerStackView
     private func popEditableCourse(_ course: HXCourseEditBox) {
         course.removeFromSuperview()
-        releaseColor(color: course.boxDrag.fillColor)
-        appDelegate.managedObjectContext.delete( retrieveCourse(withName: course.labelCourse.stringValue) )
+        appDelegate.managedObjectContext.delete( selectedSemester.retrieveCourse(named: course.labelCourse.stringValue))
         appDelegate.saveAction(self)
         masterViewController.notifyCourseDeletion(named: course.labelCourse.stringValue)
     }
@@ -413,10 +350,6 @@ class SidebarViewController: NSViewController {
         popLectures()
         for c in ledgerStackView.arrangedSubviews {
             c.removeFromSuperview()
-        }
-        // Reset colors for usage on next editable courses
-        for x in 0..<COLORS_ORDERED.count {
-            colorAvailability[x] = true
         }
     }
     
@@ -487,8 +420,8 @@ class SidebarViewController: NSViewController {
     /// CourseLabel in HXCourseEditBox - on Enter
     /// Finds the course with the given name and renames it if possible
     internal func renameCourse(_ courseBox: HXCourseEditBox) {
-        if retrieveCourse(withName: courseBox.labelCourse.stringValue) == nil {
-            retrieveCourse(withName: courseBox.oldName).title = courseBox.labelCourse.stringValue
+        if selectedSemester.retrieveCourse(named: courseBox.labelCourse.stringValue) == nil {
+            selectedSemester.retrieveCourse(named: courseBox.oldName).title = courseBox.labelCourse.stringValue
             (self.parent! as! MasterViewController).notifyCourseRename(from: courseBox.oldName)
             courseBox.oldName = courseBox.labelCourse.stringValue
         } else {
@@ -499,13 +432,13 @@ class SidebarViewController: NSViewController {
     /// ledgerStackView visuals with a new HXCourseBox.
     internal func addCourse() {
         // Creates new course data model and puts new view in ledgerStackView
-        pushCourse( newCourse() )
+        pushCourse( selectedSemester.newCourse() )
     }
     /// For external and internal usage. Creates a new Course data object and updates 
     /// ledgerStackView visuals with a new HXCourseEditBox.
     internal func addEditableCourse() {
         // Creates new course data model and puts new view in ledgerStackView
-        pushEditableCourse( newCourse() )
+        pushEditableCourse( selectedSemester.newCourse() )
     }
     /// Displays the confirmation delete box before proceeding with course removal.
     internal func removeCourse(_ course: HXCourseEditBox) {
@@ -577,7 +510,6 @@ class SidebarViewController: NSViewController {
                     scrollToLectureBox(box)
                 }
             }
-            
         }
     }
     /// Notify Sidebar from a HXLectureBox that a lecture has been clicked.
@@ -586,11 +518,11 @@ class SidebarViewController: NSViewController {
     }
     /// Visually scrolls the sidebar's ledger so the lecture box is visible
     private func scrollToLectureBox(_ box: HXLectureBox) {
-        var lectureY = ledgerStackView.frame.height - (lectureStackView.frame.origin.y + box.frame.origin.y + box.frame.height)
+        let lectureY = ledgerStackView.frame.height - (lectureStackView.frame.origin.y + box.frame.origin.y + box.frame.height)
         let clipperY = ledgerClipView.bounds.origin.y
-        if stickyHeader != nil {
-            lectureY -= stickyHeader.frame.height
-        }
+//        if stickyHeader != nil {
+//            lectureY -= stickyHeader.frame.height
+//        }
         // Scroll only if not visible
         if lectureY > (ledgerScrollView.frame.height + clipperY) || lectureY < clipperY {
             // Animate scroll to lecture
@@ -613,11 +545,11 @@ class SidebarViewController: NSViewController {
     /// Repopulates the ledgerStackView and Sidebar visuals to display HXCourseEditBox's.
     private func editingMode() {
         loadEditableCourses(fromSemester: selectedSemester)
-        // Remove sticky header
-        if stickyHeader != nil {
-            stickyHeader.removeFromSuperview()
-            stickyHeader = nil
-        }
+//        // Remove sticky header
+//        if stickyHeader != nil {
+//            stickyHeader.removeFromSuperview()
+//            stickyHeader = nil
+//        }
         masterViewController.notifySemesterEditing(semester: selectedSemester)
         // UI control flow update - Note the RETURN call
         editSemesterButton.state = NSOnState
@@ -675,152 +607,6 @@ class SidebarViewController: NSViewController {
         } else {
             masterViewController.notifyCourseDragMoved(editBox: editBox, to: loc)
         }
-    }
-    
-    // MARK: Course Attribute Helper Functions
-    // Colors used to give course boxes unique colors
-    private let COLORS_ORDERED = [
-        NSColor.init(red: 88/255, green: 205/255, blue: 189/255, alpha: 1),
-        NSColor.init(red: 114/255, green: 205/255, blue: 88/255, alpha: 1),
-        NSColor.init(red: 89/255, green: 138/255, blue: 205/255, alpha: 1),
-        NSColor.init(red: 204/255, green: 88/255, blue: 127/255, alpha: 1),
-        NSColor.init(red: 205/255, green: 142/255, blue: 88/255, alpha: 1),
-        NSColor.init(red: 161/255, green: 88/255, blue: 205/255, alpha: 1),
-        NSColor.init(red: 254/255, green: 0/255, blue: 0/255, alpha: 1),
-        NSColor.init(red: 54/255, green: 255/255, blue: 0/255, alpha: 1),
-        NSColor.init(red: 0/255, green: 240/255, blue: 255/255, alpha: 1),
-        NSColor.init(red: 254/255, green: 0/255, blue: 210/255, alpha: 1)]
-    // Track which colors have been used,
-    // in case user removes a course box in the middle of stack
-    private var colorAvailability = [Int: Bool]()
-    /// Return the first color available, or gray if all colors taken
-    private func nextColorAvailable() -> NSColor {
-        for x in 0..<COLORS_ORDERED.count {
-            if colorAvailability[x] == true {
-                colorAvailability[x] = false
-                return COLORS_ORDERED[x]
-            }
-        }
-        return NSColor.gray
-    }
-    /// Mark a color as in-use
-    private func useColor(color: NSColor) {
-        for i in 0..<COLORS_ORDERED.count {
-            if Int(COLORS_ORDERED[i].redComponent * 1000) == Int(color.redComponent * 1000) &&
-                Int(COLORS_ORDERED[i].greenComponent * 1000) == Int(color.greenComponent * 1000) &&
-                Int(COLORS_ORDERED[i].blueComponent * 1000) == Int(color.blueComponent * 1000) {
-                colorAvailability[i] = false
-            }
-        }
-    }
-    /// Release a color to be usuable again
-    private func releaseColor(color: NSColor) {
-        for i in 0..<COLORS_ORDERED.count {
-            if Int(COLORS_ORDERED[i].redComponent * 1000) == Int(color.redComponent * 1000) &&
-                Int(COLORS_ORDERED[i].greenComponent * 1000) == Int(color.greenComponent * 1000) &&
-                Int(COLORS_ORDERED[i].blueComponent * 1000) == Int(color.blueComponent * 1000) {
-                colorAvailability[i] = true
-            }
-        }
-    }
-    /// Return the first number available in the course for untitled courses.
-    private func nextNumberAvailable() -> Int {
-        // Find next available number for naming Course
-        var nextCourseNumber = 1
-        var seekingNumber = true
-        repeat {
-            if (retrieveCourse(withName: "Untitled \(nextCourseNumber)")) == nil {
-                seekingNumber = false
-            } else {
-                nextCourseNumber += 1
-            }
-        } while(seekingNumber)
-        return nextCourseNumber
-    }
-    /// Will return a printable version of the days that the course occupies.
-    func daysPerWeek(for course: Course) -> String {
-        var daysOfWeek = [0, 0, 0, 0, 0]
-        let dayNames = ["M", "T", "W", "Th", "F"]
-        for case let time as TimeSlot in course.timeSlots! {
-            daysOfWeek[Int(time.day)] += 1
-        }
-        var constructedString = ""
-        // Consecutive additions need a comma
-        for d in 0..<daysOfWeek.count {
-            if daysOfWeek[d] > 0 {
-                if constructedString == "" {
-                    constructedString = (dayNames[d])
-                }else {
-                    constructedString += ("," + dayNames[d])
-                }
-            }
-        }
-        return constructedString
-    }
-    /// Indev
-    func printableSchedule(for course: Course) -> String {
-        var constructedString = ""
-        
-        var daysOfWeek = [0, 0, 0, 0, 0]
-        let dayNames = ["M", "T", "W", "Th", "F"]
-        for d in 0...4 {
-            var times = [Int16]()
-            for case let time as TimeSlot in course.timeSlots! {
-                if time.day == Int16(d) {
-                    // Insert day name first time
-                    if daysOfWeek[d] == 0 {
-                        daysOfWeek[d] = 1
-                        constructedString += dayNames[d] + ":"
-                    }
-                    //
-                    times.append(time.hour)
-                }
-            }
-            if times.count == 0 {
-                continue
-            } else if times.count == 1 {
-                constructedString += " \(formatTime(times[0]+8))-\(formatTime(times[0]+9))      "
-                continue
-            }
-            times.sort()
-            var prevTime: Int16 = times[0] + 8
-            var timeSpan: Int16 = 0
-            for t in 1..<times.count {
-                if (times[t]+8) == (prevTime + 1){
-                    // Adjacent time
-                    if t == times.count - 1 {
-                        constructedString += " \(formatTime(prevTime - timeSpan))-\(formatTime(prevTime + 2))"
-                    }
-                    timeSpan += 1
-                } else {
-                    // Not adjacent time
-                    constructedString += " \(formatTime(prevTime - timeSpan))-\(formatTime(prevTime + 1))"
-                    // Reset time span
-                    timeSpan = 0
-                    if t == times.count - 1 {
-                        constructedString += " \(formatTime(times[t] + 8 - timeSpan))-\(formatTime(times[t] + 9))"
-                    }
-                    
-                }
-                // Update previous time
-                prevTime = times[t] + 8
-            }
-            constructedString += "      "
-        }
-        
-        return constructedString
-    }
-    /// Change 13 to 1 but keep 12 as 12. Also append AM or PM
-    private func formatTime(_ time: Int16) -> String {
-        let t_24 = Double(time)
-        let t_12 = t_24 - (ceil(Double(t_24/12)) - 1) * 12
-        var formattedTime = "\(Int(t_12)):00"
-        if floor(Double(t_24/12)) == 0 {
-            formattedTime += "AM"
-        } else {
-            formattedTime += "PM"
-        }
-        return formattedTime
     }
     
     // MARK: Notifiers - from MasterViewController
@@ -881,8 +667,8 @@ class SidebarViewController: NSViewController {
         NSAnimationContext.current().duration = 0 // This overwrites animator proxy object with 0 duration aimation
         ledgerClipView.animator().setBoundsOrigin(NSPoint(x: 0, y: ledgerClipView.bounds.origin.y))
         NSAnimationContext.endGrouping()
-        // Then call didScroll as normal to produce stickyheader effect
-        didScroll()
+//        // Then call didScroll as normal to produce stickyheader effect
+//        didScroll()
     }
     /// Receives scrolling from lectureScroller NSScrollView and any time clipper changes its bounds.
     /// Is responsible for updating the StickyHeaderBox to simulate the iOS effect of lecture titles

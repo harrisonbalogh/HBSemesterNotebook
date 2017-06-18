@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11759" systemVersion="16F73" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <entity name="Course" representedClassName="Course" syncable="YES" codeGenerationType="class">
+    <entity name="Course" representedClassName="Course" syncable="YES" codeGenerationType="category">
         <attribute name="colorBlue" attributeType="Float" minValueString="0" maxValueString="1" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="colorGreen" attributeType="Float" minValueString="0" maxValueString="1" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="colorRed" attributeType="Float" minValueString="0" maxValueString="1" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
@@ -20,7 +20,7 @@
         <attribute name="year" attributeType="Integer 16" defaultValueString="1993" usesScalarValueType="YES" syncable="YES"/>
         <relationship name="course" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Course" inverseName="lectures" inverseEntity="Course" syncable="YES"/>
     </entity>
-    <entity name="Semester" representedClassName="Semester" syncable="YES" codeGenerationType="class">
+    <entity name="Semester" representedClassName="Semester" syncable="YES" codeGenerationType="category">
         <attribute name="title" attributeType="String" defaultValueString="titleHere" syncable="YES"/>
         <relationship name="courses" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Course" inverseName="semester" inverseEntity="Course" syncable="YES"/>
         <relationship name="year" maxCount="1" deletionRule="Nullify" destinationEntity="Year" inverseName="semesters" inverseEntity="Year" syncable="YES"/>

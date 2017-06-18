@@ -19,34 +19,17 @@ class LectureViewController: NSViewController {
     @IBOutlet weak var image_corner3: NSImageView!
     @IBOutlet weak var image_corner4: NSImageView!
     @IBOutlet weak var box_dropdown: NSBox!
+    @IBOutlet weak var header: NSBox!
+    @IBOutlet weak var shadowBottom: NSImageView!
     
     var findViewController: HXFindViewController!
     var replaceViewController: HXFindReplaceViewController!
     var exportViewController: HXExportViewController!
     
     @IBOutlet weak var shadow_top: NSImageView!
-    
-    // Set the when user sets or remove focus to the customTitle textField.
-    var isTitling = false {
-        didSet {
-            if isTitling {
-                owner.customTitleFocused = self
-//                if NSApp.keyWindow?.firstResponder != label_customTitle {
-//                    print("Set label_customTitle to responder")
-//                    NSApp.keyWindow?.makeFirstResponder(label_customTitle)
-//                    owner.customTitleFocused = self
-//                }
-                
-            } else if owner.customTitleFocused != nil {
-                if owner.customTitleFocused == self && NSApp.keyWindow!.firstResponder != owner.stickyHeaderCustomTitle {
-                    owner.customTitleFocused = nil
-                }
-            }
-        }
-    }
     @IBOutlet weak var label_titleDivider: NSTextField!
-    @IBOutlet weak var label_customTitle: HXCustomTitleField!
-    @IBAction func action_customTitle(_ sender: HXCustomTitleField) {
+    @IBOutlet weak var label_customTitle: NSTextField!
+    @IBAction func action_customTitle(_ sender: NSTextField) {
         NSApp.keyWindow?.makeFirstResponder(self)
     }
     
@@ -122,6 +105,7 @@ class LectureViewController: NSViewController {
                     NSApp.keyWindow?.makeFirstResponder(self.findViewController.textField_find)
                 }
                 dropdownTopConstraint.animator().constant = box_dropdown.frame.height
+                textViewTopConstraint.animator().constant = 69
                 
                 owner.notifyLectureSelection(lecture: label_lectureTitle.stringValue)
             } else {
@@ -137,6 +121,7 @@ class LectureViewController: NSViewController {
                     }
                 }
                 dropdownTopConstraint.animator().constant = 0
+                textViewTopConstraint.animator().constant = 39
             }
             NSAnimationContext.endGrouping()
         }
@@ -163,6 +148,7 @@ class LectureViewController: NSViewController {
                     NSApp.keyWindow?.makeFirstResponder(self.replaceViewController.textField_find)
                 }
                 dropdownTopConstraint.animator().constant = box_dropdown.frame.height
+                textViewTopConstraint.animator().constant = 69
                 
                 owner.notifyLectureSelection(lecture: label_lectureTitle.stringValue)
             } else {
@@ -178,6 +164,7 @@ class LectureViewController: NSViewController {
                     }
                 }
                 dropdownTopConstraint.animator().constant = 0
+                textViewTopConstraint.animator().constant = 39
             }
             NSAnimationContext.endGrouping()
         }
@@ -197,6 +184,7 @@ class LectureViewController: NSViewController {
                 exportViewController.view.bottomAnchor.constraint(equalTo: box_dropdown.bottomAnchor).isActive = true
 
                 dropdownTopConstraint.animator().constant = box_dropdown.frame.height
+                textViewTopConstraint.animator().constant = 69
                 
                 owner.notifyLectureSelection(lecture: label_lectureTitle.stringValue)
             } else {
@@ -212,6 +200,7 @@ class LectureViewController: NSViewController {
                     }
                 }
                 dropdownTopConstraint.animator().constant = 0
+                textViewTopConstraint.animator().constant = 39
             }
             NSAnimationContext.endGrouping()
         }
@@ -228,7 +217,9 @@ class LectureViewController: NSViewController {
     
     @IBOutlet weak var textHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var dropdownTopConstraint: NSLayoutConstraint!
-    var customTitleTrailingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var customTitleTrailingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var headerTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var textViewTopConstraint: NSLayoutConstraint!
     
     var lecture: Lecture!
     
@@ -263,7 +254,6 @@ class LectureViewController: NSViewController {
         
         scrollView_lecture.parentController = self
         textView_lecture.parentController = self
-        label_customTitle.parentController = self
         
         if lecture.content != nil {
             textView_lecture.textStorage?.setAttributedString(lecture.content!)
@@ -281,9 +271,6 @@ class LectureViewController: NSViewController {
         } else {
             label_titleDivider.alphaValue = 0.3
         }
-        
-        customTitleTrailingConstraint = label_customTitle.trailingAnchor.constraint(equalTo: label_lectureDate.leadingAnchor)
-        customTitleTrailingConstraint.isActive = true
         
         button_style_underline.alphaValue = 0
         button_style_italicize.alphaValue = 0
@@ -350,9 +337,6 @@ class LectureViewController: NSViewController {
             lecture.title = label_customTitle.stringValue
             label_titleDivider.alphaValue = 1
         }
-        if owner != nil {
-            notifyCustomTitleFocus(false)
-        }
     }
     /// Received from HXNonScrollView's override of scrollWheel.
     func notifyTextViewScrolling(with event: NSEvent) {
@@ -374,17 +358,17 @@ class LectureViewController: NSViewController {
         // Update styling buttons
         selectionChange()
     }
-    /// Received from HXCustomTitleField
-    func notifyCustomTitleFocus(_ focus: Bool) {
-        if isTitling != focus {
-            isTitling = focus
-        }
-    }
     /// Received from HXTextView
     func notifyTextViewFocus(_ focus: Bool) {
         if isStyling != focus {
             isStyling = focus
         }
+    }
+    
+    // MARK: Sticky header
+    ///
+    func updateStickyHeader(with y: CGFloat) {
+        headerTopConstraint.constant = y
     }
     
     // MARK: Auto Scroll and Resizing Helper Functions
@@ -415,18 +399,6 @@ class LectureViewController: NSViewController {
     }
     
     // MARK: Styling Functionality
-    ///
-    func textIncrease() {
-    }
-    ///
-    func textDecrease() {
-    }
-    ///
-    func textColor() {
-    }
-    ///
-    func textShowFonts() {
-    }
     ///
     @IBAction func action_styleUnderline(_ sender: Any) {
         if isStyling {
@@ -477,17 +449,13 @@ class LectureViewController: NSViewController {
         if positionOfSelection == textView_lecture.attributedString().length {
             positionOfSelection = textView_lecture.attributedString().length - 1
         }
-        var isUnderlined = false
         
         if textView_lecture.attributedString().attribute("NSUnderline", at: positionOfSelection, effectiveRange: nil) != nil {
             button_style_underline.state = NSOnState
-            isUnderlined = true
         } else {
             button_style_underline.state = NSOffState
-            isUnderlined = false
         }
         
-        var theAlignment = 0
         if let parStyle = textView_lecture.attributedString().attribute("NSParagraphStyle", at: positionOfSelection, effectiveRange: nil) as? NSParagraphStyle {
             
             button_style_left.state = NSOffState
@@ -495,17 +463,14 @@ class LectureViewController: NSViewController {
             button_style_right.state = NSOffState
             
             if parStyle.alignment.rawValue == 0 {
-                theAlignment = 0
                 button_style_left.state = NSOnState
                 button_style_center.state = NSOffState
                 button_style_right.state = NSOffState
             } else if parStyle.alignment.rawValue == 1 {
-                theAlignment = 1
                 button_style_right.state = NSOnState
                 button_style_left.state = NSOffState
                 button_style_center.state = NSOffState
             } else if parStyle.alignment.rawValue == 2 {
-                theAlignment = 2
                 button_style_center.state = NSOnState
                 button_style_left.state = NSOffState
                 button_style_right.state = NSOffState
@@ -537,8 +502,6 @@ class LectureViewController: NSViewController {
             button_style_italicize.state = NSOnState
             button_style_italicize.tag = Int(NSFontTraitMask.unitalicFontMask.rawValue)
         }
-        
-        owner.textSelectionChange(with: traits, underlined: isUnderlined, alignment: theAlignment)
     }
     func traitChange() {
         selectionChange()

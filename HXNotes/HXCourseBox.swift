@@ -54,7 +54,7 @@ class HXCourseBox: NSBox {
         }
         
         labelTitle.stringValue = course.title!
-        labelDays.stringValue = parent.daysPerWeek(for: course)
+        labelDays.stringValue = course.daysPerWeekPrintable()
         // Initialize course label functionality
         buttonOverlay.target = self
         buttonOverlay.action = #selector(self.goToNotes)

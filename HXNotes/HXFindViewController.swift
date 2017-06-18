@@ -232,9 +232,9 @@ class HXFindViewController: NSViewController {
             parent.owner.masterViewController.isFinding = true
         } else if let parent = self.parent as? TopbarViewController {
             parent.masterViewController.isFinding = false
-            if parent.masterViewController.editorViewController.lectureFocused != nil {
-                parent.masterViewController.editorViewController.lectureFocused.isFinding = true
-            }
+//            if parent.masterViewController.editorViewController.lectureFocused != nil {
+//                parent.masterViewController.editorViewController.lectureFocused.isFinding = true
+//            }
         }
     }
     @IBAction func action_textField(_ sender: NSTextField) {
@@ -266,7 +266,7 @@ class HXFindViewController: NSViewController {
         // Center current typing position to center of lecture scroller
         let yPos = sender.owner.lectureStack.frame.height - selectionY // - lectureScroller.frame.height/2
         // Don't auto-scroll if selection is already visible and above center line of window
-        if yPos < (sender.owner.lectureClipper.bounds.origin.y + sender.owner.stickyHeaderBox.frame.height) || yPos > (sender.owner.lectureClipper.bounds.origin.y + sender.owner.lectureScroller.frame.height/2) {
+        if yPos < (sender.owner.lectureClipper.bounds.origin.y + sender.header.frame.height) || yPos > (sender.owner.lectureClipper.bounds.origin.y + sender.owner.lectureScroller.frame.height/2) {
             NSAnimationContext.beginGrouping()
             NSAnimationContext.current().duration = 0.2
             // Get clipper to center selection in scroller

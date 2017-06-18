@@ -59,11 +59,7 @@
                         <rect key="frame" x="135" y="0.0" width="5" height="40"/>
                     </box>
                     <button identifier="grid_button_remove" hidden="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yav-77-RA2">
-                        <rect key="frame" x="141" y="12" width="16" height="16"/>
-                        <constraints>
-                            <constraint firstAttribute="height" constant="16" id="XjS-Md-Z0f"/>
-                            <constraint firstAttribute="width" constant="16" id="vh9-1x-FDt"/>
-                        </constraints>
+                        <rect key="frame" x="138" y="0.0" width="22" height="40"/>
                         <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSStopProgressTemplate" imagePosition="only" alignment="center" enabled="NO" imageScaling="proportionallyUpOrDown" inset="2" id="MbG-CB-qI2">
                             <behavior key="behavior" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
@@ -74,8 +70,10 @@
                     <constraint firstItem="Vdd-zA-Whg" firstAttribute="centerY" secondItem="cWI-KP-5Xf" secondAttribute="centerY" id="1vm-wV-7ZN"/>
                     <constraint firstItem="Vdd-zA-Whg" firstAttribute="height" secondItem="cWI-KP-5Xf" secondAttribute="height" id="6VE-Lr-t2Q"/>
                     <constraint firstAttribute="trailing" secondItem="Vdd-zA-Whg" secondAttribute="trailing" constant="22" id="Iyy-6N-mvn"/>
-                    <constraint firstItem="yav-77-RA2" firstAttribute="centerY" secondItem="cWI-KP-5Xf" secondAttribute="centerY" id="crA-mu-jNd"/>
-                    <constraint firstAttribute="trailing" secondItem="yav-77-RA2" secondAttribute="trailing" constant="3" id="haq-eN-TYR"/>
+                    <constraint firstItem="yav-77-RA2" firstAttribute="leading" secondItem="Vdd-zA-Whg" secondAttribute="trailing" id="Ufw-FO-2qT"/>
+                    <constraint firstItem="yav-77-RA2" firstAttribute="top" secondItem="cWI-KP-5Xf" secondAttribute="top" id="dlj-F8-D5d"/>
+                    <constraint firstAttribute="bottom" secondItem="yav-77-RA2" secondAttribute="bottom" id="kVZ-no-gxc"/>
+                    <constraint firstAttribute="trailing" secondItem="yav-77-RA2" secondAttribute="trailing" id="qCD-3I-bXt"/>
                 </constraints>
             </view>
             <constraints>

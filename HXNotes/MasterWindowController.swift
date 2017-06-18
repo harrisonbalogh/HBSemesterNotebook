@@ -19,6 +19,14 @@ class MasterWindowController: NSWindowController {
         self.window!.titleVisibility = .hidden
         self.window!.titlebarAppearsTransparent = true
         self.window!.styleMask.insert(.fullSizeContentView)
+//        let newView = VibrancyView.init(frame: (self.window!.contentView?.bounds)!)
+//        newView.autoresizingMask = [.viewWidthSizable, .viewHeightSizable]
+//        newView.material = .appearanceBased
+//        newView.state = .active
+//        newView.blendingMode = .behindWindow
+//        newView.appearance = NSAppearance.init(named: NSAppearanceNameVibrantDark)
+//        self.window!.contentView?.addSubview(newView, positioned: .below, relativeTo: nil)
+        self.window!.contentView?.wantsLayer = true
         
         
         if let mVC = self.contentViewController as? MasterViewController {

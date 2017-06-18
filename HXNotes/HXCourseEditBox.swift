@@ -165,7 +165,7 @@ class HXCourseEditBox: NSView {
             buttonTrash.alphaValue = 0
             boxDrag.alphaValue = 0
             labelCourse.alphaValue = 0
-            boxBack.fillColor = NSColor(red: 0.92, green: 0.92, blue: 0.92, alpha: 1)
+//            boxBack.fillColor = NSColor(red: 0.92, green: 0.92, blue: 0.92, alpha: 1)
             NSCursor.closedHand().push()
         }
         parentController.mouseDrag_courseBox(with: self, to: event.locationInWindow)
@@ -178,7 +178,7 @@ class HXCourseEditBox: NSView {
             buttonTrash.alphaValue = 1
             boxDrag.alphaValue = 1
             labelCourse.alphaValue = 1
-            boxBack.fillColor = NSColor.white
+//            boxBack.fillColor = NSColor.white
             NSCursor.closedHand().pop()
             let origin = boxDrag.superview!.convert(boxDrag.frame.origin, to: nil) as NSPoint
             let loc = event.locationInWindow

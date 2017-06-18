@@ -14,7 +14,6 @@ class EditorViewController: NSViewController {
 
     // MARK: View References
     @IBOutlet weak var lectureStack: NSStackView!
-    @IBOutlet weak var lectureLedgerStack: NSStackView!
     @IBOutlet weak var lectureBottomBufferView: HXBottomBufferView!
     @IBOutlet weak var lectureScroller: NSScrollView!
     @IBOutlet weak var lectureClipper: HXFlippedClipView!
@@ -55,7 +54,6 @@ class EditorViewController: NSViewController {
                     }
                 }
                 NSAnimationContext.current().duration = 0.25
-                stickyHeaderBox.animator().alphaValue = 0
                 lectureScroller.animator().alphaValue = 0
                 NSAnimationContext.current().duration = 0.4
                 labelNoCourse.animator().alphaValue = 1
@@ -64,12 +62,20 @@ class EditorViewController: NSViewController {
             }
         }
     }
+    var lectureFocused: LectureViewController! {
+        didSet {
+            if lectureFocused == nil {
+                masterViewController.notifyLectureFocus(is: nil)
+            } else {
+                masterViewController.notifyLectureFocus(is: lectureFocused.lecture)
+            }
+        }
+    }
     
     // MARK: Initialize editorViewController
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        stickyHeaderBox.alphaValue = 0
         lectureScroller.alphaValue = 0
         
         // Setup observers for scrolling lectures
@@ -77,27 +83,9 @@ class EditorViewController: NSViewController {
                                                name: .NSScrollViewDidLiveScroll, object: lectureScroller)
         NotificationCenter.default.addObserver(self, selector: #selector(EditorViewController.didScroll),
                                                name: .NSViewBoundsDidChange, object: lectureClipper)
-        NotificationCenter.default.addObserver(self, selector: #selector(EditorViewController.notifyCustomTitleUpdate),
-                                               name: .NSControlTextDidEndEditing, object: stickyHeaderCustomTitle)
-        NotificationCenter.default.addObserver(self, selector: #selector(EditorViewController.notifyCustomTitleChange),
-                                               name: .NSControlTextDidChange, object: stickyHeaderCustomTitle)
-        
-        stickyHeaderCustomTitle.parentController = self
-        
-        button_style_underline.alphaValue = 0
-        button_style_italicize.alphaValue = 0
-        button_style_bold.alphaValue = 0
-        button_style_left.alphaValue = 0
-        button_style_center.alphaValue = 0
-        button_style_right.alphaValue = 0
-        
-        NSApp.keyWindow?.makeFirstResponder(self)
-        NSApp.keyWindow?.initialFirstResponder = self.view
     }
     override func viewDidAppear() {
         super.viewDidAppear()
-        
-        NSApp.keyWindow?.makeFirstResponder(nil)
         
         lectureBottomBufferView.initialize(owner: self)
     }
@@ -106,7 +94,7 @@ class EditorViewController: NSViewController {
 
         didScroll()
     }
-    // MARK: Load object models ..........................................................................................
+    // MARK: Load object models ............................................................................
     /// Internal usage only. Reach this function by setting selectedCourse.
     private func loadLectures(from course: Course) {
         self.popLectures()
@@ -121,7 +109,6 @@ class EditorViewController: NSViewController {
             NSAnimationContext.current().duration = 0.4
             labelNoCourse.animator().alphaValue = 1
             subLabelNoCourse.animator().alphaValue = 1
-            stickyHeaderBox.animator().alphaValue = 0
             lectureScroller.animator().alphaValue = 0
             NSAnimationContext.endGrouping()
         } else {
@@ -129,7 +116,6 @@ class EditorViewController: NSViewController {
             
             NSAnimationContext.beginGrouping()
             NSAnimationContext.current().duration = 0.5
-            stickyHeaderBox.animator().alphaValue = 1
             lectureScroller.animator().alphaValue = 1
             labelNoCourse.animator().alphaValue = 0
             subLabelNoCourse.animator().alphaValue = 0
@@ -148,6 +134,9 @@ class EditorViewController: NSViewController {
     /// Handles purely the visual aspect of lectures. Populates lectureStack.
     private func pushLecture(_ lecture: Lecture) {
         let newController = LectureViewController(nibName: "HXLectureView", bundle: nil)!
+        if let last = self.childViewControllers.last as? LectureViewController {
+            last.shadowBottom.isHidden = false
+        }
         self.addChildViewController(newController)
         lectureStack.insertArrangedSubview(newController.view, at: lectureStack.arrangedSubviews.count - 1)
         newController.view.widthAnchor.constraint(equalTo: lectureStack.widthAnchor).isActive = true
@@ -161,7 +150,8 @@ class EditorViewController: NSViewController {
         subLabelNoCourse.animator().alphaValue = 0
         NSAnimationContext.endGrouping()
     }
-    /// Handles purely the visual aspect of lectures. Resets lectureLedgerStack, lectureStack, selectedCourse.lectures!.count, and weekCount
+    /// Handles purely the visual aspect of lectures. Resets lectureLedgerStack, lectureStack, 
+    /// selectedCourse.lectures!.count, and weekCount
     private func popLectures() {
         for case let lectureController as LectureViewController in self.childViewControllers {
             lectureController.view.removeFromSuperview()
@@ -201,55 +191,65 @@ class EditorViewController: NSViewController {
     /// Is responsible for updating the StickyHeaderBox to simulate the iOS effect of lecture titles
     /// staying at the top of scrollView.
     func didScroll() {
+        print("DidScroll")
         // didScroll should only be called when the origin.y changes, not the height
         if oldClipperHeight == lectureClipper.bounds.height {
-            
+            // nyi
         }
         let clipperYPos = lectureClipper.bounds.origin.y
         // The y positions of each view in the stackview can be found by adding the heights of the previous views. Assumes zero spacing.
-        var accumulatedHeight: CGFloat = 0
         // Should go through one more iteration after finding the last visible element in stack.
         var foundLowestLecture = false
         for case let lectureController as LectureViewController in self.childViewControllers {
+            print("    Lecture checked: \(lectureController.label_lectureTitle.stringValue)")
+            let lectureYPos = lectureStack.bounds.height - lectureController.view.frame.origin.y
             // Skip updating sticky header title and date if it was the last visible element in stack.
             if !foundLowestLecture {
                 // If scroller is using elastic effect don't proceed past first element
                 if clipperYPos < 0 {
-                    if stickyHeaderCustomTitle.isFocused {
-                        lectureController.notifyCustomTitleFocus(true)
-                    }
-                    stickyHeaderLectureViewController = nil
+                    stickyLecture = nil
                     return
                 }
-                let height = lectureController.view.bounds.height
-                accumulatedHeight = accumulatedHeight + height
                 // Since the last visible element in stack is not found yet, check if this element is visible still.
-                if clipperYPos <= accumulatedHeight {
+                if clipperYPos <= lectureYPos {
                     // It is visible so update sticky header VC and dump out of loop after one more iteration
-                    if stickyHeaderLectureViewController != lectureController {
-                        // Only update stickyHeaderLectureViewController when its a new LectureVC
-                        stickyHeaderLectureViewController = lectureController
+                    if stickyLecture != lectureController {
+                        // Only update stickyLecture when its a new LectureVC
+                        stickyLecture = lectureController
+                    } else {
+                        // Otherwise tell the current stickyHeader of the current scroll amount
+                        let y = clipperYPos - (lectureYPos - lectureController.view.bounds.height)
+                        stickyLecture.updateStickyHeader(with: y)
                     }
                     foundLowestLecture = true
                 }
-                if self.childViewControllers.last == lectureController {
-                    // The last view controller should set its constant to 0 in this iteraiton
-                    stickyHeaderTopConstraint.constant = 0
-                }
             } else {
                 // Check how close the next element is to determine if stickyheader should be pushed aside
-                if (clipperYPos + stickyHeaderBox.bounds.height) > (accumulatedHeight) {
-                    // Next element is encroaching on header so shift by Y difference
-                    stickyHeaderTopConstraint.constant = accumulatedHeight - (clipperYPos + stickyHeaderBox.bounds.height)
-                } else {
-                    // Next element not encroaching so reset Y to 0.
-                    stickyHeaderTopConstraint.constant = 0
-                }
+//                print("Yeah")
+//                print("    stickyLecture.header.bounds.height: \(stickyLecture.header.bounds.height)")
+//                print("    clipperYPos: \(clipperYPos + stickyLecture.header.bounds.height)")
+//                print("    lectureYPos: \(lectureYPos - lectureController.view.bounds.height)")
+//                if (clipperYPos + stickyLecture.header.bounds.height) > (lectureYPos - lectureController.view.bounds.height) {
+//                    // Next element is encroaching on header so shift by Y difference
+//                    let y1 = (clipperYPos + stickyLecture.header.bounds.height) - (lectureYPos - lectureController.view.bounds.height)
+//                    let y2 = clipperYPos - (lectureStack.bounds.height - stickyLecture.view.frame.origin.y - stickyLecture.view.bounds.height)
+//                    print("    y: \(y2 - y1)")
+////                    stickyLecture.updateStickyHeader(with: y)
+//                }
                 // Stop iterating through controller views
                 break
             }
         }
     }
+    var stickyLecture: LectureViewController! {
+        didSet {
+            if oldValue != nil {
+                oldValue.updateStickyHeader(with: 0)
+            }
+        }
+    }
+    /// This notifies the editorVC that the bottom buffer view was clicked and
+    /// that the last lectureVC should be selected in the stack.
     func bottomBufferClicked() {
         for case let lectureVC as LectureViewController in self.childViewControllers {
             if lectureVC.label_lectureTitle.stringValue == "Lecture \(selectedCourse.lectures!.count)" {
@@ -259,58 +259,9 @@ class EditorViewController: NSViewController {
         }
     }
     
-    @IBAction func action_customTitle(_ sender: NSTextField) {
-        NSApp.keyWindow?.makeFirstResponder(self)
-    }
-    
     // MARK: Notifiers
-    func notifyCustomTitleStartEditing() {
-        if stickyHeaderLectureViewController != nil {
-            if !stickyHeaderLectureViewController.isTitling {
-                stickyHeaderLectureViewController.isTitling = true
-            }
-        }
-    }
-    
-    func notifyCustomTitleChange() {
-        if customTitleFocused != nil {
-            customTitleFocused.label_customTitle.stringValue = stickyHeaderCustomTitle.stringValue
-        } else {
-        }
-        if stickyHeaderCustomTitle.stringValue == "" {
-            stickyHeaderDivider.alphaValue = 0.3
-        } else {
-            stickyHeaderDivider.alphaValue = 1
-        }
-    }
-    
-    func notifyCustomTitleUpdate() {
-        if stickyHeaderLectureViewController != nil {
-            stickyHeaderLectureViewController.isTitling = false
-            stickyHeaderCustomTitle.stringValue = stickyHeaderCustomTitle.stringValue.trimmingCharacters(in: .whitespaces)
-            // If customTitleFocused is nil and this function just got called, it implies that the StickyHeader's
-            // customTitle textfield has just finished editing. Need to find current stickyheadered lecture.
-            if customTitleFocused == nil {
-                for case let lectureController as LectureViewController in self.childViewControllers {
-                    if lectureController.label_lectureTitle.stringValue == stickyHeaderTitle.stringValue {
-                        lectureController.label_customTitle.stringValue = stickyHeaderCustomTitle.stringValue
-                        lectureController.notifyCustomTitleEndEditing()
-                    }
-                }
-            } else {
-                customTitleFocused.label_customTitle.stringValue = stickyHeaderCustomTitle.stringValue
-                customTitleFocused.notifyCustomTitleEndEditing()
-                customTitleFocused = nil
-            }
-            // Check if it has content
-            if stickyHeaderCustomTitle.stringValue == "" {
-                stickyHeaderDivider.alphaValue = 0.3
-            } else {
-                stickyHeaderDivider.alphaValue = 1
-            }
-        }
-    }
-    /// Received from LectureViewController on any change to a given lecture text view. Resizes the bottom buffer box
+    /// Received from LectureViewController on any change to a given lecture text view. 
+    /// Resizes the bottom buffer box
     internal func notifyHeightUpdate() {
         // Get last view in lectureStack
         if let lectureController = childViewControllers.filter({$0 is LectureViewController})[selectedCourse.lectures!.count - 1] as?LectureViewController {
@@ -322,14 +273,15 @@ class EditorViewController: NSViewController {
             }
         }
     }
-    /// Auto scrolling whenever user types. Smoothly scroll clipper until text typing location is centered.
+    /// Auto scrolling whenever user types. 
+    /// Smoothly scroll clipper until text typing location is centered.
     internal func checkScrollLevel(from sender: LectureViewController) {
         if sender.isStyling {
             let selectionY = sender.textSelectionHeight()
             // Center current typing position to center of lecture scroller
             let yPos = lectureStack.frame.height - selectionY // - lectureScroller.frame.height/2
             // Don't auto-scroll if selection is already visible and above center line of window
-            if yPos < (lectureClipper.bounds.origin.y + stickyHeaderBox.frame.height) || yPos > (lectureClipper.bounds.origin.y + lectureScroller.frame.height/2) {
+            if yPos < (lectureClipper.bounds.origin.y + stickyLecture.header.frame.height) || yPos > (lectureClipper.bounds.origin.y + lectureScroller.frame.height/2) {
                 NSAnimationContext.beginGrouping()
                 NSAnimationContext.current().duration = 0.5
                 // Get clipper to center selection in scroller

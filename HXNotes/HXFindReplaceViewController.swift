@@ -115,9 +115,9 @@ class HXFindReplaceViewController: NSViewController {
             parent.owner.masterViewController.isReplacing = true
         } else if let parent = self.parent as? TopbarViewController {
             parent.masterViewController.isReplacing = false
-            if parent.masterViewController.editorViewController.lectureFocused != nil {
-                parent.masterViewController.editorViewController.lectureFocused.isReplacing = true
-            }
+//            if parent.masterViewController.editorViewController.lectureFocused != nil {
+//                parent.masterViewController.editorViewController.lectureFocused.isReplacing = true
+//            }
         }
     }
     

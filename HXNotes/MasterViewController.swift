@@ -15,6 +15,7 @@ class MasterViewController: NSViewController {
     @IBOutlet weak var container_content: NSView!
     @IBOutlet weak var container_topBar: NSView!
     @IBOutlet weak var container_sideBar: NSView!
+    @IBOutlet weak var sidebarBGBox: VisualEffectView!
     
     // Children controllers
     var sidebarViewController: SidebarViewController!
@@ -197,6 +198,12 @@ class MasterViewController: NSViewController {
         
         NSApp.keyWindow?.makeFirstResponder(self)
         NSApp.keyWindow?.initialFirstResponder = self.view
+        
+        sidebarBGBox.state = .active
+        sidebarBGBox.blendingMode = .behindWindow
+        sidebarBGBox.appearance = NSAppearance(named: NSAppearanceNameVibrantDark)
+        sidebarBGBox.material = .appearanceBased
+        view.wantsLayer = true
     }
     override func viewDidAppear() {
         super.viewDidAppear()

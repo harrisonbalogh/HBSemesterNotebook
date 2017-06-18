@@ -19,7 +19,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="127" height="30"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     </view>
-                    <color key="fillColor" red="0.94606050529999997" green="0.94606050529999997" blue="0.94606050529999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                 </box>
                 <textField identifier="course_title_label" horizontalHuggingPriority="249" verticalHuggingPriority="750" horizontalCompressionResistancePriority="749" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KDm-nG-qos">
                     <rect key="frame" x="2" y="6" width="92" height="17"/>
