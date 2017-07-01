@@ -21,23 +21,26 @@ class EditorViewController: NSViewController {
     // These 2 labels are displayed when no course is selected
     @IBOutlet weak var labelNoCourse: NSTextField!
     @IBOutlet weak var subLabelNoCourse: NSTextField!    
+    @IBOutlet weak var dropdownView: NSView!
+    @IBOutlet weak var dropdownTopConstraint: NSLayoutConstraint!
     
     // This constraint is for an invisible view at the bottom of lecture stack to allow user to scroll
     // enough for the last lecture's textView to be in middle of screen.
     @IBOutlet weak var lectureBottomConstraint: NSLayoutConstraint!
     
     // MARK: Object models
-    
     let appDelegate = NSApplication.shared().delegate as! AppDelegate
     let sharedFontManager = NSFontManager.shared()
     var selectedCourse: Course! {
         didSet {
-            if masterViewController.isExporting {
-                masterViewController.isExporting = false
-            } else if masterViewController.isPrinting {
-                masterViewController.isPrinting = false
-            } else if masterViewController.isFinding {
-                masterViewController.isFinding = false
+            if isExporting {
+                isExporting = false
+            } else if isPrinting {
+                isPrinting = false
+            } else if isFinding {
+                isFinding = false
+            } else if isReplacing {
+                isReplacing = false
             }
             // Setting selectedCourse, immediately updates visuals
             if selectedCourse != nil {
@@ -83,6 +86,13 @@ class EditorViewController: NSViewController {
                                                name: .NSScrollViewDidLiveScroll, object: lectureScroller)
         NotificationCenter.default.addObserver(self, selector: #selector(EditorViewController.didScroll),
                                                name: .NSViewBoundsDidChange, object: lectureClipper)
+        
+        findViewController = HXFindViewController(nibName: "HXFindView", bundle: nil)
+        self.addChildViewController(findViewController)
+        exportViewController = HXExportViewController(nibName: "HXExportView", bundle: nil)
+        self.addChildViewController(exportViewController)
+        replaceViewController = HXFindReplaceViewController(nibName: "HXFindReplaceView", bundle: nil)
+        self.addChildViewController(replaceViewController)
     }
     override func viewDidAppear() {
         super.viewDidAppear()
@@ -99,7 +109,9 @@ class EditorViewController: NSViewController {
     private func loadLectures(from course: Course) {
         self.popLectures()
         for case let lecture as Lecture in course.lectures! {
-            pushLecture( lecture )
+            if !lecture.absent {
+                pushLecture( lecture )
+            }
         }
         if course.lectures!.count == 0 {
             labelNoCourse.stringValue = "No Lecture Data"
@@ -176,22 +188,18 @@ class EditorViewController: NSViewController {
             }
         }
     }
-    /// This is called by the users scrolling versus didScroll is called by lectureClipper bounds change.
-    /// Distinguished here since user scrolling should cancel any scroll animations. Else the clipper stutters.
+    /// This allows user to override any animations placed on the scroller to remove stuttering.
     func didLiveScroll() {
         // Stop any scrolling animations currently happening on the clipper
         NSAnimationContext.beginGrouping()
         NSAnimationContext.current().duration = 0 // This overwrites animator proxy object with 0 duration aimation
         lectureClipper.animator().setBoundsOrigin(NSPoint(x: 0, y: lectureClipper.bounds.origin.y))
         NSAnimationContext.endGrouping()
-        // Then call didScroll as normal to produce stickyheader effect
-        didScroll()
     }
     /// Receives scrolling from lectureScroller NSScrollView and any time clipper changes its bounds.
-    /// Is responsible for updating the StickyHeaderBox to simulate the iOS effect of lecture titles
+    /// Is responsible for updating the headers to simulate the iOS effect of lecture titles
     /// staying at the top of scrollView.
     func didScroll() {
-        print("DidScroll")
         // didScroll should only be called when the origin.y changes, not the height
         if oldClipperHeight == lectureClipper.bounds.height {
             // nyi
@@ -201,7 +209,6 @@ class EditorViewController: NSViewController {
         // Should go through one more iteration after finding the last visible element in stack.
         var foundLowestLecture = false
         for case let lectureController as LectureViewController in self.childViewControllers {
-            print("    Lecture checked: \(lectureController.label_lectureTitle.stringValue)")
             let lectureYPos = lectureStack.bounds.height - lectureController.view.frame.origin.y
             // Skip updating sticky header title and date if it was the last visible element in stack.
             if !foundLowestLecture {
@@ -264,7 +271,9 @@ class EditorViewController: NSViewController {
     /// Resizes the bottom buffer box
     internal func notifyHeightUpdate() {
         // Get last view in lectureStack
-        if let lectureController = childViewControllers.filter({$0 is LectureViewController})[selectedCourse.lectures!.count - 1] as?LectureViewController {
+        let nonabsentLectureCount = (Array(selectedCourse.lectures!) as! [Lecture]).filter({!$0.absent}).count
+            
+        if let lectureController = childViewControllers.filter({$0 is LectureViewController})[nonabsentLectureCount - 1] as? LectureViewController {
             // Resize last lecture to keep text in the center of screen.
             if lectureController.view.frame.height < lectureScroller.frame.height/2 + 3 {
                 lectureBottomConstraint.constant = -lectureController.view.frame.height
@@ -290,6 +299,23 @@ class EditorViewController: NSViewController {
             }
         }
     }
+    /// Auto scrolling whenever user changes selection.
+    /// Will only occur when the selection is outside of the visible area (not within the buffer region).
+    internal func checkScrollLevelOutside(from sender: LectureViewController) {
+        if sender.isStyling {
+            let selectionY = sender.textSelectionHeight()
+            // Position of selection
+            let yPos = lectureStack.frame.height - selectionY // - lectureScroller.frame.height/2
+            // Don't auto-scroll if selection is visible
+            if yPos < (lectureClipper.bounds.origin.y + stickyLecture.header.frame.height) || yPos > (lectureClipper.bounds.origin.y + lectureScroller.frame.height) {
+                NSAnimationContext.beginGrouping()
+                NSAnimationContext.current().duration = 0.5
+                // Get clipper to center selection in scroller
+                lectureClipper.animator().setBoundsOrigin(NSPoint(x: 0, y: yPos - lectureScroller.frame.height/2))
+                NSAnimationContext.endGrouping()
+            }
+        }
+    }
     
     func notifyLectureAddition(lecture: Lecture) {
         addLecture(lecture)
@@ -307,7 +333,7 @@ class EditorViewController: NSViewController {
             if lectureFocused != nil {
                 lectureFocused.isFinding = !lectureFocused.isFinding
             } else {
-                masterViewController.isFinding = !masterViewController.isFinding
+                isFinding = !isFinding
             }
         }
     }
@@ -316,7 +342,7 @@ class EditorViewController: NSViewController {
             if lectureFocused != nil {
                 lectureFocused.isReplacing = !lectureFocused.isReplacing
             } else {
-                masterViewController.isReplacing = !masterViewController.isReplacing
+                isReplacing = !isReplacing
             }
         }
     }
@@ -325,7 +351,7 @@ class EditorViewController: NSViewController {
             if lectureFocused != nil {
                 
             } else {
-                masterViewController.isPrinting = !masterViewController.isPrinting
+                isPrinting = !isPrinting
             }
         }
     }
@@ -334,7 +360,7 @@ class EditorViewController: NSViewController {
             if lectureFocused != nil {
                 lectureFocused.isExporting = !lectureFocused.isExporting
             } else {
-                masterViewController.isExporting = !masterViewController.isExporting
+                isExporting = !isExporting
             }
         }
     }
@@ -379,6 +405,182 @@ class EditorViewController: NSViewController {
             try data.write(to: url, options: .atomic, originalContentsURL: nil) // this for rtfd
         } catch {
             print("Something went wrong.")
+        }
+    }
+    
+    /// Reveal or hide the top bar container.
+    func topBarShown(_ visible: Bool) {
+        NSAnimationContext.beginGrouping()
+        NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
+        NSAnimationContext.current().duration = 0.25
+        if visible {
+            dropdownTopConstraint.animator().constant = 0
+        } else {
+            dropdownTopConstraint.animator().constant = -dropdownView.frame.height
+        }
+        NSAnimationContext.endGrouping()
+    }
+    /// Toggles reveal or hide of top bar container.
+    func topBarShown() {
+        if dropdownTopConstraint.constant == 0 {
+            topBarShown(false)
+        } else {
+            topBarShown(true)
+        }
+    }
+    
+    var findViewController: HXFindViewController!
+    var exportViewController: HXExportViewController!
+    var replaceViewController: HXFindReplaceViewController!
+    
+    var isPrinting = false {
+        didSet {
+            
+        }
+    }
+    
+    var isFinding = false {
+        didSet {
+            if isFinding && (isExporting || isPrinting || isReplacing) {
+                if isExporting {
+                    isExporting = false
+                } else if isPrinting {
+                    isPrinting = false
+                } else {
+                    isReplacing = false
+                }
+            } else if isFinding {
+                dropdownView.addSubview(findViewController.view)
+                findViewController.view.leadingAnchor.constraint(equalTo: dropdownView.leadingAnchor).isActive = true
+                findViewController.view.trailingAnchor.constraint(equalTo: dropdownView.trailingAnchor).isActive = true
+                findViewController.view.topAnchor.constraint(equalTo: dropdownView.topAnchor).isActive = true
+                findViewController.view.bottomAnchor.constraint(equalTo: dropdownView.bottomAnchor).isActive = true
+                
+                NSAnimationContext.beginGrouping()
+                NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
+                NSAnimationContext.current().completionHandler = {
+                    NSApp.keyWindow?.makeFirstResponder(self.findViewController.textField_find)
+                }
+                NSAnimationContext.current().duration = 0.25
+                dropdownTopConstraint.animator().constant = 0
+                NSAnimationContext.endGrouping()
+            } else {
+                if NSApp.keyWindow?.firstResponder == findViewController.textField_find {
+                    NSApp.keyWindow?.makeFirstResponder(self)
+                }
+                NSAnimationContext.beginGrouping()
+                NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
+                NSAnimationContext.current().completionHandler = {
+                    self.findViewController.view.removeFromSuperview()
+                    if self.isExporting {
+                        self.isExporting = true
+                    } else if self.isPrinting {
+                        self.isPrinting = true
+                    } else if self.isReplacing {
+                        self.isReplacing = true
+                    }
+                }
+                NSAnimationContext.current().duration = 0.25
+                dropdownTopConstraint.animator().constant = -dropdownView.frame.height
+                NSAnimationContext.endGrouping()
+            }
+        }
+    }
+    var isReplacing = false {
+        didSet {
+            if isReplacing && (isExporting || isPrinting || isFinding) {
+                if isExporting {
+                    isExporting = false
+                } else if isPrinting {
+                    isPrinting = false
+                } else {
+                    isFinding = false
+                }
+            } else if isReplacing {
+                dropdownView.addSubview(replaceViewController.view)
+                replaceViewController.view.leadingAnchor.constraint(equalTo: dropdownView.leadingAnchor).isActive = true
+                replaceViewController.view.trailingAnchor.constraint(equalTo: dropdownView.trailingAnchor).isActive = true
+                replaceViewController.view.topAnchor.constraint(equalTo: dropdownView.topAnchor).isActive = true
+                replaceViewController.view.bottomAnchor.constraint(equalTo: dropdownView.bottomAnchor).isActive = true
+                
+                NSAnimationContext.beginGrouping()
+                NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
+                NSAnimationContext.current().completionHandler = {
+                    NSApp.keyWindow?.makeFirstResponder(self.replaceViewController.textField_find)
+                }
+                NSAnimationContext.current().duration = 0.25
+                dropdownTopConstraint.animator().constant = 0
+                NSAnimationContext.endGrouping()
+            } else {
+                if NSApp.keyWindow?.firstResponder == replaceViewController.textField_find || NSApp.keyWindow?.firstResponder == replaceViewController.textField_replace {
+                    NSApp.keyWindow?.makeFirstResponder(self)
+                }
+                NSAnimationContext.beginGrouping()
+                NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
+                NSAnimationContext.current().completionHandler = {
+                    self.replaceViewController.view.removeFromSuperview()
+                    if self.isExporting {
+                        self.isExporting = true
+                    } else if self.isPrinting {
+                        self.isPrinting = true
+                    } else if self.isFinding {
+                        self.isFinding = true
+                    }
+                }
+                NSAnimationContext.current().duration = 0.25
+                dropdownTopConstraint.animator().constant = -dropdownView.frame.height
+                NSAnimationContext.endGrouping()
+            }
+        }
+    }
+    var isExporting = false {
+        didSet {
+            if isExporting && (isFinding || isPrinting || isReplacing) {
+                if isFinding {
+                    isFinding = false
+                } else if isPrinting {
+                    isPrinting = false
+                } else {
+                    isReplacing = false
+                }
+            } else if isExporting {
+                dropdownView.addSubview(exportViewController.view)
+                exportViewController.view.leadingAnchor.constraint(equalTo: dropdownView.leadingAnchor).isActive = true
+                exportViewController.view.trailingAnchor.constraint(equalTo: dropdownView.trailingAnchor).isActive = true
+                exportViewController.view.topAnchor.constraint(equalTo: dropdownView.topAnchor).isActive = true
+                exportViewController.view.bottomAnchor.constraint(equalTo: dropdownView.bottomAnchor).isActive = true
+                
+                // Scroll to top
+                NSAnimationContext.beginGrouping()
+                NSAnimationContext.current().duration = 0.5
+                lectureClipper.animator().setBoundsOrigin(NSPoint(x: 0, y: 0))
+                NSAnimationContext.endGrouping()
+                
+                NSAnimationContext.beginGrouping()
+                NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
+                NSAnimationContext.current().duration = 0.25
+                dropdownTopConstraint.animator().constant = 0
+                NSAnimationContext.endGrouping()
+            } else {
+                if NSApp.keyWindow?.firstResponder == exportViewController.textField_name {
+                    NSApp.keyWindow?.makeFirstResponder(self)
+                }
+                NSAnimationContext.beginGrouping()
+                NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
+                NSAnimationContext.current().completionHandler = {
+                    self.exportViewController.view.removeFromSuperview()
+                    if self.isFinding {
+                        self.isFinding = true
+                    } else if self.isPrinting {
+                        self.isPrinting = true
+                    } else if self.isReplacing {
+                        self.isReplacing = true
+                    }
+                }
+                NSAnimationContext.current().duration = 0.25
+                dropdownTopConstraint.animator().constant = -dropdownView.frame.height
+                NSAnimationContext.endGrouping()
+            }
         }
     }
 }

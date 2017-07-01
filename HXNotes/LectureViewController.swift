@@ -369,6 +369,7 @@ class LectureViewController: NSViewController {
     ///
     func updateStickyHeader(with y: CGFloat) {
         headerTopConstraint.constant = y
+        header.layout()
     }
     
     // MARK: Auto Scroll and Resizing Helper Functions
@@ -440,6 +441,7 @@ class LectureViewController: NSViewController {
         }
     }
     func selectionChange() {
+        owner.checkScrollLevelOutside(from: self)
         if sharedFontManager.selectedFont == nil || textView_lecture.attributedString().length == 0 {
             return
         }

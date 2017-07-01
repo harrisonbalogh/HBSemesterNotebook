@@ -13,13 +13,11 @@ class MasterViewController: NSViewController {
     
     // MARK: View references
     @IBOutlet weak var container_content: NSView!
-    @IBOutlet weak var container_topBar: NSView!
     @IBOutlet weak var container_sideBar: NSView!
     @IBOutlet weak var sidebarBGBox: VisualEffectView!
     
     // Children controllers
     var sidebarViewController: SidebarViewController!
-    var topbarViewController: TopbarViewController!
     // The following 2 controllers fill container_content as is needed
     private var calendarViewController: CalendarViewController!
     var editorViewController: EditorViewController!
@@ -30,171 +28,11 @@ class MasterViewController: NSViewController {
     var dragBoxConstraintLead: NSLayoutConstraint!
     var dragBoxConstraintTop: NSLayoutConstraint!
     
-    @IBOutlet weak var topbarConstraintTop: NSLayoutConstraint!
-    @IBOutlet weak var sidebarConstraintLead: NSLayoutConstraint!
-    
     let appDelegate = NSApplication.shared().delegate as! AppDelegate
-    
-    // MARK: Handle top bar controlling
-    var isPrinting = false {
-        didSet {
-            
-        }
-    }
-    var isFinding = false {
-        didSet {
-            if isFinding && (isExporting || isPrinting || isReplacing) {
-                if isExporting {
-                    isExporting = false
-                } else if isPrinting {
-                    isPrinting = false
-                } else {
-                    isReplacing = false
-                }
-            } else if isFinding {
-                topbarViewController.view.addSubview(topbarViewController.findViewController.view)
-                topbarViewController.findViewController.view.leadingAnchor.constraint(equalTo: topbarViewController.view.leadingAnchor).isActive = true
-                topbarViewController.findViewController.view.trailingAnchor.constraint(equalTo: topbarViewController.view.trailingAnchor).isActive = true
-                topbarViewController.findViewController.view.topAnchor.constraint(equalTo: topbarViewController.view.topAnchor).isActive = true
-                topbarViewController.findViewController.view.bottomAnchor.constraint(equalTo: topbarViewController.view.bottomAnchor).isActive = true
-
-                NSAnimationContext.beginGrouping()
-                NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
-                NSAnimationContext.current().completionHandler = {
-                    NSApp.keyWindow?.makeFirstResponder(self.topbarViewController.findViewController.textField_find)
-                }
-                NSAnimationContext.current().duration = 0.25
-                topbarConstraintTop.animator().constant = 0
-                NSAnimationContext.endGrouping()
-            } else {
-                if NSApp.keyWindow?.firstResponder == topbarViewController.findViewController.textField_find {
-                    NSApp.keyWindow?.makeFirstResponder(self)
-                }
-                NSAnimationContext.beginGrouping()
-                NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
-                NSAnimationContext.current().completionHandler = {
-                    self.topbarViewController.findViewController.view.removeFromSuperview()
-                    if self.isExporting {
-                        self.isExporting = true
-                    } else if self.isPrinting {
-                        self.isPrinting = true
-                    } else if self.isReplacing {
-                        self.isReplacing = true
-                    }
-                }
-                NSAnimationContext.current().duration = 0.25
-                topbarConstraintTop.animator().constant = -container_topBar.frame.height
-                NSAnimationContext.endGrouping()
-            }
-        }
-    }
-    var isReplacing = false {
-        didSet {
-            if isReplacing && (isExporting || isPrinting || isFinding) {
-                if isExporting {
-                    isExporting = false
-                } else if isPrinting {
-                    isPrinting = false
-                } else {
-                    isFinding = false
-                }
-            } else if isReplacing {
-                topbarViewController.view.addSubview(topbarViewController.replaceViewController.view)
-                topbarViewController.replaceViewController.view.leadingAnchor.constraint(equalTo: topbarViewController.view.leadingAnchor).isActive = true
-                topbarViewController.replaceViewController.view.trailingAnchor.constraint(equalTo: topbarViewController.view.trailingAnchor).isActive = true
-                topbarViewController.replaceViewController.view.topAnchor.constraint(equalTo: topbarViewController.view.topAnchor).isActive = true
-                topbarViewController.replaceViewController.view.bottomAnchor.constraint(equalTo: topbarViewController.view.bottomAnchor).isActive = true
-                
-                NSAnimationContext.beginGrouping()
-                NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
-                NSAnimationContext.current().completionHandler = {
-                    NSApp.keyWindow?.makeFirstResponder(self.topbarViewController.replaceViewController.textField_find)
-                }
-                NSAnimationContext.current().duration = 0.25
-                topbarConstraintTop.animator().constant = 0
-                NSAnimationContext.endGrouping()
-            } else {
-                if NSApp.keyWindow?.firstResponder == topbarViewController.replaceViewController.textField_find || NSApp.keyWindow?.firstResponder == topbarViewController.replaceViewController.textField_replace {
-                    NSApp.keyWindow?.makeFirstResponder(self)
-                }
-                NSAnimationContext.beginGrouping()
-                NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
-                NSAnimationContext.current().completionHandler = {
-                    self.topbarViewController.findViewController.view.removeFromSuperview()
-                    if self.isExporting {
-                        self.isExporting = true
-                    } else if self.isPrinting {
-                        self.isPrinting = true
-                    } else if self.isFinding {
-                        self.isFinding = true
-                    }
-                }
-                NSAnimationContext.current().duration = 0.25
-                topbarConstraintTop.animator().constant = -container_topBar.frame.height
-                NSAnimationContext.endGrouping()
-            }
-        }
-    }
-    var isExporting = false {
-        didSet {
-            if isExporting && (isFinding || isPrinting || isReplacing) {
-                if isFinding {
-                    isFinding = false
-                } else if isPrinting {
-                    isPrinting = false
-                } else {
-                    isReplacing = false
-                }
-            } else if isExporting {
-                topbarViewController.view.addSubview(topbarViewController.exportViewController.view)
-                topbarViewController.exportViewController.view.leadingAnchor.constraint(equalTo: topbarViewController.view.leadingAnchor).isActive = true
-                topbarViewController.exportViewController.view.trailingAnchor.constraint(equalTo: topbarViewController.view.trailingAnchor).isActive = true
-                topbarViewController.exportViewController.view.topAnchor.constraint(equalTo: topbarViewController.view.topAnchor).isActive = true
-                topbarViewController.exportViewController.view.bottomAnchor.constraint(equalTo: topbarViewController.view.bottomAnchor).isActive = true
-                
-                editorViewController.notifyLectureSelection(lecture: "Lecture 1")
-                
-                NSAnimationContext.beginGrouping()
-                NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
-                NSAnimationContext.current().duration = 0.25
-                topbarConstraintTop.animator().constant = 0
-                NSAnimationContext.endGrouping()
-            } else {
-                if NSApp.keyWindow?.firstResponder == topbarViewController.exportViewController.textField_name {
-                    NSApp.keyWindow?.makeFirstResponder(self)
-                }
-                NSAnimationContext.beginGrouping()
-                NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
-                NSAnimationContext.current().completionHandler = {
-                    self.topbarViewController.exportViewController.view.removeFromSuperview()
-                    if self.isFinding {
-                        self.isFinding = true
-                    } else if self.isPrinting {
-                        self.isPrinting = true
-                    } else if self.isReplacing {
-                        self.isReplacing = true
-                    }
-                }
-                NSAnimationContext.current().duration = 0.25
-                topbarConstraintTop.animator().constant = -container_topBar.frame.height
-                NSAnimationContext.endGrouping()
-            }
-        }
-    }
-    ///
-    func export(to url: URL) {
-        if editorViewController != nil {
-            editorViewController.exportLectures(to: url)
-        } else if calendarViewController != nil {
-            // NYI
-        }
-    }
-    
     
     // Mark: Initialize the viewController ..................................................................
     override func viewDidLoad() {
         super.viewDidLoad()
-        topbarConstraintTop.constant = -container_topBar.frame.height
         
         NSApp.keyWindow?.makeFirstResponder(self)
         NSApp.keyWindow?.initialFirstResponder = self.view
@@ -203,6 +41,9 @@ class MasterViewController: NSViewController {
         sidebarBGBox.blendingMode = .behindWindow
         sidebarBGBox.appearance = NSAppearance(named: NSAppearanceNameVibrantDark)
         sidebarBGBox.material = .appearanceBased
+        
+        Alert.masterViewController = self
+        
         view.wantsLayer = true
     }
     override func viewDidAppear() {
@@ -210,10 +51,6 @@ class MasterViewController: NSViewController {
         for case let sidebarVC as SidebarViewController in self.childViewControllers {
             self.sidebarViewController = sidebarVC
             self.sidebarViewController.masterViewController = self
-        }
-        for case let topbarVC as TopbarViewController in self.childViewControllers {
-            self.topbarViewController = topbarVC
-            self.topbarViewController.masterViewController = self
         }
     }
     
@@ -248,7 +85,6 @@ class MasterViewController: NSViewController {
                 calendarViewController.removeFromParentViewController()
                 calendarViewController = nil
             }
-            topBarShown(false)
         }
     }
     private func popEditor() {
@@ -258,42 +94,28 @@ class MasterViewController: NSViewController {
                 editorViewController.removeFromParentViewController()
                 editorViewController = nil
             }
-            topBarShown(false)
         }
     }
     
     // MARK: Container Disclosure Functionality
-    /// Reveal or hide the top bar container.
-    func topBarShown(_ visible: Bool) {
-        NSAnimationContext.beginGrouping()
-        NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
-        NSAnimationContext.current().duration = 0.25
-        if visible {
-            topbarConstraintTop.animator().constant = 0
-        } else {
-            topbarConstraintTop.animator().constant = -container_topBar.frame.height
-        }
-        NSAnimationContext.endGrouping()
-    }
-    /// Toggles reveal or hide of top bar container.
-    func topBarShown() {
-        if topbarConstraintTop.constant == 0 {
-            topBarShown(false)
-        } else {
-            topBarShown(true)
-        }
-    }
-    
     func sideBarShown(_ visible: Bool) {
         NSAnimationContext.beginGrouping()
         NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
         NSAnimationContext.current().duration = 0.25
-        if visible {
-            sidebarConstraintLead.animator().constant = 0
-        } else {
-            sidebarConstraintLead.animator().constant = -container_sideBar.frame.width
-        }
+//        if visible {
+//            sidebarConstraintLead.animator().constant = 0
+//        } else {
+//            sidebarConstraintLead.animator().constant = -container_sideBar.frame.width - 1
+//        }
         NSAnimationContext.endGrouping()
+    }
+    
+    @IBAction func sideBarShownToggle(_ sender: NSButton) {
+//        if sidebarConstraintLead.constant == 0 {
+//            sideBarShown(false)
+//        } else {
+//            sideBarShown(true)
+//        }
     }
     
     // MARK: Notifiers - Child Controllers ............................................................
@@ -416,5 +238,11 @@ class MasterViewController: NSViewController {
         if editorViewController != nil {
             editorViewController.notifyFindAndReplace()
         }
+    }
+    
+    // MARK: Alert Funtionality
+    ///
+    func approveAlert() {
+        
     }
 }

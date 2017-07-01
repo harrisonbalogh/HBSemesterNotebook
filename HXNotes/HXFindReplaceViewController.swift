@@ -27,7 +27,7 @@ class HXFindReplaceViewController: NSViewController {
             textField_find.stringValue = HXFindViewController.lastFindUsed
             
             // If owned by a TopbarVC
-        } else if self.parent is TopbarViewController {
+        } else if self.parent is EditorViewController {
             
             label_lectureSelection.stringValue = "all lectures."
             textField_find.stringValue = HXFindViewController.lastFindUsed
@@ -50,8 +50,8 @@ class HXFindReplaceViewController: NSViewController {
     @IBAction func action_close(_ sender: NSButton) {
         if let parent = self.parent as? LectureViewController {
             parent.isReplacing = false
-        } else if let parent = self.parent as? TopbarViewController {
-            parent.masterViewController.isReplacing = false
+        } else if let parent = self.parent as? EditorViewController {
+            parent.isReplacing = false
         }
     }
     @IBAction func action_confirm(_ sender: Any) {
@@ -88,10 +88,9 @@ class HXFindReplaceViewController: NSViewController {
                 label_result.stringValue = "\(replaced) Replaced"
             }
             // If owned by a TopbarVC
-        } else if let parent = self.parent as? TopbarViewController {
-            let editorVC = parent.masterViewController.editorViewController!
+        } else if let parent = self.parent as? EditorViewController {
             var replaced = 0
-            for case let lectureVC as LectureViewController in editorVC.childViewControllers {
+            for case let lectureVC as LectureViewController in parent.childViewControllers {
                 var loc = lectureVC.textView_lecture.string!.lowercased().range(of: textField_find.stringValue)
                 while loc != nil {
                     let index = lectureVC.textView_lecture.string!.lowercased().distance(from: (lectureVC.textView_lecture.string?.startIndex)!, to: loc!.lowerBound)
@@ -112,12 +111,12 @@ class HXFindReplaceViewController: NSViewController {
         if let parent = self.parent as? LectureViewController {
             HXFindViewController.lastFindUsed = textField_find.stringValue
             parent.isReplacing = false
-            parent.owner.masterViewController.isReplacing = true
-        } else if let parent = self.parent as? TopbarViewController {
-            parent.masterViewController.isReplacing = false
-//            if parent.masterViewController.editorViewController.lectureFocused != nil {
-//                parent.masterViewController.editorViewController.lectureFocused.isReplacing = true
-//            }
+            parent.owner.isReplacing = true
+        } else if let parent = self.parent as? EditorViewController {
+            parent.isReplacing = false
+            if parent.lectureFocused != nil {
+                parent.lectureFocused.isReplacing = true
+            }
         }
     }
     

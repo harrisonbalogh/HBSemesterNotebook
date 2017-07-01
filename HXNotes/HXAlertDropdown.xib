@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11762" systemVersion="16F73" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11762"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="HXAlertDropdown" customModule="HXNotes" customModuleProvider="target">
+            <connections>
+                <outlet property="button_accept" destination="hFI-09-mlI" id="BCy-WP-Nkg"/>
+                <outlet property="button_ignore" destination="kXa-A7-cuI" id="aaz-at-qXT"/>
+                <outlet property="image_underline" destination="LiJ-nC-Hph" id="wVF-Oe-TUr"/>
+                <outlet property="label_accept" destination="5jC-8I-NKL" id="Ori-i2-v7D"/>
+                <outlet property="label_content" destination="tUL-Cl-W6x" id="lxv-sv-bLG"/>
+                <outlet property="label_course" destination="AXT-Ph-uIj" id="xvA-ES-Xec"/>
+                <outlet property="label_ignore" destination="bkf-zx-L0l" id="BjQ-il-Hol"/>
+                <outlet property="label_time" destination="HEb-tl-fFq" id="n1j-XS-Il4"/>
+                <outlet property="view" destination="nKh-yL-S2K" id="tPG-c2-jYw"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView translatesAutoresizingMaskIntoConstraints="NO" id="nKh-yL-S2K" userLabel="Dropdown Alert" customClass="VisualEffectView" customModule="HXNotes" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="518" height="30"/>
+            <subviews>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bkf-zx-L0l">
+                    <rect key="frame" x="460" y="6" width="46" height="17"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Ignore" id="CVT-8s-rJt">
+                        <font key="font" metaFont="systemBold"/>
+                        <color key="textColor" name="highlightColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="kXa-A7-cuI">
+                    <rect key="frame" x="462" y="-1" width="42" height="32"/>
+                    <buttonCell key="cell" type="bevel" bezelStyle="rounded" alignment="center" imageScaling="proportionallyDown" inset="2" id="0Mz-mT-SHR">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="systemBold"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="dismissController:" target="-2" id="VqF-aT-WfI"/>
+                    </connections>
+                </button>
+                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="619-cd-wYQ">
+                    <rect key="frame" x="2" y="2" width="26" height="26"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="26" id="q15-W5-H9x"/>
+                        <constraint firstAttribute="height" constant="26" id="tGI-rb-HKN"/>
+                    </constraints>
+                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="icon_clock" id="B9h-Fj-xvw"/>
+                </imageView>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HEb-tl-fFq">
+                    <rect key="frame" x="26" y="5" width="61" height="18"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="5:00PM" id="Afv-Rx-Sx7">
+                        <font key="font" size="16" name="Arial-BoldMT"/>
+                        <color key="textColor" name="highlightColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AXT-Ph-uIj">
+                    <rect key="frame" x="87" y="6" width="66" height="19"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="CECS 204" id="EMb-ie-zCT">
+                        <font key="font" size="13" name="Arial-ItalicMT"/>
+                        <color key="textColor" name="highlightColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tUL-Cl-W6x">
+                    <rect key="frame" x="153" y="6" width="72" height="19"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="has started." id="mIB-o2-OYD">
+                        <font key="font" size="13" name="ArialMT"/>
+                        <color key="textColor" name="highlightColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5jC-8I-NKL">
+                    <rect key="frame" x="327" y="6" width="117" height="18"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Start Lecture 23" id="lW7-Ot-aSj">
+                        <font key="font" metaFont="systemBold" size="14"/>
+                        <color key="textColor" name="highlightColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="hFI-09-mlI">
+                    <rect key="frame" x="329" y="0.0" width="113" height="30"/>
+                    <buttonCell key="cell" type="bevel" bezelStyle="rounded" alignment="center" imageScaling="proportionallyDown" inset="2" id="nc1-5i-gQU">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="systemBold"/>
+                    </buttonCell>
+                </button>
+                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="LiJ-nC-Hph" userLabel="Underline">
+                    <rect key="frame" x="329" y="4" width="113" height="2"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="2" id="84M-DM-D7F"/>
+                    </constraints>
+                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="axesIndependently" image="art_line_horiz" id="0Po-T8-i80"/>
+                </imageView>
+            </subviews>
+            <constraints>
+                <constraint firstItem="HEb-tl-fFq" firstAttribute="leading" secondItem="619-cd-wYQ" secondAttribute="trailing" id="4tN-25-3U4"/>
+                <constraint firstAttribute="height" constant="30" id="8ES-mh-5gN"/>
+                <constraint firstItem="tUL-Cl-W6x" firstAttribute="bottom" secondItem="HEb-tl-fFq" secondAttribute="bottom" constant="-1" id="ArB-Et-sLQ"/>
+                <constraint firstItem="kXa-A7-cuI" firstAttribute="leading" secondItem="5jC-8I-NKL" secondAttribute="trailing" constant="20" id="FTu-25-WsF"/>
+                <constraint firstItem="bkf-zx-L0l" firstAttribute="centerY" secondItem="nKh-yL-S2K" secondAttribute="centerY" id="GGa-D7-wDE"/>
+                <constraint firstItem="hFI-09-mlI" firstAttribute="top" secondItem="nKh-yL-S2K" secondAttribute="top" id="GRL-be-vVW"/>
+                <constraint firstItem="kXa-A7-cuI" firstAttribute="centerY" secondItem="nKh-yL-S2K" secondAttribute="centerY" id="Jk0-ZK-uNL"/>
+                <constraint firstItem="LiJ-nC-Hph" firstAttribute="trailing" secondItem="5jC-8I-NKL" secondAttribute="trailing" id="Jny-5c-fGh"/>
+                <constraint firstAttribute="trailing" secondItem="bkf-zx-L0l" secondAttribute="trailing" constant="14" id="RmK-jx-Zd9"/>
+                <constraint firstItem="kXa-A7-cuI" firstAttribute="trailing" secondItem="bkf-zx-L0l" secondAttribute="trailing" id="S0F-cb-Q5v"/>
+                <constraint firstItem="619-cd-wYQ" firstAttribute="centerY" secondItem="nKh-yL-S2K" secondAttribute="centerY" id="TmY-52-5dH"/>
+                <constraint firstItem="hFI-09-mlI" firstAttribute="trailing" secondItem="5jC-8I-NKL" secondAttribute="trailing" id="c7i-Nr-sLB"/>
+                <constraint firstItem="LiJ-nC-Hph" firstAttribute="leading" secondItem="5jC-8I-NKL" secondAttribute="leading" id="dPX-Ei-I3j"/>
+                <constraint firstAttribute="bottom" secondItem="hFI-09-mlI" secondAttribute="bottom" id="ec1-Sy-Wor"/>
+                <constraint firstItem="5jC-8I-NKL" firstAttribute="centerY" secondItem="nKh-yL-S2K" secondAttribute="centerY" id="ejz-ss-SpU"/>
+                <constraint firstItem="AXT-Ph-uIj" firstAttribute="leading" secondItem="HEb-tl-fFq" secondAttribute="trailing" constant="4" id="hMm-FF-f8r"/>
+                <constraint firstItem="hFI-09-mlI" firstAttribute="leading" secondItem="5jC-8I-NKL" secondAttribute="leading" id="iAT-kC-nc5"/>
+                <constraint firstItem="tUL-Cl-W6x" firstAttribute="leading" secondItem="AXT-Ph-uIj" secondAttribute="trailing" constant="4" id="iOB-eG-jXC"/>
+                <constraint firstItem="kXa-A7-cuI" firstAttribute="leading" secondItem="bkf-zx-L0l" secondAttribute="leading" id="iTw-a2-ybX"/>
+                <constraint firstItem="HEb-tl-fFq" firstAttribute="centerY" secondItem="nKh-yL-S2K" secondAttribute="centerY" constant="1" id="t2D-a6-VjF"/>
+                <constraint firstItem="LiJ-nC-Hph" firstAttribute="bottom" secondItem="5jC-8I-NKL" secondAttribute="bottom" constant="2" id="tNf-ir-kTT"/>
+                <constraint firstItem="AXT-Ph-uIj" firstAttribute="bottom" secondItem="HEb-tl-fFq" secondAttribute="bottom" constant="-1" id="uMi-eV-nVl"/>
+                <constraint firstItem="619-cd-wYQ" firstAttribute="leading" secondItem="nKh-yL-S2K" secondAttribute="leading" constant="2" id="vji-9h-aaM"/>
+            </constraints>
+        </customView>
+    </objects>
+    <resources>
+        <image name="art_line_horiz" width="6" height="1"/>
+        <image name="icon_clock" width="30" height="30"/>
+    </resources>
+</document>

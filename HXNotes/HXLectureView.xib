@@ -259,7 +259,7 @@
                         <constraints>
                             <constraint firstAttribute="height" constant="30" id="zUa-Rm-5VF"/>
                         </constraints>
-                        <color key="fillColor" red="0.96460121870000004" green="0.96476620440000005" blue="0.96459084750000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="fillColor" red="0.99090909090909096" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </box>
                     <imageView horizontalHuggingPriority="240" verticalHuggingPriority="251" horizontalCompressionResistancePriority="740" translatesAutoresizingMaskIntoConstraints="NO" id="vMK-7l-sAD">
                         <rect key="frame" x="0.0" y="38" width="560" height="8"/>

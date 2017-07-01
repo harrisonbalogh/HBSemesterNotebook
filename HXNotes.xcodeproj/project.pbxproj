@@ -16,6 +16,8 @@
 		C025FD9B1EC2A4970090A287 /* HXLectureBox.xib in Resources */ = {isa = PBXBuildFile; fileRef = C025FD9A1EC2A4970090A287 /* HXLectureBox.xib */; };
 		C025FD9D1EC2A68F0090A287 /* HXWeekBox.xib in Resources */ = {isa = PBXBuildFile; fileRef = C025FD9C1EC2A68F0090A287 /* HXWeekBox.xib */; };
 		C025FDA31EC2E29B0090A287 /* HXLectureBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C025FDA21EC2E29B0090A287 /* HXLectureBox.swift */; };
+		C02DB94F1F019BFF00044001 /* HXAbsentLectureBox.xib in Resources */ = {isa = PBXBuildFile; fileRef = C02DB94E1F019BFF00044001 /* HXAbsentLectureBox.xib */; };
+		C02DB9511F019C5B00044001 /* HXAbsentLectureBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C02DB9501F019C5B00044001 /* HXAbsentLectureBox.swift */; };
 		C037784E1EE279D900F099E4 /* HXDeleteConfirmationBox.xib in Resources */ = {isa = PBXBuildFile; fileRef = C037784D1EE279D900F099E4 /* HXDeleteConfirmationBox.xib */; };
 		C03778501EE27B8700F099E4 /* HXDeleteConfirmationBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C037784F1EE27B8700F099E4 /* HXDeleteConfirmationBox.swift */; };
 		C03AF8161EB856860028BA68 /* MasterWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C03AF8151EB856860028BA68 /* MasterWindowController.swift */; };
@@ -27,7 +29,6 @@
 		C07953841EA721B90022BFCF /* HXGridBox.xib in Resources */ = {isa = PBXBuildFile; fileRef = C07953831EA721B90022BFCF /* HXGridBox.xib */; };
 		C0824D651EEE28C4007DC002 /* HXFindReplaceView.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0824D641EEE28C4007DC002 /* HXFindReplaceView.xib */; };
 		C087C2701EEFE8F300E70469 /* HXFindReplaceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C087C26E1EEFE8F300E70469 /* HXFindReplaceViewController.swift */; };
-		C08CF4981EE340600074D104 /* TopbarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C08CF4971EE340600074D104 /* TopbarViewController.swift */; };
 		C095D7811EB9461900BBE7CB /* EditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C095D7801EB9461900BBE7CB /* EditorViewController.swift */; };
 		C095D7831EB9578700BBE7CB /* HXCourseEditBox.xib in Resources */ = {isa = PBXBuildFile; fileRef = C095D7821EB9578700BBE7CB /* HXCourseEditBox.xib */; };
 		C09B45261EDFADCB007CCC05 /* HXCourseAddBox.xib in Resources */ = {isa = PBXBuildFile; fileRef = C09B45251EDFADCB007CCC05 /* HXCourseAddBox.xib */; };
@@ -41,6 +42,13 @@
 		C0AAE14B1EA2BD13002939B6 /* HXNotesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0AAE14A1EA2BD13002939B6 /* HXNotesTests.swift */; };
 		C0AAE1561EA2BD13002939B6 /* HXNotesUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0AAE1551EA2BD13002939B6 /* HXNotesUITests.swift */; };
 		C0B68EF71EC3EA1E00E86439 /* HXWeekBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B68EF61EC3EA1E00E86439 /* HXWeekBox.swift */; };
+		C0B795911EFFA10800A0C527 /* HXAlertDropdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B7958F1EFFA10800A0C527 /* HXAlertDropdown.swift */; };
+		C0B795921EFFA10800A0C527 /* HXAlertDropdown.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0B795901EFFA10800A0C527 /* HXAlertDropdown.xib */; };
+		C0B795951EFFA11D00A0C527 /* HXAlertOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B795931EFFA11D00A0C527 /* HXAlertOverlay.swift */; };
+		C0B795961EFFA11D00A0C527 /* HXAlertOverlay.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0B795941EFFA11D00A0C527 /* HXAlertOverlay.xib */; };
+		C0B795991EFFA12700A0C527 /* HXAlertSidebar.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B795971EFFA12700A0C527 /* HXAlertSidebar.swift */; };
+		C0B7959A1EFFA12700A0C527 /* HXAlertSidebar.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0B795981EFFA12700A0C527 /* HXAlertSidebar.xib */; };
+		C0B795A01EFFA7BB00A0C527 /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B7959F1EFFA7BB00A0C527 /* Alert.swift */; };
 		C0B92E9D1EC951D700F44A3C /* HXNonScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B92E9C1EC951D700F44A3C /* HXNonScrollView.swift */; };
 		C0B92E9F1EC9535700F44A3C /* LectureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B92E9E1EC9535700F44A3C /* LectureViewController.swift */; };
 		C0D1A16D1ECAF96D006A17B2 /* HXFlippedClipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D1A16C1ECAF96D006A17B2 /* HXFlippedClipView.swift */; };
@@ -83,6 +91,8 @@
 		C025FD9A1EC2A4970090A287 /* HXLectureBox.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXLectureBox.xib; sourceTree = "<group>"; };
 		C025FD9C1EC2A68F0090A287 /* HXWeekBox.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXWeekBox.xib; sourceTree = "<group>"; };
 		C025FDA21EC2E29B0090A287 /* HXLectureBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXLectureBox.swift; sourceTree = "<group>"; };
+		C02DB94E1F019BFF00044001 /* HXAbsentLectureBox.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXAbsentLectureBox.xib; sourceTree = "<group>"; };
+		C02DB9501F019C5B00044001 /* HXAbsentLectureBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXAbsentLectureBox.swift; sourceTree = "<group>"; };
 		C037784D1EE279D900F099E4 /* HXDeleteConfirmationBox.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXDeleteConfirmationBox.xib; sourceTree = "<group>"; };
 		C037784F1EE27B8700F099E4 /* HXDeleteConfirmationBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXDeleteConfirmationBox.swift; sourceTree = "<group>"; };
 		C03AF8151EB856860028BA68 /* MasterWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MasterWindowController.swift; sourceTree = "<group>"; };
@@ -96,7 +106,6 @@
 		C07953831EA721B90022BFCF /* HXGridBox.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXGridBox.xib; sourceTree = "<group>"; };
 		C0824D641EEE28C4007DC002 /* HXFindReplaceView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXFindReplaceView.xib; sourceTree = "<group>"; };
 		C087C26E1EEFE8F300E70469 /* HXFindReplaceViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXFindReplaceViewController.swift; sourceTree = "<group>"; };
-		C08CF4971EE340600074D104 /* TopbarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopbarViewController.swift; sourceTree = "<group>"; };
 		C095D7801EB9461900BBE7CB /* EditorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditorViewController.swift; sourceTree = "<group>"; };
 		C095D7821EB9578700BBE7CB /* HXCourseEditBox.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXCourseEditBox.xib; sourceTree = "<group>"; };
 		C09B45251EDFADCB007CCC05 /* HXCourseAddBox.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXCourseAddBox.xib; sourceTree = "<group>"; };
@@ -116,6 +125,13 @@
 		C0AAE1551EA2BD13002939B6 /* HXNotesUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HXNotesUITests.swift; sourceTree = "<group>"; };
 		C0AAE1571EA2BD13002939B6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C0B68EF61EC3EA1E00E86439 /* HXWeekBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXWeekBox.swift; sourceTree = "<group>"; };
+		C0B7958F1EFFA10800A0C527 /* HXAlertDropdown.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXAlertDropdown.swift; sourceTree = "<group>"; };
+		C0B795901EFFA10800A0C527 /* HXAlertDropdown.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXAlertDropdown.xib; sourceTree = "<group>"; };
+		C0B795931EFFA11D00A0C527 /* HXAlertOverlay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXAlertOverlay.swift; sourceTree = "<group>"; };
+		C0B795941EFFA11D00A0C527 /* HXAlertOverlay.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXAlertOverlay.xib; sourceTree = "<group>"; };
+		C0B795971EFFA12700A0C527 /* HXAlertSidebar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXAlertSidebar.swift; sourceTree = "<group>"; };
+		C0B795981EFFA12700A0C527 /* HXAlertSidebar.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXAlertSidebar.xib; sourceTree = "<group>"; };
+		C0B7959F1EFFA7BB00A0C527 /* Alert.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Alert.swift; sourceTree = "<group>"; };
 		C0B92E9C1EC951D700F44A3C /* HXNonScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXNonScrollView.swift; sourceTree = "<group>"; };
 		C0B92E9E1EC9535700F44A3C /* LectureViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LectureViewController.swift; sourceTree = "<group>"; };
 		C0D1A16C1ECAF96D006A17B2 /* HXFlippedClipView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXFlippedClipView.swift; sourceTree = "<group>"; };
@@ -166,6 +182,16 @@
 			name = Model;
 			sourceTree = "<group>";
 		};
+		C026E95C1F0347190056BC27 /* NIB Templates */ = {
+			isa = PBXGroup;
+			children = (
+				C0B795901EFFA10800A0C527 /* HXAlertDropdown.xib */,
+				C0B795941EFFA11D00A0C527 /* HXAlertOverlay.xib */,
+				C0B795981EFFA12700A0C527 /* HXAlertSidebar.xib */,
+			);
+			name = "NIB Templates";
+			sourceTree = "<group>";
+		};
 		C07EE84A1EA8426700B87035 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -185,14 +211,6 @@
 			name = "NIB Templates";
 			sourceTree = "<group>";
 		};
-		C08CF4961EE340460074D104 /* Topbar */ = {
-			isa = PBXGroup;
-			children = (
-				C08CF4971EE340600074D104 /* TopbarViewController.swift */,
-			);
-			name = Topbar;
-			sourceTree = "<group>";
-		};
 		C095D77F1EB945EA00BBE7CB /* Editor Functionality */ = {
 			isa = PBXGroup;
 			children = (
@@ -210,6 +228,7 @@
 				C0FD6C221EC273C200338F1C /* HXCourseBox.swift */,
 				C00367071EA5851500C4DE0C /* HXCourseEditBox.swift */,
 				C025FDA21EC2E29B0090A287 /* HXLectureBox.swift */,
+				C02DB9501F019C5B00044001 /* HXAbsentLectureBox.swift */,
 				C0B68EF61EC3EA1E00E86439 /* HXWeekBox.swift */,
 				C09B45291EDFAED5007CCC05 /* HXCourseAddBox.swift */,
 				C09B452C1EDFD786007CCC05 /* NIB Templates */,
@@ -224,6 +243,7 @@
 				C095D7821EB9578700BBE7CB /* HXCourseEditBox.xib */,
 				C09B45251EDFADCB007CCC05 /* HXCourseAddBox.xib */,
 				C025FD9A1EC2A4970090A287 /* HXLectureBox.xib */,
+				C02DB94E1F019BFF00044001 /* HXAbsentLectureBox.xib */,
 				C025FD9C1EC2A68F0090A287 /* HXWeekBox.xib */,
 			);
 			name = "NIB Templates";
@@ -269,7 +289,7 @@
 				C0D68CFE1EA6C8CF009B06E3 /* HXCourseDragBox.swift */,
 				C0D68CFC1EA6943F009B06E3 /* HXCourseDragBox.xib */,
 				C0AAE13E1EA2BD12002939B6 /* Main.storyboard */,
-				C08CF4961EE340460074D104 /* Topbar */,
+				C0B7958E1EFFA0EC00A0C527 /* Alerts */,
 				C0A156FB1ED911E600F4DBC1 /* Sidebar */,
 				C095D77F1EB945EA00BBE7CB /* Editor Functionality */,
 				C0D687BE1EA4948A00BF1D05 /* Calendar Functionality */,
@@ -295,6 +315,26 @@
 				C0AAE1571EA2BD13002939B6 /* Info.plist */,
 			);
 			path = HXNotesUITests;
+			sourceTree = "<group>";
+		};
+		C0B7958E1EFFA0EC00A0C527 /* Alerts */ = {
+			isa = PBXGroup;
+			children = (
+				C0B7959F1EFFA7BB00A0C527 /* Alert.swift */,
+				C0B7959B1EFFA13B00A0C527 /* Views */,
+			);
+			name = Alerts;
+			sourceTree = "<group>";
+		};
+		C0B7959B1EFFA13B00A0C527 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				C0B7958F1EFFA10800A0C527 /* HXAlertDropdown.swift */,
+				C0B795931EFFA11D00A0C527 /* HXAlertOverlay.swift */,
+				C0B795971EFFA12700A0C527 /* HXAlertSidebar.swift */,
+				C026E95C1F0347190056BC27 /* NIB Templates */,
+			);
+			name = Views;
 			sourceTree = "<group>";
 		};
 		C0D687BE1EA4948A00BF1D05 /* Calendar Functionality */ = {
@@ -445,6 +485,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C0B795921EFFA10800A0C527 /* HXAlertDropdown.xib in Resources */,
+				C02DB94F1F019BFF00044001 /* HXAbsentLectureBox.xib in Resources */,
 				C057FD171EE4A00F00A62D9F /* HXPrintView.xib in Resources */,
 				C0D68CFD1EA6943F009B06E3 /* HXCourseDragBox.xib in Resources */,
 				C037784E1EE279D900F099E4 /* HXDeleteConfirmationBox.xib in Resources */,
@@ -457,10 +499,12 @@
 				C0AAE13D1EA2BD12002939B6 /* Assets.xcassets in Resources */,
 				C0009E2B1EC43BE200C80642 /* HXLectureView.xib in Resources */,
 				C0AAE1401EA2BD12002939B6 /* Main.storyboard in Resources */,
+				C0B7959A1EFFA12700A0C527 /* HXAlertSidebar.xib in Resources */,
 				C0E881A01ED66E30004974DE /* HXLectureConfirmationBox.xib in Resources */,
 				C0FD6C261EC273DA00338F1C /* HXCourseBox.xib in Resources */,
 				C0824D651EEE28C4007DC002 /* HXFindReplaceView.xib in Resources */,
 				C095D7831EB9578700BBE7CB /* HXCourseEditBox.xib in Resources */,
+				C0B795961EFFA11D00A0C527 /* HXAlertOverlay.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -485,10 +529,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C0B795991EFFA12700A0C527 /* HXAlertSidebar.swift in Sources */,
 				C087C2701EEFE8F300E70469 /* HXFindReplaceViewController.swift in Sources */,
 				C00719D71EF5FE0900161A7D /* HXTimeFormatter.swift in Sources */,
-				C08CF4981EE340600074D104 /* TopbarViewController.swift in Sources */,
 				C057FD1D1EE4B0BC00A62D9F /* HXFindViewController.swift in Sources */,
+				C0B795951EFFA11D00A0C527 /* HXAlertOverlay.swift in Sources */,
 				C0FD6C231EC273C200338F1C /* HXCourseBox.swift in Sources */,
 				C0B68EF71EC3EA1E00E86439 /* HXWeekBox.swift in Sources */,
 				C03AF8161EB856860028BA68 /* MasterWindowController.swift in Sources */,
@@ -498,13 +543,16 @@
 				C0D235EE1EA5369B00AB039A /* CalendarViewController.swift in Sources */,
 				C0B92E9D1EC951D700F44A3C /* HXNonScrollView.swift in Sources */,
 				C0A156FD1ED9120100F4DBC1 /* SidebarViewController.swift in Sources */,
+				C0B795A01EFFA7BB00A0C527 /* Alert.swift in Sources */,
 				C00367081EA5851500C4DE0C /* HXCourseEditBox.swift in Sources */,
+				C0B795911EFFA10800A0C527 /* HXAlertDropdown.swift in Sources */,
 				C0AAE13B1EA2BD12002939B6 /* HXNotes.xcdatamodeld in Sources */,
 				C0150EE81EA5AD6800BBBFA6 /* CourseLabel.swift in Sources */,
 				C00719D41EF5FC9900161A7D /* Semester+CoreDataClass.swift in Sources */,
 				C025FDA31EC2E29B0090A287 /* HXLectureBox.swift in Sources */,
 				C0D8DB391EF4EFF1009BB53E /* VisualEffectView.swift in Sources */,
 				C0D1A16D1ECAF96D006A17B2 /* HXFlippedClipView.swift in Sources */,
+				C02DB9511F019C5B00044001 /* HXAbsentLectureBox.swift in Sources */,
 				C0B92E9F1EC9535700F44A3C /* LectureViewController.swift in Sources */,
 				C09EBEBD1EAF20B700A6D72C /* MasterViewController.swift in Sources */,
 				C0AAE1361EA2BD12002939B6 /* AppDelegate.swift in Sources */,

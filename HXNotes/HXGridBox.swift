@@ -79,7 +79,7 @@ class HXGridBox: NSBox {
         
         // Initialize button functionality
         buttonRemove.target = self
-        buttonRemove.action = #selector(self.buttonRemoveAction)
+        buttonRemove.action = #selector(buttonRemoveAction)
         buttonRemove.alphaValue = 0.25
         
         trackingArea = NSTrackingArea(

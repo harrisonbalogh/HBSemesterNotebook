@@ -35,7 +35,7 @@ class HXExportViewController: NSViewController {
             textField_name.stringValue = parent.lecture.course!.title! + " Lecture \(parent.lecture.number) - \(parent.lecture.course!.semester!.year!.year) \(parent.lecture.course!.semester!.title!.capitalized)"
             
             // If owned by a TopbarVC
-        } else if let parent = self.parent as? TopbarViewController {
+        } else if let parent = self.parent as? EditorViewController {
             
             label_lectureSelection.stringValue = "all lectures"
             
@@ -73,8 +73,8 @@ class HXExportViewController: NSViewController {
     @IBAction func action_close(_ sender: NSButton) {
         if let parent = self.parent as? LectureViewController {
             parent.isExporting = false
-        } else if let parent = self.parent as? TopbarViewController {
-            parent.masterViewController.isExporting = false
+        } else if let parent = self.parent as? EditorViewController {
+            parent.isExporting = false
         }
     }
     @IBAction func action_confirm(_ sender: NSButton) {
@@ -83,19 +83,19 @@ class HXExportViewController: NSViewController {
         url.appendPathComponent("/" + textField_name.stringValue + ".rtfd")
         if let parent = self.parent as? LectureViewController {
             parent.owner.exportLecture(from: parent, to: url)
-        } else if let parent = self.parent as? TopbarViewController {
-            parent.masterViewController.export(to: url)
+        } else if let parent = self.parent as? EditorViewController {
+            parent.exportLectures(to: url)
         }
     }
     @IBAction func action_select(_ sender: NSButton) {
         if let parent = self.parent as? LectureViewController {
             parent.isExporting = false
-            parent.owner.masterViewController.isExporting = true
-        } else if let parent = self.parent as? TopbarViewController {
-            parent.masterViewController.isExporting = false
-//            if parent.masterViewController.editorViewController.lectureFocused != nil {
-//                parent.masterViewController.editorViewController.lectureFocused.isExporting = true
-//            }
+            parent.owner.isExporting = true
+        } else if let parent = self.parent as? EditorViewController {
+            parent.isExporting = false
+            if parent.lectureFocused != nil {
+                parent.lectureFocused.isExporting = true
+            }
         }
     }
     @IBAction func action_path(_ sender: NSButton) {
@@ -121,7 +121,7 @@ class HXExportViewController: NSViewController {
             // If owned by a LectureVC
             if let parent = self.parent as? LectureViewController {
                 textField_name.stringValue = parent.lecture.course!.title! + " Lecture \(parent.lecture.number) - \(parent.lecture.course!.semester!.year!.year) \(parent.lecture.course!.semester!.title!.capitalized)"
-            } else if let parent = self.parent as? TopbarViewController {
+            } else if let parent = self.parent as? EditorViewController {
                 textField_name.stringValue = parent.masterViewController.sidebarViewController.selectedCourse.title! + " Lectures - \(parent.masterViewController.sidebarViewController.selectedCourse.semester!.title!.capitalized) \(parent.masterViewController.sidebarViewController.selectedCourse.semester!.year!.year)"
             }
         } else {

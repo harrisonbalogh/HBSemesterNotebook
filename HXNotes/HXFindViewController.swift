@@ -48,12 +48,11 @@ class HXFindViewController: NSViewController {
                 }
                 label_result.stringValue = "\(foundIndices.count) Found"
             // If owned by a TopbarVC
-            } else if let parent = self.parent as? TopbarViewController {
-                let editorVC = parent.masterViewController.editorViewController!
+            } else if let parent = self.parent as? EditorViewController {
                 foundLecturesToFoundIndices = [[Int]]()
                 lectureIndex = [0, -1]
                 var controllerIndex = 0
-                for case let lectureVC as LectureViewController in editorVC.childViewControllers {
+                for case let lectureVC as LectureViewController in parent.childViewControllers {
                     foundLecturesToFoundIndices.append([Int]())
                     var searchThroughText = lectureVC.textView_lecture.string!
                     var loc = searchThroughText.lowercased().range(of: findString)
@@ -88,7 +87,7 @@ class HXFindViewController: NSViewController {
             textField_find.stringValue = HXFindViewController.lastFindUsed
 
         // If owned by a TopbarVC
-        } else if self.parent is TopbarViewController {
+        } else if self.parent is EditorViewController {
             
             label_lectureSelection.stringValue = "all lectures."
             textField_find.stringValue = HXFindViewController.lastFindUsed
@@ -111,8 +110,8 @@ class HXFindViewController: NSViewController {
     @IBAction func action_close(_ sender: NSButton) {
         if let parent = self.parent as? LectureViewController {
             parent.isFinding = false
-        } else if let parent = self.parent as? TopbarViewController {
-            parent.masterViewController.isFinding = false
+        } else if let parent = self.parent as? EditorViewController {
+            parent.isFinding = false
         }
     }
     @IBAction func action_right(_ sender: NSButton) {
@@ -128,7 +127,7 @@ class HXFindViewController: NSViewController {
                 parent.textView_lecture.setSelectedRange(NSMakeRange(foundIndices[findIndex], findString.characters.count))
                 checkScrollLevel(for: parent)
             }
-        } else if totalFound != 0 && parent is TopbarViewController {
+        } else if totalFound != 0 && parent is EditorViewController {
             
             // Find first lecture that has occurrences
             while foundLecturesToFoundIndices[lectureIndex[0]].count == 0 {
@@ -140,9 +139,8 @@ class HXFindViewController: NSViewController {
             }
             
             // If owned by a TopbarVC
-            if let parent = self.parent as? TopbarViewController {
-                let editorVC = parent.masterViewController.editorViewController!
-                var lectureVC = editorVC.childViewControllers[lectureIndex[0]] as! LectureViewController
+            if let parent = self.parent as? EditorViewController {
+                var lectureVC = parent.childViewControllers[lectureIndex[0]] as! LectureViewController
                 // Check if currently checking occurence is beyond number of occurences. Reset to zero.
                 if lectureIndex[1] >= foundLecturesToFoundIndices[lectureIndex[0]].count - 1 {
                     lectureIndex[1] = 0
@@ -161,7 +159,7 @@ class HXFindViewController: NSViewController {
                     // Else increment to next occurrence
                     lectureIndex[1] += 1
                 }
-                lectureVC = editorVC.childViewControllers[lectureIndex[0]] as! LectureViewController
+                lectureVC = parent.childViewControllers[lectureIndex[0]] as! LectureViewController
                 lectureVC.textView_lecture.setSelectedRange(NSMakeRange(foundLecturesToFoundIndices[lectureIndex[0]][lectureIndex[1]], findString.characters.count))
                 checkScrollLevel(for: lectureVC)
             }
@@ -195,9 +193,8 @@ class HXFindViewController: NSViewController {
             }
             
             // If owned by a TopbarVC
-            if let parent = self.parent as? TopbarViewController {
-                let editorVC = parent.masterViewController.editorViewController!
-                var lectureVC = editorVC.childViewControllers[lectureIndex[0]] as! LectureViewController
+            if let parent = self.parent as? EditorViewController {
+                var lectureVC = parent.childViewControllers[lectureIndex[0]] as! LectureViewController
                 // Check if currently checking occurence is below 0. Reset to previous lecture's count.
                 if lectureIndex[1] <= 0 {
                     // Reset occurrence count, so want to move to previous lectureVC, find previous one that has occurrences
@@ -215,7 +212,7 @@ class HXFindViewController: NSViewController {
                     // Else decrement to previous occurrence
                     lectureIndex[1] -= 1
                 }
-                lectureVC = editorVC.childViewControllers[lectureIndex[0]] as! LectureViewController
+                lectureVC = parent.childViewControllers[lectureIndex[0]] as! LectureViewController
                 lectureVC.textView_lecture.setSelectedRange(NSMakeRange(foundLecturesToFoundIndices[lectureIndex[0]][lectureIndex[1]], findString.characters.count))
                 checkScrollLevel(for: lectureVC)
             }
@@ -229,12 +226,12 @@ class HXFindViewController: NSViewController {
         if let parent = self.parent as? LectureViewController {
             HXFindViewController.lastFindUsed = textField_find.stringValue
             parent.isFinding = false
-            parent.owner.masterViewController.isFinding = true
-        } else if let parent = self.parent as? TopbarViewController {
-            parent.masterViewController.isFinding = false
-//            if parent.masterViewController.editorViewController.lectureFocused != nil {
-//                parent.masterViewController.editorViewController.lectureFocused.isFinding = true
-//            }
+            parent.owner.isFinding = true
+        } else if let parent = self.parent as? EditorViewController {
+            parent.isFinding = false
+            if parent.lectureFocused != nil {
+                parent.lectureFocused.isFinding = true
+            }
         }
     }
     @IBAction func action_textField(_ sender: NSTextField) {

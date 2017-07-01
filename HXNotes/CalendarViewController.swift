@@ -181,9 +181,9 @@ class CalendarViewController: NSViewController {
         noCourseSubLabel.isEnabled = true
         if thisSemester.courses!.count == 0 {
             noCourseLabel.stringValue = "No Course Data"
-            noCourseSubLabel.stringValue = "Add a course in the left sidebar."
+            noCourseSubLabel.stringValue = "Add a course in the sidebar."
         } else {
-            noCourseLabel.stringValue = "Place Course Here"
+            noCourseLabel.stringValue = "Drop Course Here"
             noCourseSubLabel.stringValue = "Drag the course color icon."
         }
     }
