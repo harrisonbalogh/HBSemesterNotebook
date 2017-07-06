@@ -75,17 +75,17 @@ class EditorViewController: NSViewController {
         }
     }
     
-    // MARK: Initialize editorViewController
+    // MARK: ___ Initialization ___
     override func viewDidLoad() {
         super.viewDidLoad()
         
         lectureScroller.alphaValue = 0
         
         // Setup observers for scrolling lectures
-        NotificationCenter.default.addObserver(self, selector: #selector(EditorViewController.didLiveScroll),
-                                               name: .NSScrollViewDidLiveScroll, object: lectureScroller)
-        NotificationCenter.default.addObserver(self, selector: #selector(EditorViewController.didScroll),
-                                               name: .NSViewBoundsDidChange, object: lectureClipper)
+//        NotificationCenter.default.addObserver(self, selector: #selector(EditorViewController.didLiveScroll),
+//                                               name: .NSScrollViewDidLiveScroll, object: lectureScroller)
+//        NotificationCenter.default.addObserver(self, selector: #selector(EditorViewController.didScroll),
+//                                               name: .NSViewBoundsDidChange, object: lectureClipper)
         
         findViewController = HXFindViewController(nibName: "HXFindView", bundle: nil)
         self.addChildViewController(findViewController)
@@ -104,7 +104,9 @@ class EditorViewController: NSViewController {
 
         didScroll()
     }
-    // MARK: Load object models ............................................................................
+    
+    // MARK: ––– Populating LectureStackView  –––
+
     /// Internal usage only. Reach this function by setting selectedCourse.
     private func loadLectures(from course: Course) {
         self.popLectures()
@@ -135,14 +137,6 @@ class EditorViewController: NSViewController {
         }
     }
     
-    // MARK: Populating stacks ...........................................................................................
-    /// Creates a Lecture object for the currently selected course, and pushes an HXLectureLedger plus HXLectureView
-    /// to their appropriate stacks.
-    private func addLecture(_ lecture: Lecture) {
-        
-        pushLecture( lecture )
-        
-    }
     /// Handles purely the visual aspect of lectures. Populates lectureStack.
     private func pushLecture(_ lecture: Lecture) {
         let newController = LectureViewController(nibName: "HXLectureView", bundle: nil)!
@@ -162,7 +156,8 @@ class EditorViewController: NSViewController {
         subLabelNoCourse.animator().alphaValue = 0
         NSAnimationContext.endGrouping()
     }
-    /// Handles purely the visual aspect of lectures. Resets lectureLedgerStack, lectureStack, 
+    
+    /// Handles purely the visual aspect of lectures. Resets lectureLedgerStack, lectureStack,
     /// selectedCourse.lectures!.count, and weekCount
     private func popLectures() {
         for case let lectureController as LectureViewController in self.childViewControllers {
@@ -172,7 +167,8 @@ class EditorViewController: NSViewController {
         lectureClipper.bounds.origin.y = 0
     }
     
-    // MARK: Scroll functionality
+    // MARK: ––– LectureStackView Visuals –––
+    
     /// Comes from the LectureLedger stack, scrolls to supplied lecture number. Lecture guaranteed to exist.
     private func scrollToLecture(_ lecture: String) {
         for case let lectureController as LectureViewController in self.childViewControllers {
@@ -188,18 +184,24 @@ class EditorViewController: NSViewController {
             }
         }
     }
+    
     /// This allows user to override any animations placed on the scroller to remove stuttering.
     func didLiveScroll() {
+        print("EditorVC - didLiveScroll")
+        return;
         // Stop any scrolling animations currently happening on the clipper
         NSAnimationContext.beginGrouping()
         NSAnimationContext.current().duration = 0 // This overwrites animator proxy object with 0 duration aimation
         lectureClipper.animator().setBoundsOrigin(NSPoint(x: 0, y: lectureClipper.bounds.origin.y))
         NSAnimationContext.endGrouping()
     }
+    
     /// Receives scrolling from lectureScroller NSScrollView and any time clipper changes its bounds.
     /// Is responsible for updating the headers to simulate the iOS effect of lecture titles
     /// staying at the top of scrollView.
     func didScroll() {
+        print("EditorVC - didScroll")
+        return;
         // didScroll should only be called when the origin.y changes, not the height
         if oldClipperHeight == lectureClipper.bounds.height {
             // nyi
@@ -231,23 +233,26 @@ class EditorViewController: NSViewController {
                     foundLowestLecture = true
                 }
             } else {
+                // The following handles displacing of two headers that are touching.
                 // Check how close the next element is to determine if stickyheader should be pushed aside
-//                print("Yeah")
-//                print("    stickyLecture.header.bounds.height: \(stickyLecture.header.bounds.height)")
-//                print("    clipperYPos: \(clipperYPos + stickyLecture.header.bounds.height)")
-//                print("    lectureYPos: \(lectureYPos - lectureController.view.bounds.height)")
-//                if (clipperYPos + stickyLecture.header.bounds.height) > (lectureYPos - lectureController.view.bounds.height) {
-//                    // Next element is encroaching on header so shift by Y difference
-//                    let y1 = (clipperYPos + stickyLecture.header.bounds.height) - (lectureYPos - lectureController.view.bounds.height)
-//                    let y2 = clipperYPos - (lectureStack.bounds.height - stickyLecture.view.frame.origin.y - stickyLecture.view.bounds.height)
-//                    print("    y: \(y2 - y1)")
-////                    stickyLecture.updateStickyHeader(with: y)
-//                }
+                //                print("Yeah")
+                //                print("    stickyLecture.header.bounds.height: \(stickyLecture.header.bounds.height)")
+                //                print("    clipperYPos: \(clipperYPos + stickyLecture.header.bounds.height)")
+                //                print("    lectureYPos: \(lectureYPos - lectureController.view.bounds.height)")
+                //                if (clipperYPos + stickyLecture.header.bounds.height) > (lectureYPos - lectureController.view.bounds.height) {
+                //                    // Next element is encroaching on header so shift by Y difference
+                //                    let y1 = (clipperYPos + stickyLecture.header.bounds.height) - (lectureYPos - lectureController.view.bounds.height)
+                //                    let y2 = clipperYPos - (lectureStack.bounds.height - stickyLecture.view.frame.origin.y - stickyLecture.view.bounds.height)
+                //                    print("    y: \(y2 - y1)")
+                ////                    stickyLecture.updateStickyHeader(with: y)
+                //                }
                 // Stop iterating through controller views
                 break
             }
         }
     }
+    // Transitioning to a new stickyHeader should reset the last stickyHeader to zero.
+    // Hence the need for a didSet.
     var stickyLecture: LectureViewController! {
         didSet {
             if oldValue != nil {
@@ -255,6 +260,45 @@ class EditorViewController: NSViewController {
             }
         }
     }
+    
+    /// Auto scrolling whenever user types.
+    /// Smoothly scroll clipper until text typing location is centered.
+    internal func checkScrollLevel(from sender: LectureViewController) {
+        //        if sender.isStyling {
+        //
+        //        }
+        let selectionY = sender.textSelectionHeight()
+        // Center current typing position to center of lecture scroller
+        let yPos = lectureStack.frame.height - selectionY // - lectureScroller.frame.height/2
+        // Don't auto-scroll if selection is already visible and above center line of window
+        if yPos < (lectureClipper.bounds.origin.y + sender.header.frame.height) || yPos > (lectureClipper.bounds.origin.y + lectureScroller.frame.height/2) {
+            NSAnimationContext.beginGrouping()
+            NSAnimationContext.current().duration = 0.5
+            // Get clipper to center selection in scroller
+            lectureClipper.animator().setBoundsOrigin(NSPoint(x: 0, y: yPos - lectureScroller.frame.height/2))
+            NSAnimationContext.endGrouping()
+        }
+    }
+    
+    /// Auto scrolling whenever user changes selection.
+    /// Will only occur when the selection is outside of the visible area (not within the buffer region).
+    internal func checkScrollLevelOutside(from sender: LectureViewController) {
+        //        if sender.isStyling {
+        //
+        //        }
+        let selectionY = sender.textSelectionHeight()
+        // Position of selection
+        let yPos = lectureStack.frame.height - selectionY // - lectureScroller.frame.height/2
+        // Don't auto-scroll if selection is visible
+        if yPos < (lectureClipper.bounds.origin.y + sender.header.frame.height) || yPos > (lectureClipper.bounds.origin.y + lectureScroller.frame.height) {
+            NSAnimationContext.beginGrouping()
+            NSAnimationContext.current().duration = 0.5
+            // Get clipper to center selection in scroller
+            lectureClipper.animator().setBoundsOrigin(NSPoint(x: 0, y: yPos - lectureScroller.frame.height/2))
+            NSAnimationContext.endGrouping()
+        }
+    }
+    
     /// This notifies the editorVC that the bottom buffer view was clicked and
     /// that the last lectureVC should be selected in the stack.
     func bottomBufferClicked() {
@@ -266,13 +310,14 @@ class EditorViewController: NSViewController {
         }
     }
     
-    // MARK: Notifiers
-    /// Received from LectureViewController on any change to a given lecture text view. 
+    // MARK: ––– Notifiers –––
+    
+    /// Received from LectureViewController on any change to a given lecture text view.
     /// Resizes the bottom buffer box
     internal func notifyHeightUpdate() {
         // Get last view in lectureStack
         let nonabsentLectureCount = (Array(selectedCourse.lectures!) as! [Lecture]).filter({!$0.absent}).count
-            
+        
         if let lectureController = childViewControllers.filter({$0 is LectureViewController})[nonabsentLectureCount - 1] as? LectureViewController {
             // Resize last lecture to keep text in the center of screen.
             if lectureController.view.frame.height < lectureScroller.frame.height/2 + 3 {
@@ -282,43 +327,9 @@ class EditorViewController: NSViewController {
             }
         }
     }
-    /// Auto scrolling whenever user types. 
-    /// Smoothly scroll clipper until text typing location is centered.
-    internal func checkScrollLevel(from sender: LectureViewController) {
-        if sender.isStyling {
-            let selectionY = sender.textSelectionHeight()
-            // Center current typing position to center of lecture scroller
-            let yPos = lectureStack.frame.height - selectionY // - lectureScroller.frame.height/2
-            // Don't auto-scroll if selection is already visible and above center line of window
-            if yPos < (lectureClipper.bounds.origin.y + stickyLecture.header.frame.height) || yPos > (lectureClipper.bounds.origin.y + lectureScroller.frame.height/2) {
-                NSAnimationContext.beginGrouping()
-                NSAnimationContext.current().duration = 0.5
-                // Get clipper to center selection in scroller
-                lectureClipper.animator().setBoundsOrigin(NSPoint(x: 0, y: yPos - lectureScroller.frame.height/2))
-                NSAnimationContext.endGrouping()
-            }
-        }
-    }
-    /// Auto scrolling whenever user changes selection.
-    /// Will only occur when the selection is outside of the visible area (not within the buffer region).
-    internal func checkScrollLevelOutside(from sender: LectureViewController) {
-        if sender.isStyling {
-            let selectionY = sender.textSelectionHeight()
-            // Position of selection
-            let yPos = lectureStack.frame.height - selectionY // - lectureScroller.frame.height/2
-            // Don't auto-scroll if selection is visible
-            if yPos < (lectureClipper.bounds.origin.y + stickyLecture.header.frame.height) || yPos > (lectureClipper.bounds.origin.y + lectureScroller.frame.height) {
-                NSAnimationContext.beginGrouping()
-                NSAnimationContext.current().duration = 0.5
-                // Get clipper to center selection in scroller
-                lectureClipper.animator().setBoundsOrigin(NSPoint(x: 0, y: yPos - lectureScroller.frame.height/2))
-                NSAnimationContext.endGrouping()
-            }
-        }
-    }
     
     func notifyLectureAddition(lecture: Lecture) {
-        addLecture(lecture)
+        pushLecture( lecture )
         
         notifyHeightUpdate()
         
@@ -337,6 +348,7 @@ class EditorViewController: NSViewController {
             }
         }
     }
+    
     func notifyFindAndReplace() {
         if selectedCourse != nil {
             if lectureFocused != nil {
@@ -346,6 +358,7 @@ class EditorViewController: NSViewController {
             }
         }
     }
+    
     func notifyPrint() {
         if selectedCourse != nil {
             if lectureFocused != nil {
@@ -355,6 +368,7 @@ class EditorViewController: NSViewController {
             }
         }
     }
+    
     func notifyExport() {
         if selectedCourse != nil {
             if lectureFocused != nil {
@@ -365,9 +379,60 @@ class EditorViewController: NSViewController {
         }
     }
     
-    // MARK: Find, Print, Export Functions
-    ///
-    func exportLectures(to url: URL){
+    // MARK: ––– Find Replace Print Export –––
+    
+    /// Reveal or hide the top bar container.
+    func topBarShown(_ visible: Bool) {
+        NSAnimationContext.beginGrouping()
+        NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
+        NSAnimationContext.current().duration = 0.25
+        if visible {
+            NSAnimationContext.current().completionHandler = {
+                // If showing top bar and isFind or isReplace, then set firstResponders
+                if self.isReplacing {
+                    NSApp.keyWindow?.makeFirstResponder(self.replaceViewController.textField_find)
+                } else if self.isFinding {
+                    NSApp.keyWindow?.makeFirstResponder(self.findViewController.textField_find)
+                }
+            }
+            dropdownTopConstraint.animator().constant = 0
+        } else {
+            NSAnimationContext.current().completionHandler = {
+                // Make sure all the VC's views are removed from their supers.
+                if self.exportViewController.view.superview != nil && !self.isExporting {
+                    self.exportViewController.view.removeFromSuperview()
+                } else if self.replaceViewController.view.superview != nil && !self.isReplacing {
+                    self.replaceViewController.view.removeFromSuperview()
+                } else if self.findViewController.view.superview != nil && !self.isFinding {
+                    self.findViewController.view.removeFromSuperview()
+                } // add for printVC
+                
+                if self.isFinding {
+                    self.isFinding = true
+                } else if self.isPrinting {
+                    self.isPrinting = true
+                } else if self.isReplacing {
+                    self.isReplacing = true
+                } else if self.isExporting {
+                    self.isExporting = true
+                }
+            }
+            dropdownTopConstraint.animator().constant = -dropdownView.frame.height
+        }
+        NSAnimationContext.endGrouping()
+    }
+    
+    /// Toggles reveal or hide of top bar container.
+    func topBarShown() {
+        if dropdownTopConstraint.constant == 0 {
+            topBarShown(false)
+        } else {
+            topBarShown(true)
+        }
+    }
+    
+    /// Produces a formatted RTFD file and places it at the provided URL.
+    func export(to url: URL){
         let attribString = NSMutableAttributedString()
         // Combine all data from every lecture
         for case let lectureController as LectureViewController in self.childViewControllers {
@@ -381,51 +446,13 @@ class EditorViewController: NSViewController {
             attribString.append(lectureController.textView_lecture.attributedString())
             attribString.append(NSAttributedString(string: "\n\n\n"))
         }
-        export(content: attribString, to: url)
-    }
-    ///
-    func exportLecture(from lecture: LectureViewController, to url: URL) {
-        let attribString = NSMutableAttributedString()
-        // Use currently focused lecture
-        attribString.append(lecture.label_lectureTitle.attributedStringValue)
-        if lecture.label_customTitle.stringValue != "" {
-            attribString.append(NSAttributedString(string: "  -  " + lecture.label_customTitle.stringValue + "\n"))
-        } else {
-            attribString.append(NSAttributedString(string: "\n"))
-        }
-        attribString.append(NSAttributedString(string: lecture.label_lectureDate.stringValue + "\n\n"))
-        attribString.append(lecture.textView_lecture.attributedString())
-        export(content: attribString, to: url)
-    }
-    ///
-    private func export(content: NSAttributedString, to url: URL) {
-        let fullRange = NSRange(location: 0, length: content.length)
+        
+        let fullRange = NSRange(location: 0, length: attribString.length)
         do {
-            let data = try content.fileWrapper(from: fullRange, documentAttributes: [NSDocumentTypeDocumentAttribute: NSRTFDTextDocumentType])
+            let data = try attribString.fileWrapper(from: fullRange, documentAttributes: [NSDocumentTypeDocumentAttribute: NSRTFDTextDocumentType])
             try data.write(to: url, options: .atomic, originalContentsURL: nil) // this for rtfd
         } catch {
             print("Something went wrong.")
-        }
-    }
-    
-    /// Reveal or hide the top bar container.
-    func topBarShown(_ visible: Bool) {
-        NSAnimationContext.beginGrouping()
-        NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
-        NSAnimationContext.current().duration = 0.25
-        if visible {
-            dropdownTopConstraint.animator().constant = 0
-        } else {
-            dropdownTopConstraint.animator().constant = -dropdownView.frame.height
-        }
-        NSAnimationContext.endGrouping()
-    }
-    /// Toggles reveal or hide of top bar container.
-    func topBarShown() {
-        if dropdownTopConstraint.constant == 0 {
-            topBarShown(false)
-        } else {
-            topBarShown(true)
         }
     }
     
@@ -456,33 +483,12 @@ class EditorViewController: NSViewController {
                 findViewController.view.topAnchor.constraint(equalTo: dropdownView.topAnchor).isActive = true
                 findViewController.view.bottomAnchor.constraint(equalTo: dropdownView.bottomAnchor).isActive = true
                 
-                NSAnimationContext.beginGrouping()
-                NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
-                NSAnimationContext.current().completionHandler = {
-                    NSApp.keyWindow?.makeFirstResponder(self.findViewController.textField_find)
-                }
-                NSAnimationContext.current().duration = 0.25
-                dropdownTopConstraint.animator().constant = 0
-                NSAnimationContext.endGrouping()
+                topBarShown(true)
             } else {
                 if NSApp.keyWindow?.firstResponder == findViewController.textField_find {
                     NSApp.keyWindow?.makeFirstResponder(self)
                 }
-                NSAnimationContext.beginGrouping()
-                NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
-                NSAnimationContext.current().completionHandler = {
-                    self.findViewController.view.removeFromSuperview()
-                    if self.isExporting {
-                        self.isExporting = true
-                    } else if self.isPrinting {
-                        self.isPrinting = true
-                    } else if self.isReplacing {
-                        self.isReplacing = true
-                    }
-                }
-                NSAnimationContext.current().duration = 0.25
-                dropdownTopConstraint.animator().constant = -dropdownView.frame.height
-                NSAnimationContext.endGrouping()
+                topBarShown(false)
             }
         }
     }
@@ -503,33 +509,12 @@ class EditorViewController: NSViewController {
                 replaceViewController.view.topAnchor.constraint(equalTo: dropdownView.topAnchor).isActive = true
                 replaceViewController.view.bottomAnchor.constraint(equalTo: dropdownView.bottomAnchor).isActive = true
                 
-                NSAnimationContext.beginGrouping()
-                NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
-                NSAnimationContext.current().completionHandler = {
-                    NSApp.keyWindow?.makeFirstResponder(self.replaceViewController.textField_find)
-                }
-                NSAnimationContext.current().duration = 0.25
-                dropdownTopConstraint.animator().constant = 0
-                NSAnimationContext.endGrouping()
+                topBarShown(true)
             } else {
                 if NSApp.keyWindow?.firstResponder == replaceViewController.textField_find || NSApp.keyWindow?.firstResponder == replaceViewController.textField_replace {
                     NSApp.keyWindow?.makeFirstResponder(self)
                 }
-                NSAnimationContext.beginGrouping()
-                NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
-                NSAnimationContext.current().completionHandler = {
-                    self.replaceViewController.view.removeFromSuperview()
-                    if self.isExporting {
-                        self.isExporting = true
-                    } else if self.isPrinting {
-                        self.isPrinting = true
-                    } else if self.isFinding {
-                        self.isFinding = true
-                    }
-                }
-                NSAnimationContext.current().duration = 0.25
-                dropdownTopConstraint.animator().constant = -dropdownView.frame.height
-                NSAnimationContext.endGrouping()
+                topBarShown(false)
             }
         }
     }
@@ -556,30 +541,12 @@ class EditorViewController: NSViewController {
                 lectureClipper.animator().setBoundsOrigin(NSPoint(x: 0, y: 0))
                 NSAnimationContext.endGrouping()
                 
-                NSAnimationContext.beginGrouping()
-                NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
-                NSAnimationContext.current().duration = 0.25
-                dropdownTopConstraint.animator().constant = 0
-                NSAnimationContext.endGrouping()
+                topBarShown(true)
             } else {
                 if NSApp.keyWindow?.firstResponder == exportViewController.textField_name {
                     NSApp.keyWindow?.makeFirstResponder(self)
                 }
-                NSAnimationContext.beginGrouping()
-                NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
-                NSAnimationContext.current().completionHandler = {
-                    self.exportViewController.view.removeFromSuperview()
-                    if self.isFinding {
-                        self.isFinding = true
-                    } else if self.isPrinting {
-                        self.isPrinting = true
-                    } else if self.isReplacing {
-                        self.isReplacing = true
-                    }
-                }
-                NSAnimationContext.current().duration = 0.25
-                dropdownTopConstraint.animator().constant = -dropdownView.frame.height
-                NSAnimationContext.endGrouping()
+                topBarShown(false)
             }
         }
     }

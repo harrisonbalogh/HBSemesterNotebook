@@ -57,16 +57,9 @@ class HXDeleteConfirmationBox: NSBox {
         }
         
         // Initialize button functionality
-        buttonDelete.target = self
-        buttonDelete.action = #selector(self.confirmDelete)
-        buttonCancel.target = self
-        buttonCancel.action = #selector(self.cancelDelete)
-    }
-    
-    func confirmDelete() {
-        parent.removeCourseConfirmed()
-    }
-    func cancelDelete() {
-        parent.removeCourseCanceled()
+//        buttonDelete.target = self
+//        buttonDelete.action = #selector(self.confirmDelete)
+//        buttonCancel.target = self
+//        buttonCancel.action = #selector(self.cancelDelete)
     }
 }

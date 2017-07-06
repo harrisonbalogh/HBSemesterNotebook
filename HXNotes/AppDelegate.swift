@@ -13,6 +13,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         // Insert code here to initialize your application
+        
+        // Menu Bar Icon
+        if let button = statusItem.button {
+            button.image = #imageLiteral(resourceName: "menu_icon@")
+        }
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
@@ -103,7 +108,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }()
 
     // MARK: - Core Data Saving and Undo support
-
     @IBAction func saveAction(_ sender: AnyObject?) {
         // Performs the save action for the application, which is to send the save: message to the application's managed object context. Any encountered errors are presented to the user.
         if !managedObjectContext.commitEditing() {
@@ -118,6 +122,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
         }
     }
+    
     ///
     @IBAction func findFunction(_ sender: NSMenuItem) {
         if let content = NSApp.keyWindow?.contentViewController as? MasterViewController {
@@ -142,7 +147,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             content.notifyPrint()
         }
     }
-    
 
     func windowWillReturnUndoManager(window: NSWindow) -> UndoManager? {
         // Returns the NSUndoManager for the application. In this case, the manager returned is that of the managed object context for the application.
@@ -189,5 +193,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // If we got here, it is time to quit.
         return .terminateNow
     }
+    
+    // MARK: Menu Bar Icon
+    let statusItem = NSStatusBar.system().statusItem(withLength: NSSquareStatusItemLength)
 }
 

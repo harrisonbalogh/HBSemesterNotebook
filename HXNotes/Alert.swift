@@ -36,7 +36,7 @@ class Alert {
                 masterViewController.addChildViewController(newController)
                 masterViewController.view.addSubview(newController.view)
                 newController.button_ignore.target = self
-                newController.button_ignore.action = #selector(Alert.cancelAlert)
+                newController.button_ignore.action = #selector(Alert.closeAlert)
                 
                 // Constraints
                 newController.topConstraint = newController.view.topAnchor.constraint(equalTo: masterViewController.view.topAnchor, constant: -30)
@@ -58,8 +58,8 @@ class Alert {
                     newController.image_underline.isHidden = true
                 } else {
                     newController.label_accept.stringValue = Alert.alertQueue[0].question!
-                    newController.button_accept.target = masterViewController.sidebarViewController
-                    newController.button_accept.action = #selector(masterViewController.sidebarViewController.tempAction_addLecture)
+                    newController.button_accept.target = Alert.alertQueue[0].target
+                    newController.button_accept.action = Alert.alertQueue[0].action
                 }
                 newController.label_ignore.stringValue = Alert.alertQueue[0].deny
                 
@@ -95,24 +95,40 @@ class Alert {
     let content: String
     let question: String?
     let deny: String
+    let action: Selector?
+    let target: AnyObject?
     
     /// Question parameter is the label applied to accepting the notification's action but can be
     /// provided with a nil in order for the accept button not to be displayed.
-    init(hour: Int, minute: Int, course: String, content: String, question: String?, deny: String) {
+    init(hour: Int, minute: Int, course: String, content: String, question: String?, deny: String, action: Selector?, target: AnyObject?) {
         self.hour = hour
         self.minute = minute
         self.course = course
         self.content = content
         self.question = question
         self.deny = deny
+        self.action = action
+        self.target = target
         
+        if question != nil {
+            if question == "Remove Course" {
+                for alert in Alert.alertQueue {
+                    if alert.question != nil {
+                        if alert.question == "Remove Course" && alert.course == course {
+                            // Don't add this alert since a remove course request already exists
+                            return
+                        }
+                    }
+                }
+            }
+        }
+
         // Check if this alert does not already exist
         if !Alert.alertQueue.contains(where: {
             $0.hour == self.hour &&
             $0.minute == self.minute &&
             $0.course == self.course &&
             $0.content == self.content }) {
-            print("Hey")
             
             Alert.alertQueue.append(self)
             
@@ -122,8 +138,16 @@ class Alert {
         }
     }
     
+    /// This initializer will assume the hour and minute is the current calendar time. Convenience initializer.
+    convenience init(course: String, content: String, question: String?, deny: String, action: Selector?, target: AnyObject?) {
+        let hour = NSCalendar.current.component(.hour, from: NSDate() as Date)
+        let minute = NSCalendar.current.component(.minute, from: NSDate() as Date)
+        
+        self.init(hour: hour, minute: minute, course: course, content: content, question: question, deny: deny, action: action, target: target)
+    }
+    
     ///
-    @objc public static func cancelAlert() {
+    @objc public static func closeAlert() {
         
         if let controller = Alert.alertControllers[0] as? HXAlertDropdown {
             NSAnimationContext.beginGrouping()
@@ -134,12 +158,13 @@ class Alert {
             }
             controller.topConstraint.animator().constant = -30
             NSAnimationContext.endGrouping()
-        } else
-        if let controller = Alert.alertControllers[0] as? HXAlertOverlay {
-
-        } else
-        if let controller = Alert.alertControllers[0] as? HXAlertSidebar {
-
         }
+//        else
+//        if let controller = Alert.alertControllers[0] as? HXAlertOverlay {
+//
+//        } else
+//        if let controller = Alert.alertControllers[0] as? HXAlertSidebar {
+//
+//        }
     }
 }

@@ -9,6 +9,7 @@
 
 import Foundation
 import CoreData
+import Cocoa
 
 @objc(Course)
 public class Course: NSManagedObject {
@@ -132,7 +133,7 @@ public class Course: NSManagedObject {
                     print("No timeslots today.")
                 }
                 
-                return count + 1
+                return count
             }
         }
         return 0
@@ -164,13 +165,15 @@ public class Course: NSManagedObject {
     /// requests a lecture number that is greater than the total number of lectures,
     /// as this is an invalid request.
     public func weekdayForLecture(number: Int) -> Int! {
+        print("Error in here? !!!!!!!!!! !!!!!!!!!! !!!!!!!!!! !!!!!!!!!! !!!!!!!!!! !!!!!!!!!! !!!!!!!!!! !!!!!!!!!!")
         var days = [Int]()
         for case let time as TimeSlot in self.timeSlots! {
             if !days.contains(Int(time.day) + 2) {
                 days.append(Int(time.day) + 2)
             }
         }
-        if days.count >= (number + 1) {
+        if (number + 1) > days.count {
+            print("... Yeah returning nil. There are \(days.count) lecture days each week. But you requested lecture day \(number + 1) ")
             return nil
         }
         days.sort()
@@ -187,5 +190,38 @@ public class Course: NSManagedObject {
             }
         }
         return theTimeSlot
+    }
+    
+    /// Returns a newly created Lecture object model for this course following the previous lecture with
+    /// the current date.
+    func newLecture() -> Lecture {
+        let appDelegate = NSApplication.shared().delegate as! AppDelegate
+        let newLecture = NSEntityDescription.insertNewObject(forEntityName: "Lecture", into: appDelegate.managedObjectContext) as! Lecture
+        newLecture.course = self
+        // Check which lecture number this is
+        var lectureNumber = 1
+        for case let lecture as Lecture in self.lectures! {
+            if lecture.absent {
+                lectureNumber += 1
+            }
+        }
+        newLecture.number = Int16(lectureNumber)
+        newLecture.weekOfYear = Int16(NSCalendar.current.component(.weekOfYear, from: NSDate() as Date))
+        newLecture.weekDay = Int16(NSCalendar.current.component(.weekday, from: NSDate() as Date))
+        newLecture.day = Int16(NSCalendar.current.component(.day, from: NSDate() as Date))
+        newLecture.month = Int16(NSCalendar.current.component(.month, from: NSDate() as Date))
+        newLecture.year = Int16(NSCalendar.current.component(.year, from: NSDate() as Date))
+        return newLecture
+    }
+    /// Returns a newly created Lecture object model for this course on the provided weekday and week of year.
+    /// This lecture will have the Absent flag on so it will not be displayed in the Editor.
+    func newAbsentLecture(on weekday: Int16, in weekOfYear: Int16) -> Lecture {
+        let appDelegate = NSApplication.shared().delegate as! AppDelegate
+        let newLecture = NSEntityDescription.insertNewObject(forEntityName: "Lecture", into: appDelegate.managedObjectContext) as! Lecture
+        newLecture.course = self
+        newLecture.weekDay = weekday
+        newLecture.weekOfYear = weekOfYear
+        newLecture.absent = true
+        return newLecture
     }
 }

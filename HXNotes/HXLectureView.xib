@@ -63,11 +63,11 @@
                     </imageView>
                     <scrollView identifier="content_scroller" borderType="none" horizontalLineScroll="0.0" horizontalPageScroll="0.0" verticalLineScroll="0.0" verticalPageScroll="0.0" hasHorizontalScroller="NO" hasVerticalScroller="NO" usesPredominantAxisScrolling="NO" verticalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="yL3-k5-tgV" customClass="HXNonScrollView" customModule="HXNotes" customModuleProvider="target">
                         <rect key="frame" x="10" y="6" width="532" height="31"/>
-                        <clipView key="contentView" identifier="content_clipper" drawsBackground="NO" copiesOnScroll="NO" id="46F-Zt-pFB">
+                        <clipView key="contentView" identifier="content_clipper" drawsBackground="NO" id="46F-Zt-pFB">
                             <rect key="frame" x="0.0" y="0.0" width="532" height="31"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
-                                <textView identifier="content_text" drawsBackground="NO" usesFontPanel="YES" findStyle="bar" continuousSpellChecking="YES" allowsUndo="YES" usesRuler="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" dashSubstitution="YES" spellingCorrection="YES" smartInsertDelete="YES" id="N8V-sZ-F2n" customClass="HXTextView" customModule="HXNotes" customModuleProvider="target">
+                                <textView identifier="content_text" drawsBackground="NO" usesFontPanel="YES" continuousSpellChecking="YES" allowsUndo="YES" usesRuler="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" dashSubstitution="YES" spellingCorrection="YES" smartInsertDelete="YES" id="N8V-sZ-F2n" customClass="HXTextView" customModule="HXNotes" customModuleProvider="target">
                                     <rect key="frame" x="0.0" y="0.0" width="532" height="31"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <color key="textColor" red="0.27931640619999998" green="0.27931640619999998" blue="0.27931640619999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -101,7 +101,7 @@
                             <constraint firstAttribute="height" constant="30" id="6yA-Og-F1P"/>
                         </constraints>
                         <color key="borderColor" name="controlDarkShadowColor" catalog="System" colorSpace="catalog"/>
-                        <color key="fillColor" red="0.96460121870000004" green="0.96476620440000005" blue="0.96459084750000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="fillColor" red="0.99090909090909096" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </box>
                     <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="oE3-bk-0Xg" userLabel="Header">
                         <rect key="frame" x="0.0" y="46" width="560" height="30"/>

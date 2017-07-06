@@ -54,7 +54,8 @@ class MasterViewController: NSViewController {
         }
     }
     
-    // MARK: Handle content container changes ................................................................    
+    // MARK: ––– Populating Content Container –––
+    
     private func pushCalendar(semester: Semester) {
         let strybrd = NSStoryboard.init(name: "Main", bundle: nil)
         if let newController = strybrd.instantiateController(withIdentifier: "CalendarID") as? CalendarViewController {
@@ -97,7 +98,8 @@ class MasterViewController: NSViewController {
         }
     }
     
-    // MARK: Container Disclosure Functionality
+    // MARK: ––– Sidebar Visuals ––– 
+    
     func sideBarShown(_ visible: Bool) {
         NSAnimationContext.beginGrouping()
         NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
@@ -118,7 +120,8 @@ class MasterViewController: NSViewController {
 //        }
     }
     
-    // MARK: Notifiers - Child Controllers ............................................................
+    // MARK: ––– Notifiers –––
+    
     /// Notify MasterViewController that a course has been selected or deselected.
     /// Passes on course selection to EditorViewController
     func notifyCourseSelection(course: Course?) {
@@ -238,11 +241,5 @@ class MasterViewController: NSViewController {
         if editorViewController != nil {
             editorViewController.notifyFindAndReplace()
         }
-    }
-    
-    // MARK: Alert Funtionality
-    ///
-    func approveAlert() {
-        
     }
 }

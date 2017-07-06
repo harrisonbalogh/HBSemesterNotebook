@@ -1,31 +1,40 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11759" systemVersion="16E195" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <entity name="Course" representedClassName="Course" syncable="YES" codeGenerationType="class">
-        <attribute name="title" attributeType="String" minValueString="1" syncable="YES"/>
-        <relationship name="notes" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="NoteEntry" syncable="YES"/>
-        <relationship name="times" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="TimeSlot" syncable="YES"/>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11759" systemVersion="16F73" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="HXNotes">
+    <entity name="Course" representedClassName="Course" syncable="YES" codeGenerationType="category">
+        <attribute name="colorBlue" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="colorGreen" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="colorRed" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="title" attributeType="String" defaultValueString="Untitled" syncable="YES"/>
+        <relationship name="lectures" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="Lecture" inverseName="course" inverseEntity="Lecture" syncable="YES"/>
+        <relationship name="semester" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Semester" inverseName="courses" inverseEntity="Semester" syncable="YES"/>
+        <relationship name="timeSlots" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="TimeSlot" inverseName="course" inverseEntity="TimeSlot" syncable="YES"/>
     </entity>
-    <entity name="NoteEntry" representedClassName="NoteEntry" syncable="YES" codeGenerationType="class">
-        <attribute name="lectureNumber" optional="YES" attributeType="Integer 16" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+    <entity name="Lecture" representedClassName="Lecture" syncable="YES" codeGenerationType="class">
+        <attribute name="absent" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="content" optional="YES" attributeType="Transformable" valueTransformerName="" customClassName="NSAttributedString" syncable="YES"/>
+        <attribute name="day" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="month" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="number" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="weekDay" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="weekOfYear" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="year" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <relationship name="course" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Course" inverseName="lectures" inverseEntity="Course" syncable="YES"/>
     </entity>
-    <entity name="Semester" representedClassName="Semester" syncable="YES" codeGenerationType="class">
-        <attribute name="title" attributeType="String" syncable="YES"/>
-        <relationship name="courses" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Course" syncable="YES"/>
-        <relationship name="year" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Year" inverseName="semesters" inverseEntity="Year" syncable="YES"/>
+    <entity name="Semester" representedClassName="Semester" syncable="YES" codeGenerationType="category">
+        <attribute name="title" attributeType="String" defaultValueString="fall" syncable="YES"/>
+        <attribute name="year" attributeType="Integer 16" defaultValueString="1993" usesScalarValueType="YES" syncable="YES"/>
+        <relationship name="courses" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="Course" inverseName="semester" inverseEntity="Course" syncable="YES"/>
     </entity>
     <entity name="TimeSlot" representedClassName="TimeSlot" syncable="YES" codeGenerationType="class">
-        <attribute name="hour" attributeType="Integer 16" minValueString="0" maxValueString="23" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="minute" attributeType="Integer 16" minValueString="0" maxValueString="59" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
-    </entity>
-    <entity name="Year" representedClassName="Year" syncable="YES" codeGenerationType="class">
-        <attribute name="year" attributeType="Integer 16" minValueString="0" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <relationship name="semesters" toMany="YES" minCount="2" maxCount="2" deletionRule="Nullify" ordered="YES" destinationEntity="Semester" inverseName="year" inverseEntity="Semester" syncable="YES"/>
+        <attribute name="day" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="hour" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <relationship name="course" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Course" inverseName="timeSlots" inverseEntity="Course" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Course" positionX="-29" positionY="-133" width="128" height="88"/>
-        <element name="NoteEntry" positionX="72" positionY="18" width="128" height="58"/>
-        <element name="Semester" positionX="-209" positionY="-235" width="128" height="88"/>
-        <element name="TimeSlot" positionX="-135" positionY="17" width="128" height="73"/>
-        <element name="Year" positionX="-351" positionY="-342" width="128" height="73"/>
+        <element name="Course" positionX="5697" positionY="10035" width="128" height="148"/>
+        <element name="Lecture" positionX="5875" positionY="10188" width="128" height="193"/>
+        <element name="Semester" positionX="5724" positionY="9900" width="128" height="88"/>
+        <element name="TimeSlot" positionX="5544" positionY="10206" width="128" height="88"/>
     </elements>
 </model>

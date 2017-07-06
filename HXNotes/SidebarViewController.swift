@@ -20,32 +20,24 @@ class SidebarViewController: NSViewController {
 
         if Int(yearLabel.stringValue) != nil {
             if semesterLabel.stringValue == "Spring" {
-                selectedSemester = produceSemester(titled: "spring", in: produceYear(Int(yearLabel.stringValue)!))
+                selectedSemester = Semester.produceSemester(titled: "spring", in: Int(yearLabel.stringValue)!)
             } else {
-                selectedSemester = produceSemester(titled: "fall", in: produceYear(Int(yearLabel.stringValue)!))
+                selectedSemester = Semester.produceSemester(titled: "fall", in: Int(yearLabel.stringValue)!)
             }
         }
     }
     func tempAction_addLecture() {
         if let courseHappening = selectedSemester.duringCourse() {
             selectedCourse = courseHappening
-            let newLec = newLecture()
+            let newLec = courseHappening.newLecture()
             addLecture(newLec)
             masterViewController.notifyLectureAddition(lecture: newLec)
         } else {
             let hour = NSCalendar.current.component(.hour, from: NSDate() as Date)
             let minute = NSCalendar.current.component(.minute, from: NSDate() as Date)
-            let _ = Alert(hour: hour, minute: minute, course: "Error:", content: "Can't add a new lecture when no course is happening.", question: nil, deny: "Close")
+            let _ = Alert(hour: hour, minute: minute, course: "Error:", content: "Can't add a new lecture when a course isn't happening.", question: nil, deny: "Close", action: nil, target: nil)
         }
-        Alert.cancelAlert()
-    }
-    @IBAction func tempAction_addLec(_ sender: NSButton) {
-        let newLec = newLecture()
-        addLecture(newLec)
-        masterViewController.notifyLectureAddition(lecture: newLec)
-        let hour = NSCalendar.current.component(.hour, from: NSDate() as Date)
-        let minute = NSCalendar.current.component(.minute, from: NSDate() as Date)
-        let _ = Alert(hour: hour, minute: minute, course: selectedCourse.title!, content: "given lecture \(newLec.number) by tester action.", question: nil, deny: "Close")
+        Alert.closeAlert()
     }
     @IBOutlet weak var semesterButtonAnimated: NSButton!
     @IBOutlet weak var semButtonAnimBotConstraint: NSLayoutConstraint!
@@ -180,7 +172,13 @@ class SidebarViewController: NSViewController {
                     if courseButton.labelTitle.stringValue != selectedCourse.title {
                         courseButton.deselect()
                     } else {
-                        scrollToCourse(courseButton)
+                        // Scroll to button
+                        let lectureY = ledgerStackView.frame.height - (courseButton.frame.origin.y + courseButton.frame.height) + 2
+                        // Animate scroll to course
+                        NSAnimationContext.beginGrouping()
+                        NSAnimationContext.current().duration = 0.5
+                        ledgerClipView.animator().setBoundsOrigin(NSPoint(x: 0, y: lectureY))
+                        NSAnimationContext.endGrouping()
                     }
                 }
             } else {
@@ -195,10 +193,8 @@ class SidebarViewController: NSViewController {
             masterViewController.notifyCourseSelection(course: selectedCourse)
         }
     }
-    var deleteConfirmationBox: HXDeleteConfirmationBox!
-    var courseToBeRemoved: HXCourseEditBox!
     
-    // MARK: Initialization
+    // MARK: ___ Initialization ___
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -230,78 +226,38 @@ class SidebarViewController: NSViewController {
         }
         tempAction_date()
     }
-    
-    override func viewDidLayout() {
-        super.viewDidLayout()
-        
-        if selectedCourse != nil {
-//            notify - HeightUpdate()
-        }
-    }
-    
-    // MARK: Course Data Model Functions
-    /// Will return a year that either has been newly created, or already exists with the given year number.
-    private func produceYear(_ year: Int) -> Year{
-        // Try fetching this year in persistent store
-        let yearFetch = NSFetchRequest<Year>(entityName: "Year")
-        do {
-            let years = try appDelegate.managedObjectContext.fetch(yearFetch) as [Year]
-            if let foundYear = years.filter({$0.year == Int16(year)}).first {
-                // This year already present in store so load
-                return foundYear
-            } else {
-                // Create year since it wasn't found
-                let newYear = NSEntityDescription.insertNewObject(forEntityName: "Year", into: appDelegate.managedObjectContext) as! Year
-                newYear.year = Int16(year)
-                return newYear
-            }
-        } catch { fatalError("Failed to fetch years: \(error)") }
-    }
-    /// Will return a semester that either has been newly created, or already exists for the given year and title.
-    private func produceSemester(titled: String, in year: Year) -> Semester {
-        // Try finding this semester in year selected
-        for case let foundSemester as Semester in year.semesters! {
-            if foundSemester.title! == titled {
-                return foundSemester
-            }
-        }
-        // Create semester since it wasn't found
-        let newSemester = NSEntityDescription.insertNewObject(forEntityName: "Semester", into: appDelegate.managedObjectContext) as! Semester
-        newSemester.title = titled
-        newSemester.year = year
-        return newSemester
-    }
 
-    // MARK: Lecture Data Model Functions
-    /// Returns a newly created Lecture data model object following the previous lecture.
-    private func newLecture() -> Lecture {
-        let newLecture = NSEntityDescription.insertNewObject(forEntityName: "Lecture", into: appDelegate.managedObjectContext) as! Lecture
-        newLecture.course = selectedCourse
-        // Check which lecture number this is
-        var lectureNumber = 1
-        for case let lecture as Lecture in selectedCourse.lectures! {
-            if lecture.absent {
-                lectureNumber += 1
+    // MARK: ––– Populating LedgerStackView  –––
+    
+    /// Access this function by setting SidebarViewController's selectedSemester.
+    /// Repopulates the ledgerStackView and Sidebar visuals to display HXCourseEditBox's.
+    private func editingMode() {
+        loadEditableCourses(fromSemester: selectedSemester)
+        masterViewController.notifySemesterEditing(semester: selectedSemester)
+        // UI control flow update - Note the RETURN call
+        editSemesterButton.state = NSOnState
+        if selectedSemester.courses!.count == 0 {
+            editSemesterButton.isEnabled = false
+        } else {
+            for case let course as Course in selectedSemester.courses! {
+                if course.timeSlots!.count == 0 {
+                    editSemesterButton.isEnabled = false
+                    return
+                }
             }
+            editSemesterButton.isEnabled = true
         }
-        newLecture.number = Int16(lectureNumber)
-        newLecture.weekOfYear = Int16(NSCalendar.current.component(.weekOfYear, from: NSDate() as Date))
-        newLecture.weekDay = Int16(NSCalendar.current.component(.weekday, from: NSDate() as Date))
-        newLecture.day = Int16(NSCalendar.current.component(.day, from: NSDate() as Date))
-        newLecture.month = Int16(NSCalendar.current.component(.month, from: NSDate() as Date))
-        newLecture.year = Int16(NSCalendar.current.component(.year, from: NSDate() as Date))
-        return newLecture
     }
-    /// Creates a Lecture with the absent flag on.
-    private func newAbsentLecture(on weekday: Int16, in weekOfYear: Int16) -> Lecture {
-        let newLecture = NSEntityDescription.insertNewObject(forEntityName: "Lecture", into: appDelegate.managedObjectContext) as! Lecture
-        newLecture.course = selectedCourse
-        newLecture.weekDay = weekday
-        newLecture.weekOfYear = weekOfYear
-        newLecture.absent = true
-        return newLecture
+    
+    /// Access this function by setting SidebarViewController's selectedSemester.
+    /// Repopulates the ledgerStackView and Sidebar visuals to display HXCourseBox's.
+    private func viewingMode() {
+        editSemesterButton.isEnabled = true
+        editSemesterButton.state = NSOffState
+        loadCourses(fromSemester: selectedSemester)
+        masterViewController.notifySemesterViewing(semester: selectedSemester)
     }
-    // MARK: Populate Course Ledger Functions
+    
     /// Populates ledgerStackView with all course data from given semester as HXCourseBox's.
     private func loadCourses(fromSemester semester: Semester) {
         popCourses()
@@ -317,6 +273,7 @@ class SidebarViewController: NSViewController {
             pushCourse( course )
         }
     }
+    
     /// Populates ledgerStackView with all course data from given semester as HXCourseEditBox's.
     private func loadEditableCourses(fromSemester semester: Semester) {
         popCourses()
@@ -335,12 +292,14 @@ class SidebarViewController: NSViewController {
             notifyTimeSlotAdded()
         }
     }
+    
     /// Handles purely the visual aspect of courses. Internal use only. Adds a new HXCourseBox to the ledgerStackView.
     private func pushCourse(_ course: Course) {
         let newBox = HXCourseBox.instance(with: course, owner: self)
         ledgerStackView.insertArrangedSubview(newBox!, at: ledgerStackView.arrangedSubviews.count - 1)
         newBox?.widthAnchor.constraint(equalTo: ledgerStackView.widthAnchor).isActive = true
     }
+    
     /// Handles purely the visual aspect of editable courses. Internal use only. Adds a new HXCourseEditBox to the ledgerStackView.
     private func pushEditableCourse(_ course: Course) {
         let newBox = HXCourseEditBox.instance(with: course, withCourseIndex: ledgerStackView.subviews.count-1, withParent: self)
@@ -352,13 +311,15 @@ class SidebarViewController: NSViewController {
             editSemesterButton.state = NSOnState
         }
     }
+    
     /// Handles purely the visual aspect of editable courses. Internal use only. Removes the given HXCourseEditBox from the ledgerStackView
     private func popEditableCourse(_ course: HXCourseEditBox) {
         course.removeFromSuperview()
-        appDelegate.managedObjectContext.delete( selectedSemester.retrieveCourse(named: course.labelCourse.stringValue))
+        appDelegate.managedObjectContext.delete( selectedSemester.retrieveCourse(named: course.labelCourse.stringValue) )
         appDelegate.saveAction(self)
         masterViewController.notifyCourseDeletion(named: course.labelCourse.stringValue)
     }
+    
     /// Handles purely the visual aspect of courses. Internal use only. Removes all HXCourseBox's from the ledgerStackView.
     private func popCourses() {
         popLectures()
@@ -367,7 +328,6 @@ class SidebarViewController: NSViewController {
         }
     }
     
-    // MARK: Populate Lecture Ledger Functions
     /// Called when a course is pressed in the ledgerStackView. 
     /// Populate ledgerStackView with the loaded lectures from the given course.
     private func loadLectures(from course: Course) {
@@ -435,80 +395,14 @@ class SidebarViewController: NSViewController {
         weekCount = 0
     }
     
-    // MARK: Control Course Ledger Functions
-    /// CourseLabel in HXCourseEditBox - on Enter
-    /// Finds the course with the given name and renames it if possible
-    internal func renameCourse(_ courseBox: HXCourseEditBox) {
-        if selectedSemester.retrieveCourse(named: courseBox.labelCourse.stringValue) == nil {
-            selectedSemester.retrieveCourse(named: courseBox.oldName).title = courseBox.labelCourse.stringValue
-            (self.parent! as! MasterViewController).notifyCourseRename(from: courseBox.oldName)
-            courseBox.oldName = courseBox.labelCourse.stringValue
-        } else {
-            courseBox.revokeNameChange()
-        }
-    }
-    /// For external and internal usage. Creates a new Course data object and updates
-    /// ledgerStackView visuals with a new HXCourseBox.
-    internal func addCourse() {
-        // Creates new course data model and puts new view in ledgerStackView
-        pushCourse( selectedSemester.newCourse() )
-    }
-    /// For external and internal usage. Creates a new Course data object and updates 
-    /// ledgerStackView visuals with a new HXCourseEditBox.
-    internal func addEditableCourse() {
-        // Creates new course data model and puts new view in ledgerStackView
-        pushEditableCourse( selectedSemester.newCourse() )
-    }
-    /// Displays the confirmation delete box before proceeding with course removal.
-    internal func removeCourse(_ course: HXCourseEditBox) {
-        if deleteConfirmationBox == nil {
-            course.buttonTrash.isEnabled = false
-            courseToBeRemoved = course
-            deleteConfirmationBox = HXDeleteConfirmationBox.instance(with: course.course, for: self)
-            masterViewController.notifyCourseDeletionConfirmation(deleteConfirmationBox)
-        }
-    }
-    /// Confirms removal of all information associated with a course object. Model and Views
-    internal func removeCourseConfirmed() {
-        // Remove course from ledgerStackView, reset grid spaces of timeSlots, delete data model
-        popEditableCourse( courseToBeRemoved )
-        // Prevent user from accessing lecture view if there are no courses
-        if selectedSemester.courses!.count == 0 {
-            editSemesterButton.isEnabled = false
-            editSemesterButton.state = NSOnState
-        } else {
-            // Check if the remaining courses have any TimeSlots
-            for case let course as Course in selectedSemester.courses! {
-                if course.timeSlots!.count == 0 {
-                    editSemesterButton.isEnabled = false
-                    editSemesterButton.state = NSOnState
-                    deleteConfirmationBox.removeFromSuperview()
-                    deleteConfirmationBox = nil
-                    courseToBeRemoved = nil
-                    return
-                }
-            }
-            editSemesterButton.isEnabled = true
-            editSemesterButton.state = NSOnState
-        }
-        deleteConfirmationBox.removeFromSuperview()
-        deleteConfirmationBox = nil
-        courseToBeRemoved = nil
-    }
-    /// Cancels removal of a course from the HXDeleteConfirmationBox
-    internal func removeCourseCanceled() {
+    // MARK: ––– LedgerStackView Visuals –––
 
-        courseToBeRemoved.buttonTrash.isEnabled = true
-        
-        deleteConfirmationBox.removeFromSuperview()
-        deleteConfirmationBox = nil
-        courseToBeRemoved = nil
-    }
     /// Apply course selection visuals. Nil value is appropriate when clearing selection.
     /// See selectedCourse didSet method for more details.
     func select(course: Course?) {
         self.selectedCourse = course
     }
+    
     /// Apply lecture focus visuals. Nil value is appropriate when clearing focus.
     func focus(lecture: Lecture?) {
         if lecture == nil {
@@ -523,135 +417,38 @@ class SidebarViewController: NSViewController {
                     box.unfocus()
                 } else {
                     box.focus()
-                    scrollToLectureBox(box)
+                    // Scroll to lecture box..................
+                    let lectureY = ledgerStackView.frame.height - (lectureStackView.frame.origin.y + box.frame.origin.y + box.frame.height)
+                    let clipperY = ledgerClipView.bounds.origin.y
+                    // Scroll only if not visible
+                    if lectureY > (ledgerScrollView.frame.height + clipperY) || lectureY < clipperY {
+                        // Animate scroll to lecture
+                        NSAnimationContext.beginGrouping()
+                        NSAnimationContext.current().duration = 1
+                        ledgerClipView.animator().setBoundsOrigin(NSPoint(x: 0, y: lectureY))
+                        NSAnimationContext.endGrouping()
+                    }
                 }
             }
         }
     }
+    
     /// Notify Sidebar from a HXLectureBox that a lecture has been clicked.
     func select(lecture: String) {
         masterViewController.notifyLectureSelection(lecture: lecture)
     }
-    /// Visually scrolls the sidebar's ledger so the lecture box is visible
-    private func scrollToLectureBox(_ box: HXLectureBox) {
-        let lectureY = ledgerStackView.frame.height - (lectureStackView.frame.origin.y + box.frame.origin.y + box.frame.height)
-        let clipperY = ledgerClipView.bounds.origin.y
-//        if stickyHeader != nil {
-//            lectureY -= stickyHeader.frame.height
-//        }
-        // Scroll only if not visible
-        if lectureY > (ledgerScrollView.frame.height + clipperY) || lectureY < clipperY {
-            // Animate scroll to lecture
-            NSAnimationContext.beginGrouping()
-            NSAnimationContext.current().duration = 1
-            ledgerClipView.animator().setBoundsOrigin(NSPoint(x: 0, y: lectureY))
-            NSAnimationContext.endGrouping()
-        }
-    }
-    /// Visually scrolls the sidebar's ledger so the course box is at the top
-    private func scrollToCourse(_ box: HXCourseBox) {
-        let lectureY = ledgerStackView.frame.height - (box.frame.origin.y + box.frame.height) + 2
-        // Animate scroll to course
+    
+    /// User scrolling should cancel any scroll animations. Else the clipper stutters.
+    func didLiveScroll() {
+        // Stop any scrolling animations currently happening on the clipper
         NSAnimationContext.beginGrouping()
-        NSAnimationContext.current().duration = 0.5
-        ledgerClipView.animator().setBoundsOrigin(NSPoint(x: 0, y: lectureY))
+        NSAnimationContext.current().duration = 0 // This overwrites animator proxy object with 0 duration aimation
+        ledgerClipView.animator().setBoundsOrigin(NSPoint(x: 0, y: ledgerClipView.bounds.origin.y))
         NSAnimationContext.endGrouping()
     }
-    /// Access this function by setting SidebarViewController's selectedSemester.
-    /// Repopulates the ledgerStackView and Sidebar visuals to display HXCourseEditBox's.
-    private func editingMode() {
-        loadEditableCourses(fromSemester: selectedSemester)
-//        // Remove sticky header
-//        if stickyHeader != nil {
-//            stickyHeader.removeFromSuperview()
-//            stickyHeader = nil
-//        }
-        masterViewController.notifySemesterEditing(semester: selectedSemester)
-        // UI control flow update - Note the RETURN call
-        editSemesterButton.state = NSOnState
-        if selectedSemester.courses!.count == 0 {
-            editSemesterButton.isEnabled = false
-        } else {
-            for case let course as Course in selectedSemester.courses! {
-                if course.timeSlots!.count == 0 {
-                    editSemesterButton.isEnabled = false
-                    return
-                }
-            }
-            editSemesterButton.isEnabled = true
-        }
-    }
-    /// Access this function by setting SidebarViewController's selectedSemester.
-    /// Repopulates the ledgerStackView and Sidebar visuals to display HXCourseBox's.
-    private func viewingMode() {
-        editSemesterButton.isEnabled = true
-        editSemesterButton.state = NSOffState
-        loadCourses(fromSemester: selectedSemester)
-        masterViewController.notifySemesterViewing(semester: selectedSemester)
-    }
     
-    // MARK: Control Lecture Ledger Functions
-    /// For external and internal usage. Creates a new Lecture data object and updates
-    /// ledgerStackView visuals with a new HXLectureBox.
-    private func addLecture(_ lecture: Lecture) {
-        
-        pushLecture( lecture )
-        
-    }
-    
-    // MARK: Dragging Editable Course Functionality
-    // Reference to index of course being dragged, nil when not dragging
-    private var draggedCourse: Course!
-    /// HXCourseEditBox - Mouse Up: Stop dragging a course to a time slot
-    internal func mouseUp_courseBox(for course: Course, at loc: NSPoint) {
-        // Ensure a course was being dragged
-        if self.draggedCourse != nil {
-            // Remove drag box from superview
-            masterViewController.notifyCourseDragEnd(course: course, at: loc)
-            self.draggedCourse = nil
-        }
-    }
-    /// HXCourseEditBox - Mouse Drag: Drag a course to a time slot
-    internal func mouseDrag_courseBox(with editBox: HXCourseEditBox, to loc: NSPoint) {
-        if self.draggedCourse == nil {
-            self.draggedCourse = editBox.course
-            masterViewController.notifyCourseDragStart(editBox: editBox, to: loc)
-        } else {
-            masterViewController.notifyCourseDragMoved(editBox: editBox, to: loc)
-        }
-    }
-    
-    // MARK: Notifiers - from MasterViewController
-    /// Notify sidebar that user should be able to finish editing since the
-    /// minimum requirement of having at least 1 time established has been met.
-    func notifyTimeSlotAdded() {
-        // If any course don't have any TimeSlots, don't allow user to proceed to Editor
-        for case let course as Course in selectedSemester.courses! {
-            if course.timeSlots!.count == 0 {
-                return
-            }
-        }
-        editSemesterButton.isEnabled = true
-        editSemesterButton.state = NSOnState
-    }
-    /// Notify sidebar that user has removed a time slot from a course and should
-    /// check if that was the only time slot for course
-    func notifyTimeSlotRemoved() {
-        // If any courses don't have any TimeSlots, don't allow user to proceed to Editor
-        for case let course as Course in selectedSemester.courses! {
-            if course.timeSlots!.count == 0 {
-                editSemesterButton.isEnabled = false
-                editSemesterButton.state = NSOnState
-                break
-            }
-        }
-    }
-    
-    // MARK: Sticky Header Functionality
-    var stickyHeader: HXCourseBox!
-    
-    /// Called when bottom buffere space needs to reevaluate its height to allow selected course
-    /// to be scrollable to the top.
+    /// Reevaluate the height of the bottom buffer space box, which keeps the selected course able
+    /// to be scrolled so it aligns with the top of the view.
     private func notifyHeightUpdate() {
         
         bottomBufferHeightConstraint.constant = 0
@@ -669,49 +466,100 @@ class SidebarViewController: NSViewController {
             }
         }
     }
-    /// This is called by the users scrolling versus didScroll is called by ledgerClipView bounds change.
-    /// Distinguished here since user scrolling should cancel any scroll animations. Else the clipper stutters.
-    func didLiveScroll() {
-        // Stop any scrolling animations currently happening on the clipper
-        NSAnimationContext.beginGrouping()
-        NSAnimationContext.current().duration = 0 // This overwrites animator proxy object with 0 duration aimation
-        ledgerClipView.animator().setBoundsOrigin(NSPoint(x: 0, y: ledgerClipView.bounds.origin.y))
-        NSAnimationContext.endGrouping()
-//        // Then call didScroll as normal to produce stickyheader effect
-//        didScroll()
-    }
-    /// Receives scrolling from lectureScroller NSScrollView and any time clipper changes its bounds.
-    /// Is responsible for updating the StickyHeaderBox to simulate the iOS effect of lecture titles
-    /// staying at the top of scrollView.
-    func didScroll() {
-        if stickyHeader != nil {
-            var box: HXCourseBox!
-            for case let courseButton as HXCourseBox in ledgerStackView.arrangedSubviews {
-                if courseButton.labelTitle.stringValue == selectedCourse.title {
-                    box = courseButton
-                    break
+    
+    // MARK: ––– Lecture & Course Model –––
+    
+    /// Confirms removal of all information associated with a course object. Model and Views
+    internal func removeCourse(_ editBox: HXCourseEditBox) {
+        // Remove course from ledgerStackView, reset grid spaces of timeSlots, delete data model
+        popEditableCourse(editBox)
+        // Prevent user from accessing lecture view if there are no courses
+        if selectedSemester.courses!.count == 0 {
+            editSemesterButton.isEnabled = false
+            editSemesterButton.state = NSOnState
+        } else {
+            // Check if the remaining courses have any TimeSlots
+            for case let course as Course in selectedSemester.courses! {
+                if course.timeSlots!.count == 0 {
+                    editSemesterButton.isEnabled = false
+                    editSemesterButton.state = NSOnState
+                    return
                 }
             }
-            if box == nil {
+            editSemesterButton.isEnabled = true
+            editSemesterButton.state = NSOnState
+        }
+    }
+    
+    /// For internal usage. Creates a new Lecture data object and updates
+    /// ledgerStackView visuals with a new HXLectureBox.
+    private func addLecture(_ lecture: Lecture) {
+        // Displays the provided lecture in the ledgerStackView
+        pushLecture( lecture )
+        
+    }
+    
+    /// For external and internal usage. Creates a new Course data object and updates
+    /// ledgerStackView visuals with a new HXCourseEditBox.
+    internal func addEditableCourse() {
+        // Creates new course data model and puts new view in ledgerStackView
+        pushEditableCourse( selectedSemester.newCourse() )
+    }
+
+    
+    // MARK: ––– Course Drag & Drop Functionality –––
+    
+    // Reference to index of course being dragged, nil when not dragging
+    private var draggedCourse: Course!
+    /// HXCourseEditBox - Mouse Up: Stop dragging a course to a time slot
+    internal func mouseUp_courseBox(for course: Course, at loc: NSPoint) {
+        // Ensure a course was being dragged
+        if self.draggedCourse != nil {
+            // Remove drag box from superview
+            masterViewController.notifyCourseDragEnd(course: course, at: loc)
+            self.draggedCourse = nil
+        }
+    }
+    
+    /// HXCourseEditBox - Mouse Drag: Drag a course to a time slot
+    internal func mouseDrag_courseBox(with editBox: HXCourseEditBox, to loc: NSPoint) {
+        if self.draggedCourse == nil {
+            self.draggedCourse = editBox.course
+            masterViewController.notifyCourseDragStart(editBox: editBox, to: loc)
+        } else {
+            masterViewController.notifyCourseDragMoved(editBox: editBox, to: loc)
+        }
+    }
+    
+    // MARK: ––– Notifiers –––
+    
+    /// Notify sidebar that user should be able to finish editing since the
+    /// minimum requirement of having at least 1 time established has been met.
+    func notifyTimeSlotAdded() {
+        // If any course don't have any TimeSlots, don't allow user to proceed to Editor
+        for case let course as Course in selectedSemester.courses! {
+            if course.timeSlots!.count == 0 {
                 return
             }
-            let y = ledgerStackView.frame.height - (box.frame.origin.y + box.frame.height) + 2
-            if ledgerClipView.bounds.origin.y >= y {
-                if stickyHeader.superview == nil {
-                    self.view.addSubview(stickyHeader)
-                    stickyHeader.leadingAnchor.constraint(equalTo: ledgerScrollView.leadingAnchor).isActive = true
-                    stickyHeader.trailingAnchor.constraint(equalTo: ledgerScrollView.trailingAnchor).isActive = true
-                    stickyHeader.topAnchor.constraint(equalTo: ledgerScrollView.topAnchor).isActive = true
-                    stickyHeader.select()
-                }
-                
-            } else if stickyHeader.superview != nil {
-                stickyHeader.removeFromSuperview()
+        }
+        editSemesterButton.isEnabled = true
+        editSemesterButton.state = NSOnState
+    }
+    
+    /// Notify sidebar that user has removed a time slot from a course and should
+    /// check if that was the only time slot for course
+    func notifyTimeSlotRemoved() {
+        // If any courses don't have any TimeSlots, don't allow user to proceed to Editor
+        for case let course as Course in selectedSemester.courses! {
+            if course.timeSlots!.count == 0 {
+                editSemesterButton.isEnabled = false
+                editSemesterButton.state = NSOnState
+                break
             }
         }
     }
     
-    // MARK: Timing Notifiers
+    // MARK: Timing Notifiers - being moved to its own Schedule Assistant class
     /// Check if a lecture is occuring and, if so, prompt user for lecture action
     func lectureCheck() {
         print("Lecture Check...")
@@ -732,26 +580,26 @@ class SidebarViewController: NSViewController {
                     let weekday = selectedCourse.weekdayForLecture(number: ((count + i) % selectedCourse.daysPerWeek()))!
                     // Number of weeks missing added to starting week for course, mod by max weeks.
                     let weekInYear = (Int((count + i) / selectedCourse.daysPerWeek()) + (selectedCourse.lectures![0] as! Lecture).weekOfYear) % 52
-                    pushLecture(newAbsentLecture(on: Int16(weekday), in: weekInYear))
+                    pushLecture(selectedCourse.newAbsentLecture(on: Int16(weekday), in: weekInYear))
                 }
             }
             print("    selectedCourse.theoreticalLectureCount(): \(selectedCourse.theoreticalLectureCount())")
             if lecturesToCreate == 1 {
-                let _ = Alert(hour: hour, minute: minute, course: selectedCourse.title!, content: "lecture missed.", question: nil, deny: "Close")
+                let _ = Alert(hour: hour, minute: minute, course: selectedCourse.title!, content: "lecture missed.", question: nil, deny: "Close", action: nil, target: nil)
             } else if lecturesToCreate > 1 {
-                let _ = Alert(hour: hour, minute: minute, course: selectedCourse.title!, content: "\(lecturesToCreate) lectures missed.", question: nil, deny: "Close")
+                let _ = Alert(hour: hour, minute: minute, course: selectedCourse.title!, content: "\(lecturesToCreate) lectures missed.", question: nil, deny: "Close", action: nil, target: nil)
             }
         }
         if let courseHappening = selectedSemester.duringCourse() {
             // Check if this is the first lecture
             print("    courseHappening.theoreticalLectureCount() for course happening: \(courseHappening.theoreticalLectureCount())")
             if courseHappening.theoreticalLectureCount() == 0 && courseHappening.lectures!.count == 0 {
-                let _ = Alert(hour: hour, minute: minute, course: courseHappening.title!, content: "is starting. Create first lecture?", question: "Create Lecture 1", deny: "Ignore")
+                let _ = Alert(hour: hour, minute: minute, course: courseHappening.title!, content: "is starting. Create first lecture?", question: "Create Lecture 1", deny: "Ignore", action: #selector(tempAction_addLecture), target: self)
             } else {
                 // This will allow a new lecture to be made only once, lectureDisparity will increase to 1 once a new lecture is added.
                 let lectureDisparity = courseHappening.theoreticalLectureCount() - courseHappening.lectures!.count
                 if lectureDisparity == 0 {
-                    let _ = Alert(hour: hour, minute: minute, course: courseHappening.title!, content: "is starting.", question: "Start Lecture", deny: "Ignore")
+                    let _ = Alert(hour: hour, minute: minute, course: courseHappening.title!, content: "is starting.", question: "Start Lecture", deny: "Ignore", action: #selector(tempAction_addLecture), target: self)
                 }
             }
             
@@ -760,7 +608,7 @@ class SidebarViewController: NSViewController {
             let hour = NSCalendar.current.component(.hour, from: NSDate() as Date)
             let minute = NSCalendar.current.component(.minute, from: NSDate() as Date)
             
-            let _ = Alert(hour: hour, minute: minute, course: futureCourse.title!, content: "is starting in \(60 - minute) minutes.", question: nil, deny: "Close")
+            let _ = Alert(hour: hour, minute: minute, course: futureCourse.title!, content: "is starting in \(60 - minute) minutes.", question: nil, deny: "Close", action: nil, target: nil)
         }
     }
     /// Do not call this method. A perform() is called and reset on this notifyHour selector.

@@ -32,14 +32,14 @@ class HXExportViewController: NSViewController {
             
             label_lectureSelection.stringValue = "selected lecture"
             
-            textField_name.stringValue = parent.lecture.course!.title! + " Lecture \(parent.lecture.number) - \(parent.lecture.course!.semester!.year!.year) \(parent.lecture.course!.semester!.title!.capitalized)"
+            textField_name.stringValue = parent.lecture.course!.title! + " Lecture \(parent.lecture.number) - \(parent.lecture.course!.semester!.year) \(parent.lecture.course!.semester!.title!.capitalized)"
             
             // If owned by a TopbarVC
         } else if let parent = self.parent as? EditorViewController {
             
             label_lectureSelection.stringValue = "all lectures"
             
-            textField_name.stringValue = parent.masterViewController.sidebarViewController.selectedCourse.title! + " Lectures - \(parent.masterViewController.sidebarViewController.selectedCourse.semester!.title!.capitalized) \(parent.masterViewController.sidebarViewController.selectedCourse.semester!.year!.year)"
+            textField_name.stringValue = parent.masterViewController.sidebarViewController.selectedCourse.title! + " Lectures - \(parent.masterViewController.sidebarViewController.selectedCourse.semester!.title!.capitalized) \(parent.masterViewController.sidebarViewController.selectedCourse.semester!.year)"
             
         }
         
@@ -82,9 +82,9 @@ class HXExportViewController: NSViewController {
         var url = URL(fileURLWithPath: self.label_path.stringValue)
         url.appendPathComponent("/" + textField_name.stringValue + ".rtfd")
         if let parent = self.parent as? LectureViewController {
-            parent.owner.exportLecture(from: parent, to: url)
+            parent.export(to: url)
         } else if let parent = self.parent as? EditorViewController {
-            parent.exportLectures(to: url)
+            parent.export(to: url)
         }
     }
     @IBAction func action_select(_ sender: NSButton) {
@@ -120,9 +120,9 @@ class HXExportViewController: NSViewController {
         if input == "" {
             // If owned by a LectureVC
             if let parent = self.parent as? LectureViewController {
-                textField_name.stringValue = parent.lecture.course!.title! + " Lecture \(parent.lecture.number) - \(parent.lecture.course!.semester!.year!.year) \(parent.lecture.course!.semester!.title!.capitalized)"
+                textField_name.stringValue = parent.lecture.course!.title! + " Lecture \(parent.lecture.number) - \(parent.lecture.course!.semester!.year) \(parent.lecture.course!.semester!.title!.capitalized)"
             } else if let parent = self.parent as? EditorViewController {
-                textField_name.stringValue = parent.masterViewController.sidebarViewController.selectedCourse.title! + " Lectures - \(parent.masterViewController.sidebarViewController.selectedCourse.semester!.title!.capitalized) \(parent.masterViewController.sidebarViewController.selectedCourse.semester!.year!.year)"
+                textField_name.stringValue = parent.masterViewController.sidebarViewController.selectedCourse.title! + " Lectures - \(parent.masterViewController.sidebarViewController.selectedCourse.semester!.title!.capitalized) \(parent.masterViewController.sidebarViewController.selectedCourse.semester!.year)"
             }
         } else {
             textField_name.stringValue = input

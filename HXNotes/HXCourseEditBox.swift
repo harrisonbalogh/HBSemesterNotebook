@@ -90,7 +90,19 @@ class HXCourseEditBox: NSView {
     
     /// Removes this course box from the stack view
     func removeCourseBox() {
+        
+        var lectureInfo = ""
+        if self.course.lectures!.count == 1 {
+            lectureInfo = "A lecture will be lost."
+        } else {
+            lectureInfo = "\(self.course.lectures!.count) lectures will be lost."
+        }
+        
+        let _ = Alert(course: self.course.title!, content: "is to be removed. " + lectureInfo, question: "Remove Course", deny: "Cancel", action: #selector(self.confirmRemoveCourse), target: self)
+    }
+    func confirmRemoveCourse() {
         parentController.removeCourse(self)
+        Alert.closeAlert()
     }
     
     /// Clear selection of course's title field
@@ -103,12 +115,16 @@ class HXCourseEditBox: NSView {
         if labelCourse.stringValue == "" {
             labelCourse.stringValue = oldName
         } else {
-            parentController.renameCourse(self)
+            // Rename course if the name isn't already taken
+            if course.semester!.retrieveCourse(named: labelCourse.stringValue) == nil {
+                course.title = labelCourse.stringValue
+                parentController.masterViewController.notifyCourseRename(from: oldName)
+                oldName = labelCourse.stringValue
+            } else {
+                // Revoke name change
+                labelCourse.stringValue = oldName
+            }
         }
-    }
-    /// Reset name to old name since that name is already taken.
-    func revokeNameChange() {
-        labelCourse.stringValue = oldName
     }
     
     override func mouseMoved(with event: NSEvent) {

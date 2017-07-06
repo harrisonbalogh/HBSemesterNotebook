@@ -37,6 +37,27 @@ public class Semester: NSManagedObject {
         return nil
     }
     
+    /// Will return a semester that either has been newly created, or already exists for the given year and title.
+    static func produceSemester(titled title: String, in year: Int) -> Semester {
+        // Fetch semesters in persistent store. Return if found else create new.
+        let semesterFetch = NSFetchRequest<Semester>(entityName: "Semester")
+        let appDelegate = NSApplication.shared().delegate as! AppDelegate
+        do {
+            let semesters = try appDelegate.managedObjectContext.fetch(semesterFetch) as [Semester]
+            if let foundSemester = semesters.filter({$0.year == Int16(year) && $0.title == title}).first {
+                // This semester already present in store so return it
+                return foundSemester
+            } else {
+                // Create semester since it wasn't found
+                let newSemester = NSEntityDescription.insertNewObject(forEntityName: "Semester", into: appDelegate.managedObjectContext) as! Semester
+                newSemester.year = Int16(year)
+                newSemester.title = title
+                return newSemester
+                
+            }
+        } catch { fatalError("Failed to fetch semesters: \(error)") }
+    }
+    
     /// Returns a single course that is currently happening or will start in 5 minutes.
     /// Returns nil if no course is happening at the moment.
     public func duringCourse() -> Course? {
