@@ -73,7 +73,7 @@ class LectureViewController: NSViewController {
         
         label_lectureTitle.stringValue = "Lecture \(lecture.number)"
         
-        label_lectureDate.stringValue = "\(lecture.month)/\(lecture.day)/\(lecture.year % 100)"
+        label_lectureDate.stringValue = "\(lecture.monthInYear())/\(lecture.dayInMonth())/\(lecture.course!.semester!.year % 100)"
         
         scrollView_lecture.parentController = self
         textView_lecture.parentController = self

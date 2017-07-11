@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11762" systemVersion="16F73" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11762"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner"/>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView id="gNt-Qm-U5E" customClass="HXTimeSlotBox" customModule="HXNotes" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="244" height="23"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tlj-Ja-gMP">
+                    <rect key="frame" x="150" y="4" width="11" height="17"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="–" id="iT8-Qg-qlX">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" red="0.4500166223404255" green="0.4500166223404255" blue="0.4500166223404255" alpha="0.84999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <button identifier="timeslot_button_trash" alphaValue="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="FBM-cr-ymj" userLabel="Trash Button">
+                    <rect key="frame" x="223" y="5" width="14" height="14"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="14" id="Gua-AT-q4l"/>
+                        <constraint firstAttribute="height" constant="14" id="Ze5-t3-ZJG"/>
+                    </constraints>
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="trash_icon_inverse" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="gTs-aO-g8M">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                </button>
+                <datePicker identifier="timeslot_picker_stop" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="rKA-5K-3vo" userLabel="Stop Date Picker">
+                    <rect key="frame" x="159" y="1" width="64" height="22"/>
+                    <datePickerCell key="cell" alignment="left" drawsBackground="NO" datePickerStyle="textField" id="0WF-v7-MhB">
+                        <font key="font" metaFont="system"/>
+                        <date key="date" timeIntervalSinceReferenceDate="-595958400">
+                            <!--1982-02-12 08:00:00 +0000-->
+                        </date>
+                        <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        <color key="textColor" red="0.44411569150000002" green="0.44411569150000002" blue="0.44411569150000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <datePickerElements key="datePickerElements" hour="YES" minute="YES"/>
+                    </datePickerCell>
+                </datePicker>
+                <datePicker identifier="timeslot_picker_start" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="H9h-dj-WBZ" userLabel="Start Date Picker">
+                    <rect key="frame" x="88" y="0.0" width="64" height="22"/>
+                    <datePickerCell key="cell" alignment="left" drawsBackground="NO" datePickerStyle="textField" id="Lgj-AA-oA0">
+                        <font key="font" metaFont="system"/>
+                        <date key="date" timeIntervalSinceReferenceDate="-595958400">
+                            <!--1982-02-12 08:00:00 +0000-->
+                        </date>
+                        <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        <color key="textColor" red="0.44411569150000002" green="0.44411569150000002" blue="0.44411569150000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <datePickerElements key="datePickerElements" hour="YES" minute="YES"/>
+                    </datePickerCell>
+                </datePicker>
+                <textField identifier="timeslot_weekday_label" horizontalHuggingPriority="100" verticalHuggingPriority="750" horizontalCompressionResistancePriority="100" allowsCharacterPickerTouchBarItem="NO" preferredMaxLayoutWidth="10" translatesAutoresizingMaskIntoConstraints="NO" id="eLk-mb-bem" userLabel="Monday">
+                    <rect key="frame" x="18" y="3" width="53" height="17"/>
+                    <constraints>
+                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="10" id="eTw-NQ-0Ye"/>
+                    </constraints>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Monday" id="tP0-oq-7kl">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" red="0.56073803191489358" green="0.56073803191489358" blue="0.56073803191489358" alpha="0.93685037364130441" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <button horizontalHuggingPriority="99" verticalHuggingPriority="99" horizontalCompressionResistancePriority="99" verticalCompressionResistancePriority="99" translatesAutoresizingMaskIntoConstraints="NO" id="GAX-uW-iRE">
+                    <rect key="frame" x="20" y="0.0" width="49" height="23"/>
+                    <buttonCell key="cell" type="bevel" bezelStyle="rounded" alignment="center" imageScaling="proportionallyDown" inset="2" id="Qcr-Gd-fIU">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                </button>
+                <textField horizontalHuggingPriority="750" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GjM-aH-oGe">
+                    <rect key="frame" x="80" y="5" width="8" height="17"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title=":" id="P5h-Ku-k5l">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" red="0.56073803190000004" green="0.56073803190000004" blue="0.56073803190000004" alpha="0.93685037360000001" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <stepper identifier="timeslot_stepper_weekday" horizontalHuggingPriority="750" verticalHuggingPriority="750" alphaValue="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="Frr-eN-a0N">
+                    <rect key="frame" x="69" y="0.0" width="15" height="22"/>
+                    <stepperCell key="cell" controlSize="small" continuous="YES" alignment="left" minValue="1" maxValue="7" doubleValue="1" valueWraps="YES" id="uy3-xg-mGN"/>
+                </stepper>
+            </subviews>
+            <constraints>
+                <constraint firstItem="FBM-cr-ymj" firstAttribute="leading" secondItem="rKA-5K-3vo" secondAttribute="trailing" id="7KJ-J1-bJt"/>
+                <constraint firstItem="Tlj-Ja-gMP" firstAttribute="centerY" secondItem="gNt-Qm-U5E" secondAttribute="centerY" constant="-1" id="9r3-Ve-Cs1"/>
+                <constraint firstItem="H9h-dj-WBZ" firstAttribute="top" secondItem="gNt-Qm-U5E" secondAttribute="top" constant="1" id="FpU-AR-H81"/>
+                <constraint firstItem="eLk-mb-bem" firstAttribute="centerY" secondItem="gNt-Qm-U5E" secondAttribute="centerY" id="JKY-H0-2yk"/>
+                <constraint firstAttribute="trailing" secondItem="FBM-cr-ymj" secondAttribute="trailing" constant="7" id="JUv-Fa-oMd"/>
+                <constraint firstAttribute="bottom" secondItem="H9h-dj-WBZ" secondAttribute="bottom" id="PfT-9Q-rBD"/>
+                <constraint firstItem="GAX-uW-iRE" firstAttribute="top" secondItem="gNt-Qm-U5E" secondAttribute="top" id="SIk-13-AMK"/>
+                <constraint firstAttribute="bottom" secondItem="GAX-uW-iRE" secondAttribute="bottom" id="UhV-ib-PVu"/>
+                <constraint firstItem="rKA-5K-3vo" firstAttribute="centerY" secondItem="gNt-Qm-U5E" secondAttribute="centerY" id="YgV-yW-Els"/>
+                <constraint firstItem="Frr-eN-a0N" firstAttribute="leading" secondItem="eLk-mb-bem" secondAttribute="trailing" constant="2" id="ZAB-gR-zBm"/>
+                <constraint firstItem="GjM-aH-oGe" firstAttribute="centerY" secondItem="gNt-Qm-U5E" secondAttribute="centerY" constant="-2" id="eqr-fm-cQe"/>
+                <constraint firstItem="GAX-uW-iRE" firstAttribute="leading" secondItem="eLk-mb-bem" secondAttribute="leading" id="gDn-Wo-SMl"/>
+                <constraint firstItem="eLk-mb-bem" firstAttribute="leading" secondItem="gNt-Qm-U5E" secondAttribute="leading" constant="20" id="k9I-kf-eh1"/>
+                <constraint firstItem="rKA-5K-3vo" firstAttribute="leading" secondItem="Tlj-Ja-gMP" secondAttribute="trailing" id="nwI-3Z-WsL"/>
+                <constraint firstItem="H9h-dj-WBZ" firstAttribute="leading" secondItem="GjM-aH-oGe" secondAttribute="trailing" constant="2" id="uIi-x5-5AV"/>
+                <constraint firstItem="Frr-eN-a0N" firstAttribute="centerY" secondItem="gNt-Qm-U5E" secondAttribute="centerY" id="vpR-hW-Zaj"/>
+                <constraint firstItem="Tlj-Ja-gMP" firstAttribute="leading" secondItem="H9h-dj-WBZ" secondAttribute="trailing" id="wjN-gw-y59"/>
+                <constraint firstItem="GAX-uW-iRE" firstAttribute="trailing" secondItem="eLk-mb-bem" secondAttribute="trailing" id="wsy-w7-r72"/>
+                <constraint firstItem="GjM-aH-oGe" firstAttribute="leading" secondItem="Frr-eN-a0N" secondAttribute="trailing" id="xt6-50-li2"/>
+                <constraint firstItem="FBM-cr-ymj" firstAttribute="centerY" secondItem="gNt-Qm-U5E" secondAttribute="centerY" id="zNV-B1-aog"/>
+            </constraints>
+            <point key="canvasLocation" x="37" y="58.5"/>
+        </customView>
+    </objects>
+    <resources>
+        <image name="trash_icon_inverse" width="25" height="25"/>
+    </resources>
+</document>

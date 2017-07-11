@@ -37,6 +37,21 @@ public class Semester: NSManagedObject {
         return nil
     }
     
+    /// Return the semester present at the given year and semester. Will return nil if none exists/
+    static func retrieveSemester(titled title: String, in year: Int) -> Semester? {
+        // Fetch semesters in persistent store. Return if found else return nil.
+        let semesterFetch = NSFetchRequest<Semester>(entityName: "Semester")
+        let appDelegate = NSApplication.shared().delegate as! AppDelegate
+        do {
+            let semesters = try appDelegate.managedObjectContext.fetch(semesterFetch) as [Semester]
+            if let foundSemester = semesters.filter({$0.year == Int16(year) && $0.title == title}).first {
+                // Found semester, return it.
+                return foundSemester
+            }
+        } catch { fatalError("Failed to fetch semesters: \(error)") }
+        return nil
+    }
+    
     /// Will return a semester that either has been newly created, or already exists for the given year and title.
     static func produceSemester(titled title: String, in year: Int) -> Semester {
         // Fetch semesters in persistent store. Return if found else create new.
@@ -61,38 +76,51 @@ public class Semester: NSManagedObject {
     /// Returns a single course that is currently happening or will start in 5 minutes.
     /// Returns nil if no course is happening at the moment.
     public func duringCourse() -> Course? {
-        let hour = NSCalendar.current.component(.hour, from: NSDate() as Date)
-        let minute = NSCalendar.current.component(.minute, from: NSDate() as Date)
-        let day = NSCalendar.current.component(.weekday, from: NSDate() as Date)
+        let hour = NSCalendar.current.component(.hour, from: Date())
+        let minute = NSCalendar.current.component(.minute, from: Date())
+        
+        let weekday = NSCalendar.current.component(.weekday, from: Date())
+        let minuteOfDay = hour * 60 + minute
         
         for case let course as Course in self.courses! {
             for case let time as TimeSlot in course.timeSlots! {
-                if Int16(day - 2) == time.day && (Int16(hour - 8) == time.hour || (Int16(hour - 8) == (time.hour - 1) && Int16(minute) > 55)) {
-                    // during class
-                    return time.course
+                if Int16(weekday) == time.weekday && Int16(minuteOfDay) > time.startMinuteOfDay - 5 && Int16(minuteOfDay) < time.stopMinuteOfDay {
+                    // during class period
+                    return course
                 }
             }
         }
         // no class
         return nil
     }
-    /// Returns a single course that is happening soon. Returns nill if no course is happening soon.
+    
+    let TEMP_TIMESPAN: Int16 = 60 // should be adjustable in settings, will...
+    /// Returns the earliest course to occur within the next TEMP_TIMESPAN minutes.
     public func futureCourse() -> Course? {
-        let hour = NSCalendar.current.component(.hour, from: NSDate() as Date)
-        let minute = NSCalendar.current.component(.minute, from: NSDate() as Date)
-        let day = NSCalendar.current.component(.weekday, from: NSDate() as Date)
-        print("Checking future course.")
+        
+        var soonestTimeSlot: TimeSlot!
+        
+        let hour = NSCalendar.current.component(.hour, from: Date())
+        let minute = NSCalendar.current.component(.minute, from: Date())
+        
+        let weekday = NSCalendar.current.component(.weekday, from: Date())
+        let minuteOfDay = hour * 60 + minute
+        
         for case let course as Course in self.courses! {
             for case let time as TimeSlot in course.timeSlots! {
-                if Int16(day - 2) == time.day && ((Int16(hour - 8) == (time.hour - 1) && Int16(minute) > 30)) {
-                    // during class
-                    print("Found 'em. \(time.course!.title!)")
-                    return time.course
+                
+                if Int16(weekday) == time.weekday && Int16(minuteOfDay) < time.startMinuteOfDay && Int16(minuteOfDay) > time.startMinuteOfDay - TEMP_TIMESPAN {
+                    // Course approaching within timespan.
+                    if soonestTimeSlot == nil || time.startMinuteOfDay < soonestTimeSlot.startMinuteOfDay {
+                        soonestTimeSlot = time
+                    }
                 }
             }
         }
-        // no class
-        return nil
+        if soonestTimeSlot == nil {
+            return nil
+        }
+        return soonestTimeSlot.course
     }
     
     /// Return the first number available in the semester for untitled courses.

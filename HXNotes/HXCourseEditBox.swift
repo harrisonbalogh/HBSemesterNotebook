@@ -38,11 +38,15 @@ class HXCourseEditBox: NSView {
     let ID_LABEL_TITLE      = "course_label_title"
     let ID_BOX_DRAG         = "course_box_drag"
     let ID_BOX_BACK         = "course_box_back"
+    let ID_ADD_TIME         = "timeslot_add_button"
+    let ID_STACKVIEW_TIMESLOT = "timeSlot_stack_view"
     // Elements of course box
     var boxDrag: NSBox!
     var labelCourse: CourseLabel!
     var buttonTrash: NSButton!
     var boxBack: NSBox!
+    var timeSlotStackView: NSStackView!
+    var timeSlotAddButton: NSButton!
     
     /// Initialize the color, index, and tracking area of the CourseBox view
     private func initialize(with course: Course, withCourseIndex index: Int, withParent parent: SidebarViewController) {
@@ -58,6 +62,13 @@ class HXCourseEditBox: NSView {
                 labelCourse = v as! CourseLabel
             case ID_BOX_BACK:
                 boxBack = v as! NSBox
+            case ID_STACKVIEW_TIMESLOT:
+                timeSlotStackView = v as! NSStackView
+                for child in timeSlotStackView.arrangedSubviews[0].subviews {
+                    if child.identifier == ID_ADD_TIME {
+                        timeSlotAddButton = child as! NSButton
+                    }
+                }
             default: continue
             }
         }
@@ -69,6 +80,9 @@ class HXCourseEditBox: NSView {
         // Initialize button functionality
         buttonTrash.target = self
         buttonTrash.action = #selector(self.removeCourseBox)
+        
+        timeSlotAddButton.target = self
+        timeSlotAddButton.action = #selector(self.addTimeSlot)
         
         let theColor = NSColor(red: CGFloat(course.colorRed), green: CGFloat(course.colorGreen), blue: CGFloat(course.colorBlue), alpha: 1)
         self.boxDrag.fillColor = theColor
@@ -86,6 +100,11 @@ class HXCourseEditBox: NSView {
         self.labelCourse.stringValue = course.title!
         self.oldName = course.title!
         
+        for case let timeSlot as TimeSlot in course.timeSlots! {
+            let newBox = HXTimeSlotBox.instance(with: timeSlot, for: self)
+//            timeSlotStackView.insertArrangedSubview(newBox!, at: timeSlotStackView.arrangedSubviews.count - 1)
+            timeSlotStackView.addArrangedSubview(newBox!)
+        }
     }
     
     /// Removes this course box from the stack view
@@ -98,11 +117,22 @@ class HXCourseEditBox: NSView {
             lectureInfo = "\(self.course.lectures!.count) lectures will be lost."
         }
         
-        let _ = Alert(course: self.course.title!, content: "is to be removed. " + lectureInfo, question: "Remove Course", deny: "Cancel", action: #selector(self.confirmRemoveCourse), target: self)
+        let _ = Alert(course: self.course.title!, content: "is to be removed. " + lectureInfo, question: "Remove Course", deny: "Cancel", action: #selector(self.confirmRemoveCourse), target: self, type: .deletion)
     }
+    /// Removes a timeSlot from this course
+    func removeTimeSlot(_ timeSlot: TimeSlot) {
+        parentController.removeTimeSlot(timeSlot)
+    }
+    /// Adds a timeSlot for this course
+    func addTimeSlot() {
+        let newBox = HXTimeSlotBox.instance(with: course.nextTimeSlot(), for: self)
+//        timeSlotStackView.insertArrangedSubview(newBox!, at: timeSlotStackView.arrangedSubviews.count - 1)
+        timeSlotStackView.addArrangedSubview(newBox!)
+    }
+    
     func confirmRemoveCourse() {
+        Alert.flushAlerts(for: course.title!)
         parentController.removeCourse(self)
-        Alert.closeAlert()
     }
     
     /// Clear selection of course's title field
@@ -211,5 +241,10 @@ class HXCourseEditBox: NSView {
             }
         }
         parentController.mouseUp_courseBox(for: course, at: event.locationInWindow)
+    }
+    
+    // MARK: - Notifiers
+    func notifyTimeSlotChange() {
+        parentController.notifyTimeSlotChange()
     }
 }

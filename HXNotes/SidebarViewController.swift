@@ -26,18 +26,12 @@ class SidebarViewController: NSViewController {
             }
         }
     }
-    func tempAction_addLecture() {
-        if let courseHappening = selectedSemester.duringCourse() {
-            selectedCourse = courseHappening
-            let newLec = courseHappening.newLecture()
-            addLecture(newLec)
-            masterViewController.notifyLectureAddition(lecture: newLec)
-        } else {
-            let hour = NSCalendar.current.component(.hour, from: NSDate() as Date)
-            let minute = NSCalendar.current.component(.minute, from: NSDate() as Date)
-            let _ = Alert(hour: hour, minute: minute, course: "Error:", content: "Can't add a new lecture when a course isn't happening.", question: nil, deny: "Close", action: nil, target: nil)
-        }
-        Alert.closeAlert()
+    func setDate(semester: Semester) {
+        print("    SidebarVC - setting date.")
+        lastYearUsed = Int(semester.year)
+        yearLabel.stringValue = "\(lastYearUsed)"
+        selectedSemester = semester
+        semesterLabel.stringValue = selectedSemester.title!.capitalized
     }
     @IBOutlet weak var semesterButtonAnimated: NSButton!
     @IBOutlet weak var semButtonAnimBotConstraint: NSLayoutConstraint!
@@ -135,6 +129,10 @@ class SidebarViewController: NSViewController {
     let appDelegate = NSApplication.shared().delegate as! AppDelegate
     private var selectedSemester: Semester! {
         didSet {
+            if oldValue != nil && oldValue == selectedSemester {
+                return
+            }
+            
             // Clear old course visuals
             popCourses()
             // Get courses from this semester
@@ -144,14 +142,20 @@ class SidebarViewController: NSViewController {
                         editingMode()
                         return
                     }
+                    for case let timeSlot as TimeSlot in course.timeSlots! {
+                        if timeSlot.weekday == -1 {
+                            editingMode()
+                            return
+                        }
+                    }
                 }
                 viewingMode()
                 if selectedSemester.courses!.count == 1 {
-                    print("No course... but there's only one so select it")
+                    // Only 1 course in semester, so select it
                     selectedCourse = (selectedSemester.courses![0] as! Course)
                 } else {
-                    // Prevent getting called twice since lectureCheck() called selectedCourse set.
-                    lectureCheck()
+                    // Prevent getting called twice since lectureCheck() called on selectedCourse set (above).
+                    AppDelegate.scheduleAssistant.checkHappening()
                 }
             } else {
                 editingMode()
@@ -160,11 +164,16 @@ class SidebarViewController: NSViewController {
     }
     var selectedCourse: Course! {
         didSet {
+            if oldValue != nil && selectedCourse != nil && oldValue == selectedCourse {
+                return
+            }
+            
             if selectedCourse != nil {
+                selectedCourse.fillAbsentLectures()
                 // Populate ledgerStackView
                 loadLectures(from: selectedCourse)
                 // Fill in absent lectures since last app launch
-                lectureCheck()
+                AppDelegate.scheduleAssistant.checkHappening()
                 // Update editorVC buffer spacing
                 notifyHeightUpdate()
                 // Deselect all other buttons excepts selected one.
@@ -201,30 +210,6 @@ class SidebarViewController: NSViewController {
         // Setup observers
         NotificationCenter.default.addObserver(self, selector: #selector(SidebarViewController.didLiveScroll),
                                                name: .NSScrollViewDidLiveScroll, object: ledgerClipView)
-        
-        // Start timers
-        let date = Date()
-        let calendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
-        // Listen for hour change
-        let dateMinute = calendar.component(.minute, from: date)
-        self.perform(#selector(SidebarViewController.notifyHour), with: nil, afterDelay: Double(60 - dateMinute) * 60)
-        // Listen for minute change
-        let dateSecond = calendar.component(.second, from: date)
-        self.perform(#selector(SidebarViewController.notifyMinute), with: nil, afterDelay: Double(60 - dateSecond))
-    }
-    
-    override func viewDidAppear() {
-        // Default to current year
-        let yr = NSCalendar.current.component(.year, from: NSDate() as Date)
-        yearLabel.stringValue = "\(yr)"
-        // Default to current semester by assuming Fall: [July, December]
-        let month = NSCalendar.current.component(.month, from: NSDate() as Date)
-        if month >= 7 && month <= 12 {
-            semesterLabel.stringValue = "Fall"
-        } else {
-            semesterLabel.stringValue = "Spring"
-        }
-        tempAction_date()
     }
 
     // MARK: ––– Populating LedgerStackView  –––
@@ -243,6 +228,12 @@ class SidebarViewController: NSViewController {
                 if course.timeSlots!.count == 0 {
                     editSemesterButton.isEnabled = false
                     return
+                }
+                for case let timeSlot as TimeSlot in course.timeSlots! {
+                    if timeSlot.weekday == -1 {
+                        editSemesterButton.isEnabled = false
+                        return
+                    }
                 }
             }
             editSemesterButton.isEnabled = true
@@ -317,7 +308,7 @@ class SidebarViewController: NSViewController {
         course.removeFromSuperview()
         appDelegate.managedObjectContext.delete( selectedSemester.retrieveCourse(named: course.labelCourse.stringValue) )
         appDelegate.saveAction(self)
-        masterViewController.notifyCourseDeletion(named: course.labelCourse.stringValue)
+        masterViewController.notifyCourseDeletion()
     }
     
     /// Handles purely the visual aspect of courses. Internal use only. Removes all HXCourseBox's from the ledgerStackView.
@@ -379,7 +370,7 @@ class SidebarViewController: NSViewController {
             lectureStackView.addArrangedSubview(newBox!)
             newBox!.widthAnchor.constraint(equalTo: ledgerStackView.widthAnchor).isActive = true
         } else {
-            let newBox = HXLectureBox.instance(numbered: lecture.number, dated: "\(lecture.month)/\(lecture.day)/\(lecture.year % 100)", owner: self)
+            let newBox = HXLectureBox.instance(numbered: lecture.number, dated: "\(lecture.monthInYear())/\(lecture.dayInMonth())/\(lecture.course!.semester!.year % 100)", owner: self)
             lectureStackView.addArrangedSubview(newBox!)
             newBox?.widthAnchor.constraint(equalTo: ledgerStackView.widthAnchor).isActive = true
         }
@@ -491,12 +482,51 @@ class SidebarViewController: NSViewController {
         }
     }
     
-    /// For internal usage. Creates a new Lecture data object and updates
+    /// Confirms removal of all information associated with a TimeSlot object. Model and Views
+    internal func removeTimeSlot(_ timeSlot: TimeSlot) {
+        appDelegate.managedObjectContext.delete( timeSlot )
+        appDelegate.saveAction(self)
+        masterViewController.notifyTimeSlotDeletion()
+    }
+    
+    /// Creates a new Lecture data object and updates
     /// ledgerStackView visuals with a new HXLectureBox.
-    private func addLecture(_ lecture: Lecture) {
-        // Displays the provided lecture in the ledgerStackView
-        pushLecture( lecture )
+    public func addLecture() {
         
+        // This assumes that an alert called addLecture.
+        Alert.closeAlert()
+        
+        let calendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
+        // Get calendar date to deduce semester
+        let yearComponent = calendar.component(.year, from: Date())
+        
+        // This should be adjustable in the settings, assumes Jul-Dec is Fall. Jan-Jun is Spring.
+        var semesterTitle = "spring"
+        if calendar.component(.month, from: Date()) >= 7 {
+            semesterTitle = "fall"
+        }
+        
+        // See if the current semester exists in the persistant store
+        if let currentSemester = Semester.retrieveSemester(titled: semesterTitle, in: yearComponent) {
+            if let courseHappening = currentSemester.duringCourse() {
+                if courseHappening.theoreticalLectureCount() - courseHappening.lectures!.count == 1 {
+                    let newLec = courseHappening.newLecture(during: courseHappening.duringTimeSlot()!)
+                    selectedSemester = currentSemester
+                    selectedCourse = courseHappening
+                    // Displays lecture in the ledgerStackView
+                    pushLecture( newLec )
+                    // Displays lecture in the lectureStackView
+                    masterViewController.notifyLectureAddition(lecture: newLec)
+                } else {
+                    print("No lectures to add??? Theoretical count: \(courseHappening.theoreticalLectureCount())")
+                }
+            } else {
+                // User probably waited too long to accept lecture, so display error
+                let hour = NSCalendar.current.component(.hour, from: NSDate() as Date)
+                let minute = NSCalendar.current.component(.minute, from: NSDate() as Date)
+                let _ = Alert(hour: hour, minute: minute, course: "Error:", content: "Can't add a new lecture when a course isn't happening.", question: nil, deny: "Close", action: nil, target: nil, type: .custom)
+            }
+        }
     }
     
     /// For external and internal usage. Creates a new Course data object and updates
@@ -533,13 +563,44 @@ class SidebarViewController: NSViewController {
     
     // MARK: ––– Notifiers –––
     
-    /// Notify sidebar that user should be able to finish editing since the
-    /// minimum requirement of having at least 1 time established has been met.
-    func notifyTimeSlotAdded() {
+    ///
+    func notifyTimeSlotChange() {
+        masterViewController.notifyTimeSlotChange()
+        
         // If any course don't have any TimeSlots, don't allow user to proceed to Editor
         for case let course as Course in selectedSemester.courses! {
             if course.timeSlots!.count == 0 {
+                editSemesterButton.isEnabled = false
+                editSemesterButton.state = NSOffState
                 return
+            }
+            for case let timeSlot as TimeSlot in course.timeSlots! {
+                if timeSlot.weekday == -1 {
+                    editSemesterButton.isEnabled = false
+                    editSemesterButton.state = NSOnState
+                    return
+                }
+            }
+        }
+        editSemesterButton.isEnabled = true
+        editSemesterButton.state = NSOnState
+    }
+    
+    /// Notify sidebar that user should be able to finish editing since the
+    /// minimum requirement of having at least 1 time established has been met.
+    func notifyTimeSlotAdded() {
+        
+        // If any course don't have any TimeSlots, don't allow user to proceed to Editor
+        for case let course as Course in selectedSemester.courses! {
+            if course.timeSlots!.count == 0 {
+                editSemesterButton.isEnabled = false
+                return
+            }
+            for case let timeSlot as TimeSlot in course.timeSlots! {
+                if timeSlot.weekday == -1 {
+                    editSemesterButton.isEnabled = false
+                    return
+                }
             }
         }
         editSemesterButton.isEnabled = true
@@ -549,6 +610,7 @@ class SidebarViewController: NSViewController {
     /// Notify sidebar that user has removed a time slot from a course and should
     /// check if that was the only time slot for course
     func notifyTimeSlotRemoved() {
+        masterViewController.notifyTimeSlotChange()
         // If any courses don't have any TimeSlots, don't allow user to proceed to Editor
         for case let course as Course in selectedSemester.courses! {
             if course.timeSlots!.count == 0 {
@@ -556,85 +618,14 @@ class SidebarViewController: NSViewController {
                 editSemesterButton.state = NSOnState
                 break
             }
+            for case let timeSlot as TimeSlot in course.timeSlots! {
+                if timeSlot.weekday == -1 {
+                    editSemesterButton.isEnabled = false
+                    editSemesterButton.state = NSOnState
+                    break
+                }
+            }
         }
-    }
-    
-    // MARK: Timing Notifiers - being moved to its own Schedule Assistant class
-    /// Check if a lecture is occuring and, if so, prompt user for lecture action
-    func lectureCheck() {
-        print("Lecture Check...")
-        let hour = NSCalendar.current.component(.hour, from: NSDate() as Date)
-        let minute = NSCalendar.current.component(.minute, from: NSDate() as Date)
-        
-        // If a course is open and they let a lecture pass, implant absent lecture
-        if selectedCourse != nil {
-            let lecturesToCreate = selectedCourse.theoreticalLectureCount() - selectedCourse.lectures!.count
-            if lecturesToCreate > 0 {
-                // Need to fill in the dayOfWeek and weekOfYear for each absent lecture.
-                // Start with how many lectures there are currently and add course starting day
-                let lectureStartingDay = selectedCourse.lectureInWeek(for: Int((selectedCourse.lectures![0] as! Lecture).weekDay)) - 1
-                let count = selectedCourse.lectures!.count + lectureStartingDay
                 
-                for i in 0..<lecturesToCreate {
-                    // Mod weekday and convert that lecture index to a specific calendar weekday
-                    let weekday = selectedCourse.weekdayForLecture(number: ((count + i) % selectedCourse.daysPerWeek()))!
-                    // Number of weeks missing added to starting week for course, mod by max weeks.
-                    let weekInYear = (Int((count + i) / selectedCourse.daysPerWeek()) + (selectedCourse.lectures![0] as! Lecture).weekOfYear) % 52
-                    pushLecture(selectedCourse.newAbsentLecture(on: Int16(weekday), in: weekInYear))
-                }
-            }
-            print("    selectedCourse.theoreticalLectureCount(): \(selectedCourse.theoreticalLectureCount())")
-            if lecturesToCreate == 1 {
-                let _ = Alert(hour: hour, minute: minute, course: selectedCourse.title!, content: "lecture missed.", question: nil, deny: "Close", action: nil, target: nil)
-            } else if lecturesToCreate > 1 {
-                let _ = Alert(hour: hour, minute: minute, course: selectedCourse.title!, content: "\(lecturesToCreate) lectures missed.", question: nil, deny: "Close", action: nil, target: nil)
-            }
-        }
-        if let courseHappening = selectedSemester.duringCourse() {
-            // Check if this is the first lecture
-            print("    courseHappening.theoreticalLectureCount() for course happening: \(courseHappening.theoreticalLectureCount())")
-            if courseHappening.theoreticalLectureCount() == 0 && courseHappening.lectures!.count == 0 {
-                let _ = Alert(hour: hour, minute: minute, course: courseHappening.title!, content: "is starting. Create first lecture?", question: "Create Lecture 1", deny: "Ignore", action: #selector(tempAction_addLecture), target: self)
-            } else {
-                // This will allow a new lecture to be made only once, lectureDisparity will increase to 1 once a new lecture is added.
-                let lectureDisparity = courseHappening.theoreticalLectureCount() - courseHappening.lectures!.count
-                if lectureDisparity == 0 {
-                    let _ = Alert(hour: hour, minute: minute, course: courseHappening.title!, content: "is starting.", question: "Start Lecture", deny: "Ignore", action: #selector(tempAction_addLecture), target: self)
-                }
-            }
-            
-        }
-        if let futureCourse = selectedSemester.futureCourse() {
-            let hour = NSCalendar.current.component(.hour, from: NSDate() as Date)
-            let minute = NSCalendar.current.component(.minute, from: NSDate() as Date)
-            
-            let _ = Alert(hour: hour, minute: minute, course: futureCourse.title!, content: "is starting in \(60 - minute) minutes.", question: nil, deny: "Close", action: nil, target: nil)
-        }
-    }
-    /// Do not call this method. A perform() is called and reset on this notifyHour selector.
-    func notifyHour() {
-        
-        print("Hour")
-        
-        lectureCheck()
-        
-        // Place code above. The following resets timer. Do not alter.
-        let date = Date()
-        let calendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
-        let dateComponent = calendar.component(.minute, from: date)
-        self.perform(#selector(SidebarViewController.notifyHour), with: nil, afterDelay: Double(60 - dateComponent) * 60)
-    }
-    /// Do not call this method. A perform() is called and reset on this notifyMinute selector.
-    func notifyMinute() {
-        
-        print("Minute")
-        
-        lectureCheck()
-        
-        // Place code above. The following resets timer. Do not alter.
-        let date = Date()
-        let calendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
-        let dateComponent = calendar.component(.second, from: date)
-        self.perform(#selector(SidebarViewController.notifyMinute), with: nil, afterDelay: Double(60 - dateComponent))
     }
 }

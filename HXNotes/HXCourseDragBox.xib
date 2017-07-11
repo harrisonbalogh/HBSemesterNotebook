@@ -30,7 +30,7 @@
                             <constraint firstAttribute="height" constant="18" id="nTv-3w-BtK"/>
                             <constraint firstAttribute="width" constant="18" id="rck-dS-zik"/>
                         </constraints>
-                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="2F33EACC-9C32-41E1-9E5C-228DDC8A4746" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="UGl-N7-HDd">
+                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="B77126A6-247C-41F5-A39A-84CC4E1FAD15" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="UGl-N7-HDd">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -69,7 +69,7 @@
         </box>
     </objects>
     <resources>
-        <image name="2F33EACC-9C32-41E1-9E5C-228DDC8A4746" width="25" height="25">
+        <image name="B77126A6-247C-41F5-A39A-84CC4E1FAD15" width="25" height="25">
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGOjtYJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK0HCBEW
 GxwgISgrLjQ3VSRudWxs1AkKCwwNDg8QViRjbGFzc1xOU0ltYWdlRmxhZ3NWTlNSZXBzV05TQ29sb3KA

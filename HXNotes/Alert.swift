@@ -10,6 +10,17 @@ import Cocoa
 
 class Alert {
     
+    // Alert types help with getting rid of duplicate alerts.
+    // For instance if a user doesn't remove a 10 minute warning
+    // alert, then when the 5 minute warning alert occurs, it should
+    // remove the 10 minute warning.
+    enum AlertType {
+        case future
+        case happening
+        case deletion
+        case custom
+    }
+    
     enum AlertLocation {
         case dropdown
         case overlay
@@ -97,10 +108,11 @@ class Alert {
     let deny: String
     let action: Selector?
     let target: AnyObject?
+    let type: AlertType
     
     /// Question parameter is the label applied to accepting the notification's action but can be
     /// provided with a nil in order for the accept button not to be displayed.
-    init(hour: Int, minute: Int, course: String, content: String, question: String?, deny: String, action: Selector?, target: AnyObject?) {
+    init(hour: Int, minute: Int, course: String, content: String, question: String?, deny: String, action: Selector?, target: AnyObject?, type: AlertType) {
         self.hour = hour
         self.minute = minute
         self.course = course
@@ -109,16 +121,32 @@ class Alert {
         self.deny = deny
         self.action = action
         self.target = target
+        self.type = type
         
-        if question != nil {
-            if question == "Remove Course" {
-                for alert in Alert.alertQueue {
-                    if alert.question != nil {
-                        if alert.question == "Remove Course" && alert.course == course {
-                            // Don't add this alert since a remove course request already exists
-                            return
-                        }
-                    }
+        // Check if course already has deletion alert
+        if type == .deletion {
+            for alert in Alert.alertQueue {
+                if alert.type == .deletion && alert.course == course {
+                    // This course already had a deletion alert
+                    return
+                }
+            }
+        } else
+        // Check if a future alert already exists for course. Remove it so the new Alert can be displayed
+        if type == .future {
+            for x in 0..<Alert.alertQueue.count {
+                if Alert.alertQueue[x].type == .future && Alert.alertQueue[x].course == course {
+                    Alert.remove(at: x)
+                    break
+                }
+            }
+        } else
+        // Check if course is happening, in which case remove the future alerts
+        if type == .happening {
+            for x in 0..<Alert.alertQueue.count {
+                if Alert.alertQueue[x].type == .future && Alert.alertQueue[x].course == course {
+                    Alert.remove(at: x)
+                    break
                 }
             }
         }
@@ -139,17 +167,20 @@ class Alert {
     }
     
     /// This initializer will assume the hour and minute is the current calendar time. Convenience initializer.
-    convenience init(course: String, content: String, question: String?, deny: String, action: Selector?, target: AnyObject?) {
+    convenience init(course: String, content: String, question: String?, deny: String, action: Selector?, target: AnyObject?, type: AlertType) {
         let hour = NSCalendar.current.component(.hour, from: NSDate() as Date)
         let minute = NSCalendar.current.component(.minute, from: NSDate() as Date)
         
-        self.init(hour: hour, minute: minute, course: course, content: content, question: question, deny: deny, action: action, target: target)
+        self.init(hour: hour, minute: minute, course: course, content: content, question: question, deny: deny, action: action, target: target, type: type)
     }
     
-    ///
+    /// Dequeue alert.
     @objc public static func closeAlert() {
         
         if let controller = Alert.alertControllers[0] as? HXAlertDropdown {
+            print("Closing dropdown alert.")
+            controller.button_accept.isEnabled = false
+            
             NSAnimationContext.beginGrouping()
             NSAnimationContext.current().duration = 0.2
             NSAnimationContext.current().completionHandler = {
@@ -166,5 +197,37 @@ class Alert {
 //        if let controller = Alert.alertControllers[0] as? HXAlertSidebar {
 //
 //        }
+    }
+    
+    /// Use this instead of Alert.alertQueue.remove(at:), will check if the alert is visible.
+    private static func remove(at index: Int) {
+        print("Remove alert \(index)")
+        if index > 0 {
+            Alert.alertQueue.remove(at: index)
+        } else if Alert.alertShowing {
+            // Alert is showing if its index 0
+            Alert.closeAlert()
+        }
+    }
+    
+    /// Probably used after a .deletion alert has been confirmed, will remove
+    /// all alerts with the provided course title.
+    public static func flushAlerts(for course: String) {
+        print("Flush alerts for \(course)")
+        for x in stride(from: Alert.alertQueue.count - 1, through: 0, by: -1) {
+            if Alert.alertQueue[x].course == course {
+                Alert.remove(at: x)
+            }
+        }
+    }
+    
+    /// In case a user lets a course go by with a course .happening alert, this can
+    /// be called to nullify a .happening alert.
+    public static func flushHappening(for course: String) {
+        for x in 0..<Alert.alertQueue.count {
+            if Alert.alertQueue[x].type == .happening && Alert.alertQueue[x].course == course {
+                Alert.remove(at: x)
+            }
+        }
     }
 }

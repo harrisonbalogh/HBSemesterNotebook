@@ -21,3 +21,4 @@ class HXAbsentLectureBox: NSBox {
         return nil
     }
 }
+

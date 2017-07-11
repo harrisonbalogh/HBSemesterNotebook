@@ -130,9 +130,9 @@ class CalendarViewController: NSViewController {
     // MARK: Populating stacks (visuals) ______________________________________________________________________
     /// Handles purely the visual aspect of timeSlots. Updates visuals on an HXGridBox in the gridBoxes array.
     private func pushTimeSlot(_ time: TimeSlot, for course: Course) {
-        gridBoxes[Int(time.day)][Int(time.hour)].update(course: course)
-        updateClusters(Int(time.day), Int(time.hour))
-        evaluateEmptyVisuals()
+//        gridBoxes[Int(time.day)][Int(time.hour)].update(course: course)
+//        updateClusters(Int(time.day), Int(time.hour))
+//        evaluateEmptyVisuals()
     }
     /// Handles purely the visual aspect of timeSlots. Update visuals on an HXGridBox
     private func popTimeSlot(_ x: Int, _ y: Int) {
@@ -188,17 +188,6 @@ class CalendarViewController: NSViewController {
         }
     }
     
-    // MARK: Instance object models ____________________________________________________________________________
-
-    //
-    private func newTimeSlot(for course: Course, atDay day: Int, atHour hour: Int) -> TimeSlot {
-        let newTime = NSEntityDescription.insertNewObject(forEntityName: "TimeSlot", into: appDelegate.managedObjectContext) as! TimeSlot
-        newTime.hour = Int16(hour) // Supplied range is [0,14] but we want it to be actual hour so [8,22]
-        newTime.day = Int16(day) // Supplied range is [0,4] but we want it to match Calendar.Component.weekday so [2,6]
-        newTime.course = course
-        return newTime
-    }
-    
     // MARK: Populating object model
     /// Remove all timeslots associated with given course
     func clearTimeSlots(named name: String) {
@@ -213,7 +202,7 @@ class CalendarViewController: NSViewController {
     }
     /// Add a timeslot model and update gridBox visuals
     private func addTimeSlot(for course: Course, atDay day: Int, atHour hour: Int) {
-        pushTimeSlot( newTimeSlot(for: course, atDay: day, atHour: hour), for: course)
+//        pushTimeSlot( newTimeSlot(for: course, atDay: day, atHour: hour), for: course)
         masterViewController.notifyTimeSlotAddition()
     }
     /// Remove a timeslot model and update gridBox visuals
@@ -222,14 +211,14 @@ class CalendarViewController: NSViewController {
         let fetchRequest = NSFetchRequest<TimeSlot>(entityName: "TimeSlot")
         do {
             let fetch = try appDelegate.managedObjectContext.fetch(fetchRequest) as [TimeSlot]
-            if let found = fetch.filter({$0.course!.semester == thisSemester && $0.day == Int16(x) && $0.hour == Int16(y)}).first {
-                appDelegate.managedObjectContext.delete(found)
-                appDelegate.saveAction(self)
-                // Notify sidebar
-                masterViewController.notifyTimeSlotDeletion()
-                // Update Visuals
-                popTimeSlot(x, y)
-            }
+//            if let found = fetch.filter({$0.course!.semester == thisSemester && $0.day == Int16(x) && $0.hour == Int16(y)}).first {
+//                appDelegate.managedObjectContext.delete(found)
+//                appDelegate.saveAction(self)
+//                // Notify sidebar
+//                masterViewController.notifyTimeSlotDeletion()
+//                // Update Visuals
+//                popTimeSlot(x, y)
+//            }
         } catch { fatalError("Failed to fetch: \(error)") }
     }
     

@@ -19,7 +19,8 @@ class MasterViewController: NSViewController {
     // Children controllers
     var sidebarViewController: SidebarViewController!
     // The following 2 controllers fill container_content as is needed
-    private var calendarViewController: CalendarViewController!
+//    private var calendarViewController: CalendarViewController!
+    private var schedulerViewController: SchedulerViewController!
     var editorViewController: EditorViewController!
     
     // Course drag box for moving courses
@@ -45,6 +46,8 @@ class MasterViewController: NSViewController {
         Alert.masterViewController = self
         
         view.wantsLayer = true
+        
+        AppDelegate.scheduleAssistant = ScheduleAssistant(masterController: self)
     }
     override func viewDidAppear() {
         super.viewDidAppear()
@@ -52,21 +55,31 @@ class MasterViewController: NSViewController {
             self.sidebarViewController = sidebarVC
             self.sidebarViewController.masterViewController = self
         }
+        
+        let calendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
+        // Get calendar date to deduce semester
+        let yearComponent = calendar.component(.year, from: Date())
+        
+        // This should be adjustable in the settings, assumes Jul-Dec is Fall. Jan-Jun is Spring.
+        var semesterTitle = "spring"
+        if calendar.component(.month, from: Date()) >= 7 {
+            semesterTitle = "fall"
+        }
+        // Set the current semester displayed in the SidebarVC - might want to remeber last selected semester
+        sidebarViewController.setDate(semester: Semester.produceSemester(titled: semesterTitle, in: yearComponent))
     }
     
     // MARK: ––– Populating Content Container –––
     
     private func pushCalendar(semester: Semester) {
-        let strybrd = NSStoryboard.init(name: "Main", bundle: nil)
-        if let newController = strybrd.instantiateController(withIdentifier: "CalendarID") as? CalendarViewController {
-            calendarViewController = newController
-            self.addChildViewController(calendarViewController)
-            container_content.addSubview(calendarViewController.view)
-            calendarViewController.masterViewController = self
-            calendarViewController.view.frame = container_content.bounds
-            calendarViewController.view.autoresizingMask = [.viewWidthSizable, .viewHeightSizable]
-            calendarViewController.initialize(with: semester)
-        }
+
+        schedulerViewController = SchedulerViewController(nibName: "HXScheduler", bundle: nil)!
+        self.addChildViewController(schedulerViewController)
+        container_content.addSubview(schedulerViewController.view)
+        schedulerViewController.view.frame = container_content.bounds
+        schedulerViewController.view.autoresizingMask = [.viewWidthSizable, .viewHeightSizable]
+        schedulerViewController.initialize(with: semester)
+        
     }
     private func pushEditor() {
         let strybrd = NSStoryboard.init(name: "Main", bundle: nil)
@@ -80,11 +93,11 @@ class MasterViewController: NSViewController {
         }
     }
     private func popCalendar() {
-        if calendarViewController != nil {
-            if calendarViewController.view.superview != nil {
-                calendarViewController.view.removeFromSuperview()
-                calendarViewController.removeFromParentViewController()
-                calendarViewController = nil
+        if schedulerViewController != nil {
+            if schedulerViewController.view.superview != nil {
+                schedulerViewController.view.removeFromSuperview()
+                schedulerViewController.removeFromParentViewController()
+                schedulerViewController = nil
             }
         }
     }
@@ -127,30 +140,23 @@ class MasterViewController: NSViewController {
     func notifyCourseSelection(course: Course?) {
         editorViewController.selectedCourse = course
     }
-    ///
-    func notifyCourseDeletionConfirmation(_ dialog: HXDeleteConfirmationBox) {
-        view.addSubview(dialog)
-        dialog.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        dialog.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        dialog.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        dialog.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-    }
     /// Notify MasterViewController that a course has been removed.
     /// Currently used to remove time slot grid spaces in Calendar.
-    func notifyCourseDeletion(named course: String) {
-        calendarViewController.clearTimeSlots(named: course)
-        calendarViewController.evaluateEmptyVisuals()
+    func notifyCourseDeletion() {
+        if schedulerViewController != nil {
+            schedulerViewController.notifyTimeSlotChange()
+        }
     }
-    /// Notify calendar of a course being added so it may display proper visuals.
+    /// Notify scheduler of a course being added so it may display proper visuals.
     func notifyCourseAddition() {
-        if calendarViewController != nil {
-            calendarViewController.evaluateEmptyVisuals()
+        if schedulerViewController != nil {
+            schedulerViewController.notifyTimeSlotChange()
         }
     }
     /// Notify MasterViewController that a course has been renamed.
     /// Currently used to reload the label titles on time slots in the Calendar.
     func notifyCourseRename(from oldName: String) {
-        calendarViewController.reloadTimeslotTitles(named: oldName)
+//        calendarViewController.reloadTimeslotTitles(named: oldName)
     }
     ///
     func notifyCourseDragStart(editBox: HXCourseEditBox, to loc: NSPoint) {
@@ -171,12 +177,12 @@ class MasterViewController: NSViewController {
     func notifyCourseDragMoved(editBox: HXCourseEditBox, to loc: NSPoint) {
         dragBoxConstraintLead.constant = loc.x - editBox.boxDrag.frame.origin.x - editBox.boxDrag.frame.width/2
         dragBoxConstraintTop.constant = self.view.bounds.height - loc.y - editBox.boxDrag.frame.origin.y - editBox.boxDrag.frame.height/2
-        calendarViewController.drag()
+//        calendarViewController.drag()
     }
     ///
     func notifyCourseDragEnd(course: Course, at loc: NSPoint) {
         self.courseDragBox.removeFromSuperview()
-        calendarViewController.drop(course: course, at: loc)
+//        calendarViewController.drop(course: course, at: loc)
     }
     /// From EditorVC to SidebarVC
     func notifyLectureFocus(is lecture: Lecture?) {
@@ -192,12 +198,12 @@ class MasterViewController: NSViewController {
     }
     ///
     func notifySemesterEditing(semester: Semester) {
-        if calendarViewController == nil {
+        if schedulerViewController == nil {
             // Only push a new calendar if the editor is showing.
             popEditor()
             pushCalendar(semester: semester)
         } else {
-            calendarViewController.initialize(with: semester)
+//            calendarViewController.initialize(with: semester)
         }
     }
     ///
@@ -208,6 +214,12 @@ class MasterViewController: NSViewController {
             pushEditor()
         } else {
             editorViewController.selectedCourse = nil
+        }
+    }
+    ///
+    func notifyTimeSlotChange() {
+        if schedulerViewController != nil {
+            schedulerViewController.notifyTimeSlotChange()
         }
     }
     /// 
