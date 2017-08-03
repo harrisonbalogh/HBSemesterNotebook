@@ -11,16 +11,23 @@ import Foundation
 class HXTimeFormatter {
     
     /// Change 13 to 1 but keep 12 as 12. Also append AM or PM
-    public static  func formatTime(_ time: Int16) -> String {
-        let t_24 = Double(time)
-        let t_12 = t_24 - (ceil(Double(t_24/12)) - 1) * 12
-        var formattedTime = "\(Int(t_12)):00"
-        if floor(Double(t_24/12)) == 0 {
-            formattedTime += "AM"
-        } else {
-            formattedTime += "PM"
+    public static  func formatTime(_ minuteOfDay: Int16) -> String {
+        
+        var hourStop = "\(Int(minuteOfDay / 60))"
+        var minuteStop = "\(Int(minuteOfDay % 60))"
+        if Int(minuteOfDay % 60) < 10 {
+            minuteStop = "0" + minuteStop
+            
         }
-        return formattedTime
+        if Int(minuteOfDay / 60) > 12 {
+            hourStop = "\(Int(minuteOfDay / 60) - 12)"
+            minuteStop = minuteStop + "P"
+        } else if Int(minuteOfDay / 60) == 12 {
+            minuteStop = minuteStop + "P"
+        } else {
+            minuteStop = minuteStop + "A"
+        }
+        return hourStop + ":" + minuteStop
     }
     /// Change 13 to 1 but keep 12 as 12.
     public static  func formatTime(_ time: Int) -> Int {
@@ -41,9 +48,4 @@ class HXTimeFormatter {
     private static var DAYS_IN_OCT = 31
     private static var DAYS_IN_NOV = 30
     private static var DAYS_IN_DEC = 31
-    
-    public static func hey() {
-        
-    }
-    
 }

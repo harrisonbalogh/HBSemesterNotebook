@@ -19,7 +19,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Menu Bar Icon
         if let button = statusItem.button {
             button.image = #imageLiteral(resourceName: "menu_icon@")
+            button.target = self
+            button.action = #selector(self.toggleMenuBarPopover(sender:))
         }
+        menuBarPopover.contentViewController = MenuBarPopover(nibName: "MenuBarPopover", bundle: nil)
+        
+        eventMonitor = EventMonitor(mask: [NSEventMask.leftMouseDown, NSEventMask.rightMouseDown], handler: {event in
+            if self.menuBarPopover.isShown {
+                self.closeMenuBarPopover(sender: event)
+            }
+        })
+        eventMonitor?.start()
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
@@ -171,9 +181,55 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         return .terminateNow
     }
     
+    // MARK: - Preferences
+    var prefPanel: NSPanel!
+    
+    @IBAction func revealPreferences(_ sender: NSMenuItem) {
+        
+//        if prefPanel == nil {
+//            let prefController = PreferencesViewController(nibName: "PreferencesView", bundle: nil)!
+//            prefPanel = NSPanel(contentViewController: prefController)
+//            NSApp.mainWindow!.beginSheet(prefPanel, completionHandler: {response in })
+//            NSApp.runModal(for: prefPanel)
+//            
+//        }
+        
+        if let content = NSApp.keyWindow?.contentViewController as? MasterViewController {
+            content.displayPreferences()
+        }
+        
+    }
+    func closeModal() {
+        
+//        NSApp.mainWindow!.endSheet(prefPanel!)
+//        NSApp.stopModal()
+//        prefPanel = nil
+        
+    }
+    
     // MARK: - Menu Bar Functionality
     
     let statusItem = NSStatusBar.system().statusItem(withLength: NSSquareStatusItemLength)
+    let menuBarPopover = NSPopover()
+    var eventMonitor: EventMonitor?
+    
+    func showMenuBarPopover(sender: AnyObject?) {
+        if let button = statusItem.button {
+            menuBarPopover.show(relativeTo: button.bounds, of: button, preferredEdge: NSRectEdge.minY)
+        }
+    }
+    
+    func closeMenuBarPopover(sender: AnyObject?) {
+        menuBarPopover.performClose(sender)
+    }
+    
+    func toggleMenuBarPopover(sender: AnyObject?) {
+        if menuBarPopover.isShown {
+            closeMenuBarPopover(sender: sender)
+        } else {
+            showMenuBarPopover(sender: sender)
+        }
+    }
     
     ///
     @IBAction func findFunction(_ sender: NSMenuItem) {

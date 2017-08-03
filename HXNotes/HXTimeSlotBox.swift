@@ -32,8 +32,8 @@ class HXTimeSlotBox: NSView {
     let ID_STEPPER_WEEKDAY  = "timeslot_stepper_weekday"
     // Elements of course box
     var buttonTrash: NSButton!
-    var timeSlot: TimeSlot!
-    var editBox: HXCourseEditBox!
+    weak var timeSlot: TimeSlot!
+    weak var editBox: HXCourseEditBox!
     var labelWeekday: NSTextField!
     var pickerStart: NSDatePicker!
     var pickerStop: NSDatePicker!
@@ -109,38 +109,40 @@ class HXTimeSlotBox: NSView {
         
         // Check if new start time is passed old stop time
         if startTime > timeSlot.stopMinuteOfDay - 5 {
-            // Try pushing back stop time
-            if timeSlot.validateTimeSlot(on: timeSlot.weekday, from: startTime, to: startTime + timeSlotLength) {
-                stopTime = startTime + timeSlotLength
-            }
+            stopTime = startTime + timeSlotLength
         } else {
-            if timeSlot.validateTimeSlot(on: timeSlot.weekday, from: startTime, to: timeSlot.stopMinuteOfDay) {
-                stopTime = timeSlot.stopMinuteOfDay
-            }
+            stopTime = timeSlot.stopMinuteOfDay
         }
         
-        if stopTime != nil {
-            timeSlot.stopMinuteOfDay = stopTime
-            timeSlot.startMinuteOfDay = startTime
-            editBox.notifyTimeSlotChange()
-            // Update pickerStop
-            let calendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
-            var components = calendar.components([.hour, .minute], from: Date())
-            let hourStop = Int(timeSlot.stopMinuteOfDay / 60)
-            let minuteStop = Int(timeSlot.stopMinuteOfDay % 60)
-            components.hour = hourStop
-            components.minute = minuteStop
-            pickerStop.dateValue = calendar.date(from: components)!
-            
+        timeSlot.stopMinuteOfDay = stopTime
+        timeSlot.startMinuteOfDay = startTime
+        editBox.notifyTimeSlotChange()
+        // Update pickerStop
+        let calendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
+        var components = calendar.components([.hour, .minute], from: Date())
+        let hourStop = Int(timeSlot.stopMinuteOfDay / 60)
+        let minuteStop = Int(timeSlot.stopMinuteOfDay % 60)
+        components.hour = hourStop
+        components.minute = minuteStop
+        pickerStop.dateValue = calendar.date(from: components)!
+        
+//        if stopTime != nil {
+//            
+//        } else {
+//            // Unavailable, reset pickerStart
+//            let calendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
+//            var components = calendar.components([.hour, .minute], from: Date())
+//            let hourStart = Int(timeSlot.startMinuteOfDay / 60)
+//            let minuteStart = Int(timeSlot.startMinuteOfDay % 60)
+//            components.hour = hourStart
+//            components.minute = minuteStart
+//            pickerStart.dateValue = calendar.date(from: components)!
+//        }
+        
+        if timeSlot.validateTimeSlot(on: timeSlot.weekday, from: startTime, to: stopTime) {
+            timeSlot.valid = true
         } else {
-            // Unavailable, reset pickerStart
-            let calendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
-            var components = calendar.components([.hour, .minute], from: Date())
-            let hourStart = Int(timeSlot.startMinuteOfDay / 60)
-            let minuteStart = Int(timeSlot.startMinuteOfDay % 60)
-            components.hour = hourStart
-            components.minute = minuteStart
-            pickerStart.dateValue = calendar.date(from: components)!
+            timeSlot.valid = false
         }
     }
     func action_pickerStop() {
@@ -152,51 +154,52 @@ class HXTimeSlotBox: NSView {
 
         // Check if new stop time is before old start time
         if timeSlot.startMinuteOfDay > stopTime - 5 {
-            // Try pushing forward start time
-            if timeSlot.validateTimeSlot(on: timeSlot.weekday, from: stopTime - timeSlotLength, to: stopTime) {
-                startTime = stopTime - timeSlotLength
-            }
+            startTime = stopTime - timeSlotLength
         } else {
-            if timeSlot.validateTimeSlot(on: timeSlot.weekday, from: timeSlot.startMinuteOfDay, to: stopTime) {
-                startTime = timeSlot.startMinuteOfDay
-            }
+            startTime = timeSlot.startMinuteOfDay
         }
         
-        if startTime != nil {
-            timeSlot.stopMinuteOfDay = stopTime
-            timeSlot.startMinuteOfDay = startTime
-            editBox.notifyTimeSlotChange()
-            // Update pickerStart
-            let calendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
-            var components = calendar.components([.hour, .minute], from: Date())
-            let hourStart = Int(timeSlot.startMinuteOfDay / 60)
-            let minuteStart = Int(timeSlot.startMinuteOfDay % 60)
-            components.hour = hourStart
-            components.minute = minuteStart
-            pickerStart.dateValue = calendar.date(from: components)!
-            
+        timeSlot.stopMinuteOfDay = stopTime
+        timeSlot.startMinuteOfDay = startTime
+        editBox.notifyTimeSlotChange()
+        // Update pickerStart
+        let calendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
+        var components = calendar.components([.hour, .minute], from: Date())
+        let hourStart = Int(timeSlot.startMinuteOfDay / 60)
+        let minuteStart = Int(timeSlot.startMinuteOfDay % 60)
+        components.hour = hourStart
+        components.minute = minuteStart
+        pickerStart.dateValue = calendar.date(from: components)!
+        
+        if timeSlot.validateTimeSlot(on: timeSlot.weekday, from: startTime, to: stopTime) {
+            timeSlot.valid = true
         } else {
-            // Unavailable, reset pickerStop
-            let calendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
-            var components = calendar.components([.hour, .minute], from: Date())
-            let hourStop = Int(timeSlot.stopMinuteOfDay / 60)
-            let minuteStop = Int(timeSlot.stopMinuteOfDay % 60)
-            components.hour = hourStop
-            components.minute = minuteStop
-            pickerStop.dateValue = calendar.date(from: components)!
+            timeSlot.valid = false
         }
     }
     
     func action_stepper() {
+        // Available timeslot
+        labelWeekday.stringValue = DAY_NAMES[Int(stepperDay.intValue)]
+        timeSlot.weekday = Int16(stepperDay.intValue)
+        editBox.notifyTimeSlotChange()
+        
         if timeSlot.validateTimeSlot(on: Int16(stepperDay.intValue), from: timeSlot.startMinuteOfDay, to: timeSlot.stopMinuteOfDay) {
-            // Available timeslot
-            labelWeekday.stringValue = DAY_NAMES[Int(stepperDay.intValue)]
-            timeSlot.weekday = Int16(stepperDay.intValue)
-            editBox.notifyTimeSlotChange()
+            timeSlot.valid = true
         } else {
-            // Unavailable, reset it to previous value
-            stepperDay.intValue = Int32(Int(timeSlot.weekday))
+            timeSlot.valid = false
         }
+        
+//        if timeSlot.validateTimeSlot(on: Int16(stepperDay.intValue), from: timeSlot.startMinuteOfDay, to: timeSlot.stopMinuteOfDay) {
+//            // Available timeslot
+//            labelWeekday.stringValue = DAY_NAMES[Int(stepperDay.intValue)]
+//            timeSlot.weekday = Int16(stepperDay.intValue)
+//            editBox.notifyTimeSlotChange()
+//            timeSlot.course!.sortTimeSlots()
+//        } else {
+//            // Unavailable, reset it to previous value
+//            stepperDay.intValue = Int32(Int(timeSlot.weekday))
+//        }
     }
     
     func removeTimeSlotBox() {

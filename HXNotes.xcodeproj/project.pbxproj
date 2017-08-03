@@ -31,7 +31,13 @@
 		C057FD201EE4B0CA00A62D9F /* HXExportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C057FD1E1EE4B0CA00A62D9F /* HXExportViewController.swift */; };
 		C06017241F12D638001EDE97 /* HXTimeSlotBox.xib in Resources */ = {isa = PBXBuildFile; fileRef = C06017231F12D638001EDE97 /* HXTimeSlotBox.xib */; };
 		C06017261F12D67B001EDE97 /* HXTimeSlotBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06017251F12D67B001EDE97 /* HXTimeSlotBox.swift */; };
-		C07953841EA721B90022BFCF /* HXGridBox.xib in Resources */ = {isa = PBXBuildFile; fileRef = C07953831EA721B90022BFCF /* HXGridBox.xib */; };
+		C069202C1F33046600D04234 /* PreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C069202A1F33046600D04234 /* PreferencesViewController.swift */; };
+		C069202D1F33046600D04234 /* PreferencesView.xib in Resources */ = {isa = PBXBuildFile; fileRef = C069202B1F33046600D04234 /* PreferencesView.xib */; };
+		C06920301F330F2200D04234 /* PreferencesNavViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C069202E1F330F2200D04234 /* PreferencesNavViewController.swift */; };
+		C06920311F330F2200D04234 /* PreferencesNavView.xib in Resources */ = {isa = PBXBuildFile; fileRef = C069202F1F330F2200D04234 /* PreferencesNavView.xib */; };
+		C081A6AA1F19940000C8E1FB /* MenuBarPopover.swift in Sources */ = {isa = PBXBuildFile; fileRef = C081A6A81F19940000C8E1FB /* MenuBarPopover.swift */; };
+		C081A6AB1F19940000C8E1FB /* MenuBarPopover.xib in Resources */ = {isa = PBXBuildFile; fileRef = C081A6A91F19940000C8E1FB /* MenuBarPopover.xib */; };
+		C081A6AD1F19991400C8E1FB /* EventMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C081A6AC1F19991400C8E1FB /* EventMonitor.swift */; };
 		C0824D651EEE28C4007DC002 /* HXFindReplaceView.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0824D641EEE28C4007DC002 /* HXFindReplaceView.xib */; };
 		C087C2701EEFE8F300E70469 /* HXFindReplaceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C087C26E1EEFE8F300E70469 /* HXFindReplaceViewController.swift */; };
 		C095D7811EB9461900BBE7CB /* EditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C095D7801EB9461900BBE7CB /* EditorViewController.swift */; };
@@ -123,7 +129,13 @@
 		C057FD1E1EE4B0CA00A62D9F /* HXExportViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXExportViewController.swift; sourceTree = "<group>"; };
 		C06017231F12D638001EDE97 /* HXTimeSlotBox.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXTimeSlotBox.xib; sourceTree = "<group>"; };
 		C06017251F12D67B001EDE97 /* HXTimeSlotBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXTimeSlotBox.swift; sourceTree = "<group>"; };
-		C07953831EA721B90022BFCF /* HXGridBox.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXGridBox.xib; sourceTree = "<group>"; };
+		C069202A1F33046600D04234 /* PreferencesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferencesViewController.swift; sourceTree = "<group>"; };
+		C069202B1F33046600D04234 /* PreferencesView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PreferencesView.xib; sourceTree = "<group>"; };
+		C069202E1F330F2200D04234 /* PreferencesNavViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferencesNavViewController.swift; sourceTree = "<group>"; };
+		C069202F1F330F2200D04234 /* PreferencesNavView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PreferencesNavView.xib; sourceTree = "<group>"; };
+		C081A6A81F19940000C8E1FB /* MenuBarPopover.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuBarPopover.swift; sourceTree = "<group>"; };
+		C081A6A91F19940000C8E1FB /* MenuBarPopover.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MenuBarPopover.xib; sourceTree = "<group>"; };
+		C081A6AC1F19991400C8E1FB /* EventMonitor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventMonitor.swift; sourceTree = "<group>"; };
 		C0824D641EEE28C4007DC002 /* HXFindReplaceView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXFindReplaceView.xib; sourceTree = "<group>"; };
 		C087C26E1EEFE8F300E70469 /* HXFindReplaceViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXFindReplaceViewController.swift; sourceTree = "<group>"; };
 		C095D7801EB9461900BBE7CB /* EditorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditorViewController.swift; sourceTree = "<group>"; };
@@ -222,6 +234,17 @@
 			name = "Schedule Assistant";
 			sourceTree = "<group>";
 		};
+		C06920291F33044500D04234 /* Preferences */ = {
+			isa = PBXGroup;
+			children = (
+				C069202A1F33046600D04234 /* PreferencesViewController.swift */,
+				C069202B1F33046600D04234 /* PreferencesView.xib */,
+				C069202E1F330F2200D04234 /* PreferencesNavViewController.swift */,
+				C069202F1F330F2200D04234 /* PreferencesNavView.xib */,
+			);
+			name = Preferences;
+			sourceTree = "<group>";
+		};
 		C07EE84A1EA8426700B87035 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -236,10 +259,19 @@
 		C07EE84B1EA8428300B87035 /* NIB Templates */ = {
 			isa = PBXGroup;
 			children = (
-				C07953831EA721B90022BFCF /* HXGridBox.xib */,
 				C02231961F114DD7009A421B /* HXScheduler.xib */,
 			);
 			name = "NIB Templates";
+			sourceTree = "<group>";
+		};
+		C081A6A71F19939A00C8E1FB /* Menu Bar Function */ = {
+			isa = PBXGroup;
+			children = (
+				C081A6A81F19940000C8E1FB /* MenuBarPopover.swift */,
+				C081A6AC1F19991400C8E1FB /* EventMonitor.swift */,
+				C081A6A91F19940000C8E1FB /* MenuBarPopover.xib */,
+			);
+			name = "Menu Bar Function";
 			sourceTree = "<group>";
 		};
 		C095D77F1EB945EA00BBE7CB /* Editor Functionality */ = {
@@ -326,7 +358,9 @@
 				C0B7958E1EFFA0EC00A0C527 /* Alerts */,
 				C0A156FB1ED911E600F4DBC1 /* Sidebar */,
 				C095D77F1EB945EA00BBE7CB /* Editor Functionality */,
+				C081A6A71F19939A00C8E1FB /* Menu Bar Function */,
 				C0D687BE1EA4948A00BF1D05 /* Calendar Functionality */,
+				C06920291F33044500D04234 /* Preferences */,
 				C0AAE1411EA2BD12002939B6 /* Info.plist */,
 				C0D7CEE51F0DF48800062B59 /* HXNotes.xcdatamodeld */,
 			);
@@ -527,13 +561,15 @@
 				C025FD9D1EC2A68F0090A287 /* HXWeekBox.xib in Resources */,
 				C057FD151EE4A00300A62D9F /* HXFindView.xib in Resources */,
 				C02231971F114DD7009A421B /* HXScheduler.xib in Resources */,
+				C069202D1F33046600D04234 /* PreferencesView.xib in Resources */,
 				C025FD9B1EC2A4970090A287 /* HXLectureBox.xib in Resources */,
-				C07953841EA721B90022BFCF /* HXGridBox.xib in Resources */,
 				C09B45261EDFADCB007CCC05 /* HXCourseAddBox.xib in Resources */,
 				C057FD191EE4A01800A62D9F /* HXExportView.xib in Resources */,
 				C0AAE13D1EA2BD12002939B6 /* Assets.xcassets in Resources */,
+				C081A6AB1F19940000C8E1FB /* MenuBarPopover.xib in Resources */,
 				C0009E2B1EC43BE200C80642 /* HXLectureView.xib in Resources */,
 				C0AAE1401EA2BD12002939B6 /* Main.storyboard in Resources */,
+				C06920311F330F2200D04234 /* PreferencesNavView.xib in Resources */,
 				C0B7959A1EFFA12700A0C527 /* HXAlertSidebar.xib in Resources */,
 				C0FD6C261EC273DA00338F1C /* HXCourseBox.xib in Resources */,
 				C0824D651EEE28C4007DC002 /* HXFindReplaceView.xib in Resources */,
@@ -577,6 +613,7 @@
 				C0B68EF71EC3EA1E00E86439 /* HXWeekBox.swift in Sources */,
 				C03AF8161EB856860028BA68 /* MasterWindowController.swift in Sources */,
 				C0D33D3F1ED250F70051B25C /* HXBottomBufferView.swift in Sources */,
+				C069202C1F33046600D04234 /* PreferencesViewController.swift in Sources */,
 				C09B452A1EDFAED5007CCC05 /* HXCourseAddBox.swift in Sources */,
 				C0D235EE1EA5369B00AB039A /* CalendarViewController.swift in Sources */,
 				C0B92E9D1EC951D700F44A3C /* HXNonScrollView.swift in Sources */,
@@ -591,12 +628,15 @@
 				C0D8DB391EF4EFF1009BB53E /* VisualEffectView.swift in Sources */,
 				C0D1A16D1ECAF96D006A17B2 /* HXFlippedClipView.swift in Sources */,
 				C02DB9511F019C5B00044001 /* HXAbsentLectureBox.swift in Sources */,
+				C081A6AA1F19940000C8E1FB /* MenuBarPopover.swift in Sources */,
 				C02D55B41F135C7500E1AF4F /* TimeSlot+CoreDataClass.swift in Sources */,
 				C0B92E9F1EC9535700F44A3C /* LectureViewController.swift in Sources */,
+				C081A6AD1F19991400C8E1FB /* EventMonitor.swift in Sources */,
 				C09EBEBD1EAF20B700A6D72C /* MasterViewController.swift in Sources */,
 				C0AAE1361EA2BD12002939B6 /* AppDelegate.swift in Sources */,
 				C0E96E741ED7641000705A35 /* HXTextView.swift in Sources */,
 				C00719D01EF5FA9100161A7D /* Course+CoreDataClass.swift in Sources */,
+				C06920301F330F2200D04234 /* PreferencesNavViewController.swift in Sources */,
 				C057FD201EE4B0CA00A62D9F /* HXExportViewController.swift in Sources */,
 				C0D687BD1EA4948400BF1D05 /* HXGridBox.swift in Sources */,
 				C095D7811EB9461900BBE7CB /* EditorViewController.swift in Sources */,

@@ -14,8 +14,16 @@ import Cocoa
 @objc(Semester)
 public class Semester: NSManagedObject {
     
-    /// Creates and returns a new persistent Course object.
-    public func newCourse() -> Course {
+    // Note: about the object model and function names.
+    // create'Object' returns a new object.
+    // retrieve'Object' returns an object that already exists or nil if it doesn't.
+    // produce'Object' returns an object that already exists or a new object if it doesn't.
+    
+    // MARK: Creating/Retrieving/Producing Objects
+    
+    /// Creates and returns a new persistent Course object. Can never have the same title as another
+    /// course.
+    public func createCourse() -> Course {
         let newCourse = NSEntityDescription.insertNewObject(forEntityName: "Course", into: managedObjectContext!) as! Course
         let assignedColor = nextColorAvailable().usingColorSpace(.sRGB)!
         newCourse.colorRed = Float(assignedColor.redComponent)
@@ -73,6 +81,8 @@ public class Semester: NSManagedObject {
         } catch { fatalError("Failed to fetch semesters: \(error)") }
     }
     
+    // MARK: - Schedule Assistant Helper Functions
+    
     /// Returns a single course that is currently happening or will start in 5 minutes.
     /// Returns nil if no course is happening at the moment.
     public func duringCourse() -> Course? {
@@ -122,6 +132,8 @@ public class Semester: NSManagedObject {
         }
         return soonestTimeSlot.course
     }
+    
+    // MARK: - Course Creation Helper Functions
     
     /// Return the first number available in the semester for untitled courses.
     public func nextNumberAvailable() -> Int {

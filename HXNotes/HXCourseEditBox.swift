@@ -24,8 +24,8 @@ class HXCourseEditBox: NSView {
     
 //    // Need to update course index when a course gets removed
 //    var courseIndex: Int!
-    var parentController: SidebarViewController!
-    var course: Course!
+    weak var parentController: SidebarViewController!
+    weak var course: Course!
     // Note when cursor is inside the area to drag box (to calendar)
     var insideDrag = false
     // Note when user started dragging after being in drag region
@@ -100,24 +100,31 @@ class HXCourseEditBox: NSView {
         self.labelCourse.stringValue = course.title!
         self.oldName = course.title!
         
+        Swift.print("HXCourseEditBox - initialize() : Print time slots!")
         for case let timeSlot as TimeSlot in course.timeSlots! {
+            Swift.print("    timeSlot - Weekday: \(timeSlot.weekday)  Minute: \(timeSlot.startMinuteOfDay)")
             let newBox = HXTimeSlotBox.instance(with: timeSlot, for: self)
-//            timeSlotStackView.insertArrangedSubview(newBox!, at: timeSlotStackView.arrangedSubviews.count - 1)
-            timeSlotStackView.addArrangedSubview(newBox!)
+            let index = course.timeSlots!.index(of: newBox!.timeSlot)
+            timeSlotStackView.insertArrangedSubview(newBox!, at: index + 1)
         }
     }
     
     /// Removes this course box from the stack view
     func removeCourseBox() {
         
-        var lectureInfo = ""
-        if self.course.lectures!.count == 1 {
-            lectureInfo = "A lecture will be lost."
-        } else {
-            lectureInfo = "\(self.course.lectures!.count) lectures will be lost."
+        if self.course.timeSlots!.count == 0 {
+            confirmRemoveCourse()
+            return
         }
         
-        let _ = Alert(course: self.course.title!, content: "is to be removed. " + lectureInfo, question: "Remove Course", deny: "Cancel", action: #selector(self.confirmRemoveCourse), target: self, type: .deletion)
+        var lectureInfo = ""
+        if self.course.lectures!.count == 1 {
+            lectureInfo = " A lecture will be lost."
+        } else if self.course.lectures!.count != 0 {
+            lectureInfo = " \(self.course.lectures!.count) lectures will be lost."
+        }
+        
+        let _ = Alert(course: self.course.title!, content: "is to be removed." + lectureInfo + " Confirm removal?", question: "Remove Course", deny: "Cancel", action: #selector(self.confirmRemoveCourse), target: self, type: .deletion)
     }
     /// Removes a timeSlot from this course
     func removeTimeSlot(_ timeSlot: TimeSlot) {
@@ -126,8 +133,8 @@ class HXCourseEditBox: NSView {
     /// Adds a timeSlot for this course
     func addTimeSlot() {
         let newBox = HXTimeSlotBox.instance(with: course.nextTimeSlot(), for: self)
-//        timeSlotStackView.insertArrangedSubview(newBox!, at: timeSlotStackView.arrangedSubviews.count - 1)
-        timeSlotStackView.addArrangedSubview(newBox!)
+        let index = course.timeSlots!.index(of: newBox!.timeSlot)
+        timeSlotStackView.insertArrangedSubview(newBox!, at: index + 1)
     }
     
     func confirmRemoveCourse() {
@@ -148,7 +155,7 @@ class HXCourseEditBox: NSView {
             // Rename course if the name isn't already taken
             if course.semester!.retrieveCourse(named: labelCourse.stringValue) == nil {
                 course.title = labelCourse.stringValue
-                parentController.masterViewController.notifyCourseRename(from: oldName)
+                parentController.masterViewController.notifyTimeSlotChange()
                 oldName = labelCourse.stringValue
             } else {
                 // Revoke name change
@@ -246,5 +253,6 @@ class HXCourseEditBox: NSView {
     // MARK: - Notifiers
     func notifyTimeSlotChange() {
         parentController.notifyTimeSlotChange()
+        course.sortTimeSlots()
     }
 }

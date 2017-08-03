@@ -21,13 +21,41 @@ class HXScheduleBox: NSBox {
         for timeSlot in timeSlotVisuals {
             let w = self.bounds.width/7
             let x = CGFloat(timeSlot.weekday - 1) * w
-            let y = self.bounds.height - self.bounds.height * CGFloat(timeSlot.startMinuteOfDay)/1439
-            let h = self.bounds.height * CGFloat(timeSlot.stopMinuteOfDay - timeSlot.startMinuteOfDay)/1439
+            // Deducting 480 (8 hours) removes the hours of 12A-8A from being drawn, and deducting 120 (2 hours)
+            // removes the hours of 10P-12A.
+            let y = self.bounds.height - self.bounds.height * CGFloat(timeSlot.startMinuteOfDay-480)/(1439-480-120)
+            let h = self.bounds.height * CGFloat(timeSlot.stopMinuteOfDay - timeSlot.startMinuteOfDay)/(1439-480-120)
+            
+            var textColor = NSColor.black
+            var alphaValue: CGFloat = 1
+            if !timeSlot.valid {
+                textColor = NSColor.red
+                alphaValue = 0.5
+            }
             
             let bezPath = NSBezierPath(rect: NSRect(x: x, y: y, width: w, height: -h))
             
-            NSColor(calibratedRed: CGFloat(timeSlot.course!.colorRed), green: CGFloat(timeSlot.course!.colorGreen), blue: CGFloat(timeSlot.course!.colorBlue), alpha: 1).setFill()
+            NSColor(calibratedRed: CGFloat(timeSlot.course!.colorRed), green: CGFloat(timeSlot.course!.colorGreen), blue: CGFloat(timeSlot.course!.colorBlue), alpha: alphaValue).setFill()
             bezPath.fill()
+            
+            let startString = NSAttributedString(string: HXTimeFormatter.formatTime(timeSlot.startMinuteOfDay), attributes: [NSForegroundColorAttributeName: textColor])
+            
+            let stopString = NSAttributedString(string: HXTimeFormatter.formatTime(timeSlot.stopMinuteOfDay), attributes: [NSForegroundColorAttributeName: textColor])
+            
+            let titleString = NSAttributedString(string: timeSlot.course!.title!, attributes: [NSForegroundColorAttributeName: NSColor.darkGray])
+            
+            // Layout adjustments if the timeSlotVisual height is too small to fit 3 lines of text
+            if h < startString.size().height * 2 {
+                startString.draw(at: NSPoint(x: x + 1, y: y - h/2 - titleString.size().height/2))
+                stopString.draw(at: NSPoint(x: x + w - stopString.size().width, y: y - h/2 - titleString.size().height/2))
+            } else if h < startString.size().height * 3 {
+                startString.draw(at: NSPoint(x: x + w/2 - startString.size().width/2, y: y - startString.size().height))
+                stopString.draw(at: NSPoint(x: x + w/2 - stopString.size().width/2, y: y - h))
+            } else {
+                startString.draw(at: NSPoint(x: x + w/2 - startString.size().width/2, y: y - startString.size().height))
+                stopString.draw(at: NSPoint(x: x + w/2 - stopString.size().width/2, y: y - h))
+                titleString.draw(at: NSPoint(x: x + w/2 - titleString.size().width/2, y: y - h/2 - titleString.size().height/2))
+            }
         }
     }
     
@@ -63,7 +91,6 @@ class HXScheduleBox: NSBox {
     // MARK: - Drawing Schedule Boxes
 
     func addTimeSlotVisual(_ timeSlot: TimeSlot) {
-        Swift.print("Adding timeslot for \(timeSlot.course!.title!) at start minute of day: \(timeSlot.startMinuteOfDay)")
         timeSlotVisuals.append(timeSlot)
     }
     

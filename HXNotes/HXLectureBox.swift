@@ -33,7 +33,7 @@ class HXLectureBox: NSBox {
     var imageLecture: NSImageView!
     var buttonOverlay: NSButton!
     
-    var parentController: SidebarViewController!
+    weak var parentController: SidebarViewController!
     
     func initialize(numbered number: Int, dated date: String, owner: SidebarViewController) {
         

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11762" systemVersion="16F73" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11762"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="MenuBarPopover" customModule="HXNotes" customModuleProvider="target">
+            <connections>
+                <outlet property="view" destination="Hz6-mo-xeY" id="0bl-1N-x8E"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView id="Hz6-mo-xeY">
+            <rect key="frame" x="0.0" y="0.0" width="240" height="141"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kWV-LW-fRn">
+                    <rect key="frame" x="4" y="124" width="118" height="17"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="Calendar Assistant" id="MTe-f2-AQH">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="H5G-RV-1T7">
+                    <rect key="frame" x="6" y="122" width="228" height="5"/>
+                </box>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tI1-u0-vKA">
+                    <rect key="frame" x="57" y="81" width="126" height="18"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="No lectures today." id="4XY-U1-EBg">
+                        <font key="font" metaFont="system" size="14"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="UV4-vg-wQd">
+                    <rect key="frame" x="4" y="61" width="232" height="16"/>
+                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" title="First lecture tomorrow is at 8:45AM." id="aDP-rh-Cyd">
+                        <font key="font" metaFont="system" size="12"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="STU-fV-RH9">
+                    <rect key="frame" x="6" y="24" width="228" height="5"/>
+                </box>
+                <button focusRingType="none" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="XE1-PV-qn6">
+                    <rect key="frame" x="6" y="3" width="70" height="19"/>
+                    <buttonCell key="cell" type="roundRect" title="Editor" bezelStyle="roundedRect" image="NSColumnViewTemplate" imagePosition="left" alignment="left" state="on" borderStyle="border" focusRingType="none" imageScaling="proportionallyDown" inset="2" id="voK-0h-w6p">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="cellTitle"/>
+                    </buttonCell>
+                </button>
+                <button focusRingType="none" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="7hS-Xo-IEH">
+                    <rect key="frame" x="196" y="3" width="38" height="19"/>
+                    <buttonCell key="cell" type="roundRect" title="Quit" bezelStyle="roundedRect" alignment="left" state="on" borderStyle="border" focusRingType="none" imageScaling="proportionallyDown" inset="2" id="0Ty-v0-ZcE">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="cellTitle"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="action_quitButton:" target="-2" id="B9K-Jm-1xw"/>
+                    </connections>
+                </button>
+            </subviews>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="7hS-Xo-IEH" secondAttribute="trailing" constant="6" id="2Uo-dN-OcE"/>
+                <constraint firstItem="STU-fV-RH9" firstAttribute="leading" secondItem="H5G-RV-1T7" secondAttribute="leading" id="7kV-Dl-OT5"/>
+                <constraint firstItem="H5G-RV-1T7" firstAttribute="top" secondItem="kWV-LW-fRn" secondAttribute="bottom" constant="-1" id="8YR-y0-Sgc"/>
+                <constraint firstItem="UV4-vg-wQd" firstAttribute="centerX" secondItem="Hz6-mo-xeY" secondAttribute="centerX" id="JX3-w1-VA3"/>
+                <constraint firstItem="H5G-RV-1T7" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" constant="6" id="N2B-12-wNz"/>
+                <constraint firstAttribute="trailing" secondItem="H5G-RV-1T7" secondAttribute="trailing" constant="6" id="OXE-ns-bl2"/>
+                <constraint firstItem="XE1-PV-qn6" firstAttribute="centerY" secondItem="7hS-Xo-IEH" secondAttribute="centerY" id="PTU-KG-k4F"/>
+                <constraint firstItem="UV4-vg-wQd" firstAttribute="leading" secondItem="H5G-RV-1T7" secondAttribute="leading" id="Q9J-zG-bln"/>
+                <constraint firstItem="XE1-PV-qn6" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" constant="6" id="QAd-7b-PRy"/>
+                <constraint firstItem="STU-fV-RH9" firstAttribute="trailing" secondItem="H5G-RV-1T7" secondAttribute="trailing" id="RSg-3A-9WB"/>
+                <constraint firstItem="STU-fV-RH9" firstAttribute="top" secondItem="UV4-vg-wQd" secondAttribute="bottom" constant="34" id="VT6-ed-CRt"/>
+                <constraint firstItem="kWV-LW-fRn" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" id="Ygl-L2-1ch"/>
+                <constraint firstItem="7hS-Xo-IEH" firstAttribute="top" secondItem="STU-fV-RH9" secondAttribute="bottom" constant="4" id="b7r-Tg-r7h"/>
+                <constraint firstItem="UV4-vg-wQd" firstAttribute="top" secondItem="tI1-u0-vKA" secondAttribute="bottom" constant="4" id="e5x-gb-r4e"/>
+                <constraint firstItem="UV4-vg-wQd" firstAttribute="trailing" secondItem="H5G-RV-1T7" secondAttribute="trailing" id="gI0-iL-zez"/>
+                <constraint firstItem="tI1-u0-vKA" firstAttribute="centerX" secondItem="Hz6-mo-xeY" secondAttribute="centerX" id="jbm-Ua-O6t"/>
+                <constraint firstItem="kWV-LW-fRn" firstAttribute="leading" secondItem="H5G-RV-1T7" secondAttribute="leading" id="nEl-oG-R5f"/>
+                <constraint firstItem="tI1-u0-vKA" firstAttribute="top" secondItem="H5G-RV-1T7" secondAttribute="bottom" constant="25" id="nb0-nI-ecJ"/>
+                <constraint firstAttribute="bottom" secondItem="7hS-Xo-IEH" secondAttribute="bottom" constant="4" id="qTc-kn-CFc"/>
+            </constraints>
+            <point key="canvasLocation" x="73.5" y="71.5"/>
+        </customView>
+    </objects>
+    <resources>
+        <image name="NSColumnViewTemplate" width="16" height="10"/>
+    </resources>
+</document>

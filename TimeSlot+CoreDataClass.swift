@@ -24,7 +24,6 @@ public class TimeSlot: NSManagedObject {
         
         if startTime > stopTime - 5 {
             // Start time is earlier than stop time, try and push back stop time
-            
             return false
         }
         
@@ -37,13 +36,9 @@ public class TimeSlot: NSManagedObject {
                         (startTime <= timeSlot.startMinuteOfDay && timeSlot.startMinuteOfDay < stopTime + 5) ||
                         (startTime < timeSlot.stopMinuteOfDay + 5 && timeSlot.stopMinuteOfDay + 5 < stopTime) {
                         // Conflicting time
+                        timeSlot.valid = false
                         return false
-                    } else {
-                        Swift.print("Different time.")
                     }
-                        
-                } else {
-                    Swift.print("Wrong day or same timeslot. new weekday: \(weekday). checked day: \(timeSlot.weekday)")
                 }
             }
         }

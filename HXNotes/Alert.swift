@@ -32,7 +32,7 @@ class Alert {
     private static var alertShowing = false
     
     // Sets in the MasterViewController viewDidLoad - Location of alerts temporarily.
-    static var masterViewController: MasterViewController!
+    static weak var masterViewController: MasterViewController!
     
     ///
     private static func display(_ location: AlertLocation) {

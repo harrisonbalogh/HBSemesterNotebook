@@ -10,9 +10,9 @@ import Cocoa
 
 class SchedulerViewController: NSViewController {
 
-    @IBOutlet weak var scheduleBox: HXScheduleBox!
+    @IBOutlet var scheduleBox: HXScheduleBox!
     
-    private var editingSemester: Semester! {
+    private weak var editingSemester: Semester! {
         didSet {
             if editingSemester != nil {
                 clearTimeSlots()

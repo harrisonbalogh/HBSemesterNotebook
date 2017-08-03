@@ -44,9 +44,9 @@ class LectureViewController: NSViewController {
     @IBOutlet weak var headerTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var textViewTopConstraint: NSLayoutConstraint!
     
-    var lecture: Lecture!
+    weak var lecture: Lecture!
     
-    var owner: EditorViewController!
+    weak var owner: EditorViewController!
     
     // MARK: ___ Initialization ___
     override func viewDidLoad() {

@@ -41,6 +41,7 @@ class MasterViewController: NSViewController {
         sidebarBGBox.state = .active
         sidebarBGBox.blendingMode = .behindWindow
         sidebarBGBox.appearance = NSAppearance(named: NSAppearanceNameVibrantDark)
+//        sidebarBGBox.appearance = NSAppearance(named: NSAppearanceNameVibrantLight)
         sidebarBGBox.material = .appearanceBased
         
         Alert.masterViewController = self
@@ -69,17 +70,101 @@ class MasterViewController: NSViewController {
         sidebarViewController.setDate(semester: Semester.produceSemester(titled: semesterTitle, in: yearComponent))
     }
     
+    // MARK: - ––– Preferences –––
+    @IBOutlet weak var preferencesButton: NSButton!
+    var prefNav: PreferencesNavViewController!
+    var prefNavLeadingAnchor: NSLayoutConstraint!
+    var pref: PreferencesViewController!
+    var prefTrailingAnchor: NSLayoutConstraint!
+    
+    /// Creates a new PreferencesVC and PreferencesNavVC and adds their views to MasterVC as well as animates
+    /// the addition and hiding of appropriate views.
+    func displayPreferences() {
+        // Prevent more than one preferences view from being created.
+        if prefNav == nil {
+            
+            pref = PreferencesViewController(nibName: "PreferencesView", bundle: nil)!
+            self.addChildViewController(pref)
+            self.view.addSubview(pref.view)
+            pref.view.frame = container_content.frame
+            pref.view.widthAnchor.constraint(equalTo: container_content.widthAnchor).isActive = true
+            pref.view.topAnchor.constraint(equalTo: container_content.topAnchor).isActive = true
+            pref.view.bottomAnchor.constraint(equalTo: container_content.bottomAnchor).isActive = true
+            prefTrailingAnchor = pref.view.trailingAnchor.constraint(equalTo: container_content.trailingAnchor, constant: container_content.frame.width)
+            prefTrailingAnchor.isActive = true
+            
+            prefNav = PreferencesNavViewController(nibName: "PreferencesNavView", bundle: nil)!
+            self.addChildViewController(prefNav)
+            self.view.addSubview(prefNav.view)
+            prefNav.view.frame = sidebarBGBox.frame
+            prefNav.view.widthAnchor.constraint(equalToConstant: prefNav.view.frame.width).isActive = true
+            prefNav.view.topAnchor.constraint(equalTo: container_sideBar.topAnchor).isActive = true
+            prefNav.view.bottomAnchor.constraint(equalTo: container_sideBar.bottomAnchor).isActive = true
+            prefNavLeadingAnchor = prefNav.view.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: -sidebarBGBox.frame.width)
+            prefNavLeadingAnchor.isActive = true
+            
+            // Update button
+            preferencesButton.image = #imageLiteral(resourceName: "icon_drawer")
+            
+            // Animate the box to reveal it since its initially off-screen (and fade stuff behind it)
+            NSAnimationContext.beginGrouping()
+            NSAnimationContext.current().duration = 0.25
+            NSAnimationContext.current().completionHandler = {
+                self.container_sideBar.isHidden = true
+                self.container_sideBar.alphaValue = 1
+            }
+            prefNavLeadingAnchor.animator().constant = 0
+            prefTrailingAnchor.animator().constant = 0
+            container_sideBar.animator().alphaValue = 0
+            NSAnimationContext.endGrouping()
+        }
+    }
+    
+    @IBAction func action_preferencesToggle(_ sender: NSButton) {
+        // Toggle between hiding and showing preference views
+        if prefNav == nil {
+            displayPreferences()
+        } else {
+            // Update button
+            preferencesButton.image = #imageLiteral(resourceName: "icon_settings")
+            
+            // Recall hidden stuff. Slide away the preferences view, then remove it.
+            container_sideBar.alphaValue = 0
+            container_sideBar.isHidden = false
+            NSAnimationContext.beginGrouping()
+            NSAnimationContext.current().duration = 0.25
+            NSAnimationContext.current().completionHandler = {
+                if self.prefNav != nil {
+                    self.prefNav.view.removeFromSuperview()
+                    self.prefNav.removeFromParentViewController()
+                    
+                    self.pref.view.removeFromSuperview()
+                    self.pref.removeFromParentViewController()
+                    
+                    self.prefNav = nil
+                    self.prefNavLeadingAnchor = nil
+                    
+                    self.pref = nil
+                    self.prefTrailingAnchor = nil
+                }
+            }
+            prefNavLeadingAnchor.animator().constant = -sidebarBGBox.frame.width
+            prefTrailingAnchor.animator().constant = container_content.frame.width
+            container_sideBar.animator().alphaValue = 1
+            NSAnimationContext.endGrouping()
+        }
+    }
+    
+    
     // MARK: ––– Populating Content Container –––
     
     private func pushCalendar(semester: Semester) {
-
         schedulerViewController = SchedulerViewController(nibName: "HXScheduler", bundle: nil)!
         self.addChildViewController(schedulerViewController)
         container_content.addSubview(schedulerViewController.view)
         schedulerViewController.view.frame = container_content.bounds
         schedulerViewController.view.autoresizingMask = [.viewWidthSizable, .viewHeightSizable]
         schedulerViewController.initialize(with: semester)
-        
     }
     private func pushEditor() {
         let strybrd = NSStoryboard.init(name: "Main", bundle: nil)
@@ -202,8 +287,6 @@ class MasterViewController: NSViewController {
             // Only push a new calendar if the editor is showing.
             popEditor()
             pushCalendar(semester: semester)
-        } else {
-//            calendarViewController.initialize(with: semester)
         }
     }
     ///
@@ -212,6 +295,7 @@ class MasterViewController: NSViewController {
             // Only push a new editor if the calendar is showing.
             popCalendar()
             pushEditor()
+            
         } else {
             editorViewController.selectedCourse = nil
         }

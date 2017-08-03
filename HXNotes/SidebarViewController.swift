@@ -117,13 +117,18 @@ class SidebarViewController: NSViewController {
             viewingMode()
         }
     }
+    func action_addEditableCourse() {
+        // Creates new course data model and puts new view in ledgerStackView
+        pushEditableCourse( selectedSemester.createCourse() )
+    }
+
     var bottomBufferView: NSView!
     var bottomBufferHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var ledgerStackView: NSStackView!
-    @IBOutlet weak var ledgerClipView: HXFlippedClipView!
-    @IBOutlet weak var ledgerScrollView: NSScrollView!
+    @IBOutlet var ledgerStackView: NSStackView!
+    @IBOutlet var ledgerClipView: HXFlippedClipView!
+    @IBOutlet var ledgerScrollView: NSScrollView!
     var lectureStackView: NSStackView!
-    var masterViewController: MasterViewController!
+    weak var masterViewController: MasterViewController!
     
     // MARK: References - Data Objects
     let appDelegate = NSApplication.shared().delegate as! AppDelegate
@@ -143,7 +148,7 @@ class SidebarViewController: NSViewController {
                         return
                     }
                     for case let timeSlot as TimeSlot in course.timeSlots! {
-                        if timeSlot.weekday == -1 {
+                        if !timeSlot.valid {
                             editingMode()
                             return
                         }
@@ -203,22 +208,23 @@ class SidebarViewController: NSViewController {
         }
     }
     
-    // MARK: ___ Initialization ___
+    // MARK: ––– Initialization –––
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // Setup observers
-        NotificationCenter.default.addObserver(self, selector: #selector(SidebarViewController.didLiveScroll),
-                                               name: .NSScrollViewDidLiveScroll, object: ledgerClipView)
+//        NotificationCenter.default.addObserver(self, selector: #selector(SidebarViewController.didLiveScroll),
+//                                               name: .NSScrollViewDidLiveScroll, object: ledgerClipView)
     }
 
-    // MARK: ––– Populating LedgerStackView  –––
+    // MARK: ––– Populating LedgerStackView –––
     
     /// Access this function by setting SidebarViewController's selectedSemester.
     /// Repopulates the ledgerStackView and Sidebar visuals to display HXCourseEditBox's.
     private func editingMode() {
         loadEditableCourses(fromSemester: selectedSemester)
         masterViewController.notifySemesterEditing(semester: selectedSemester)
+        
         // UI control flow update - Note the RETURN call
         editSemesterButton.state = NSOnState
         if selectedSemester.courses!.count == 0 {
@@ -230,7 +236,7 @@ class SidebarViewController: NSViewController {
                     return
                 }
                 for case let timeSlot as TimeSlot in course.timeSlots! {
-                    if timeSlot.weekday == -1 {
+                    if !timeSlot.valid {
                         editSemesterButton.isEnabled = false
                         return
                     }
@@ -272,7 +278,7 @@ class SidebarViewController: NSViewController {
             bottomBufferHeightConstraint.constant = 0
         }
         // When first loading editable courses, append the 'New Course' button at end of ledgerStackView
-        let addBox = HXCourseAddBox.instance(target: self, action: #selector(SidebarViewController.addEditableCourse))
+        let addBox = HXCourseAddBox.instance(target: self, action: #selector(SidebarViewController.action_addEditableCourse))
         ledgerStackView.addArrangedSubview(addBox!)
         addBox?.widthAnchor.constraint(equalTo: ledgerStackView.widthAnchor).isActive = true
         // Populate ledgerStackView with HXCourseEditBox's
@@ -358,7 +364,7 @@ class SidebarViewController: NSViewController {
             weekCount += 1
         } else {
             let prevLecWeekInYear = (selectedCourse.lectures![selectedCourse.lectures!.count-2] as! Lecture).weekOfYear
-            let currentLecWeekInYear = (selectedCourse.lectures![selectedCourse.lectures!.count-1] as! Lecture).weekOfYear
+            let currentLecWeekInYear = (selectedCourse.lectures!.lastObject as! Lecture).weekOfYear
             if currentLecWeekInYear != prevLecWeekInYear {
                 lectureStackView.addArrangedSubview(HXWeekBox.instance(withNumber: (weekCount+1)))
                 weekCount += 1
@@ -459,7 +465,7 @@ class SidebarViewController: NSViewController {
     }
     
     // MARK: ––– Lecture & Course Model –––
-    
+
     /// Confirms removal of all information associated with a course object. Model and Views
     internal func removeCourse(_ editBox: HXCourseEditBox) {
         // Remove course from ledgerStackView, reset grid spaces of timeSlots, delete data model
@@ -510,7 +516,8 @@ class SidebarViewController: NSViewController {
         if let currentSemester = Semester.retrieveSemester(titled: semesterTitle, in: yearComponent) {
             if let courseHappening = currentSemester.duringCourse() {
                 if courseHappening.theoreticalLectureCount() - courseHappening.lectures!.count == 1 {
-                    let newLec = courseHappening.newLecture(during: courseHappening.duringTimeSlot()!)
+                    let newLec = courseHappening.createLecture(during: courseHappening.duringTimeSlot()!, absent: nil)
+                    // Following two lines won't have any visual effect if they are setting the same value. See didSet
                     selectedSemester = currentSemester
                     selectedCourse = courseHappening
                     // Displays lecture in the ledgerStackView
@@ -528,14 +535,6 @@ class SidebarViewController: NSViewController {
             }
         }
     }
-    
-    /// For external and internal usage. Creates a new Course data object and updates
-    /// ledgerStackView visuals with a new HXCourseEditBox.
-    internal func addEditableCourse() {
-        // Creates new course data model and puts new view in ledgerStackView
-        pushEditableCourse( selectedSemester.newCourse() )
-    }
-
     
     // MARK: ––– Course Drag & Drop Functionality –––
     
@@ -575,7 +574,7 @@ class SidebarViewController: NSViewController {
                 return
             }
             for case let timeSlot as TimeSlot in course.timeSlots! {
-                if timeSlot.weekday == -1 {
+                if !timeSlot.valid {
                     editSemesterButton.isEnabled = false
                     editSemesterButton.state = NSOnState
                     return
@@ -597,7 +596,7 @@ class SidebarViewController: NSViewController {
                 return
             }
             for case let timeSlot as TimeSlot in course.timeSlots! {
-                if timeSlot.weekday == -1 {
+                if !timeSlot.valid {
                     editSemesterButton.isEnabled = false
                     return
                 }
@@ -619,7 +618,7 @@ class SidebarViewController: NSViewController {
                 break
             }
             for case let timeSlot as TimeSlot in course.timeSlots! {
-                if timeSlot.weekday == -1 {
+                if !timeSlot.valid {
                     editSemesterButton.isEnabled = false
                     editSemesterButton.state = NSOnState
                     break
@@ -627,5 +626,23 @@ class SidebarViewController: NSViewController {
             }
         }
                 
+    }
+    
+    // MARK: - TESTING
+    
+    func test_repeat() {
+        print("Test loop call")
+        
+        editingMode()
+        
+//        action_editSemester(editSemesterButton)
+//        if editSemesterButton.state == NSOnState {
+//            editSemesterButton.state = NSOffState
+//        } else {
+//            editSemesterButton.state = NSOnState
+//        }
+        
+        // Code above.
+        self.perform(#selector(self.test_repeat), with: nil, afterDelay: 0.5)
     }
 }

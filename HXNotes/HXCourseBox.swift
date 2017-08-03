@@ -22,8 +22,8 @@ class HXCourseBox: NSBox {
         return nil
     }
     
-    var parent: SidebarViewController!
-    var course: Course!
+    weak var parent: SidebarViewController!
+    weak var course: Course!
     
     // Manually connect course box child elements using identifiers
     let ID_BUTTON_OVERLAY = "course_overlay_button"

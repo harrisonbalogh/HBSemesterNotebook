@@ -284,6 +284,9 @@
                         <real value="3.4028234663852886e+38"/>
                     </customSpacing>
                 </stackView>
+                <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="34f-Vi-SHk">
+                    <rect key="frame" x="0.0" y="250" width="400" height="5"/>
+                </box>
             </subviews>
             <constraints>
                 <constraint firstItem="jAs-W5-OMt" firstAttribute="centerY" secondItem="c22-O7-iKe" secondAttribute="centerY" id="2Vo-S8-k9T"/>
@@ -291,12 +294,15 @@
                 <constraint firstItem="jAs-W5-OMt" firstAttribute="centerX" secondItem="c22-O7-iKe" secondAttribute="centerX" id="K3S-ma-Pdw"/>
                 <constraint firstAttribute="bottom" secondItem="Fnf-qn-2eS" secondAttribute="bottom" id="OAH-Ur-ipQ"/>
                 <constraint firstItem="5P4-Mv-hnu" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" id="ORU-pv-ONm"/>
+                <constraint firstItem="34f-Vi-SHk" firstAttribute="leading" secondItem="5P4-Mv-hnu" secondAttribute="leading" id="Siy-nG-L2L"/>
+                <constraint firstItem="34f-Vi-SHk" firstAttribute="trailing" secondItem="5P4-Mv-hnu" secondAttribute="trailing" id="fWI-iH-BiV"/>
                 <constraint firstAttribute="trailing" secondItem="Fnf-qn-2eS" secondAttribute="trailing" id="ipT-48-9ND"/>
                 <constraint firstItem="jAs-W5-OMt" firstAttribute="width" secondItem="c22-O7-iKe" secondAttribute="width" id="kuT-ln-wNZ"/>
                 <constraint firstItem="Fnf-qn-2eS" firstAttribute="top" secondItem="5P4-Mv-hnu" secondAttribute="bottom" id="q0a-Fq-6lv"/>
                 <constraint firstItem="Fnf-qn-2eS" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" id="t7I-LW-pjM"/>
                 <constraint firstAttribute="trailing" secondItem="5P4-Mv-hnu" secondAttribute="trailing" id="uCp-DD-fgw"/>
                 <constraint firstItem="jAs-W5-OMt" firstAttribute="height" secondItem="c22-O7-iKe" secondAttribute="height" id="w7s-wU-w5Y"/>
+                <constraint firstItem="34f-Vi-SHk" firstAttribute="top" secondItem="5P4-Mv-hnu" secondAttribute="bottom" constant="-1" id="yRm-pj-xuk"/>
             </constraints>
             <point key="canvasLocation" x="-260" y="169"/>
         </customView>

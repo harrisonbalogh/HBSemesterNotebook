@@ -10,7 +10,7 @@ import Cocoa
 
 class EditorViewController: NSViewController {
     
-    var masterViewController: MasterViewController!
+    weak var masterViewController: MasterViewController!
 
     // MARK: View References
     @IBOutlet weak var lectureStack: NSStackView!
@@ -31,7 +31,7 @@ class EditorViewController: NSViewController {
     // MARK: Object models
     let appDelegate = NSApplication.shared().delegate as! AppDelegate
     let sharedFontManager = NSFontManager.shared()
-    var selectedCourse: Course! {
+    weak var selectedCourse: Course! {
         didSet {
             if isExporting {
                 isExporting = false
@@ -65,7 +65,7 @@ class EditorViewController: NSViewController {
             }
         }
     }
-    var lectureFocused: LectureViewController! {
+    weak var lectureFocused: LectureViewController! {
         didSet {
             if lectureFocused == nil {
                 masterViewController.notifyLectureFocus(is: nil)
@@ -200,7 +200,7 @@ class EditorViewController: NSViewController {
     /// Is responsible for updating the headers to simulate the iOS effect of lecture titles
     /// staying at the top of scrollView.
     func didScroll() {
-        print("EditorVC - didScroll")
+//        print("EditorVC - didScroll")
         return;
         // didScroll should only be called when the origin.y changes, not the height
         if oldClipperHeight == lectureClipper.bounds.height {

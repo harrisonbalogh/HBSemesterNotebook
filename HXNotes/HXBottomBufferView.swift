@@ -10,7 +10,7 @@ import Cocoa
 
 class HXBottomBufferView: NSBox {
     
-    var owner: EditorViewController!
+    weak var owner: EditorViewController!
     
     func initialize(owner: EditorViewController) {
         self.owner = owner

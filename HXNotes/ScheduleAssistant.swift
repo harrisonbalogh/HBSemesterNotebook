@@ -10,7 +10,7 @@ import Foundation
 
 class ScheduleAssistant: NSObject {
     
-    var masterVC: MasterViewController!
+    weak var masterVC: MasterViewController!
     
     // MARK: ___ Initialization ___
     init(masterController: MasterViewController) {
