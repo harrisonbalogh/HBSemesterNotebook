@@ -27,7 +27,7 @@ class SidebarViewController: NSViewController {
         }
     }
     func setDate(semester: Semester) {
-        print("    SidebarVC - setting date.")
+//        print("    SidebarVC - setting date.")
         lastYearUsed = Int(semester.year)
         yearLabel.stringValue = "\(lastYearUsed)"
         selectedSemester = semester
@@ -515,7 +515,7 @@ class SidebarViewController: NSViewController {
         // See if the current semester exists in the persistant store
         if let currentSemester = Semester.retrieveSemester(titled: semesterTitle, in: yearComponent) {
             if let courseHappening = currentSemester.duringCourse() {
-                if courseHappening.theoreticalLectureCount() - courseHappening.lectures!.count == 1 {
+                if courseHappening.theoreticalLectureCount() - courseHappening.lectures!.count == 1 || courseHappening.theoreticalLectureCount() == 0 {
                     let newLec = courseHappening.createLecture(during: courseHappening.duringTimeSlot()!, absent: nil)
                     // Following two lines won't have any visual effect if they are setting the same value. See didSet
                     selectedSemester = currentSemester
@@ -566,7 +566,8 @@ class SidebarViewController: NSViewController {
     func notifyTimeSlotChange() {
         masterViewController.notifyTimeSlotChange()
         
-        // If any course don't have any TimeSlots, don't allow user to proceed to Editor
+        // If any course don't have any TimeSlots, don't allow user to proceed to Editor...
+        // Also don't proceed if any TimeSlots overlap
         for case let course as Course in selectedSemester.courses! {
             if course.timeSlots!.count == 0 {
                 editSemesterButton.isEnabled = false

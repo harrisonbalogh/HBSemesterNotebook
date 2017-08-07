@@ -23,6 +23,14 @@
 		C02DB94F1F019BFF00044001 /* HXAbsentLectureBox.xib in Resources */ = {isa = PBXBuildFile; fileRef = C02DB94E1F019BFF00044001 /* HXAbsentLectureBox.xib */; };
 		C02DB9511F019C5B00044001 /* HXAbsentLectureBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C02DB9501F019C5B00044001 /* HXAbsentLectureBox.swift */; };
 		C03AF8161EB856860028BA68 /* MasterWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C03AF8151EB856860028BA68 /* MasterWindowController.swift */; };
+		C049A6411F3429F100685CF9 /* LectureCollectionViewItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C049A63F1F3429F100685CF9 /* LectureCollectionViewItem.swift */; };
+		C049A6421F3429F100685CF9 /* LectureCollectionViewItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = C049A6401F3429F100685CF9 /* LectureCollectionViewItem.xib */; };
+		C049A6441F34322000685CF9 /* LectureHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = C049A6431F34322000685CF9 /* LectureHeaderView.xib */; };
+		C049A6481F3433A400685CF9 /* LectureHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C049A6471F3433A400685CF9 /* LectureHeaderView.swift */; };
+		C04B12111F33C211002E05E9 /* GeneralPreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C04B120F1F33C211002E05E9 /* GeneralPreferencesViewController.swift */; };
+		C04B12121F33C211002E05E9 /* GeneralPreferencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C04B12101F33C211002E05E9 /* GeneralPreferencesViewController.xib */; };
+		C04B12141F33E8F2002E05E9 /* HXStickyHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = C04B12131F33E8F2002E05E9 /* HXStickyHeaderView.xib */; };
+		C04B12161F33E93F002E05E9 /* HXStickyHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C04B12151F33E93F002E05E9 /* HXStickyHeaderView.swift */; };
 		C04F7A161F0DA3BB00490938 /* ScheduleAssistant.swift in Sources */ = {isa = PBXBuildFile; fileRef = C04F7A151F0DA3BB00490938 /* ScheduleAssistant.swift */; };
 		C057FD151EE4A00300A62D9F /* HXFindView.xib in Resources */ = {isa = PBXBuildFile; fileRef = C057FD141EE4A00300A62D9F /* HXFindView.xib */; };
 		C057FD171EE4A00F00A62D9F /* HXPrintView.xib in Resources */ = {isa = PBXBuildFile; fileRef = C057FD161EE4A00F00A62D9F /* HXPrintView.xib */; };
@@ -60,11 +68,8 @@
 		C0B795991EFFA12700A0C527 /* HXAlertSidebar.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B795971EFFA12700A0C527 /* HXAlertSidebar.swift */; };
 		C0B7959A1EFFA12700A0C527 /* HXAlertSidebar.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0B795981EFFA12700A0C527 /* HXAlertSidebar.xib */; };
 		C0B795A01EFFA7BB00A0C527 /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B7959F1EFFA7BB00A0C527 /* Alert.swift */; };
-		C0B92E9D1EC951D700F44A3C /* HXNonScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B92E9C1EC951D700F44A3C /* HXNonScrollView.swift */; };
-		C0B92E9F1EC9535700F44A3C /* LectureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B92E9E1EC9535700F44A3C /* LectureViewController.swift */; };
 		C0D1A16D1ECAF96D006A17B2 /* HXFlippedClipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D1A16C1ECAF96D006A17B2 /* HXFlippedClipView.swift */; };
 		C0D235EE1EA5369B00AB039A /* CalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D235ED1EA5369B00AB039A /* CalendarViewController.swift */; };
-		C0D33D3F1ED250F70051B25C /* HXBottomBufferView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D33D3E1ED250F70051B25C /* HXBottomBufferView.swift */; };
 		C0D687BD1EA4948400BF1D05 /* HXGridBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D687BC1EA4948400BF1D05 /* HXGridBox.swift */; };
 		C0D68CFD1EA6943F009B06E3 /* HXCourseDragBox.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0D68CFC1EA6943F009B06E3 /* HXCourseDragBox.xib */; };
 		C0D68CFF1EA6C8CF009B06E3 /* HXCourseDragBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D68CFE1EA6C8CF009B06E3 /* HXCourseDragBox.swift */; };
@@ -121,6 +126,14 @@
 		C02DB94E1F019BFF00044001 /* HXAbsentLectureBox.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXAbsentLectureBox.xib; sourceTree = "<group>"; };
 		C02DB9501F019C5B00044001 /* HXAbsentLectureBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXAbsentLectureBox.swift; sourceTree = "<group>"; };
 		C03AF8151EB856860028BA68 /* MasterWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MasterWindowController.swift; sourceTree = "<group>"; };
+		C049A63F1F3429F100685CF9 /* LectureCollectionViewItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LectureCollectionViewItem.swift; sourceTree = "<group>"; };
+		C049A6401F3429F100685CF9 /* LectureCollectionViewItem.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LectureCollectionViewItem.xib; sourceTree = "<group>"; };
+		C049A6431F34322000685CF9 /* LectureHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LectureHeaderView.xib; sourceTree = "<group>"; };
+		C049A6471F3433A400685CF9 /* LectureHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LectureHeaderView.swift; sourceTree = "<group>"; };
+		C04B120F1F33C211002E05E9 /* GeneralPreferencesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeneralPreferencesViewController.swift; sourceTree = "<group>"; };
+		C04B12101F33C211002E05E9 /* GeneralPreferencesViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GeneralPreferencesViewController.xib; sourceTree = "<group>"; };
+		C04B12131F33E8F2002E05E9 /* HXStickyHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXStickyHeaderView.xib; sourceTree = "<group>"; };
+		C04B12151F33E93F002E05E9 /* HXStickyHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXStickyHeaderView.swift; sourceTree = "<group>"; };
 		C04F7A151F0DA3BB00490938 /* ScheduleAssistant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScheduleAssistant.swift; sourceTree = "<group>"; };
 		C057FD141EE4A00300A62D9F /* HXFindView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXFindView.xib; sourceTree = "<group>"; };
 		C057FD161EE4A00F00A62D9F /* HXPrintView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXPrintView.xib; sourceTree = "<group>"; };
@@ -164,11 +177,8 @@
 		C0B795971EFFA12700A0C527 /* HXAlertSidebar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXAlertSidebar.swift; sourceTree = "<group>"; };
 		C0B795981EFFA12700A0C527 /* HXAlertSidebar.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXAlertSidebar.xib; sourceTree = "<group>"; };
 		C0B7959F1EFFA7BB00A0C527 /* Alert.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Alert.swift; sourceTree = "<group>"; };
-		C0B92E9C1EC951D700F44A3C /* HXNonScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXNonScrollView.swift; sourceTree = "<group>"; };
-		C0B92E9E1EC9535700F44A3C /* LectureViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LectureViewController.swift; sourceTree = "<group>"; };
 		C0D1A16C1ECAF96D006A17B2 /* HXFlippedClipView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXFlippedClipView.swift; sourceTree = "<group>"; };
 		C0D235ED1EA5369B00AB039A /* CalendarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarViewController.swift; sourceTree = "<group>"; };
-		C0D33D3E1ED250F70051B25C /* HXBottomBufferView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXBottomBufferView.swift; sourceTree = "<group>"; };
 		C0D687BC1EA4948400BF1D05 /* HXGridBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXGridBox.swift; sourceTree = "<group>"; };
 		C0D68CFC1EA6943F009B06E3 /* HXCourseDragBox.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXCourseDragBox.xib; sourceTree = "<group>"; };
 		C0D68CFE1EA6C8CF009B06E3 /* HXCourseDragBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXCourseDragBox.swift; sourceTree = "<group>"; };
@@ -226,6 +236,15 @@
 			name = "NIB Templates";
 			sourceTree = "<group>";
 		};
+		C04B120E1F33C1D6002E05E9 /* Preference Tabs */ = {
+			isa = PBXGroup;
+			children = (
+				C04B120F1F33C211002E05E9 /* GeneralPreferencesViewController.swift */,
+				C04B12101F33C211002E05E9 /* GeneralPreferencesViewController.xib */,
+			);
+			name = "Preference Tabs";
+			sourceTree = "<group>";
+		};
 		C04F7A141F0DA39A00490938 /* Schedule Assistant */ = {
 			isa = PBXGroup;
 			children = (
@@ -237,6 +256,7 @@
 		C06920291F33044500D04234 /* Preferences */ = {
 			isa = PBXGroup;
 			children = (
+				C04B120E1F33C1D6002E05E9 /* Preference Tabs */,
 				C069202A1F33046600D04234 /* PreferencesViewController.swift */,
 				C069202B1F33046600D04234 /* PreferencesView.xib */,
 				C069202E1F330F2200D04234 /* PreferencesNavViewController.swift */,
@@ -278,7 +298,6 @@
 			isa = PBXGroup;
 			children = (
 				C095D7801EB9461900BBE7CB /* EditorViewController.swift */,
-				C0B92E9E1EC9535700F44A3C /* LectureViewController.swift */,
 				C0FD6C211EC273AB00338F1C /* Views */,
 				C0089FC31EF5F593003F960B /* Model */,
 			);
@@ -362,6 +381,8 @@
 				C0D687BE1EA4948A00BF1D05 /* Calendar Functionality */,
 				C06920291F33044500D04234 /* Preferences */,
 				C0AAE1411EA2BD12002939B6 /* Info.plist */,
+				C04B12131F33E8F2002E05E9 /* HXStickyHeaderView.xib */,
+				C04B12151F33E93F002E05E9 /* HXStickyHeaderView.swift */,
 				C0D7CEE51F0DF48800062B59 /* HXNotes.xcdatamodeld */,
 			);
 			path = HXNotes;
@@ -417,8 +438,8 @@
 		C0FD6C211EC273AB00338F1C /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				C0B92E9C1EC951D700F44A3C /* HXNonScrollView.swift */,
-				C0D33D3E1ED250F70051B25C /* HXBottomBufferView.swift */,
+				C049A63F1F3429F100685CF9 /* LectureCollectionViewItem.swift */,
+				C049A6471F3433A400685CF9 /* LectureHeaderView.swift */,
 				C0D1A16C1ECAF96D006A17B2 /* HXFlippedClipView.swift */,
 				C0E96E731ED7641000705A35 /* HXTextView.swift */,
 				C057FD1C1EE4B0BC00A62D9F /* HXFindViewController.swift */,
@@ -433,6 +454,8 @@
 		C0FD6C241EC273C600338F1C /* NIB Templates */ = {
 			isa = PBXGroup;
 			children = (
+				C049A6401F3429F100685CF9 /* LectureCollectionViewItem.xib */,
+				C049A6431F34322000685CF9 /* LectureHeaderView.xib */,
 				C0009E2A1EC43BE200C80642 /* HXLectureView.xib */,
 				C057FD141EE4A00300A62D9F /* HXFindView.xib */,
 				C0824D641EEE28C4007DC002 /* HXFindReplaceView.xib */,
@@ -563,12 +586,16 @@
 				C02231971F114DD7009A421B /* HXScheduler.xib in Resources */,
 				C069202D1F33046600D04234 /* PreferencesView.xib in Resources */,
 				C025FD9B1EC2A4970090A287 /* HXLectureBox.xib in Resources */,
+				C04B12141F33E8F2002E05E9 /* HXStickyHeaderView.xib in Resources */,
 				C09B45261EDFADCB007CCC05 /* HXCourseAddBox.xib in Resources */,
 				C057FD191EE4A01800A62D9F /* HXExportView.xib in Resources */,
 				C0AAE13D1EA2BD12002939B6 /* Assets.xcassets in Resources */,
 				C081A6AB1F19940000C8E1FB /* MenuBarPopover.xib in Resources */,
 				C0009E2B1EC43BE200C80642 /* HXLectureView.xib in Resources */,
 				C0AAE1401EA2BD12002939B6 /* Main.storyboard in Resources */,
+				C049A6421F3429F100685CF9 /* LectureCollectionViewItem.xib in Resources */,
+				C049A6441F34322000685CF9 /* LectureHeaderView.xib in Resources */,
+				C04B12121F33C211002E05E9 /* GeneralPreferencesViewController.xib in Resources */,
 				C06920311F330F2200D04234 /* PreferencesNavView.xib in Resources */,
 				C0B7959A1EFFA12700A0C527 /* HXAlertSidebar.xib in Resources */,
 				C0FD6C261EC273DA00338F1C /* HXCourseBox.xib in Resources */,
@@ -612,16 +639,17 @@
 				C0D7CEE71F0DF48800062B59 /* HXNotes.xcdatamodeld in Sources */,
 				C0B68EF71EC3EA1E00E86439 /* HXWeekBox.swift in Sources */,
 				C03AF8161EB856860028BA68 /* MasterWindowController.swift in Sources */,
-				C0D33D3F1ED250F70051B25C /* HXBottomBufferView.swift in Sources */,
+				C049A6411F3429F100685CF9 /* LectureCollectionViewItem.swift in Sources */,
+				C04B12161F33E93F002E05E9 /* HXStickyHeaderView.swift in Sources */,
 				C069202C1F33046600D04234 /* PreferencesViewController.swift in Sources */,
 				C09B452A1EDFAED5007CCC05 /* HXCourseAddBox.swift in Sources */,
 				C0D235EE1EA5369B00AB039A /* CalendarViewController.swift in Sources */,
-				C0B92E9D1EC951D700F44A3C /* HXNonScrollView.swift in Sources */,
 				C0A156FD1ED9120100F4DBC1 /* SidebarViewController.swift in Sources */,
 				C0B795A01EFFA7BB00A0C527 /* Alert.swift in Sources */,
 				C00367081EA5851500C4DE0C /* HXCourseEditBox.swift in Sources */,
 				C0B795911EFFA10800A0C527 /* HXAlertDropdown.swift in Sources */,
 				C0150EE81EA5AD6800BBBFA6 /* CourseLabel.swift in Sources */,
+				C049A6481F3433A400685CF9 /* LectureHeaderView.swift in Sources */,
 				C00719D41EF5FC9900161A7D /* Semester+CoreDataClass.swift in Sources */,
 				C022319B1F114E51009A421B /* HXScheduleBox.swift in Sources */,
 				C025FDA31EC2E29B0090A287 /* HXLectureBox.swift in Sources */,
@@ -630,7 +658,6 @@
 				C02DB9511F019C5B00044001 /* HXAbsentLectureBox.swift in Sources */,
 				C081A6AA1F19940000C8E1FB /* MenuBarPopover.swift in Sources */,
 				C02D55B41F135C7500E1AF4F /* TimeSlot+CoreDataClass.swift in Sources */,
-				C0B92E9F1EC9535700F44A3C /* LectureViewController.swift in Sources */,
 				C081A6AD1F19991400C8E1FB /* EventMonitor.swift in Sources */,
 				C09EBEBD1EAF20B700A6D72C /* MasterViewController.swift in Sources */,
 				C0AAE1361EA2BD12002939B6 /* AppDelegate.swift in Sources */,
@@ -640,6 +667,7 @@
 				C057FD201EE4B0CA00A62D9F /* HXExportViewController.swift in Sources */,
 				C0D687BD1EA4948400BF1D05 /* HXGridBox.swift in Sources */,
 				C095D7811EB9461900BBE7CB /* EditorViewController.swift in Sources */,
+				C04B12111F33C211002E05E9 /* GeneralPreferencesViewController.swift in Sources */,
 				C0D68CFF1EA6C8CF009B06E3 /* HXCourseDragBox.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

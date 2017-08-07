@@ -25,14 +25,9 @@ class HXCourseBox: NSBox {
     weak var parent: SidebarViewController!
     weak var course: Course!
     
-    // Manually connect course box child elements using identifiers
-    let ID_BUTTON_OVERLAY = "course_overlay_button"
-    let ID_LABEL_DAYS     = "course_days_label"
-    let ID_LABEL_TITLE    = "course_title_label"
-    // Elements of course box
-    var buttonOverlay: NSButton!
-    var labelDays: NSTextField!
-    var labelTitle: NSTextField!
+    @IBOutlet weak var labelTitle: NSTextField!
+    @IBOutlet weak var labelDays: NSTextField!
+    @IBOutlet weak var buttonOverlay: NSButton!
     
     /// Initialize the color, index, and tracking area of the CourseBox view
     private func initialize(with course: Course, owner parent: SidebarViewController) {
@@ -40,24 +35,8 @@ class HXCourseBox: NSBox {
         self.parent = parent
         self.course = course
         
-        // Initialize child elements
-        for v in self.subviews {
-            switch v.identifier! {
-            case ID_LABEL_TITLE:
-                labelTitle = v as! NSTextField
-            case ID_BUTTON_OVERLAY:
-                buttonOverlay = v as! NSButton
-            case ID_LABEL_DAYS:
-                labelDays = v as! NSTextField
-            default: continue
-            }
-        }
-        
         labelTitle.stringValue = course.title!
         labelDays.stringValue = course.daysPerWeekPrintable()
-        // Initialize course label functionality
-        buttonOverlay.target = self
-        buttonOverlay.action = #selector(self.goToNotes)
         
         let trackArea = NSTrackingArea(
             rect: self.bounds,
@@ -67,7 +46,7 @@ class HXCourseBox: NSBox {
         addTrackingArea(trackArea)
     }
     
-    func goToNotes() {
+    @IBAction func goToNotes(_ sender: Any) {
         if buttonOverlay.state == NSOnState {
             self.select()
             parent.select(course: self.course)

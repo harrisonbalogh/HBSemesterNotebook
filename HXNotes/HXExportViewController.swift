@@ -28,7 +28,7 @@ class HXExportViewController: NSViewController {
         label_path.stringValue = HXExportViewController.lastDestinationUsed
         
         // If owned by a LectureVC
-        if let parent = self.parent as? LectureViewController {
+        if let parent = self.parent as? LectureCollectionViewItem {
             
             label_lectureSelection.stringValue = "selected lecture"
             
@@ -71,7 +71,7 @@ class HXExportViewController: NSViewController {
     }
     
     @IBAction func action_close(_ sender: NSButton) {
-        if let parent = self.parent as? LectureViewController {
+        if let parent = self.parent as? LectureCollectionViewItem {
             parent.isExporting = false
         } else if let parent = self.parent as? EditorViewController {
             parent.isExporting = false
@@ -81,14 +81,14 @@ class HXExportViewController: NSViewController {
         action_inputField(textField_name) // make sure name is formatted properly
         var url = URL(fileURLWithPath: self.label_path.stringValue)
         url.appendPathComponent("/" + textField_name.stringValue + ".rtfd")
-        if let parent = self.parent as? LectureViewController {
+        if let parent = self.parent as? LectureCollectionViewItem {
             parent.export(to: url)
         } else if let parent = self.parent as? EditorViewController {
             parent.export(to: url)
         }
     }
     @IBAction func action_select(_ sender: NSButton) {
-        if let parent = self.parent as? LectureViewController {
+        if let parent = self.parent as? LectureCollectionViewItem {
             parent.isExporting = false
             parent.owner.isExporting = true
         } else if let parent = self.parent as? EditorViewController {
@@ -119,7 +119,7 @@ class HXExportViewController: NSViewController {
         // Check if it has content
         if input == "" {
             // If owned by a LectureVC
-            if let parent = self.parent as? LectureViewController {
+            if let parent = self.parent as? LectureCollectionViewItem {
                 textField_name.stringValue = parent.lecture.course!.title! + " Lecture \(parent.lecture.number) - \(parent.lecture.course!.semester!.year) \(parent.lecture.course!.semester!.title!.capitalized)"
             } else if let parent = self.parent as? EditorViewController {
                 textField_name.stringValue = parent.masterViewController.sidebarViewController.selectedCourse.title! + " Lectures - \(parent.masterViewController.sidebarViewController.selectedCourse.semester!.title!.capitalized) \(parent.masterViewController.sidebarViewController.selectedCourse.semester!.year)"

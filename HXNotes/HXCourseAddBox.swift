@@ -22,16 +22,12 @@ class HXCourseAddBox: NSView {
         return nil
     }
     
+    @IBOutlet weak var addCourseButton: CourseLabel!
+    
     func initialize(target: AnyObject?, action: Selector?) {
         
-        // Initialize child elements
-        for v in self.subviews {
-            switch v.identifier! {
-            case "add_button_id":
-                (v as! NSButton).target = target
-                (v as! NSButton).action = action
-            default: continue
-            }
-        }
+        addCourseButton.target = target
+        addCourseButton.action = action
+
     }
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11762" systemVersion="16F73" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11762" systemVersion="16G29" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11762"/>
@@ -34,6 +34,9 @@
             <constraints>
                 <constraint firstItem="HR4-GH-oNx" firstAttribute="top" secondItem="P58-rQ-lXy" secondAttribute="top" constant="6" id="KpY-Iw-9yT"/>
             </constraints>
+            <connections>
+                <outlet property="labelTitle" destination="HR4-GH-oNx" id="XAZ-AO-jlP"/>
+            </connections>
             <point key="canvasLocation" x="139" y="164"/>
         </box>
     </objects>

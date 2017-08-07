@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11762" systemVersion="16F73" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11762" systemVersion="16G29" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11762"/>
@@ -31,6 +31,9 @@
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
+                    <connections>
+                        <action selector="removeTimeSlotBox:" target="gNt-Qm-U5E" id="q6k-et-zcu"/>
+                    </connections>
                 </button>
                 <datePicker identifier="timeslot_picker_stop" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="rKA-5K-3vo" userLabel="Stop Date Picker">
                     <rect key="frame" x="159" y="1" width="64" height="22"/>
@@ -43,6 +46,9 @@
                         <color key="textColor" red="0.44411569150000002" green="0.44411569150000002" blue="0.44411569150000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <datePickerElements key="datePickerElements" hour="YES" minute="YES"/>
                     </datePickerCell>
+                    <connections>
+                        <action selector="action_pickerStop:" target="gNt-Qm-U5E" id="jM2-sk-GLV"/>
+                    </connections>
                 </datePicker>
                 <datePicker identifier="timeslot_picker_start" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="H9h-dj-WBZ" userLabel="Start Date Picker">
                     <rect key="frame" x="88" y="0.0" width="64" height="22"/>
@@ -55,6 +61,9 @@
                         <color key="textColor" red="0.44411569150000002" green="0.44411569150000002" blue="0.44411569150000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <datePickerElements key="datePickerElements" hour="YES" minute="YES"/>
                     </datePickerCell>
+                    <connections>
+                        <action selector="action_pickerStart:" target="gNt-Qm-U5E" id="xfv-bd-5DF"/>
+                    </connections>
                 </datePicker>
                 <textField identifier="timeslot_weekday_label" horizontalHuggingPriority="100" verticalHuggingPriority="750" horizontalCompressionResistancePriority="100" allowsCharacterPickerTouchBarItem="NO" preferredMaxLayoutWidth="10" translatesAutoresizingMaskIntoConstraints="NO" id="eLk-mb-bem" userLabel="Monday">
                     <rect key="frame" x="18" y="3" width="53" height="17"/>
@@ -84,7 +93,13 @@
                 </textField>
                 <stepper identifier="timeslot_stepper_weekday" horizontalHuggingPriority="750" verticalHuggingPriority="750" alphaValue="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="Frr-eN-a0N">
                     <rect key="frame" x="69" y="0.0" width="15" height="22"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="11" id="Oh3-c4-RFK"/>
+                    </constraints>
                     <stepperCell key="cell" controlSize="small" continuous="YES" alignment="left" minValue="1" maxValue="7" doubleValue="1" valueWraps="YES" id="uy3-xg-mGN"/>
+                    <connections>
+                        <action selector="action_stepper:" target="gNt-Qm-U5E" id="OuX-ql-WJj"/>
+                    </connections>
                 </stepper>
             </subviews>
             <constraints>
@@ -109,6 +124,15 @@
                 <constraint firstItem="GjM-aH-oGe" firstAttribute="leading" secondItem="Frr-eN-a0N" secondAttribute="trailing" id="xt6-50-li2"/>
                 <constraint firstItem="FBM-cr-ymj" firstAttribute="centerY" secondItem="gNt-Qm-U5E" secondAttribute="centerY" id="zNV-B1-aog"/>
             </constraints>
+            <connections>
+                <outlet property="buttonTrash" destination="FBM-cr-ymj" id="IU2-WC-kKg"/>
+                <outlet property="labelWeekday" destination="eLk-mb-bem" id="FdP-On-YPk"/>
+                <outlet property="pickerStart" destination="H9h-dj-WBZ" id="R2w-bS-xhf"/>
+                <outlet property="pickerStop" destination="rKA-5K-3vo" id="Vbe-CS-BQ9"/>
+                <outlet property="stepperDay" destination="Frr-eN-a0N" id="Fk0-1r-7Fj"/>
+                <outlet property="stepperDayWidthConstraint" destination="Oh3-c4-RFK" id="abp-NQ-fwB"/>
+                <outlet property="trashButtonWidthConstraint" destination="Gua-AT-q4l" id="GDx-3d-LpW"/>
+            </connections>
             <point key="canvasLocation" x="37" y="58.5"/>
         </customView>
     </objects>

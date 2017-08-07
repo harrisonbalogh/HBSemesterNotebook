@@ -10,7 +10,7 @@ import Cocoa
 
 class HXTextView: NSTextView {
 
-    weak var parentController: LectureViewController!
+    weak var parentController: LectureCollectionViewItem!
     
     override func becomeFirstResponder() -> Bool {
         super.becomeFirstResponder()

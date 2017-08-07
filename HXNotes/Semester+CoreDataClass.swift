@@ -94,6 +94,12 @@ public class Semester: NSManagedObject {
         
         for case let course as Course in self.courses! {
             for case let time as TimeSlot in course.timeSlots! {
+                
+                // If any of the time slots are invalid, don't check them for alerts
+                if !time.valid {
+                    return nil
+                }
+                
                 if Int16(weekday) == time.weekday && Int16(minuteOfDay) > time.startMinuteOfDay - 5 && Int16(minuteOfDay) < time.stopMinuteOfDay {
                     // during class period
                     return course
@@ -118,6 +124,11 @@ public class Semester: NSManagedObject {
         
         for case let course as Course in self.courses! {
             for case let time as TimeSlot in course.timeSlots! {
+                
+                // If any of the time slots are invalid, don't check them for alerts
+                if !time.valid {
+                    return nil
+                }
                 
                 if Int16(weekday) == time.weekday && Int16(minuteOfDay) < time.startMinuteOfDay && Int16(minuteOfDay) > time.startMinuteOfDay - TEMP_TIMESPAN {
                     // Course approaching within timespan.

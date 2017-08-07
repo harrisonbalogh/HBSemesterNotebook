@@ -23,41 +23,32 @@ class HXTimeSlotBox: NSView {
         }
         return nil
     }
-    
-    // Manually connect course box child elements using identifiers
-    let ID_BUTTON_TRASH     = "timeslot_button_trash"
-    let ID_LABEL_WEEKDAY    = "timeslot_weekday_label"
-    let ID_PICKER_START     = "timeslot_picker_start"
-    let ID_PICKER_STOP      = "timeslot_picker_stop"
-    let ID_STEPPER_WEEKDAY  = "timeslot_stepper_weekday"
-    // Elements of course box
-    var buttonTrash: NSButton!
+
     weak var timeSlot: TimeSlot!
     weak var editBox: HXCourseEditBox!
-    var labelWeekday: NSTextField!
-    var pickerStart: NSDatePicker!
-    var pickerStop: NSDatePicker!
-    var stepperDay: NSStepper!
+    
+    @IBOutlet weak var buttonTrash: NSButton!
+    @IBOutlet weak var pickerStart: NSDatePicker!
+    @IBOutlet weak var pickerStop: NSDatePicker!
+    @IBOutlet weak var stepperDay: NSStepper!
+    @IBOutlet weak var labelWeekday: NSTextField!
+    
+    @IBOutlet weak var stepperDayWidthConstraint: NSLayoutConstraint!
+    @IBOutlet weak var trashButtonWidthConstraint: NSLayoutConstraint!
     
     private func initialize(with timeSlot: TimeSlot, for editBox: HXCourseEditBox) {
         self.timeSlot = timeSlot
         self.editBox = editBox
         
-        // Initialize child elements
-        for v in self.subviews {
-            switch v.identifier! {
-            case ID_BUTTON_TRASH:
-                buttonTrash = v as! NSButton
-            case ID_LABEL_WEEKDAY:
-                labelWeekday = v as! NSTextField
-            case ID_PICKER_START:
-                pickerStart = v as! NSDatePicker
-            case ID_PICKER_STOP:
-                pickerStop = v as! NSDatePicker
-            case ID_STEPPER_WEEKDAY:
-                stepperDay = v as! NSStepper
-            default: continue
-            }
+        if timeSlot.course!.lectures!.count > 0 {
+            buttonTrash.isEnabled = false
+            buttonTrash.isHidden = true
+            pickerStart.isEnabled = false
+            pickerStop.isEnabled = false
+            stepperDay.isEnabled = false
+            stepperDay.isHidden = true
+            stepperDayWidthConstraint.constant = 0
+            trashButtonWidthConstraint.constant = 0
         }
         
         let hourStart = Int(timeSlot.startMinuteOfDay / 60)
@@ -84,23 +75,17 @@ class HXTimeSlotBox: NSView {
             stepperDay.intValue = Int32(timeSlot.weekday)
         }
         
-        // Initialize button functionality
-        buttonTrash.target = self
-        buttonTrash.action = #selector(self.removeTimeSlotBox)
-        
-        stepperDay.target = self
-        stepperDay.action = #selector(self.action_stepper)
-        
-        // Initialize NSDatePicker actions
-        pickerStart.target = self
-        pickerStart.action = #selector(self.action_pickerStart)
-        pickerStop.target = self
-        pickerStop.action = #selector(self.action_pickerStop)
+        if timeSlot.validateTimeSlot(on: timeSlot.weekday, from: timeSlot.startMinuteOfDay, to: timeSlot.stopMinuteOfDay) {
+            timeSlot.valid = true
+        } else {
+            timeSlot.valid = false
+        }
         
         editBox.notifyTimeSlotChange()
     }
     
-    func action_pickerStart() {
+    
+    @IBAction func action_pickerStart(_ sender: Any) {
         let minuteComponent = NSCalendar.current.component(.minute, from: pickerStart.dateValue)
         let hourComponent = NSCalendar.current.component(.hour, from: pickerStart.dateValue)
         let startTime = Int16(hourComponent * 60 + minuteComponent)
@@ -116,7 +101,7 @@ class HXTimeSlotBox: NSView {
         
         timeSlot.stopMinuteOfDay = stopTime
         timeSlot.startMinuteOfDay = startTime
-        editBox.notifyTimeSlotChange()
+        
         // Update pickerStop
         let calendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
         var components = calendar.components([.hour, .minute], from: Date())
@@ -126,32 +111,36 @@ class HXTimeSlotBox: NSView {
         components.minute = minuteStop
         pickerStop.dateValue = calendar.date(from: components)!
         
-//        if stopTime != nil {
-//            
-//        } else {
-//            // Unavailable, reset pickerStart
-//            let calendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
-//            var components = calendar.components([.hour, .minute], from: Date())
-//            let hourStart = Int(timeSlot.startMinuteOfDay / 60)
-//            let minuteStart = Int(timeSlot.startMinuteOfDay % 60)
-//            components.hour = hourStart
-//            components.minute = minuteStart
-//            pickerStart.dateValue = calendar.date(from: components)!
-//        }
+        //        if stopTime != nil {
+        //
+        //        } else {
+        //            // Unavailable, reset pickerStart
+        //            let calendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
+        //            var components = calendar.components([.hour, .minute], from: Date())
+        //            let hourStart = Int(timeSlot.startMinuteOfDay / 60)
+        //            let minuteStart = Int(timeSlot.startMinuteOfDay % 60)
+        //            components.hour = hourStart
+        //            components.minute = minuteStart
+        //            pickerStart.dateValue = calendar.date(from: components)!
+        //        }
         
         if timeSlot.validateTimeSlot(on: timeSlot.weekday, from: startTime, to: stopTime) {
             timeSlot.valid = true
         } else {
             timeSlot.valid = false
         }
+        
+        editBox.notifyTimeSlotChange()
     }
-    func action_pickerStop() {
+    
+    
+    @IBAction func action_pickerStop(_ sender: Any) {
         let minuteComponent = NSCalendar.current.component(.minute, from: pickerStop.dateValue)
         let hourComponent = NSCalendar.current.component(.hour, from: pickerStop.dateValue)
         let stopTime = Int16(hourComponent * 60 + minuteComponent)
         var startTime: Int16!
         let timeSlotLength = timeSlot.stopMinuteOfDay - timeSlot.startMinuteOfDay
-
+        
         // Check if new stop time is before old start time
         if timeSlot.startMinuteOfDay > stopTime - 5 {
             startTime = stopTime - timeSlotLength
@@ -161,7 +150,7 @@ class HXTimeSlotBox: NSView {
         
         timeSlot.stopMinuteOfDay = stopTime
         timeSlot.startMinuteOfDay = startTime
-        editBox.notifyTimeSlotChange()
+        
         // Update pickerStart
         let calendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
         var components = calendar.components([.hour, .minute], from: Date())
@@ -176,13 +165,15 @@ class HXTimeSlotBox: NSView {
         } else {
             timeSlot.valid = false
         }
+        
+        editBox.notifyTimeSlotChange()
     }
     
-    func action_stepper() {
+    @IBAction func action_stepper(_ sender: Any) {
         // Available timeslot
         labelWeekday.stringValue = DAY_NAMES[Int(stepperDay.intValue)]
         timeSlot.weekday = Int16(stepperDay.intValue)
-        editBox.notifyTimeSlotChange()
+        
         
         if timeSlot.validateTimeSlot(on: Int16(stepperDay.intValue), from: timeSlot.startMinuteOfDay, to: timeSlot.stopMinuteOfDay) {
             timeSlot.valid = true
@@ -190,19 +181,21 @@ class HXTimeSlotBox: NSView {
             timeSlot.valid = false
         }
         
-//        if timeSlot.validateTimeSlot(on: Int16(stepperDay.intValue), from: timeSlot.startMinuteOfDay, to: timeSlot.stopMinuteOfDay) {
-//            // Available timeslot
-//            labelWeekday.stringValue = DAY_NAMES[Int(stepperDay.intValue)]
-//            timeSlot.weekday = Int16(stepperDay.intValue)
-//            editBox.notifyTimeSlotChange()
-//            timeSlot.course!.sortTimeSlots()
-//        } else {
-//            // Unavailable, reset it to previous value
-//            stepperDay.intValue = Int32(Int(timeSlot.weekday))
-//        }
+        editBox.notifyTimeSlotChange()
+        
+        //        if timeSlot.validateTimeSlot(on: Int16(stepperDay.intValue), from: timeSlot.startMinuteOfDay, to: timeSlot.stopMinuteOfDay) {
+        //            // Available timeslot
+        //            labelWeekday.stringValue = DAY_NAMES[Int(stepperDay.intValue)]
+        //            timeSlot.weekday = Int16(stepperDay.intValue)
+        //            editBox.notifyTimeSlotChange()
+        //            timeSlot.course!.sortTimeSlots()
+        //        } else {
+        //            // Unavailable, reset it to previous value
+        //            stepperDay.intValue = Int32(Int(timeSlot.weekday))
+        //        }
     }
-    
-    func removeTimeSlotBox() {
+
+    @IBAction func removeTimeSlotBox(_ sender: Any) {
         self.removeFromSuperview()
         editBox.removeTimeSlot(timeSlot)
     }

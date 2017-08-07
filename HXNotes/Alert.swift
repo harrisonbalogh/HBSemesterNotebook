@@ -221,13 +221,40 @@ class Alert {
         }
     }
     
-    /// In case a user lets a course go by with a course .happening alert, this can
-    /// be called to nullify a .happening alert.
-    public static func flushHappening(for course: String) {
-        for x in 0..<Alert.alertQueue.count {
-            if Alert.alertQueue[x].type == .happening && Alert.alertQueue[x].course == course {
-                Alert.remove(at: x)
+    public static func checkExpiredAlerts() {
+        for x in 0..<alertQueue.count {
+            if alertQueue[x].type == .happening {
+                
+                let calendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
+                // Get calendar date to deduce semester
+                let yearComponent = calendar.component(.year, from: Date())
+                
+                // This should be adjustable in the settings, assumes Jul-Dec is Fall. Jan-Jun is Spring.
+                var semesterTitle = "spring"
+                if calendar.component(.month, from: Date()) >= 7 {
+                    semesterTitle = "fall"
+                }
+                
+                if let currentSemester = Semester.retrieveSemester(titled: semesterTitle, in: yearComponent) {
+                    if let course = currentSemester.retrieveCourse(named: alertQueue[x].course) {
+                        if course.duringTimeSlot() == nil {
+                            // Course is not happening at the moment... So this alert doesn't apply anymore.
+                            Alert.remove(at: x)
+                        }
+                    }
+                }
+                
             }
         }
     }
+    
+//    /// In case a user lets a course go by with a course .happening alert, this can
+//    /// be called to nullify a .happening alert.
+//    public static func flushHappening(for course: String) {
+//        for x in 0..<Alert.alertQueue.count {
+//            if Alert.alertQueue[x].type == .happening && Alert.alertQueue[x].course == course {
+//                Alert.remove(at: x)
+//            }
+//        }
+//    }
 }

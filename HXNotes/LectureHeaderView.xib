@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11762" systemVersion="16G29" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11762"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="LectureHeaderView" customModule="HXNotes" customModuleProvider="target"/>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <view translatesAutoresizingMaskIntoConstraints="NO" id="JT4-FN-tGf" customClass="LectureHeaderView" customModule="HXNotes" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="560" height="30"/>
+            <subviews>
+                <textField identifier="content_label_lecture" horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mMz-pT-UFk" userLabel="Lecture Title">
+                    <rect key="frame" x="8" y="3" width="92" height="24"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="Lecture 1" id="KPw-jS-jsB">
+                        <font key="font" metaFont="systemBold" size="20"/>
+                        <color key="textColor" red="0.35308140519999998" green="0.34494185449999998" blue="0.3531225026" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Md-on-UBW">
+                    <rect key="frame" x="102" y="7.5" width="11" height="17"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="-" id="liq-fe-Sev">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" red="0.27931640619999998" green="0.27931640619999998" blue="0.27931640619999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WcU-I9-xGv" userLabel="Custom Title">
+                    <rect key="frame" x="115" y="5.5" width="371" height="17"/>
+                    <textFieldCell key="cell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" focusRingType="none" alignment="left" placeholderString="Untitled" usesSingleLineMode="YES" id="s2x-L3-u6B">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" red="0.27931640619999998" green="0.27931640619999998" blue="0.27931640619999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <button translatesAutoresizingMaskIntoConstraints="NO" id="Vxg-NA-8VZ" userLabel="Button Underline">
+                    <rect key="frame" x="333" y="6" width="19" height="19"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="19" id="lB6-JW-yMV"/>
+                        <constraint firstAttribute="width" constant="19" id="wI0-FF-p9V"/>
+                    </constraints>
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="icon_text_underline" imagePosition="only" alignment="center" alternateImage="icon_text_underline_alt" imageScaling="proportionallyUpOrDown" inset="2" id="gev-GV-5cv">
+                        <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="action_styleUnderline:" target="JT4-FN-tGf" id="dN1-pW-DMz"/>
+                    </connections>
+                </button>
+                <button translatesAutoresizingMaskIntoConstraints="NO" id="tdf-0T-lf3" userLabel="Button Italic">
+                    <rect key="frame" x="355" y="6" width="19" height="19"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="19" id="90S-J4-swC"/>
+                        <constraint firstAttribute="height" constant="19" id="sSo-Wf-vup"/>
+                    </constraints>
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="icon_text_italic" imagePosition="only" alignment="center" alternateImage="icon_text_italic_alt" imageScaling="proportionallyUpOrDown" inset="2" id="F8i-c3-hPh">
+                        <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="action_styleItalicize:" target="JT4-FN-tGf" id="17h-hq-zQU"/>
+                    </connections>
+                </button>
+                <button translatesAutoresizingMaskIntoConstraints="NO" id="6cW-rj-HSR" userLabel="Button Bold">
+                    <rect key="frame" x="377" y="6" width="19" height="19"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="19" id="Jug-Gi-7Wp"/>
+                        <constraint firstAttribute="height" constant="19" id="rRd-Mo-4zC"/>
+                    </constraints>
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="icon_text_bold" imagePosition="only" alignment="center" alternateImage="icon_text_bold_alt" imageScaling="proportionallyUpOrDown" inset="2" id="t4D-ec-spj">
+                        <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="action_styleBold:" target="JT4-FN-tGf" id="DyM-8d-ahM"/>
+                    </connections>
+                </button>
+                <button translatesAutoresizingMaskIntoConstraints="NO" id="Erc-k2-LMv" userLabel="Button Left">
+                    <rect key="frame" x="411" y="6" width="19" height="19"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="19" id="c2v-xu-yhC"/>
+                        <constraint firstAttribute="height" constant="19" id="uBK-MZ-rh8"/>
+                    </constraints>
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="icon_text_left" imagePosition="only" alignment="center" alternateImage="icon_text_left_alt" imageScaling="proportionallyUpOrDown" inset="2" id="f8a-d2-gyj">
+                        <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="action_styleLeft:" target="JT4-FN-tGf" id="0er-8L-huL"/>
+                    </connections>
+                </button>
+                <button translatesAutoresizingMaskIntoConstraints="NO" id="vxh-f6-xv1" userLabel="Button Center">
+                    <rect key="frame" x="433" y="6" width="19" height="19"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="19" id="5dV-N3-eLr"/>
+                        <constraint firstAttribute="height" constant="19" id="T91-3z-Jt7"/>
+                    </constraints>
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="icon_text_center" imagePosition="only" alignment="center" alternateImage="icon_text_center_alt" imageScaling="proportionallyUpOrDown" inset="2" id="bLB-Lr-9Hb">
+                        <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="action_styleCenter:" target="JT4-FN-tGf" id="4Rw-qk-BPx"/>
+                    </connections>
+                </button>
+                <button translatesAutoresizingMaskIntoConstraints="NO" id="bxh-0r-g8Z" userLabel="Button Right">
+                    <rect key="frame" x="455" y="6" width="19" height="19"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="19" id="ZbB-fY-FKn"/>
+                        <constraint firstAttribute="height" constant="19" id="z9c-89-MGX"/>
+                    </constraints>
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="icon_text_right" imagePosition="only" alignment="center" alternateImage="icon_text_right_alt" imageScaling="proportionallyUpOrDown" inset="2" id="tQb-TL-vxH">
+                        <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="action_styleRight:" target="JT4-FN-tGf" id="Pkg-Hh-p2I"/>
+                    </connections>
+                </button>
+                <textField identifier="content_label_date" horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vxy-Jl-2uI">
+                    <rect key="frame" x="482" y="7" width="62" height="17"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="58" id="e9G-si-0uX"/>
+                    </constraints>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="12/13/93" id="b0p-bh-lrY">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" red="0.27931640619999998" green="0.27931640619999998" blue="0.27931640619999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+            </subviews>
+            <constraints>
+                <constraint firstItem="vxh-f6-xv1" firstAttribute="centerY" secondItem="Erc-k2-LMv" secondAttribute="centerY" id="1Zx-39-62J"/>
+                <constraint firstItem="Vxg-NA-8VZ" firstAttribute="centerY" secondItem="tdf-0T-lf3" secondAttribute="centerY" id="2aA-AY-0cj"/>
+                <constraint firstItem="8Md-on-UBW" firstAttribute="centerY" secondItem="mMz-pT-UFk" secondAttribute="centerY" constant="-1" id="2nC-zc-idf"/>
+                <constraint firstItem="WcU-I9-xGv" firstAttribute="centerY" secondItem="8Md-on-UBW" secondAttribute="centerY" constant="2" id="5VZ-zr-iWa"/>
+                <constraint firstItem="Vxy-Jl-2uI" firstAttribute="leading" secondItem="WcU-I9-xGv" secondAttribute="trailing" id="E7G-px-DlN"/>
+                <constraint firstItem="tdf-0T-lf3" firstAttribute="leading" secondItem="Vxg-NA-8VZ" secondAttribute="trailing" constant="3" id="Q1m-3s-CUw"/>
+                <constraint firstItem="6cW-rj-HSR" firstAttribute="leading" secondItem="tdf-0T-lf3" secondAttribute="trailing" constant="3" id="aw3-zq-c1R"/>
+                <constraint firstItem="mMz-pT-UFk" firstAttribute="centerY" secondItem="JT4-FN-tGf" secondAttribute="centerY" id="bq1-x4-NLe"/>
+                <constraint firstItem="6cW-rj-HSR" firstAttribute="centerY" secondItem="Vxy-Jl-2uI" secondAttribute="centerY" id="cUf-0c-Y0w"/>
+                <constraint firstItem="mMz-pT-UFk" firstAttribute="leading" secondItem="JT4-FN-tGf" secondAttribute="leading" constant="10" id="eKp-Au-MLO"/>
+                <constraint firstItem="vxh-f6-xv1" firstAttribute="leading" secondItem="Erc-k2-LMv" secondAttribute="trailing" constant="3" id="ebo-Vv-5rP"/>
+                <constraint firstItem="bxh-0r-g8Z" firstAttribute="leading" secondItem="vxh-f6-xv1" secondAttribute="trailing" constant="3" id="fxG-7v-aIg"/>
+                <constraint firstItem="WcU-I9-xGv" firstAttribute="leading" secondItem="8Md-on-UBW" secondAttribute="trailing" constant="6" id="hf0-Gs-uw4"/>
+                <constraint firstAttribute="trailing" secondItem="Vxy-Jl-2uI" secondAttribute="trailing" constant="18" id="qWs-46-gYP"/>
+                <constraint firstItem="tdf-0T-lf3" firstAttribute="centerY" secondItem="6cW-rj-HSR" secondAttribute="centerY" id="qXf-Sv-wKW"/>
+                <constraint firstItem="Vxy-Jl-2uI" firstAttribute="centerY" secondItem="JT4-FN-tGf" secondAttribute="centerY" id="t8J-b2-dfw"/>
+                <constraint firstItem="Erc-k2-LMv" firstAttribute="centerY" secondItem="6cW-rj-HSR" secondAttribute="centerY" id="vKH-Jn-30s"/>
+                <constraint firstItem="Vxy-Jl-2uI" firstAttribute="leading" secondItem="bxh-0r-g8Z" secondAttribute="trailing" constant="10" id="w0i-MX-Wp1"/>
+                <constraint firstItem="Erc-k2-LMv" firstAttribute="leading" secondItem="6cW-rj-HSR" secondAttribute="trailing" constant="15" id="yU0-Mp-Qny"/>
+                <constraint firstItem="8Md-on-UBW" firstAttribute="leading" secondItem="mMz-pT-UFk" secondAttribute="trailing" constant="6" id="yUJ-zn-vb3"/>
+                <constraint firstItem="bxh-0r-g8Z" firstAttribute="centerY" secondItem="vxh-f6-xv1" secondAttribute="centerY" id="zjU-mk-aa4"/>
+            </constraints>
+            <connections>
+                <outlet property="button_style_bold" destination="6cW-rj-HSR" id="127-LN-mr3"/>
+                <outlet property="button_style_center" destination="vxh-f6-xv1" id="G5E-h1-UOd"/>
+                <outlet property="button_style_italicize" destination="tdf-0T-lf3" id="TZk-RO-sc3"/>
+                <outlet property="button_style_left" destination="Erc-k2-LMv" id="MXg-dw-b5e"/>
+                <outlet property="button_style_right" destination="bxh-0r-g8Z" id="NUl-rc-BNc"/>
+                <outlet property="button_style_underline" destination="Vxg-NA-8VZ" id="5S7-eb-5jb"/>
+                <outlet property="customTitleTrailingConstraint" destination="E7G-px-DlN" id="Wso-pe-Fzt"/>
+                <outlet property="label_customTitle" destination="WcU-I9-xGv" id="XN5-Tw-thx"/>
+                <outlet property="label_lectureDate" destination="Vxy-Jl-2uI" id="Cfe-ha-Fu7"/>
+                <outlet property="label_lectureTitle" destination="mMz-pT-UFk" id="V4K-uc-nbO"/>
+                <outlet property="label_titleDivider" destination="8Md-on-UBW" id="7lq-T7-rvk"/>
+            </connections>
+        </view>
+    </objects>
+    <resources>
+        <image name="icon_text_bold" width="19" height="19"/>
+        <image name="icon_text_bold_alt" width="19" height="19"/>
+        <image name="icon_text_center" width="19" height="19"/>
+        <image name="icon_text_center_alt" width="19" height="19"/>
+        <image name="icon_text_italic" width="19" height="19"/>
+        <image name="icon_text_italic_alt" width="19" height="19"/>
+        <image name="icon_text_left" width="19" height="19"/>
+        <image name="icon_text_left_alt" width="19" height="19"/>
+        <image name="icon_text_right" width="19" height="19"/>
+        <image name="icon_text_right_alt" width="19" height="19"/>
+        <image name="icon_text_underline" width="19" height="19"/>
+        <image name="icon_text_underline_alt" width="19" height="19"/>
+    </resources>
+</document>

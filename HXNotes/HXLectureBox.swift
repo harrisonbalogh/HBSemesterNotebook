@@ -22,49 +22,25 @@ class HXLectureBox: NSBox {
         return nil
     }
     
-    // Manually connect drag box child elements using identifiers
-    let ID_LABEL_TITLE      = "lecture_label_title"
-    let ID_LABEL_DATE       = "lecture_label_date"
-    let ID_IMAGE            = "lecture_image"
-    let ID_BUTTON_OVERLAY   = "lecture_button_overlay"
-    // Elements of course box
-    var labelTitle: NSTextField!
-    var labelDate: NSTextField!
-    var imageLecture: NSImageView!
-    var buttonOverlay: NSButton!
+    @IBOutlet weak var labelTitle: NSTextField!
+    @IBOutlet weak var labelDate: NSTextField!
+    @IBOutlet weak var imageLecture: NSImageView!
     
     weak var parentController: SidebarViewController!
     
     func initialize(numbered number: Int, dated date: String, owner: SidebarViewController) {
-        
-        // Initialize child elements
-        for v in self.subviews[0].subviews {
-            switch v.identifier! {
-            case ID_LABEL_TITLE:
-                labelTitle = v as! NSTextField
-            case ID_LABEL_DATE:
-                labelDate = v as! NSTextField
-            case ID_IMAGE:
-                imageLecture = v as! NSImageView
-            case ID_BUTTON_OVERLAY:
-                buttonOverlay = v as! NSButton
-            default: continue
-            }
-        }
         
         labelTitle.stringValue = "Lecture \(number)"
         
         labelDate.stringValue = date
         
         self.parentController = owner
-        
-        buttonOverlay.target = self
-        buttonOverlay.action = #selector(HXLectureBox.action_clickLecture)
     }
     
-    func action_clickLecture() {
+    @IBAction func action_clickLecture(_ sender: Any) {
         
         parentController.select(lecture: labelTitle.stringValue)
+        
     }
     
     func focus() {

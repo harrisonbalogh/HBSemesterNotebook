@@ -24,9 +24,10 @@ class ScheduleAssistant: NSObject {
         self.perform(#selector(self.notifyMinute), with: nil, afterDelay: Double(60 - minuteComponent))
     }
     
-    // MARK: ––– Shedule Checks –––
+    // MARK: ––– Schedule Checks –––
     
-    /// Check for upcoming courses - should be adjustable in settings
+    /// Check for upcoming courses - should be adjustable in settings. This is used to
+    /// provide an alert that a course will be starting in x minutes.
     func checkFuture() {
         
         let calendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
@@ -56,7 +57,7 @@ class ScheduleAssistant: NSObject {
         }
     }
     
-    /// Check if a course is currently happening
+    /// Check if a course is currently happening. This is used to display a "Start Lecture" alert.
     func checkHappening() {
         
         let calendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
@@ -82,7 +83,7 @@ class ScheduleAssistant: NSObject {
                 
                 // Check if this is the first lecture
                 if courseHappening.theoreticalLectureCount() == 0 && courseHappening.lectures!.count == 0 {
-                    let _ = Alert(hour: hour, minute: 0, course: courseHappening.title!, content: "is starting. Create first lecture?", question: "Create Lecture 1", deny: "Ignore", action: #selector(masterVC.sidebarViewController.addLecture), target: masterVC.sidebarViewController, type: .happening)
+                    let _ = Alert(hour: hour, minute: 0, course: courseHappening.title!, content: "is starting. Create first lecture?", question: "Yes (Start Course)", deny: "No (Not Yet)", action: #selector(masterVC.sidebarViewController.addLecture), target: masterVC.sidebarViewController, type: .happening)
                 } else {
                     
                     // It's not the first lecture, so check if a lecture was already made for this course.
@@ -98,6 +99,8 @@ class ScheduleAssistant: NSObject {
     /// Check if a course was just missed. This will remove any .happening alerts for the
     /// missed course and inform the SidebarVC that an absent course should be inserted.
     func checkMissed() {
+        
+        Alert.checkExpiredAlerts()
         
     }
     

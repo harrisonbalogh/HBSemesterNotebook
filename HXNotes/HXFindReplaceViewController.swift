@@ -21,7 +21,7 @@ class HXFindReplaceViewController: NSViewController {
         super.viewDidAppear()
         
         // If owned by a LectureVC
-        if self.parent is LectureViewController {
+        if self.parent is LectureCollectionViewItem {
             
             label_lectureSelection.stringValue = "selected lecture."
             textField_find.stringValue = HXFindViewController.lastFindUsed
@@ -48,7 +48,7 @@ class HXFindReplaceViewController: NSViewController {
         label_result.stringValue = ""
     }
     @IBAction func action_close(_ sender: NSButton) {
-        if let parent = self.parent as? LectureViewController {
+        if let parent = self.parent as? LectureCollectionViewItem {
             parent.isReplacing = false
         } else if let parent = self.parent as? EditorViewController {
             parent.isReplacing = false
@@ -62,7 +62,7 @@ class HXFindReplaceViewController: NSViewController {
             return
         }
         // If owned by a LectureVC
-        if let parent = self.parent as? LectureViewController {
+        if let parent = self.parent as? LectureCollectionViewItem {
             var searchThroughText = parent.textView_lecture.string!
             var replaced = 0
             var index = 0
@@ -90,16 +90,16 @@ class HXFindReplaceViewController: NSViewController {
             // If owned by a TopbarVC
         } else if let parent = self.parent as? EditorViewController {
             var replaced = 0
-            for case let lectureVC as LectureViewController in parent.childViewControllers {
-                var loc = lectureVC.textView_lecture.string!.lowercased().range(of: textField_find.stringValue)
-                while loc != nil {
-                    let index = lectureVC.textView_lecture.string!.lowercased().distance(from: (lectureVC.textView_lecture.string?.startIndex)!, to: loc!.lowerBound)
-                    lectureVC.textView_lecture.string?.removeSubrange(loc!)
-                    lectureVC.textView_lecture.textStorage?.insert(NSAttributedString(string: textField_replace.stringValue), at: index)
-                    replaced += 1
-                    loc = lectureVC.textView_lecture.string!.lowercased().range(of: textField_find.stringValue)
-                }
-            }
+//            for case let lectureVC as LectureViewController in parent.childViewControllers {
+//                var loc = lectureVC.textView_lecture.string!.lowercased().range(of: textField_find.stringValue)
+//                while loc != nil {
+//                    let index = lectureVC.textView_lecture.string!.lowercased().distance(from: (lectureVC.textView_lecture.string?.startIndex)!, to: loc!.lowerBound)
+//                    lectureVC.textView_lecture.string?.removeSubrange(loc!)
+//                    lectureVC.textView_lecture.textStorage?.insert(NSAttributedString(string: textField_replace.stringValue), at: index)
+//                    replaced += 1
+//                    loc = lectureVC.textView_lecture.string!.lowercased().range(of: textField_find.stringValue)
+//                }
+//            }
             if replaced == 0 {
                 label_result.stringValue = "None Found"
             } else {
@@ -108,7 +108,7 @@ class HXFindReplaceViewController: NSViewController {
         }
     }
     @IBAction func action_select(_ sender: NSButton) {
-        if let parent = self.parent as? LectureViewController {
+        if let parent = self.parent as? LectureCollectionViewItem {
             HXFindViewController.lastFindUsed = textField_find.stringValue
             parent.isReplacing = false
             parent.owner.isReplacing = true

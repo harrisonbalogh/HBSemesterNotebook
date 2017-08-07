@@ -40,7 +40,9 @@ public class Course: NSManagedObject {
     }
     
     /// Returns a newly created Lecture object model for this course following the previous lecture with
-    /// the current date.
+    /// the current date. If this is not an absent lecture, then provide nil in the weekOfYear field so
+    /// it can be retrieved based on the current date. Otherwise, for the case of an absent lecture, provide
+    /// the weekOfYear that this lecture occurred on.
     func createLecture(during timeSlot: TimeSlot, absent weekOfYear: Int16?) -> Lecture {
         let appDelegate = NSApplication.shared().delegate as! AppDelegate
         let newLecture = NSEntityDescription.insertNewObject(forEntityName: "Lecture", into: appDelegate.managedObjectContext) as! Lecture
@@ -49,14 +51,7 @@ public class Course: NSManagedObject {
         if weekOfYear != nil {
             newLecture.weekOfYear = weekOfYear!
         } else {
-            // Check which lecture number this is
-            var lectureNumber = 1
-            for case let lecture as Lecture in self.lectures! {
-                if lecture.absent {
-                    lectureNumber += 1
-                }
-            }
-            newLecture.number = Int16(lectureNumber)
+            newLecture.number = Int16(self.lectures!.count)
             newLecture.weekOfYear = Int16(NSCalendar.current.component(.weekOfYear, from: Date()))
         }
         
@@ -79,7 +74,7 @@ public class Course: NSManagedObject {
     
     // MARK: - Schedule Assistant Helper Functions
     
-    ///
+    /// Returns the time slot that is currently happening for this course
     func duringTimeSlot() -> TimeSlot? {
         let hour = NSCalendar.current.component(.hour, from: Date())
         let minute = NSCalendar.current.component(.minute, from: Date())
@@ -99,19 +94,22 @@ public class Course: NSManagedObject {
     // MARK: - Calculated Properties
     
     /// The number of lectures there should be up to the current time. This can only be
-    /// calculated after the first lecture has been added. This theoretical number is
-    /// deduced based on lectures per week and the first lecture.
-    public func theoreticalLectureCount() -> Int {
-        var count = 1
+    /// calculated after the first lecture has been added. This method only works if the 
+    /// lectures orderedSet is sorted. If this function returns zero, it means there aren't
+    /// any courses yet. Verified multiple times to be performing the correct logic.
+    func theoreticalLectureCount() -> Int {
+        var count = 0
         
+        //
         if lectures!.count != 0 {
             
             if let firstLecture = lectures![0] as? Lecture {
                 
+                // Today's date
                 let weekOfYearToday = NSCalendar.current.component(.weekOfYear, from: Date())
                 let weekdayToday = NSCalendar.current.component(.weekday, from: Date())
                 
-                // Initial count is based on weeks.
+                // Initial count is based on weeks and timeslots for that class per week
                 count = (weekOfYearToday - Int(firstLecture.weekOfYear)) * self.timeSlots!.count
                 
                 // Adjust count if the first lecture was offset from the start of the week
@@ -122,10 +120,11 @@ public class Course: NSManagedObject {
                 let hour = NSCalendar.current.component(.hour, from: Date())
                 let minute = NSCalendar.current.component(.minute, from: Date())
                 let minuteOfDay = hour * 60 + minute
+                // Iterate through times
                 for case let timeSlot as TimeSlot in self.timeSlots! {
                     if timeSlot.weekday < Int16(weekdayToday) {
                         count += 1
-                    } else if timeSlot.weekday == Int16(weekdayToday) && timeSlot.startMinuteOfDay - 5 <= Int16(minuteOfDay) {
+                    } else if timeSlot.weekday == Int16(weekdayToday) && timeSlot.startMinuteOfDay - 5 < Int16(minuteOfDay) {
                         count += 1
                     } else {
                         break
@@ -138,36 +137,42 @@ public class Course: NSManagedObject {
     }
     
     /// Sort the time slots of this course to be in order of weekday and then by startMinuteOfDay.
-    /// This runs slower than an insertion sort - but does have the properties of an insertion sort.
+    /// This runs slower than an insertion sort but is not called often and doesn't have many elements.
+    /// Must be called before returning the theoreticalLectureCount() of a course. Logic verified.
     func sortTimeSlots() {
+
         // Re-sort the timeslots for this course object. Inefficient, backwards insertion sort.
         let sortedSet = NSMutableOrderedSet()
         for case let unsortedTimeSlot as TimeSlot in self.timeSlots! {
+            
+            // First element being sorted, don't check, just add it.
             if sortedSet.count != 0 {
-                var index = 0
-                for x in 0..<sortedSet.count {
-                    if let timeSlot = sortedSet[x] as? TimeSlot {
-                        Swift.print("Course Object - if let worked. \(timeSlot)")
-                    }
-                }
                 
+                var index = 0
                 for case let sortedTimeSlot as TimeSlot in sortedSet {
+                    // If the unsortedTimeSlot is earlier than the sortedTimeSlot, insert it.
                     if unsortedTimeSlot.weekday == sortedTimeSlot.weekday {
                         if unsortedTimeSlot.startMinuteOfDay < sortedTimeSlot.startMinuteOfDay {
                             sortedSet.insert(unsortedTimeSlot, at: index)
+                            break
                         }
                     } else if unsortedTimeSlot.weekday < sortedTimeSlot.weekday {
                         sortedSet.insert(unsortedTimeSlot, at: index)
+                        break
                     }
+                    // Otherwise continue to check next sortedTimeSlot... unless it was the last sorted element.
                     index += 1
                     if index == sortedSet.count {
+                        // Reached end of inner loop, append this time slot
                         sortedSet.add(unsortedTimeSlot)
                     }
                 }
             } else {
+                // First element being added
                 sortedSet.add(unsortedTimeSlot)
             }
         }
+        
         self.timeSlots = sortedSet
         appDelegate.saveAction(self)
     }
@@ -273,37 +278,67 @@ public class Course: NSManagedObject {
     
     /// Will fill all the absent lectures for a given course. Note this runs
     /// the duringTimeSlot method. May be inefficient if fillAbsentLectures is always called
-    /// after duringCourse or duringTimeSlot gets called.
+    /// after duringCourse or duringTimeSlot gets called. The TimeSlots for this course must
+    /// be guaranteed to be sorted else it will produce incorrect results.
     func fillAbsentLectures() {
-        var startIndex = -1
-        var weekOfYear: Int16 = 0
-        // Get which timeSlot the last lecture used.
-        if lectures!.count > 0 {
-            // Shift start index if it didn't begin on first timeslot in week
-            startIndex = self.timeSlots!.index(of: (self.lectures!.lastObject as! Lecture).timeSlot!)
-            weekOfYear = (self.lectures!.lastObject as! Lecture).weekOfYear
-        } else {
-            // In the future, the user will probably be able to specify course start day, so
-            // if they miss it, this will fill absent lectures from the starting day, but for
-            // now it only works if there is at least 1 lecture.
+        
+        self.sortTimeSlots()
+        
+        // This function doesn't do anything if course hasn't started yet.
+        if self.lectures!.count == 0 {
             return
         }
         
-        var addLatestCourse = 0
-        // If there isn't a lecture happening, user missed the most recent lecture
-        if duringTimeSlot() == nil {
-            addLatestCourse = 1 // so create 1 more absentLecture
-        }
+        var lecturesToFill = self.theoreticalLectureCount() - self.lectures!.count
         
-        // Add absent lectures if there is more than 1 missing lecture based on the theoretical lecture count.
-        if self.theoreticalLectureCount() - self.lectures!.count + addLatestCourse < 0 {
+        // No lectures to create if the amount of lectures is the same as the expected amount of lectures to this date
+        if lecturesToFill <= 0 {
             return
         }
-        for missing in 0..<(self.theoreticalLectureCount() - self.lectures!.count + addLatestCourse) {
+        
+        // If there is a time slot currently in progress, do not yet add an absent lecture for it, so reduce number
+        // to fill in
+        if self.duringTimeSlot() != nil {
+            lecturesToFill -= 1
+        }
+        
+        let lastTimeSlotIndex = self.timeSlots!.index(of: (self.lectures!.lastObject as! Lecture).timeSlot!)
+        let lastTimeSlotWeekOfYear = (self.lectures!.lastObject as! Lecture).weekOfYear
+        for x in 0..<(lecturesToFill) {
             let _ = createLecture(
-                during: self.timeSlots![(startIndex + missing + 1) % timeSlots!.count] as! TimeSlot,
-                absent: weekOfYear + Int16((startIndex + missing + 1)/timeSlots!.count))
+                during: self.timeSlots![(lastTimeSlotIndex + 1 + x) % self.timeSlots!.count] as! TimeSlot,
+                absent: lastTimeSlotWeekOfYear + Int16((lastTimeSlotIndex + 1 + x)/timeSlots!.count))
         }
+//        
+//        var startIndex = -1
+//        var weekOfYear: Int16 = 0
+//        // Get which timeSlot the last lecture used.
+//        if lectures!.count > 0 {
+//            // Shift start index if it didn't begin on first timeslot in week
+//            startIndex = self.timeSlots!.index(of: (self.lectures!.lastObject as! Lecture).timeSlot!)
+//            weekOfYear = (self.lectures!.lastObject as! Lecture).weekOfYear
+//        } else {
+//            // In the future, the user will probably be able to specify course start day, so
+//            // if they miss it, this will fill absent lectures from the starting day, but for
+//            // now it only works if there is at least 1 lecture.
+//            return
+//        }
+//        
+//        var addLatestCourse = 0
+//        // If there isn't a lecture happening, user missed the most recent lecture
+//        if duringTimeSlot() == nil {
+//            addLatestCourse = 1 // so create 1 more absentLecture
+//        }
+//        
+//        // Add absent lectures if there is more than 1 missing lecture based on the theoretical lecture count.
+//        if self.theoreticalLectureCount() - self.lectures!.count + addLatestCourse < 0 {
+//            return
+//        }
+//        for missing in 0..<(self.theoreticalLectureCount() - self.lectures!.count + addLatestCourse) {
+//            let _ = createLecture(
+//                during: self.timeSlots![(startIndex + missing + 1) % timeSlots!.count] as! TimeSlot,
+//                absent: weekOfYear + Int16((startIndex + missing + 1)/timeSlots!.count))
+//        }
     }
     
     /// Will produce the next available time slot with a default length of 55 minutes. Can still return

@@ -8,14 +8,11 @@
 
 import Cocoa
 
-class EditorViewController: NSViewController {
+class EditorViewController: NSViewController, NSCollectionViewDataSource, NSCollectionViewDelegateFlowLayout {
     
     weak var masterViewController: MasterViewController!
 
     // MARK: View References
-    @IBOutlet weak var lectureStack: NSStackView!
-    @IBOutlet weak var lectureBottomBufferView: HXBottomBufferView!
-    @IBOutlet weak var lectureScroller: NSScrollView!
     @IBOutlet weak var lectureClipper: HXFlippedClipView!
     var oldClipperHeight: CGFloat = 0
     // These 2 labels are displayed when no course is selected
@@ -24,13 +21,10 @@ class EditorViewController: NSViewController {
     @IBOutlet weak var dropdownView: NSView!
     @IBOutlet weak var dropdownTopConstraint: NSLayoutConstraint!
     
-    // This constraint is for an invisible view at the bottom of lecture stack to allow user to scroll
-    // enough for the last lecture's textView to be in middle of screen.
-    @IBOutlet weak var lectureBottomConstraint: NSLayoutConstraint!
-    
     // MARK: Object models
     let appDelegate = NSApplication.shared().delegate as! AppDelegate
     let sharedFontManager = NSFontManager.shared()
+    
     weak var selectedCourse: Course! {
         didSet {
             if isExporting {
@@ -44,8 +38,18 @@ class EditorViewController: NSViewController {
             }
             // Setting selectedCourse, immediately updates visuals
             if selectedCourse != nil {
-                // Populate new lecture visuals
-                loadLectures(from: selectedCourse)
+                
+                collectionView.reloadData()
+                
+                // Animate hiding the lecture
+                NSAnimationContext.beginGrouping()
+                NSAnimationContext.current().duration = 0.25
+                collectionView.animator().alphaValue = 1
+                NSAnimationContext.current().duration = 0.4
+                labelNoCourse.animator().alphaValue = 0
+                subLabelNoCourse.animator().alphaValue = 0
+                NSAnimationContext.endGrouping()
+                
             } else {
                 labelNoCourse.stringValue = "No Course Selected"
                 subLabelNoCourse.stringValue = "Courses are selectable to the left."
@@ -53,11 +57,11 @@ class EditorViewController: NSViewController {
                 NSAnimationContext.beginGrouping()
                 NSAnimationContext.current().completionHandler = {
                     if self.selectedCourse == nil {
-                        self.popLectures()
+                        self.collectionView.reloadData()
                     }
                 }
                 NSAnimationContext.current().duration = 0.25
-                lectureScroller.animator().alphaValue = 0
+                collectionView.animator().alphaValue = 0
                 NSAnimationContext.current().duration = 0.4
                 labelNoCourse.animator().alphaValue = 1
                 subLabelNoCourse.animator().alphaValue = 1
@@ -65,12 +69,21 @@ class EditorViewController: NSViewController {
             }
         }
     }
-    weak var lectureFocused: LectureViewController! {
+    
+    weak var lectureFocused: LectureCollectionViewItem! {
         didSet {
+            print("Lecture Focused...")
+            if oldValue != nil {
+                print("    Old value: \(collectionViewItems.index(of: oldValue)!)")
+                headerViews[collectionViewItems.index(of: oldValue)!].notifyTextViewFocus(false)
+            }
             if lectureFocused == nil {
+                print("    Nil value.")
                 masterViewController.notifyLectureFocus(is: nil)
             } else {
                 masterViewController.notifyLectureFocus(is: lectureFocused.lecture)
+                print("    New Value: \(collectionViewItems.index(of: lectureFocused)!)")
+                headerViews[collectionViewItems.index(of: lectureFocused)!].notifyTextViewFocus(true)
             }
         }
     }
@@ -79,13 +92,7 @@ class EditorViewController: NSViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        lectureScroller.alphaValue = 0
-        
-        // Setup observers for scrolling lectures
-//        NotificationCenter.default.addObserver(self, selector: #selector(EditorViewController.didLiveScroll),
-//                                               name: .NSScrollViewDidLiveScroll, object: lectureScroller)
-//        NotificationCenter.default.addObserver(self, selector: #selector(EditorViewController.didScroll),
-//                                               name: .NSViewBoundsDidChange, object: lectureClipper)
+        collectionView.alphaValue = 0
         
         findViewController = HXFindViewController(nibName: "HXFindView", bundle: nil)
         self.addChildViewController(findViewController)
@@ -93,243 +100,111 @@ class EditorViewController: NSViewController {
         self.addChildViewController(exportViewController)
         replaceViewController = HXFindReplaceViewController(nibName: "HXFindReplaceView", bundle: nil)
         self.addChildViewController(replaceViewController)
-    }
-    override func viewDidAppear() {
-        super.viewDidAppear()
         
-        lectureBottomBufferView.initialize(owner: self)
+        self.view.wantsLayer = true
+        
+        configureCollectionView()
     }
+    
     override func viewDidLayout() {
         super.viewDidLayout()
-
-        didScroll()
+        
+//        print("ViewDidLayout")
+        // To keep dynamic item widths, need to recalculate them when resizing collection view.
+        collectionView.collectionViewLayout?.invalidateLayout()
     }
     
-    // MARK: ––– Populating LectureStackView  –––
-
-    /// Internal usage only. Reach this function by setting selectedCourse.
-    private func loadLectures(from course: Course) {
-        self.popLectures()
-        for case let lecture as Lecture in course.lectures! {
-            if !lecture.absent {
-                pushLecture( lecture )
-            }
-        }
-        if course.lectures!.count == 0 {
-            labelNoCourse.stringValue = "No Lecture Data"
-            subLabelNoCourse.stringValue = "Open HXNotes during an input class period."
-            
-            NSAnimationContext.beginGrouping()
-            NSAnimationContext.current().duration = 0.4
-            labelNoCourse.animator().alphaValue = 1
-            subLabelNoCourse.animator().alphaValue = 1
-            lectureScroller.animator().alphaValue = 0
-            NSAnimationContext.endGrouping()
-        } else {
-            notifyHeightUpdate()
-            
-            NSAnimationContext.beginGrouping()
-            NSAnimationContext.current().duration = 0.5
-            lectureScroller.animator().alphaValue = 1
-            labelNoCourse.animator().alphaValue = 0
-            subLabelNoCourse.animator().alphaValue = 0
-            NSAnimationContext.endGrouping()
-        }
-    }
-    
-    /// Handles purely the visual aspect of lectures. Populates lectureStack.
-    private func pushLecture(_ lecture: Lecture) {
-        let newController = LectureViewController(nibName: "HXLectureView", bundle: nil)!
-        if let last = self.childViewControllers.last as? LectureViewController {
-            last.shadowBottom.isHidden = false
-        }
-        self.addChildViewController(newController)
-        lectureStack.insertArrangedSubview(newController.view, at: lectureStack.arrangedSubviews.count - 1)
-        newController.view.widthAnchor.constraint(equalTo: lectureStack.widthAnchor).isActive = true
-        newController.initialize(with: lecture)
-        // Animate showing the lecture
-        NSAnimationContext.beginGrouping()
-        NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
-        NSAnimationContext.current().duration = 0.5
-        lectureScroller.animator().alphaValue = 1
-        labelNoCourse.animator().alphaValue = 0
-        subLabelNoCourse.animator().alphaValue = 0
-        NSAnimationContext.endGrouping()
-    }
-    
-    /// Handles purely the visual aspect of lectures. Resets lectureLedgerStack, lectureStack,
-    /// selectedCourse.lectures!.count, and weekCount
-    private func popLectures() {
-        for case let lectureController as LectureViewController in self.childViewControllers {
-            lectureController.view.removeFromSuperview()
-            lectureController.removeFromParentViewController()
-        }
-        lectureClipper.bounds.origin.y = 0
-    }
-    
-    // MARK: ––– LectureStackView Visuals –––
+    // MARK: - ––– LectureStackView Visuals –––
     
     /// Comes from the LectureLedger stack, scrolls to supplied lecture number. Lecture guaranteed to exist.
     private func scrollToLecture(_ lecture: String) {
-        for case let lectureController as LectureViewController in self.childViewControllers {
-            if lectureController.label_lectureTitle.stringValue == lecture {
-                NSApp.keyWindow?.makeFirstResponder(lectureController.textView_lecture)
-                let yPos = lectureStack.frame.height - lectureController.view.frame.origin.y - lectureController.view.frame.height
-                // Animate scroll to lecture
+        
+        var scrollY: CGFloat = 0
+        var responder: NSResponder!
+        for collectionViewItem in collectionViewItems {
+            if "Lecture \(collectionViewItem.lecture.number)" == lecture {
+                responder = collectionViewItem.textView_lecture
+                scrollY = collectionViewItem.view.frame.origin.y
+                break
+            }
+        }
+        
+        for headerItem in headerViews {
+            if headerItem.label_lectureTitle.stringValue == lecture {
+                
                 NSAnimationContext.beginGrouping()
-                NSAnimationContext.current().duration = 0.5
-                lectureClipper.animator().setBoundsOrigin(NSPoint(x: 0, y: yPos))
+                NSAnimationContext.current().duration = 0.25
+                NSAnimationContext.current().completionHandler = {NSApp.keyWindow?.makeFirstResponder(responder)}
+                collectionClipView.animator().setBoundsOrigin(NSPoint(x: 0, y: scrollY - headerItem.frame.height))
                 NSAnimationContext.endGrouping()
                 break
             }
         }
     }
     
-    /// This allows user to override any animations placed on the scroller to remove stuttering.
-    func didLiveScroll() {
-        print("EditorVC - didLiveScroll")
-        return;
-        // Stop any scrolling animations currently happening on the clipper
-        NSAnimationContext.beginGrouping()
-        NSAnimationContext.current().duration = 0 // This overwrites animator proxy object with 0 duration aimation
-        lectureClipper.animator().setBoundsOrigin(NSPoint(x: 0, y: lectureClipper.bounds.origin.y))
-        NSAnimationContext.endGrouping()
-    }
-    
-    /// Receives scrolling from lectureScroller NSScrollView and any time clipper changes its bounds.
-    /// Is responsible for updating the headers to simulate the iOS effect of lecture titles
-    /// staying at the top of scrollView.
-    func didScroll() {
-//        print("EditorVC - didScroll")
-        return;
-        // didScroll should only be called when the origin.y changes, not the height
-        if oldClipperHeight == lectureClipper.bounds.height {
-            // nyi
-        }
-        let clipperYPos = lectureClipper.bounds.origin.y
-        // The y positions of each view in the stackview can be found by adding the heights of the previous views. Assumes zero spacing.
-        // Should go through one more iteration after finding the last visible element in stack.
-        var foundLowestLecture = false
-        for case let lectureController as LectureViewController in self.childViewControllers {
-            let lectureYPos = lectureStack.bounds.height - lectureController.view.frame.origin.y
-            // Skip updating sticky header title and date if it was the last visible element in stack.
-            if !foundLowestLecture {
-                // If scroller is using elastic effect don't proceed past first element
-                if clipperYPos < 0 {
-                    stickyLecture = nil
-                    return
-                }
-                // Since the last visible element in stack is not found yet, check if this element is visible still.
-                if clipperYPos <= lectureYPos {
-                    // It is visible so update sticky header VC and dump out of loop after one more iteration
-                    if stickyLecture != lectureController {
-                        // Only update stickyLecture when its a new LectureVC
-                        stickyLecture = lectureController
-                    } else {
-                        // Otherwise tell the current stickyHeader of the current scroll amount
-                        let y = clipperYPos - (lectureYPos - lectureController.view.bounds.height)
-                        stickyLecture.updateStickyHeader(with: y)
-                    }
-                    foundLowestLecture = true
-                }
-            } else {
-                // The following handles displacing of two headers that are touching.
-                // Check how close the next element is to determine if stickyheader should be pushed aside
-                //                print("Yeah")
-                //                print("    stickyLecture.header.bounds.height: \(stickyLecture.header.bounds.height)")
-                //                print("    clipperYPos: \(clipperYPos + stickyLecture.header.bounds.height)")
-                //                print("    lectureYPos: \(lectureYPos - lectureController.view.bounds.height)")
-                //                if (clipperYPos + stickyLecture.header.bounds.height) > (lectureYPos - lectureController.view.bounds.height) {
-                //                    // Next element is encroaching on header so shift by Y difference
-                //                    let y1 = (clipperYPos + stickyLecture.header.bounds.height) - (lectureYPos - lectureController.view.bounds.height)
-                //                    let y2 = clipperYPos - (lectureStack.bounds.height - stickyLecture.view.frame.origin.y - stickyLecture.view.bounds.height)
-                //                    print("    y: \(y2 - y1)")
-                ////                    stickyLecture.updateStickyHeader(with: y)
-                //                }
-                // Stop iterating through controller views
-                break
-            }
-        }
-    }
-    // Transitioning to a new stickyHeader should reset the last stickyHeader to zero.
-    // Hence the need for a didSet.
-    var stickyLecture: LectureViewController! {
-        didSet {
-            if oldValue != nil {
-                oldValue.updateStickyHeader(with: 0)
-            }
-        }
-    }
-    
     /// Auto scrolling whenever user types.
     /// Smoothly scroll clipper until text typing location is centered.
-    internal func checkScrollLevel(from sender: LectureViewController) {
-        //        if sender.isStyling {
-        //
-        //        }
-        let selectionY = sender.textSelectionHeight()
-        // Center current typing position to center of lecture scroller
-        let yPos = lectureStack.frame.height - selectionY // - lectureScroller.frame.height/2
-        // Don't auto-scroll if selection is already visible and above center line of window
-        if yPos < (lectureClipper.bounds.origin.y + sender.header.frame.height) || yPos > (lectureClipper.bounds.origin.y + lectureScroller.frame.height/2) {
+    internal func checkScrollLevel(from sender: LectureCollectionViewItem) {
+        let scrollY = sender.textSelectionHeight()
+        
+        // ADJUSTABLE SETTING SPOT. Change collectionView.frame.height/2 (this is 50% spot)
+        if scrollY < collectionClipView.bounds.origin.y + sender.header.frame.height || scrollY > collectionClipView.bounds.origin.y + collectionView.enclosingScrollView!.frame.height/2 {
             NSAnimationContext.beginGrouping()
-            NSAnimationContext.current().duration = 0.5
-            // Get clipper to center selection in scroller
-            lectureClipper.animator().setBoundsOrigin(NSPoint(x: 0, y: yPos - lectureScroller.frame.height/2))
+            NSAnimationContext.current().duration = 0.25
+            collectionClipView.animator().setBoundsOrigin(NSPoint(x: 0, y: scrollY - collectionView.enclosingScrollView!.frame.height/2))
             NSAnimationContext.endGrouping()
+            
+            collectionView.enclosingScrollView?.flashScrollers()
         }
     }
     
     /// Auto scrolling whenever user changes selection.
     /// Will only occur when the selection is outside of the visible area (not within the buffer region).
-    internal func checkScrollLevelOutside(from sender: LectureViewController) {
-        //        if sender.isStyling {
-        //
-        //        }
-        let selectionY = sender.textSelectionHeight()
-        // Position of selection
-        let yPos = lectureStack.frame.height - selectionY // - lectureScroller.frame.height/2
-        // Don't auto-scroll if selection is visible
-        if yPos < (lectureClipper.bounds.origin.y + sender.header.frame.height) || yPos > (lectureClipper.bounds.origin.y + lectureScroller.frame.height) {
+    internal func checkScrollLevelOutside(from sender: LectureCollectionViewItem) {
+        let scrollY = sender.textSelectionHeight()
+        
+        // ADJUSTABLE SETTING SPOT. Change collectionView.frame.height/2 (this is 50% spot)
+        if scrollY < collectionClipView.bounds.origin.y + sender.header.frame.height || scrollY > collectionClipView.bounds.origin.y + collectionView.enclosingScrollView!.frame.height {
             NSAnimationContext.beginGrouping()
-            NSAnimationContext.current().duration = 0.5
-            // Get clipper to center selection in scroller
-            lectureClipper.animator().setBoundsOrigin(NSPoint(x: 0, y: yPos - lectureScroller.frame.height/2))
+            NSAnimationContext.current().duration = 0.25
+            collectionClipView.animator().setBoundsOrigin(NSPoint(x: 0, y: scrollY - collectionView.enclosingScrollView!.frame.height/2))
             NSAnimationContext.endGrouping()
+            
+            collectionView.enclosingScrollView?.flashScrollers()
         }
     }
     
-    /// This notifies the editorVC that the bottom buffer view was clicked and
-    /// that the last lectureVC should be selected in the stack.
-    func bottomBufferClicked() {
-        for case let lectureVC as LectureViewController in self.childViewControllers {
-            if lectureVC.label_lectureTitle.stringValue == "Lecture \(selectedCourse.lectures!.count)" {
-                NSApp.keyWindow?.makeFirstResponder(lectureVC.textView_lecture)
-                lectureVC.textView_lecture.setSelectedRange(NSMakeRange((lectureVC.textView_lecture.string?.characters.count)!, 0))
-            }
-        }
+    override func mouseDown(with event: NSEvent) {
+        print("Mouse down.")
     }
     
-    // MARK: ––– Notifiers –––
+    // MARK: - ––– Notifiers –––
     
     /// Received from LectureViewController on any change to a given lecture text view.
     /// Resizes the bottom buffer box
     internal func notifyHeightUpdate() {
-        // Get last view in lectureStack
-        let nonabsentLectureCount = (Array(selectedCourse.lectures!) as! [Lecture]).filter({!$0.absent}).count
+
+        // REPLACE FOLLOWING
+//        if let lectureController = childViewControllers.filter({$0 is LectureViewController})[nonabsentLectureCount - 1] as? LectureViewController {
+//            // Resize last lecture to keep text in the center of screen.
+//            if lectureController.view.frame.height < lectureScroller.frame.height/2 + 3 {
+//                lectureBottomConstraint.constant = -lectureController.view.frame.height
+//            } else {
+//                lectureBottomConstraint.constant = -lectureScroller.frame.height/2 - 3
+//            }
+//        }
         
-        if let lectureController = childViewControllers.filter({$0 is LectureViewController})[nonabsentLectureCount - 1] as? LectureViewController {
-            // Resize last lecture to keep text in the center of screen.
-            if lectureController.view.frame.height < lectureScroller.frame.height/2 + 3 {
-                lectureBottomConstraint.constant = -lectureController.view.frame.height
-            } else {
-                lectureBottomConstraint.constant = -lectureScroller.frame.height/2 - 3
-            }
-        }
+        // NOTE
+//        collectionView.reloadItems(at: <#T##Set<IndexPath>#>)
+//        collectionView.lastBaselineAnchor
+        
+        
+        // REPLACE WITH THIS
+//        collectionViewBottomConstraint - SET THIS
     }
     
     func notifyLectureAddition(lecture: Lecture) {
-        pushLecture( lecture )
+        collectionView.reloadData()
         
         notifyHeightUpdate()
         
@@ -379,7 +254,136 @@ class EditorViewController: NSViewController {
         }
     }
     
-    // MARK: ––– Find Replace Print Export –––
+    // MARK: - ––– Collection View Data Source & Delegate (Flow Layout) –––
+    
+    @IBOutlet weak var collectionView: NSCollectionView!
+    @IBOutlet weak var collectionViewBottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var collectionClipView: NSClipView!
+    
+    
+    var headerViews = [LectureHeaderView]()
+    var collectionViewItems = [LectureCollectionViewItem]()
+    
+    fileprivate func configureCollectionView() {
+        
+        let flowLayout = NSCollectionViewFlowLayout()
+        flowLayout.itemSize = NSSize(width: 50, height: 50)
+        flowLayout.sectionInset = EdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        flowLayout.minimumInteritemSpacing = 0
+        flowLayout.minimumLineSpacing = 0
+        flowLayout.sectionHeadersPinToVisibleBounds = true
+        collectionView.collectionViewLayout = flowLayout
+        collectionView.allowsEmptySelection = true
+    }
+    
+    func numberOfSections(in collectionView: NSCollectionView) -> Int {
+        
+//        print("Collection view getting number of sections...")
+        
+        headerViews = [LectureHeaderView]()
+        collectionViewItems = [LectureCollectionViewItem]()
+        
+        if selectedCourse != nil {
+            print("    - \(selectedCourse.lectures!.count)")
+            return selectedCourse.lectures!.count
+        }
+        return 0
+    }
+    
+    func collectionView(_ collectionView: NSCollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 1
+    }
+    
+    func collectionView(_ itemForRepresentedObjectAtcollectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
+        
+        // Create LectureCollectionViewItem
+        let item = collectionView.makeItem(withIdentifier: "LectureCollectionViewItem", for: indexPath) as! LectureCollectionViewItem
+        
+//        print("Int(indexPath[0].toIntMax(): \(Int(indexPath[0].toIntMax()))")
+        
+        // Initialize the LectureCollectionViewItem
+        let lecture = selectedCourse.lectures!.array[Int(indexPath[0].toIntMax())] as! Lecture
+        item.lecture = lecture
+        if lecture.content != nil {
+            item.textView_lecture.textStorage?.setAttributedString(lecture.content!)
+        }
+        item.owner = self
+        item.textView_lecture.parentController = item
+        
+//        print("LectureCollectionViewItem instanced.")
+        
+        collectionViewItems.append(item)
+        return item
+    }
+    
+    func collectionView(_ collectionView: NSCollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> NSView {
+        
+        // Create LectureHeaderView
+        let header = collectionView.makeSupplementaryView(ofKind: NSCollectionElementKindSectionHeader, withIdentifier: "LectureHeaderView", for: indexPath) as! LectureHeaderView
+        
+        // Initialize the LectureHeaderView
+        let lecture = selectedCourse.lectures!.array[Int(indexPath[0].toIntMax())] as! Lecture
+//        print("Lecture: \(lecture.number)")
+//        print("    absent - \(lecture.absent)")
+        header.label_lectureTitle.stringValue = "Lecture \(lecture.number)"
+        header.label_lectureDate.stringValue = "\(lecture.monthInYear())/\(lecture.dayInMonth())/\(lecture.course!.semester!.year % 100)"
+        if lecture.title != nil {
+            header.label_customTitle.stringValue = lecture.title!
+            if header.label_customTitle.stringValue == "" {
+                header.label_titleDivider.alphaValue = 0.3
+            } else {
+                header.label_titleDivider.alphaValue = 1
+            }
+        } else {
+            header.label_titleDivider.alphaValue = 0.3
+        }
+        header.button_style_underline.alphaValue = 0
+        header.button_style_italicize.alphaValue = 0
+        header.button_style_bold.alphaValue = 0
+        header.button_style_left.alphaValue = 0
+        header.button_style_center.alphaValue = 0
+        header.button_style_right.alphaValue = 0
+        NotificationCenter.default.addObserver(header, selector: #selector(LectureHeaderView.notifyCustomTitleEndEditing),
+                                               name: .NSControlTextDidEndEditing, object: header.label_customTitle)
+        NotificationCenter.default.addObserver(header, selector: #selector(LectureHeaderView.notifyCustomTitleChange),
+                                               name: .NSControlTextDidChange, object: header.label_customTitle)
+        header.owner = self
+        
+//        print("LectureHeaderView instanced. Index: \(Int(indexPath[0].toIntMax()))")
+        if (collectionViewItems.count - 1) >= Int(indexPath[0].toIntMax()) {
+//            print(" -- Setting vars")
+            header.collectionViewItem = collectionViewItems[Int(indexPath[0].toIntMax())]
+            collectionViewItems[Int(indexPath[0].toIntMax())].header = header
+            
+            NotificationCenter.default.addObserver(header, selector: #selector(LectureHeaderView.selectionChange),
+                                                   name: .NSTextViewDidChangeSelection, object: collectionViewItems[Int(indexPath[0].toIntMax())].textView_lecture)
+            NotificationCenter.default.addObserver(header, selector: #selector(LectureHeaderView.traitChange),
+                                                   name: .NSTextViewDidChangeTypingAttributes, object: collectionViewItems[Int(indexPath[0].toIntMax())].textView_lecture)
+        }
+        
+        headerViews.append(header)
+        return header
+    }
+    
+    func collectionView(_ collectionView: NSCollectionView, layout collectionViewLayout: NSCollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> NSSize {
+        
+//        print("Size 1.")
+        //CGFloat(indexPath[0].toIntMax() + 1) * 36
+        if (collectionViewItems.count - 1) >= Int(indexPath[0].toIntMax()) {
+            let h = collectionViewItems[Int(indexPath[0].toIntMax())].textHeight()
+            return CGSize(width: collectionView.bounds.width, height: h)
+        }
+        
+        return CGSize(width: collectionView.bounds.width, height: 41)
+    }
+    
+    func collectionView(_ collectionView: NSCollectionView, layout collectionViewLayout: NSCollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> NSSize {
+        
+//        print("Size 2.")
+        return NSSize(width: 560, height: 30)
+    }
+    
+    // MARK: - ––– Find Replace Print Export –––
     
     /// Reveal or hide the top bar container.
     func topBarShown(_ visible: Bool) {
@@ -435,17 +439,21 @@ class EditorViewController: NSViewController {
     func export(to url: URL){
         let attribString = NSMutableAttributedString()
         // Combine all data from every lecture
-        for case let lectureController as LectureViewController in self.childViewControllers {
-            attribString.append(lectureController.label_lectureTitle.attributedStringValue)
-            if lectureController.label_customTitle.stringValue != "" {
-                attribString.append(NSAttributedString(string: "  -  " + lectureController.label_customTitle.stringValue + "\n"))
-            } else {
-                attribString.append(NSAttributedString(string: "\n"))
-            }
-            attribString.append(NSAttributedString(string: lectureController.label_lectureDate.stringValue + "\n\n"))
-            attribString.append(lectureController.textView_lecture.attributedString())
-            attribString.append(NSAttributedString(string: "\n\n\n"))
+        for case let lecture as Lecture in selectedCourse.lectures! {
+//            attribString
         }
+        
+//        for case let lectureController as LectureViewController in self.childViewControllers {
+//            attribString.append(lectureController.label_lectureTitle.attributedStringValue)
+//            if lectureController.label_customTitle.stringValue != "" {
+//                attribString.append(NSAttributedString(string: "  -  " + lectureController.label_customTitle.stringValue + "\n"))
+//            } else {
+//                attribString.append(NSAttributedString(string: "\n"))
+//            }
+//            attribString.append(NSAttributedString(string: lectureController.label_lectureDate.stringValue + "\n\n"))
+//            attribString.append(lectureController.textView_lecture.attributedString())
+//            attribString.append(NSAttributedString(string: "\n\n\n"))
+//        }
         
         let fullRange = NSRange(location: 0, length: attribString.length)
         do {

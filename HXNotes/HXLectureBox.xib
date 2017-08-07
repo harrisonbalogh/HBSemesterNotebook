@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11762" systemVersion="16F73" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11762" systemVersion="16G29" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11762"/>
@@ -50,6 +50,9 @@
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
+                        <connections>
+                            <action selector="action_clickLecture:" target="t5V-vF-Qiz" id="LXU-fh-Fkc"/>
+                        </connections>
                     </button>
                 </subviews>
                 <constraints>
@@ -69,6 +72,11 @@
                     <constraint firstItem="LVh-cI-Rwu" firstAttribute="leading" secondItem="wKk-gO-Paf" secondAttribute="leading" id="yG7-XC-ezS"/>
                 </constraints>
             </view>
+            <connections>
+                <outlet property="imageLecture" destination="L6d-o0-tmR" id="02b-j0-Dj4"/>
+                <outlet property="labelDate" destination="kOz-iL-Isi" id="reU-MK-qcE"/>
+                <outlet property="labelTitle" destination="LVh-cI-Rwu" id="1wN-x2-BVF"/>
+            </connections>
             <point key="canvasLocation" x="141" y="205"/>
         </box>
     </objects>

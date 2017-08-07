@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11762" systemVersion="16F73" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11762" systemVersion="16G29" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11762"/>
@@ -48,6 +48,9 @@
                         <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
+                    <connections>
+                        <action selector="goToNotes:" target="bW5-Ce-BLW" id="LLs-T4-cU5"/>
+                    </connections>
                 </button>
             </subviews>
             <constraints>
@@ -68,6 +71,11 @@
                 <constraint firstAttribute="bottom" secondItem="yPy-ug-gwA" secondAttribute="bottom" id="lDV-Ci-7sz"/>
                 <constraint firstItem="yPy-ug-gwA" firstAttribute="leading" secondItem="bW5-Ce-BLW" secondAttribute="leading" id="qkn-3s-fDS"/>
             </constraints>
+            <connections>
+                <outlet property="buttonOverlay" destination="85O-e2-ljm" id="dR1-dQ-ZDS"/>
+                <outlet property="labelDays" destination="KF5-Na-1mY" id="N1N-cT-f9s"/>
+                <outlet property="labelTitle" destination="KDm-nG-qos" id="dnG-pX-yuy"/>
+            </connections>
             <point key="canvasLocation" x="-24.5" y="58"/>
         </customView>
     </objects>
