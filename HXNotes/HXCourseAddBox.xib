@@ -73,7 +73,7 @@
                 <constraint firstItem="GEF-Kj-szg" firstAttribute="leading" secondItem="ImR-CX-SWb" secondAttribute="leading" constant="5" id="ywA-UC-CP0"/>
             </constraints>
             <connections>
-                <outlet property="addCourseButton" destination="uzc-KG-1z8" id="CCg-zd-tza"/>
+                <outlet property="addCourseButton" destination="BFf-6y-M4q" id="vee-6n-wMc"/>
             </connections>
             <point key="canvasLocation" x="-24" y="58"/>
         </customView>

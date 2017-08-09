@@ -16,6 +16,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         // Insert code here to initialize your application
         
+        setupDefaults()
+        
         // Menu Bar Icon
         if let button = statusItem.button {
             button.image = #imageLiteral(resourceName: "menu_icon@")
@@ -183,6 +185,26 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     // MARK: - Preferences
     var prefPanel: NSPanel!
+    
+    func setupDefaults() {
+        
+        if CFPreferencesCopyAppValue(NSString(string: "autoScroll"), kCFPreferencesCurrentApplication) == nil {
+            
+            CFPreferencesSetAppValue(NSString(string: "autoScroll"),NSString(string: "\(true)"), kCFPreferencesCurrentApplication)
+            CFPreferencesSetAppValue(NSString(string: "autoScrollPositionPercent"),NSString(string: "50"), kCFPreferencesCurrentApplication)
+            CFPreferencesSetAppValue(NSString(string: "launchWithSystem"),NSString(string: "\(false)"), kCFPreferencesCurrentApplication)
+            CFPreferencesSetAppValue(NSString(string: "runAfterClose"),NSString(string: "\(false)"), kCFPreferencesCurrentApplication)
+            CFPreferencesSetAppValue(NSString(string: "futureAlertTimeMinutes"),NSString(string: "5"), kCFPreferencesCurrentApplication)
+            // ALWAYS, NO_LECTURES, NO_TIMESLOTS, NEVER
+            CFPreferencesSetAppValue(NSString(string: "courseDeletionConfirmation"),NSString(string: "NO_LECTURES"), kCFPreferencesCurrentApplication)
+            // TOPBAR, SIDEBAR, OVERLAY
+            CFPreferencesSetAppValue(NSString(string: "alertLocation"),NSString(string: "TOPBAR"), kCFPreferencesCurrentApplication)
+            CFPreferencesSetAppValue(NSString(string: "defaultCourseTimeSpanMinutes"),NSString(string: "55"), kCFPreferencesCurrentApplication)
+            CFPreferencesSetAppValue(NSString(string: "bufferTimeBetweenCoursesMinutes"),NSString(string: "5"), kCFPreferencesCurrentApplication)
+            
+            CFPreferencesAppSynchronize(kCFPreferencesCurrentApplication)
+        }
+    }
     
     @IBAction func revealPreferences(_ sender: NSMenuItem) {
         

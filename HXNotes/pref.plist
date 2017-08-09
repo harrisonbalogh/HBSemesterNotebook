@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>LaunchWithSystem</key>
+	<false/>
+	<key>AutoScrollPercentHeight</key>
+	<integer>50</integer>
+	<key>AutoScroll</key>
+	<true/>
+	<key>BottomBufferSpace</key>
+	<true/>
+	<key>TopBarVisible</key>
+	<true/>
+	<key>DeletionConfirmationFrequency</key>
+	<integer>0</integer>
+	<key>NewTimeSlotsDefaultLength</key>
+	<integer>55</integer>
+	<key>BufferTimeBetweenCourses</key>
+	<integer>5</integer>
+	<key>AlertLocation</key>
+	<integer>0</integer>
+</dict>
+</plist>

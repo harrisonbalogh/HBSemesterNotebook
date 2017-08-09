@@ -12,7 +12,7 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
     
     weak var masterViewController: MasterViewController!
 
-    // MARK: View References
+    // MARK: - View References
     @IBOutlet weak var lectureClipper: HXFlippedClipView!
     var oldClipperHeight: CGFloat = 0
     // These 2 labels are displayed when no course is selected
@@ -104,6 +104,8 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
         self.view.wantsLayer = true
         
         configureCollectionView()
+        
+        loadPreferences()
     }
     
     override func viewDidLayout() {
@@ -145,13 +147,18 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
     /// Auto scrolling whenever user types.
     /// Smoothly scroll clipper until text typing location is centered.
     internal func checkScrollLevel(from sender: LectureCollectionViewItem) {
-        let scrollY = sender.textSelectionHeight()
+        // Only do smooth auto scrolling if the preference value is set to true
+        if !autoScroll {
+            return
+        }
         
-        // ADJUSTABLE SETTING SPOT. Change collectionView.frame.height/2 (this is 50% spot)
-        if scrollY < collectionClipView.bounds.origin.y + sender.header.frame.height || scrollY > collectionClipView.bounds.origin.y + collectionView.enclosingScrollView!.frame.height/2 {
+        let scrollY = sender.textSelectionHeight()
+
+        if scrollY < collectionClipView.bounds.origin.y + sender.header.frame.height || scrollY > collectionClipView.bounds.origin.y + collectionView.enclosingScrollView!.frame.height * CGFloat(autoScrollPosition)/100 {
+            print("Auto")
             NSAnimationContext.beginGrouping()
             NSAnimationContext.current().duration = 0.25
-            collectionClipView.animator().setBoundsOrigin(NSPoint(x: 0, y: scrollY - collectionView.enclosingScrollView!.frame.height/2))
+            collectionClipView.animator().setBoundsOrigin(NSPoint(x: 0, y: scrollY - collectionView.enclosingScrollView!.frame.height * CGFloat(autoScrollPosition)/100))
             NSAnimationContext.endGrouping()
             
             collectionView.enclosingScrollView?.flashScrollers()
@@ -162,12 +169,10 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
     /// Will only occur when the selection is outside of the visible area (not within the buffer region).
     internal func checkScrollLevelOutside(from sender: LectureCollectionViewItem) {
         let scrollY = sender.textSelectionHeight()
-        
-        // ADJUSTABLE SETTING SPOT. Change collectionView.frame.height/2 (this is 50% spot)
         if scrollY < collectionClipView.bounds.origin.y + sender.header.frame.height || scrollY > collectionClipView.bounds.origin.y + collectionView.enclosingScrollView!.frame.height {
             NSAnimationContext.beginGrouping()
             NSAnimationContext.current().duration = 0.25
-            collectionClipView.animator().setBoundsOrigin(NSPoint(x: 0, y: scrollY - collectionView.enclosingScrollView!.frame.height/2))
+            collectionClipView.animator().setBoundsOrigin(NSPoint(x: 0, y: scrollY - collectionView.enclosingScrollView!.frame.height * CGFloat(autoScrollPosition)/100))
             NSAnimationContext.endGrouping()
             
             collectionView.enclosingScrollView?.flashScrollers()
@@ -381,6 +386,26 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
         
 //        print("Size 2.")
         return NSSize(width: 560, height: 30)
+    }
+    
+    
+    // MARK: - Preferences
+    var autoScroll = true
+    var autoScrollPosition = 50
+    
+    func loadPreferences() {
+        if let autoScrollPref = CFPreferencesCopyAppValue(NSString(string: "autoScroll"), kCFPreferencesCurrentApplication) as? String {
+            if autoScrollPref == "YES" {
+                autoScroll = true
+            } else if autoScrollPref == "NO" {
+                autoScroll = false
+            }
+        }
+        if let bottomBufferPercent = CFPreferencesCopyAppValue(NSString(string: "autoScrollPositionPercent"), kCFPreferencesCurrentApplication) as? String {
+            if let percent = Int(bottomBufferPercent) {
+                autoScrollPosition = 100 - percent
+            }
+        }
     }
     
     // MARK: - ––– Find Replace Print Export –––

@@ -20,7 +20,7 @@ public class TimeSlot: NSManagedObject {
 
     /// Similar to what nextTimeSlot does but instead of finding the next time slot available, it will
     /// return false if it fails at all.
-    func validateTimeSlot(on weekday: Int16, from startTime: Int16, to stopTime: Int16) -> Bool {
+    private func validateTimeSlot(on weekday: Int16, from startTime: Int16, to stopTime: Int16) -> Bool {
         
         if startTime > stopTime - 5 {
             // Start time is earlier than stop time, try and push back stop time

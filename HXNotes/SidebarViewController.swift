@@ -132,7 +132,7 @@ class SidebarViewController: NSViewController {
     
     // MARK: References - Data Objects
     let appDelegate = NSApplication.shared().delegate as! AppDelegate
-    private var selectedSemester: Semester! {
+    private(set) var selectedSemester: Semester! {
         didSet {
             if oldValue != nil && oldValue == selectedSemester {
                 return
@@ -169,10 +169,6 @@ class SidebarViewController: NSViewController {
     }
     var selectedCourse: Course! {
         didSet {
-            if oldValue != nil && selectedCourse != nil && oldValue == selectedCourse {
-                return
-            }
-            
             if selectedCourse != nil {
                 selectedCourse.fillAbsentLectures()
                 // Populate ledgerStackView
@@ -514,18 +510,18 @@ class SidebarViewController: NSViewController {
         
         // See if the current semester exists in the persistant store
         if let currentSemester = Semester.retrieveSemester(titled: semesterTitle, in: yearComponent) {
-            if let courseHappening = currentSemester.duringCourse() {
-                if courseHappening.theoreticalLectureCount() - courseHappening.lectures!.count == 1 || courseHappening.theoreticalLectureCount() == 0 {
-                    let newLec = courseHappening.createLecture(during: courseHappening.duringTimeSlot()!, absent: nil)
+            if let timeSlotHappening = currentSemester.duringCourse() {
+                if timeSlotHappening.course!.theoreticalLectureCount() - timeSlotHappening.course!.lectures!.count == 1 || timeSlotHappening.course!.theoreticalLectureCount() == 0 {
+                    let newLec = timeSlotHappening.course!.createLecture(during: timeSlotHappening.course!.duringTimeSlot()!, absent: nil)
                     // Following two lines won't have any visual effect if they are setting the same value. See didSet
                     selectedSemester = currentSemester
-                    selectedCourse = courseHappening
+                    selectedCourse = timeSlotHappening.course!
                     // Displays lecture in the ledgerStackView
                     pushLecture( newLec )
                     // Displays lecture in the lectureStackView
                     masterViewController.notifyLectureAddition(lecture: newLec)
                 } else {
-                    print("No lectures to add??? Theoretical count: \(courseHappening.theoreticalLectureCount())")
+                    print("No lectures to add??? Theoretical count: \(timeSlotHappening.course!.theoreticalLectureCount())")
                 }
             } else {
                 // User probably waited too long to accept lecture, so display error

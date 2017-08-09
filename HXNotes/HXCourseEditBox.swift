@@ -77,7 +77,16 @@ class HXCourseEditBox: NSView {
     /// Removes this course box from the stack view
     @IBAction func removeCourseBox(_ sender: Any) {
         
-        if self.course.timeSlots!.count == 0 {
+        var confirmationFrequency = "NO_LECTURES"
+        if let confirmPref = CFPreferencesCopyAppValue(NSString(string: "courseDeletionConfirmation"), kCFPreferencesCurrentApplication) as? String {
+            confirmationFrequency = confirmPref
+        }
+        
+        if confirmationFrequency == "NEVER" {
+            confirmRemoveCourse()
+        }
+        
+        if self.course.timeSlots!.count == 0 && confirmationFrequency != "ALWAYS" {
             confirmRemoveCourse()
             return
         }
@@ -87,6 +96,9 @@ class HXCourseEditBox: NSView {
             lectureInfo = " A lecture will be lost."
         } else if self.course.lectures!.count != 0 {
             lectureInfo = " \(self.course.lectures!.count) lectures will be lost."
+        } else if confirmationFrequency == "NO_LECTURES" {
+            confirmRemoveCourse()
+            return
         }
         
         let _ = Alert(course: self.course.title!, content: "is to be removed." + lectureInfo + " Confirm removal?", question: "Remove Course", deny: "Cancel", action: #selector(self.confirmRemoveCourse), target: self, type: .deletion)

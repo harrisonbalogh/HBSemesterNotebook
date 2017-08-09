@@ -257,7 +257,7 @@ public class Course: NSManagedObject {
     
     /// Similar to what nextTimeSlot does but instead of finding the next time slot available, it will
     /// return false if it fails at all.
-    func validateTimeSlot(on weekday: Int16, from startTime: Int16, to stopTime: Int16) -> Bool {
+    private func validateTimeSlot(on weekday: Int16, from startTime: Int16, to stopTime: Int16) -> Bool {
         for case let course as Course in self.semester!.courses! {
             for case let timeSlot as TimeSlot in course.timeSlots! {
                 if weekday == timeSlot.weekday {
@@ -345,8 +345,16 @@ public class Course: NSManagedObject {
     /// nil but this would mean every day has a full schedule... Starts at 8:00AM and searches each day
     /// before 10:00PM.
     func nextTimeSlot() -> TimeSlot {
+        
+        var courseLength = 55
+        if let defaultTimeSpan = CFPreferencesCopyAppValue(NSString(string: "defaultCourseTimeSpanMinutes"), kCFPreferencesCurrentApplication) as? String {
+            if let time = Int(defaultTimeSpan) {
+                courseLength = time
+            }
+        }
+        
         var startTime: Int16 = 480
-        var stopTime: Int16 = startTime + 55
+        var stopTime: Int16 = startTime + courseLength
         var weekday: Int16 = 1
         var timeAvailableOnDay = true
         
@@ -363,7 +371,7 @@ public class Course: NSManagedObject {
                 timeAvailableOnDay = validateTimeSlot(on: weekday, from: startTime, to: stopTime)
                 if !timeAvailableOnDay {
                     startTime += 60
-                    stopTime = startTime + 55
+                    stopTime = startTime + courseLength
                 }
             }
             if timeAvailableOnDay {
@@ -372,7 +380,7 @@ public class Course: NSManagedObject {
             } else {
                 // The time was not available today, so reset the start and stop time
                 startTime = 480
-                stopTime = startTime + 55
+                stopTime = startTime + courseLength
             }
         }
         return createTimeSlot(on: 2, from: 480, to: 535, valid: false)!

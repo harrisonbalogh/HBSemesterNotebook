@@ -72,7 +72,7 @@ class ScheduleAssistant: NSObject {
         
         // See if the current semester exists in the persistant store
         if let currentSemester = Semester.retrieveSemester(titled: semesterTitle, in: yearComponent) {
-            if let courseHappening = currentSemester.duringCourse() {
+            if let timeSlotHappening = currentSemester.duringCourse() {
                 
                 let hour = NSCalendar.current.component(.hour, from: Date())
                 let minute = NSCalendar.current.component(.minute, from: Date())
@@ -82,14 +82,41 @@ class ScheduleAssistant: NSObject {
                 let weekOfYear = NSCalendar.current.component(.weekOfYear, from: Date())
                 
                 // Check if this is the first lecture
-                if courseHappening.theoreticalLectureCount() == 0 && courseHappening.lectures!.count == 0 {
-                    let _ = Alert(hour: hour, minute: 0, course: courseHappening.title!, content: "is starting. Create first lecture?", question: "Yes (Start Course)", deny: "No (Not Yet)", action: #selector(masterVC.sidebarViewController.addLecture), target: masterVC.sidebarViewController, type: .happening)
+                if timeSlotHappening.course!.theoreticalLectureCount() == 0 && timeSlotHappening.course!.lectures!.count == 0 {
+                    
+                    // Alert english details for specific time of lecture
+                    var appendTimeUntilLecture = ""
+                    if minuteOfDay < timeSlotHappening.startMinuteOfDay - 1 {
+                        appendTimeUntilLecture = "is starting in \(timeSlotHappening.startMinuteOfDay - minuteOfDay) minutes."
+                    } else if Int16(minuteOfDay) < timeSlotHappening.startMinuteOfDay {
+                        appendTimeUntilLecture = "is starting in \(timeSlotHappening.startMinuteOfDay - minuteOfDay) minute."
+                    } else if Int16(minuteOfDay) == timeSlotHappening.startMinuteOfDay || Int16(minuteOfDay) == timeSlotHappening.startMinuteOfDay + 1 {
+                        appendTimeUntilLecture = "is starting now."
+                    } else {
+                        appendTimeUntilLecture = "started \(Int16(minuteOfDay) - timeSlotHappening.startMinuteOfDay) minutes ago."
+                    }
+                    
+                    
+                    let _ = Alert(hour: hour, minute: 0, course: timeSlotHappening.course!.title!, content: appendTimeUntilLecture + " Create first lecture?", question: "Yes (Start Course)", deny: "No (Not Yet)", action: #selector(masterVC.sidebarViewController.addLecture), target: masterVC.sidebarViewController, type: .happening)
                 } else {
                     
                     // It's not the first lecture, so check if a lecture was already made for this course.
-                    if courseHappening.retrieveLecture(on: weekDay, in: weekOfYear, at: minuteOfDay) == nil {
+                    if timeSlotHappening.course!.retrieveLecture(on: weekDay, in: weekOfYear, at: minuteOfDay) == nil {
+                        
+                        // Alert english details for specific time of lecture
+                        var appendTimeUntilLecture = ""
+                        if minuteOfDay < timeSlotHappening.startMinuteOfDay - 1 {
+                            appendTimeUntilLecture = "is starting in \(timeSlotHappening.startMinuteOfDay - minuteOfDay) minutes."
+                        } else if Int16(minuteOfDay) < timeSlotHappening.startMinuteOfDay {
+                            appendTimeUntilLecture = "is starting in \(timeSlotHappening.startMinuteOfDay - minuteOfDay) minute."
+                        } else if Int16(minuteOfDay) == timeSlotHappening.startMinuteOfDay || Int16(minuteOfDay) == timeSlotHappening.startMinuteOfDay + 1 {
+                            appendTimeUntilLecture = "is starting now."
+                        } else {
+                            appendTimeUntilLecture = "started \(Int16(minuteOfDay) - timeSlotHappening.startMinuteOfDay) minutes ago."
+                        }
+                        
                         // No lecture exists for this time so give alert
-                        let _ = Alert(hour: hour, minute: 0, course: courseHappening.title!, content: "is starting. Create lecture \(courseHappening.theoreticalLectureCount())?", question: "Create Lecture \(courseHappening.theoreticalLectureCount())", deny: "Ignore", action: #selector(masterVC.sidebarViewController.addLecture), target: masterVC.sidebarViewController, type: .happening)
+                        let _ = Alert(hour: hour, minute: 0, course: timeSlotHappening.course!.title!, content: appendTimeUntilLecture + " Create lecture \(timeSlotHappening.course!.theoreticalLectureCount())?", question: "Create Lecture \(timeSlotHappening.course!.theoreticalLectureCount())", deny: "Ignore", action: #selector(masterVC.sidebarViewController.addLecture), target: masterVC.sidebarViewController, type: .happening)
                     }
                 }
             }

@@ -83,16 +83,16 @@ public class Semester: NSManagedObject {
     
     // MARK: - Schedule Assistant Helper Functions
     
-    /// Returns a single course that is currently happening or will start in 5 minutes.
+    /// Returns a single timeSlot that is currently happening or will start in 5 minutes.
     /// Returns nil if no course is happening at the moment.
-    public func duringCourse() -> Course? {
+    public func duringCourse() -> TimeSlot? {
         let hour = NSCalendar.current.component(.hour, from: Date())
         let minute = NSCalendar.current.component(.minute, from: Date())
         
         let weekday = NSCalendar.current.component(.weekday, from: Date())
         let minuteOfDay = hour * 60 + minute
         
-        for case let course as Course in self.courses! {
+        courseLoop: for case let course as Course in self.courses! {
             for case let time as TimeSlot in course.timeSlots! {
                 
                 // If any of the time slots are invalid, don't check them for alerts
@@ -102,17 +102,26 @@ public class Semester: NSManagedObject {
                 
                 if Int16(weekday) == time.weekday && Int16(minuteOfDay) > time.startMinuteOfDay - 5 && Int16(minuteOfDay) < time.stopMinuteOfDay {
                     // during class period
-                    return course
+                    return time
                 }
+                
+                // MODIFY HERE TO STOP ITERATING THROUGH TIME SLOTS AFTER WEEKDAY HAS PASSED SINCE SLOTS ARE IN ORDER
+                
             }
         }
         // no class
         return nil
     }
     
-    let TEMP_TIMESPAN: Int16 = 60 // should be adjustable in settings, will...
-    /// Returns the earliest course to occur within the next TEMP_TIMESPAN minutes.
+    /// Returns the earliest course to occur within the next 60 (default, user adjustable CFPreferences) minutes.
     public func futureCourse() -> Course? {
+        
+        var alertTimespan = 60
+        if let alertTimePref = CFPreferencesCopyAppValue(NSString(string: "bufferTimeBetweenCoursesMinutes"), kCFPreferencesCurrentApplication) as? String {
+            if let time = Int(alertTimePref) {
+                alertTimespan = time
+            }
+        }
         
         var soonestTimeSlot: TimeSlot!
         
@@ -130,7 +139,7 @@ public class Semester: NSManagedObject {
                     return nil
                 }
                 
-                if Int16(weekday) == time.weekday && Int16(minuteOfDay) < time.startMinuteOfDay && Int16(minuteOfDay) > time.startMinuteOfDay - TEMP_TIMESPAN {
+                if Int16(weekday) == time.weekday && Int16(minuteOfDay) < time.startMinuteOfDay && Int16(minuteOfDay) > time.startMinuteOfDay - alertTimespan {
                     // Course approaching within timespan.
                     if soonestTimeSlot == nil || time.startMinuteOfDay < soonestTimeSlot.startMinuteOfDay {
                         soonestTimeSlot = time
@@ -142,6 +151,58 @@ public class Semester: NSManagedObject {
             return nil
         }
         return soonestTimeSlot.course
+    }
+    
+    // MARK: - Validation
+    
+    func validateSchedule() {
+        
+        var bufferTime = 5
+        if let bufferTimePref = CFPreferencesCopyAppValue(NSString(string: "bufferTimeBetweenCoursesMinutes"), kCFPreferencesCurrentApplication) as? String {
+            if let time = Int(bufferTimePref) {
+                bufferTime = time
+            }
+        }
+        
+        // Check each course's timeSlots against every other timeSlot
+        for case let course as Course in self.courses! {
+            for case let timeSlot as TimeSlot in course.timeSlots! {
+                
+                var timeSlotValid = true
+                
+                courseLoop: for case let otherCourse as Course in self.courses! {
+                    for case let otherTimeSlot as TimeSlot in otherCourse.timeSlots! {
+                        
+                        let startA = otherTimeSlot.startMinuteOfDay
+                        let stopA = otherTimeSlot.stopMinuteOfDay
+                        let startB = timeSlot.startMinuteOfDay
+                        let stopB = timeSlot.stopMinuteOfDay
+                        
+                        if otherTimeSlot.weekday != timeSlot.weekday || otherTimeSlot == timeSlot {
+                            continue
+                        } else if otherTimeSlot.weekday > timeSlot.weekday {
+                            // Since timeSlots are always sorted in chronological order, we can stop
+                            // iterating once the day is passed the checked time slot day
+                            break courseLoop
+                        } else if (startA <= startB - bufferTime && startB - bufferTime < stopA) ||
+                            (startA < stopB + bufferTime && stopB + bufferTime < stopB) ||
+                            (startB <= startA && startA <= stopB) {
+                            // The above checks for any kind of overlap
+                            
+                            timeSlot.valid = false
+                            timeSlotValid = false
+                            
+                            otherTimeSlot.valid = false
+                            
+                            break courseLoop
+                        }
+                    }
+                }
+                if timeSlotValid {
+                    timeSlot.valid = true
+                }
+            }
+        }
     }
     
     // MARK: - Course Creation Helper Functions

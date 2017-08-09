@@ -19,6 +19,7 @@
 		C025FD9B1EC2A4970090A287 /* HXLectureBox.xib in Resources */ = {isa = PBXBuildFile; fileRef = C025FD9A1EC2A4970090A287 /* HXLectureBox.xib */; };
 		C025FD9D1EC2A68F0090A287 /* HXWeekBox.xib in Resources */ = {isa = PBXBuildFile; fileRef = C025FD9C1EC2A68F0090A287 /* HXWeekBox.xib */; };
 		C025FDA31EC2E29B0090A287 /* HXLectureBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C025FDA21EC2E29B0090A287 /* HXLectureBox.swift */; };
+		C02A8AC81F38AADC00B7CD5D /* pref.plist in Resources */ = {isa = PBXBuildFile; fileRef = C02A8AC71F38AADC00B7CD5D /* pref.plist */; };
 		C02D55B41F135C7500E1AF4F /* TimeSlot+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = C02D55B21F135C7500E1AF4F /* TimeSlot+CoreDataClass.swift */; };
 		C02DB94F1F019BFF00044001 /* HXAbsentLectureBox.xib in Resources */ = {isa = PBXBuildFile; fileRef = C02DB94E1F019BFF00044001 /* HXAbsentLectureBox.xib */; };
 		C02DB9511F019C5B00044001 /* HXAbsentLectureBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C02DB9501F019C5B00044001 /* HXAbsentLectureBox.swift */; };
@@ -122,6 +123,7 @@
 		C025FD9A1EC2A4970090A287 /* HXLectureBox.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXLectureBox.xib; sourceTree = "<group>"; };
 		C025FD9C1EC2A68F0090A287 /* HXWeekBox.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXWeekBox.xib; sourceTree = "<group>"; };
 		C025FDA21EC2E29B0090A287 /* HXLectureBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXLectureBox.swift; sourceTree = "<group>"; };
+		C02A8AC71F38AADC00B7CD5D /* pref.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = pref.plist; sourceTree = "<group>"; };
 		C02D55B21F135C7500E1AF4F /* TimeSlot+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "TimeSlot+CoreDataClass.swift"; path = "../TimeSlot+CoreDataClass.swift"; sourceTree = "<group>"; };
 		C02DB94E1F019BFF00044001 /* HXAbsentLectureBox.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXAbsentLectureBox.xib; sourceTree = "<group>"; };
 		C02DB9501F019C5B00044001 /* HXAbsentLectureBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXAbsentLectureBox.swift; sourceTree = "<group>"; };
@@ -381,6 +383,7 @@
 				C0D687BE1EA4948A00BF1D05 /* Calendar Functionality */,
 				C06920291F33044500D04234 /* Preferences */,
 				C0AAE1411EA2BD12002939B6 /* Info.plist */,
+				C02A8AC71F38AADC00B7CD5D /* pref.plist */,
 				C04B12131F33E8F2002E05E9 /* HXStickyHeaderView.xib */,
 				C04B12151F33E93F002E05E9 /* HXStickyHeaderView.swift */,
 				C0D7CEE51F0DF48800062B59 /* HXNotes.xcdatamodeld */,
@@ -580,6 +583,7 @@
 				C0B795921EFFA10800A0C527 /* HXAlertDropdown.xib in Resources */,
 				C02DB94F1F019BFF00044001 /* HXAbsentLectureBox.xib in Resources */,
 				C057FD171EE4A00F00A62D9F /* HXPrintView.xib in Resources */,
+				C02A8AC81F38AADC00B7CD5D /* pref.plist in Resources */,
 				C0D68CFD1EA6943F009B06E3 /* HXCourseDragBox.xib in Resources */,
 				C025FD9D1EC2A68F0090A287 /* HXWeekBox.xib in Resources */,
 				C057FD151EE4A00300A62D9F /* HXFindView.xib in Resources */,

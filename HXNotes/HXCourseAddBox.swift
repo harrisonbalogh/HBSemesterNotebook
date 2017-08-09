@@ -22,7 +22,7 @@ class HXCourseAddBox: NSView {
         return nil
     }
     
-    @IBOutlet weak var addCourseButton: CourseLabel!
+    @IBOutlet weak var addCourseButton: NSButton!
     
     func initialize(target: AnyObject?, action: Selector?) {
         

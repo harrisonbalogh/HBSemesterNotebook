@@ -75,12 +75,6 @@ class HXTimeSlotBox: NSView {
             stepperDay.intValue = Int32(timeSlot.weekday)
         }
         
-        if timeSlot.validateTimeSlot(on: timeSlot.weekday, from: timeSlot.startMinuteOfDay, to: timeSlot.stopMinuteOfDay) {
-            timeSlot.valid = true
-        } else {
-            timeSlot.valid = false
-        }
-        
         editBox.notifyTimeSlotChange()
     }
     
@@ -111,24 +105,7 @@ class HXTimeSlotBox: NSView {
         components.minute = minuteStop
         pickerStop.dateValue = calendar.date(from: components)!
         
-        //        if stopTime != nil {
-        //
-        //        } else {
-        //            // Unavailable, reset pickerStart
-        //            let calendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
-        //            var components = calendar.components([.hour, .minute], from: Date())
-        //            let hourStart = Int(timeSlot.startMinuteOfDay / 60)
-        //            let minuteStart = Int(timeSlot.startMinuteOfDay % 60)
-        //            components.hour = hourStart
-        //            components.minute = minuteStart
-        //            pickerStart.dateValue = calendar.date(from: components)!
-        //        }
-        
-        if timeSlot.validateTimeSlot(on: timeSlot.weekday, from: startTime, to: stopTime) {
-            timeSlot.valid = true
-        } else {
-            timeSlot.valid = false
-        }
+        timeSlot.course!.semester!.validateSchedule()
         
         editBox.notifyTimeSlotChange()
     }
@@ -160,11 +137,7 @@ class HXTimeSlotBox: NSView {
         components.minute = minuteStart
         pickerStart.dateValue = calendar.date(from: components)!
         
-        if timeSlot.validateTimeSlot(on: timeSlot.weekday, from: startTime, to: stopTime) {
-            timeSlot.valid = true
-        } else {
-            timeSlot.valid = false
-        }
+        timeSlot.course!.semester!.validateSchedule()
         
         editBox.notifyTimeSlotChange()
     }
@@ -175,24 +148,9 @@ class HXTimeSlotBox: NSView {
         timeSlot.weekday = Int16(stepperDay.intValue)
         
         
-        if timeSlot.validateTimeSlot(on: Int16(stepperDay.intValue), from: timeSlot.startMinuteOfDay, to: timeSlot.stopMinuteOfDay) {
-            timeSlot.valid = true
-        } else {
-            timeSlot.valid = false
-        }
+        timeSlot.course!.semester!.validateSchedule()
         
         editBox.notifyTimeSlotChange()
-        
-        //        if timeSlot.validateTimeSlot(on: Int16(stepperDay.intValue), from: timeSlot.startMinuteOfDay, to: timeSlot.stopMinuteOfDay) {
-        //            // Available timeslot
-        //            labelWeekday.stringValue = DAY_NAMES[Int(stepperDay.intValue)]
-        //            timeSlot.weekday = Int16(stepperDay.intValue)
-        //            editBox.notifyTimeSlotChange()
-        //            timeSlot.course!.sortTimeSlots()
-        //        } else {
-        //            // Unavailable, reset it to previous value
-        //            stepperDay.intValue = Int32(Int(timeSlot.weekday))
-        //        }
     }
 
     @IBAction func removeTimeSlotBox(_ sender: Any) {

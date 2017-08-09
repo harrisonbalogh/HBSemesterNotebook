@@ -102,6 +102,7 @@ class MasterViewController: NSViewController {
             prefNav.view.bottomAnchor.constraint(equalTo: container_sideBar.bottomAnchor).isActive = true
             prefNavLeadingAnchor = prefNav.view.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: -sidebarBGBox.frame.width)
             prefNavLeadingAnchor.isActive = true
+            prefNav.preferencesVC = pref
             
             // Update button
             preferencesButton.image = #imageLiteral(resourceName: "icon_drawer")
@@ -146,6 +147,13 @@ class MasterViewController: NSViewController {
                     
                     self.pref = nil
                     self.prefTrailingAnchor = nil
+                }
+                if self.editorViewController != nil {
+                    self.editorViewController.loadPreferences()
+                }
+                if self.schedulerViewController != nil {
+                    self.sidebarViewController.selectedSemester.validateSchedule()
+                    self.schedulerViewController.notifyTimeSlotChange()
                 }
             }
             prefNavLeadingAnchor.animator().constant = -sidebarBGBox.frame.width

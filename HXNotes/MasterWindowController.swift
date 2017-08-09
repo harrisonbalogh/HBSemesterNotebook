@@ -21,7 +21,6 @@ class MasterWindowController: NSWindowController {
         self.window!.styleMask.insert(.fullSizeContentView)
         self.window!.contentView?.wantsLayer = true
         
-        
         if let mVC = self.contentViewController as? MasterViewController {
             masterViewController = mVC
         }
