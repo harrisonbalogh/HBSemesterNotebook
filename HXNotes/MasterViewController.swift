@@ -57,17 +57,37 @@ class MasterViewController: NSViewController {
             self.sidebarViewController.masterViewController = self
         }
         
-        let calendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
-        // Get calendar date to deduce semester
-        let yearComponent = calendar.component(.year, from: Date())
-        
-        // This should be adjustable in the settings, assumes Jul-Dec is Fall. Jan-Jun is Spring.
-        var semesterTitle = "spring"
-        if calendar.component(.month, from: Date()) >= 7 {
-            semesterTitle = "fall"
+        var noPrev = true
+        if let prevOpenCourse = CFPreferencesCopyAppValue(NSString(string: "previouslyOpenedCourse"), kCFPreferencesCurrentApplication) as? String {
+            if prevOpenCourse != "nil" {
+                let parseSem = prevOpenCourse.substring(to: (prevOpenCourse.range(of: ":")?.lowerBound)!)
+                let remain = prevOpenCourse.substring(from: (prevOpenCourse.range(of: ":")?.upperBound)!)
+                let parseYr = remain.substring(to: (remain.range(of: ":")?.lowerBound)!)
+                let parseCourse = remain.substring(from: (remain.range(of: ":")?.upperBound)!)
+                
+                let semester = Semester.produceSemester(titled: parseSem.lowercased(), in: Int(parseYr)!)
+                noPrev = false
+                sidebarViewController.setDate(semester: semester)
+                
+                if parseCourse != "nil" {
+                    sidebarViewController.selectedCourse = semester.retrieveCourse(named: parseCourse)
+                }
+            }
         }
-        // Set the current semester displayed in the SidebarVC - might want to remeber last selected semester
-        sidebarViewController.setDate(semester: Semester.produceSemester(titled: semesterTitle, in: yearComponent))
+        
+        if noPrev {
+            let calendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
+            // Get calendar date to deduce semester
+            let yearComponent = calendar.component(.year, from: Date())
+            
+            // This should be adjustable in the settings, assumes Jul-Dec is Fall. Jan-Jun is Spring.
+            var semesterTitle = "spring"
+            if calendar.component(.month, from: Date()) >= 7 {
+                semesterTitle = "fall"
+            }
+            // Set the current semester displayed in the SidebarVC - might want to remeber last selected semester
+            sidebarViewController.setDate(semester: Semester.produceSemester(titled: semesterTitle, in: yearComponent))
+        }
     }
     
     // MARK: - ––– Preferences –––
@@ -150,10 +170,17 @@ class MasterViewController: NSViewController {
                 }
                 if self.editorViewController != nil {
                     self.editorViewController.loadPreferences()
+                    self.editorViewController.collectionView.collectionViewLayout?.invalidateLayout()
                 }
                 if self.schedulerViewController != nil {
                     self.sidebarViewController.selectedSemester.validateSchedule()
-                    self.schedulerViewController.notifyTimeSlotChange()
+                    self.sidebarViewController.notifyTimeSlotChange()
+                } else {
+                    // Check if the preference changes invalidated any time slots
+                    if !self.sidebarViewController.selectedSemester.validateSchedule() {
+                        print("Not valid!")
+                        self.sidebarViewController.selectedSemester = self.sidebarViewController.selectedSemester
+                    }
                 }
             }
             prefNavLeadingAnchor.animator().constant = -sidebarBGBox.frame.width
@@ -231,7 +258,9 @@ class MasterViewController: NSViewController {
     /// Notify MasterViewController that a course has been selected or deselected.
     /// Passes on course selection to EditorViewController
     func notifyCourseSelection(course: Course?) {
-        editorViewController.selectedCourse = course
+        if editorViewController != nil {
+            editorViewController.selectedCourse = course
+        }
     }
     /// Notify MasterViewController that a course has been removed.
     /// Currently used to remove time slot grid spaces in Calendar.
@@ -278,8 +307,12 @@ class MasterViewController: NSViewController {
 //        calendarViewController.drop(course: course, at: loc)
     }
     /// From EditorVC to SidebarVC
-    func notifyLectureFocus(is lecture: Lecture?) {
-        sidebarViewController.focus(lecture: lecture)
+    func notifyLectureFocus(is lectureCVI: LectureCollectionViewItem?) {
+        if lectureCVI == nil {
+            sidebarViewController.focus(lecture: nil)
+        } else {
+            sidebarViewController.focus(lecture: lectureCVI!.lecture)
+        }
     }
     /// from SidebarVC to EditorVC
     func notifyLectureSelection(lecture: String) {

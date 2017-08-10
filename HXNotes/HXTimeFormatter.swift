@@ -21,11 +21,11 @@ class HXTimeFormatter {
         }
         if Int(minuteOfDay / 60) > 12 {
             hourStop = "\(Int(minuteOfDay / 60) - 12)"
-            minuteStop = minuteStop + "P"
+            minuteStop = minuteStop + "PM"
         } else if Int(minuteOfDay / 60) == 12 {
-            minuteStop = minuteStop + "P"
+            minuteStop = minuteStop + "PM"
         } else {
-            minuteStop = minuteStop + "A"
+            minuteStop = minuteStop + "AM"
         }
         return hourStop + ":" + minuteStop
     }

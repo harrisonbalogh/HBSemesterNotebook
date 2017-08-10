@@ -48,11 +48,9 @@ class HXCourseBox: NSBox {
     
     @IBAction func goToNotes(_ sender: Any) {
         if buttonOverlay.state == NSOnState {
-            Swift.print("On state")
             self.select()
             parent.select(course: self.course)
         } else {
-            Swift.print("Off state")
             self.deselect()
             parent.select(course: nil)
         }

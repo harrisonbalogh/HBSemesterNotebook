@@ -19,7 +19,7 @@ class SidebarViewController: NSViewController {
         }
 
         if Int(yearLabel.stringValue) != nil {
-            if semesterLabel.stringValue == "Spring" {
+            if semesterButton.title == "Spring" {
                 selectedSemester = Semester.produceSemester(titled: "spring", in: Int(yearLabel.stringValue)!)
             } else {
                 selectedSemester = Semester.produceSemester(titled: "fall", in: Int(yearLabel.stringValue)!)
@@ -27,79 +27,92 @@ class SidebarViewController: NSViewController {
         }
     }
     func setDate(semester: Semester) {
-//        print("    SidebarVC - setting date.")
         lastYearUsed = Int(semester.year)
         yearLabel.stringValue = "\(lastYearUsed)"
         selectedSemester = semester
-        semesterLabel.stringValue = selectedSemester.title!.capitalized
+        semesterButton.title = selectedSemester.title!.capitalized
     }
+    @IBOutlet weak var semesterButton: NSButton!
+    @IBOutlet weak var semButtonBotConstraint: NSLayoutConstraint!
     @IBOutlet weak var semesterButtonAnimated: NSButton!
     @IBOutlet weak var semButtonAnimBotConstraint: NSLayoutConstraint!
-    @IBOutlet weak var semesterLabel: NSTextField!
-    @IBOutlet weak var semesterButton: NSButton!
-    @IBOutlet weak var yearButtonAnimated: NSButton!
-    @IBOutlet weak var yrButtonAnimBotConstraint: NSLayoutConstraint!
     @IBOutlet weak var yearLabel: NSTextField!
     var lastYearUsed = 0
     @IBAction func action_incrementTime(_ sender: NSButton) {
-        NSAnimationContext.runAnimationGroup({context in
-            context.duration = 0.3
-            if semesterLabel.stringValue == "Spring" {
-                semesterButtonAnimated.title = "Fall"
+        
+        semButtonAnimBotConstraint.constant = -30
+        if self.semesterButton.title == "Spring" {
+            self.semesterButtonAnimated.title = "Fall"
+            let recoloredText = NSMutableAttributedString(attributedString: self.semesterButtonAnimated.attributedTitle)
+            recoloredText.addAttribute(NSForegroundColorAttributeName, value: NSColor.white, range: NSMakeRange(0,self.semesterButtonAnimated.attributedTitle.length))
+            self.semesterButtonAnimated.attributedTitle = recoloredText
+        } else {
+            self.semesterButtonAnimated.title = "Spring"
+            let recoloredText = NSMutableAttributedString(attributedString: self.semesterButtonAnimated.attributedTitle)
+            recoloredText.addAttribute(NSForegroundColorAttributeName, value: NSColor.white, range: NSMakeRange(0,self.semesterButtonAnimated.attributedTitle.length))
+            self.semesterButtonAnimated.attributedTitle = recoloredText
+        }
+        
+        NSAnimationContext.beginGrouping()
+        NSAnimationContext.current().duration = 0.2
+        NSAnimationContext.current().completionHandler = {
+            if self.semesterButton.title == "Spring" {
+                self.semesterButton.title = "Fall"
+                let recoloredText = NSMutableAttributedString(attributedString: self.semesterButton.attributedTitle)
+                recoloredText.addAttribute(NSForegroundColorAttributeName, value: NSColor.white, range: NSMakeRange(0,self.semesterButton.attributedTitle.length))
+                self.semesterButton.attributedTitle = recoloredText
             } else {
-                semesterButtonAnimated.title = "Spring"
-                yearButtonAnimated.title = "\(Int(self.yearLabel.stringValue)! + 1)"
-                yrButtonAnimBotConstraint.animator().constant = semesterButtonAnimated.bounds.height
-                yearLabel.animator().setBoundsOrigin(NSPoint(x: 0, y: -semesterButton.bounds.height))
-            }
-            semButtonAnimBotConstraint.animator().constant = semesterButtonAnimated.bounds.height
-            semesterLabel.animator().setBoundsOrigin(NSPoint(x: 0, y: -semesterButton.bounds.height))
-        }, completionHandler: {
-            if self.semesterLabel.stringValue == "Spring" {
-                self.semesterLabel.stringValue = "Fall"
-            } else {
-                self.semesterLabel.stringValue = "Spring"
+                self.semesterButton.title = "Spring"
+                let recoloredText = NSMutableAttributedString(attributedString: self.semesterButton.attributedTitle)
+                recoloredText.addAttribute(NSForegroundColorAttributeName, value: NSColor.white, range: NSMakeRange(0,self.semesterButton.attributedTitle.length))
+                self.semesterButton.attributedTitle = recoloredText
                 self.yearLabel.stringValue = "\(Int(self.yearLabel.stringValue)! + 1)"
-                self.yearLabel.setBoundsOrigin(NSPoint(x: 0, y: 0))
             }
-            self.semesterLabel.setBoundsOrigin(NSPoint(x: 0, y: 0))
+            self.semButtonBotConstraint.constant = 0
             self.tempAction_date()
-            self.semButtonAnimBotConstraint.constant = 0
-            self.yrButtonAnimBotConstraint.constant = 0
-        })
+        }
+        self.semButtonBotConstraint.animator().constant = -semesterButton.frame.height
+        NSAnimationContext.endGrouping()
     }
     @IBAction func action_decrementTime(_ sender: NSButton) {
-        NSAnimationContext.runAnimationGroup({context in
-            semButtonAnimBotConstraint.constant = 2 * semesterButtonAnimated.bounds.height
-            yrButtonAnimBotConstraint.constant = 2 * semesterButtonAnimated.bounds.height
-            context.duration = 0.3
-            if semesterLabel.stringValue == "Fall" {
-                semesterButtonAnimated.title = "Spring"
+        
+        semButtonAnimBotConstraint.constant = 30
+        if self.semesterButton.title == "Spring" {
+            self.semesterButtonAnimated.title = "Fall"
+            let recoloredText = NSMutableAttributedString(attributedString: self.semesterButtonAnimated.attributedTitle)
+            recoloredText.addAttribute(NSForegroundColorAttributeName, value: NSColor.white, range: NSMakeRange(0,self.semesterButtonAnimated.attributedTitle.length))
+            self.semesterButtonAnimated.attributedTitle = recoloredText
+        } else {
+            self.semesterButtonAnimated.title = "Spring"
+            let recoloredText = NSMutableAttributedString(attributedString: self.semesterButtonAnimated.attributedTitle)
+            recoloredText.addAttribute(NSForegroundColorAttributeName, value: NSColor.white, range: NSMakeRange(0,self.semesterButtonAnimated.attributedTitle.length))
+            self.semesterButtonAnimated.attributedTitle = recoloredText
+        }
+
+        NSAnimationContext.beginGrouping()
+        NSAnimationContext.current().duration = 0.2
+        NSAnimationContext.current().completionHandler = {
+            if self.semesterButton.title == "Fall" {
+                self.semesterButton.title = "Spring"
+                let recoloredText = NSMutableAttributedString(attributedString: self.semesterButton.attributedTitle)
+                recoloredText.addAttribute(NSForegroundColorAttributeName, value: NSColor.white, range: NSMakeRange(0,self.semesterButton.attributedTitle.length))
+                self.semesterButton.attributedTitle = recoloredText
             } else {
-                semesterButtonAnimated.title = "Fall"
-                yearButtonAnimated.title = "\(Int(self.yearLabel.stringValue)! - 1)"
-                yrButtonAnimBotConstraint.animator().constant = semesterButtonAnimated.bounds.height
-                yearLabel.animator().setBoundsOrigin(NSPoint(x: 0, y: semesterButton.bounds.height))
-            }
-            semButtonAnimBotConstraint.animator().constant = semesterButtonAnimated.bounds.height
-            semesterLabel.animator().setBoundsOrigin(NSPoint(x: 0, y: semesterButton.bounds.height))
-        }, completionHandler: {
-            if self.semesterLabel.stringValue == "Fall" {
-                self.semesterLabel.stringValue = "Spring"
-            } else {
-                self.semesterLabel.stringValue = "Fall"
+                self.semesterButton.title = "Fall"
+                let recoloredText = NSMutableAttributedString(attributedString: self.semesterButton.attributedTitle)
+                recoloredText.addAttribute(NSForegroundColorAttributeName, value: NSColor.white, range: NSMakeRange(0,self.semesterButton.attributedTitle.length))
+                self.semesterButton.attributedTitle = recoloredText
                 self.yearLabel.stringValue = "\(Int(self.yearLabel.stringValue)! - 1)"
-                self.yearLabel.setBoundsOrigin(NSPoint(x: 0, y: 0))
             }
-            self.semesterLabel.setBoundsOrigin(NSPoint(x: 0, y: 0))
+            self.semButtonBotConstraint.constant = 0
             self.tempAction_date()
-            self.semButtonAnimBotConstraint.constant = 0
-            self.yrButtonAnimBotConstraint.constant = 0
-        })
+        }
+        self.semButtonBotConstraint.animator().constant = semesterButton.frame.height
+        NSAnimationContext.endGrouping()
     }
     
     @IBAction func action_semesterButton(_ sender: NSButton) {
-        if semesterLabel.stringValue == "Fall" {
+        if semesterButton.title == "Fall" {
             action_decrementTime(sender)
         } else {
             action_incrementTime(sender)
@@ -132,12 +145,8 @@ class SidebarViewController: NSViewController {
     
     // MARK: References - Data Objects
     let appDelegate = NSApplication.shared().delegate as! AppDelegate
-    private(set) var selectedSemester: Semester! {
+    var selectedSemester: Semester! {
         didSet {
-            if oldValue != nil && oldValue == selectedSemester {
-                return
-            }
-            
             // Clear old course visuals
             popCourses()
             // Get courses from this semester
@@ -182,6 +191,7 @@ class SidebarViewController: NSViewController {
                     if courseButton.labelTitle.stringValue != selectedCourse.title {
                         courseButton.deselect()
                     } else {
+                        courseButton.select()
                         // Scroll to button
                         let lectureY = ledgerStackView.frame.height - (courseButton.frame.origin.y + courseButton.frame.height) + 2
                         // Animate scroll to course
@@ -197,7 +207,9 @@ class SidebarViewController: NSViewController {
                 for case let courseButton as HXCourseBox in ledgerStackView.arrangedSubviews {
                     courseButton.deselect()
                 }
-                bottomBufferHeightConstraint.constant = 0
+                if bottomBufferHeightConstraint != nil {
+                    bottomBufferHeightConstraint.constant = 0
+                }
             }
             // Notify masterViewController that a course was selected
             masterViewController.notifyCourseSelection(course: selectedCourse)
@@ -207,10 +219,31 @@ class SidebarViewController: NSViewController {
     // MARK: ––– Initialization –––
     override func viewDidLoad() {
         super.viewDidLoad()
+    }
+    
+    override func viewDidAppear() {
+        super.viewDidAppear()
         
-        // Setup observers
-//        NotificationCenter.default.addObserver(self, selector: #selector(SidebarViewController.didLiveScroll),
-//                                               name: .NSScrollViewDidLiveScroll, object: ledgerClipView)
+        let recoloredText = NSMutableAttributedString(attributedString: semesterButton.attributedTitle)
+        recoloredText.addAttribute(NSForegroundColorAttributeName, value: NSColor.white, range: NSMakeRange(0,semesterButton.attributedTitle.length))
+        semesterButton.attributedTitle = recoloredText
+    }
+    
+    override func viewWillDisappear() {
+        super.viewWillDisappear()
+        
+        var course = ""
+        if selectedCourse == nil {
+            course = "nil"
+        } else {
+            course = selectedCourse.title!
+        }
+        
+        let key = semesterButton.title.uppercased() + ":" + yearLabel.stringValue + ":" + course
+        
+        CFPreferencesSetAppValue(NSString(string: "previouslyOpenedCourse"),NSString(string: key), kCFPreferencesCurrentApplication)
+        
+        CFPreferencesAppSynchronize(kCFPreferencesCurrentApplication)
     }
 
     // MARK: ––– Populating LedgerStackView –––
@@ -218,6 +251,7 @@ class SidebarViewController: NSViewController {
     /// Access this function by setting SidebarViewController's selectedSemester.
     /// Repopulates the ledgerStackView and Sidebar visuals to display HXCourseEditBox's.
     private func editingMode() {
+        selectedCourse = nil
         loadEditableCourses(fromSemester: selectedSemester)
         masterViewController.notifySemesterEditing(semester: selectedSemester)
         
@@ -444,7 +478,9 @@ class SidebarViewController: NSViewController {
     /// to be scrolled so it aligns with the top of the view.
     private func notifyHeightUpdate() {
         
-        bottomBufferHeightConstraint.constant = 0
+        if bottomBufferHeightConstraint != nil {
+            bottomBufferHeightConstraint.constant = 0
+        }
         ledgerScrollView.layoutSubtreeIfNeeded()
         
         for case let courseButton as HXCourseBox in ledgerStackView.arrangedSubviews {
@@ -560,6 +596,9 @@ class SidebarViewController: NSViewController {
     
     ///
     func notifyTimeSlotChange() {
+        
+        selectedSemester.validateSchedule()
+        
         masterViewController.notifyTimeSlotChange()
         
         // If any course don't have any TimeSlots, don't allow user to proceed to Editor...
@@ -586,6 +625,8 @@ class SidebarViewController: NSViewController {
     /// minimum requirement of having at least 1 time established has been met.
     func notifyTimeSlotAdded() {
         
+        selectedSemester.validateSchedule()
+        
         // If any course don't have any TimeSlots, don't allow user to proceed to Editor
         for case let course as Course in selectedSemester.courses! {
             if course.timeSlots!.count == 0 {
@@ -606,7 +647,11 @@ class SidebarViewController: NSViewController {
     /// Notify sidebar that user has removed a time slot from a course and should
     /// check if that was the only time slot for course
     func notifyTimeSlotRemoved() {
+        
+        selectedSemester.validateSchedule()
+        
         masterViewController.notifyTimeSlotChange()
+        
         // If any courses don't have any TimeSlots, don't allow user to proceed to Editor
         for case let course as Course in selectedSemester.courses! {
             if course.timeSlots!.count == 0 {
@@ -623,23 +668,5 @@ class SidebarViewController: NSViewController {
             }
         }
                 
-    }
-    
-    // MARK: - TESTING
-    
-    func test_repeat() {
-        print("Test loop call")
-        
-        editingMode()
-        
-//        action_editSemester(editSemesterButton)
-//        if editSemesterButton.state == NSOnState {
-//            editSemesterButton.state = NSOffState
-//        } else {
-//            editSemesterButton.state = NSOnState
-//        }
-        
-        // Code above.
-        self.perform(#selector(self.test_repeat), with: nil, afterDelay: 0.5)
     }
 }

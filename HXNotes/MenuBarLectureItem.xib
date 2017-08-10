@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11762" systemVersion="16G29" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11762"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+        <capability name="system font weights other than Regular or Bold" minToolsVersion="7.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner"/>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView id="c22-O7-iKe" customClass="MenuBarLectureItem" customModule="HXNotes" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="221" height="25"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <textField horizontalHuggingPriority="249" verticalHuggingPriority="750" horizontalCompressionResistancePriority="749" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hiy-oh-eTW">
+                    <rect key="frame" x="4" y="4" width="176" height="17"/>
+                    <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="left" title="Label" id="F2t-8S-gTz">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Cjz-KZ-V5r">
+                    <rect key="frame" x="180" y="4" width="37" height="17"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Label" id="vbY-yl-NvJ">
+                        <font key="font" metaFont="systemLight" size="13"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="drK-VO-8yV">
+                    <rect key="frame" x="0.0" y="-1" width="221" height="5"/>
+                </box>
+            </subviews>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="drK-VO-8yV" secondAttribute="trailing" id="0ea-pJ-R70"/>
+                <constraint firstAttribute="trailing" secondItem="Cjz-KZ-V5r" secondAttribute="trailing" constant="6" id="A1y-ZA-wf6"/>
+                <constraint firstItem="Cjz-KZ-V5r" firstAttribute="leading" secondItem="hiy-oh-eTW" secondAttribute="trailing" constant="4" id="GKi-Hw-Y6f"/>
+                <constraint firstItem="hiy-oh-eTW" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" constant="6" id="IEJ-De-K9X"/>
+                <constraint firstItem="hiy-oh-eTW" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" constant="4" id="Lad-50-fGX"/>
+                <constraint firstAttribute="bottom" secondItem="Cjz-KZ-V5r" secondAttribute="bottom" constant="4" id="R9m-Cu-61j"/>
+                <constraint firstAttribute="bottom" secondItem="hiy-oh-eTW" secondAttribute="bottom" constant="4" id="YH1-yI-BlP"/>
+                <constraint firstItem="drK-VO-8yV" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" id="jr9-Ug-mP9"/>
+                <constraint firstItem="Cjz-KZ-V5r" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" constant="4" id="qMH-qJ-HIP"/>
+                <constraint firstAttribute="bottom" secondItem="drK-VO-8yV" secondAttribute="bottom" constant="1" id="rhF-3P-7v4"/>
+            </constraints>
+            <connections>
+                <outlet property="courseTitleLabel" destination="hiy-oh-eTW" id="1Xc-Cu-wnm"/>
+                <outlet property="timeSlotStartLabel" destination="Cjz-KZ-V5r" id="z3Z-E8-iVT"/>
+            </connections>
+            <point key="canvasLocation" x="9.5" y="50.5"/>
+        </customView>
+    </objects>
+</document>

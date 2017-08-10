@@ -13,8 +13,6 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
     weak var masterViewController: MasterViewController!
 
     // MARK: - View References
-    @IBOutlet weak var lectureClipper: HXFlippedClipView!
-    var oldClipperHeight: CGFloat = 0
     // These 2 labels are displayed when no course is selected
     @IBOutlet weak var labelNoCourse: NSTextField!
     @IBOutlet weak var subLabelNoCourse: NSTextField!    
@@ -39,16 +37,53 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
             // Setting selectedCourse, immediately updates visuals
             if selectedCourse != nil {
                 
-                collectionView.reloadData()
-                
-                // Animate hiding the lecture
-                NSAnimationContext.beginGrouping()
-                NSAnimationContext.current().duration = 0.25
-                collectionView.animator().alphaValue = 1
-                NSAnimationContext.current().duration = 0.4
-                labelNoCourse.animator().alphaValue = 0
-                subLabelNoCourse.animator().alphaValue = 0
-                NSAnimationContext.endGrouping()
+                if selectedCourse.lectures!.count != 0 {
+                    collectionView.reloadData()
+                    
+                    // Animate showing the lectures
+                    NSAnimationContext.beginGrouping()
+                    NSAnimationContext.current().duration = 0.25
+                    collectionView.animator().alphaValue = 1
+                    NSAnimationContext.current().duration = 0.4
+                    labelNoCourse.animator().alphaValue = 0
+                    subLabelNoCourse.animator().alphaValue = 0
+                    NSAnimationContext.endGrouping()
+                } else {
+                    
+                    let hour = NSCalendar.current.component(.hour, from: Date())
+                    let minute = NSCalendar.current.component(.minute, from: Date())
+                    
+                    let weekday = Int16(NSCalendar.current.component(.weekday, from: Date()))
+                    let minuteOfDay = Int16(hour * 60 + minute)
+                    
+                    var nextTimeSlot: TimeSlot!
+                    
+                    var dayNames = ["", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+                    
+                    // Iterate through days (plus extra one if case we need to check the same day again)
+                    dayLoop: for d in 0..<8 {
+                        let checkDay = (weekday + d) % 8 + Int(floor(Double((weekday + d) / 8)))
+                        for case let timeSlot as TimeSlot in selectedCourse.timeSlots! {
+                            if timeSlot.weekday == weekday && d != 7 {
+                                // If its today, then check the time of day
+                                if timeSlot.stopMinuteOfDay > minuteOfDay {
+                                    nextTimeSlot = timeSlot
+                                    dayNames[Int(weekday)] = "today"
+                                    break dayLoop
+                                }
+                            } else if timeSlot.weekday == checkDay {
+                                nextTimeSlot = timeSlot
+                                if d == 7 {
+                                    dayNames[Int(weekday)] = "next " + dayNames[Int(weekday)]
+                                }
+                                break dayLoop
+                            }
+                        }
+                    }
+                    
+                    labelNoCourse.stringValue = "No Lectures for " + selectedCourse.title!
+                    subLabelNoCourse.stringValue = "New lectures can only be added during a course's timeslot. Next lecture is \(dayNames[Int(nextTimeSlot.weekday)]) at \(HXTimeFormatter.formatTime(nextTimeSlot.startMinuteOfDay))."
+                }
                 
             } else {
                 labelNoCourse.stringValue = "No Course Selected"
@@ -72,19 +107,7 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
     
     weak var lectureFocused: LectureCollectionViewItem! {
         didSet {
-            print("Lecture Focused...")
-            if oldValue != nil {
-                print("    Old value: \(collectionViewItems.index(of: oldValue)!)")
-                headerViews[collectionViewItems.index(of: oldValue)!].notifyTextViewFocus(false)
-            }
-            if lectureFocused == nil {
-                print("    Nil value.")
-                masterViewController.notifyLectureFocus(is: nil)
-            } else {
-                masterViewController.notifyLectureFocus(is: lectureFocused.lecture)
-                print("    New Value: \(collectionViewItems.index(of: lectureFocused)!)")
-                headerViews[collectionViewItems.index(of: lectureFocused)!].notifyTextViewFocus(true)
-            }
+            masterViewController.notifyLectureFocus(is: lectureFocused)
         }
     }
     
@@ -111,7 +134,6 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
     override func viewDidLayout() {
         super.viewDidLayout()
         
-//        print("ViewDidLayout")
         // To keep dynamic item widths, need to recalculate them when resizing collection view.
         collectionView.collectionViewLayout?.invalidateLayout()
     }
@@ -151,11 +173,10 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
         if !autoScroll {
             return
         }
+        return
+        let scrollY = sender.lastSelectionHeightCheck
         
-        let scrollY = sender.textSelectionHeight()
-
         if scrollY < collectionClipView.bounds.origin.y + sender.header.frame.height || scrollY > collectionClipView.bounds.origin.y + collectionView.enclosingScrollView!.frame.height * CGFloat(autoScrollPosition)/100 {
-            print("Auto")
             NSAnimationContext.beginGrouping()
             NSAnimationContext.current().duration = 0.25
             collectionClipView.animator().setBoundsOrigin(NSPoint(x: 0, y: scrollY - collectionView.enclosingScrollView!.frame.height * CGFloat(autoScrollPosition)/100))
@@ -168,15 +189,16 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
     /// Auto scrolling whenever user changes selection.
     /// Will only occur when the selection is outside of the visible area (not within the buffer region).
     internal func checkScrollLevelOutside(from sender: LectureCollectionViewItem) {
-        let scrollY = sender.textSelectionHeight()
-        if scrollY < collectionClipView.bounds.origin.y + sender.header.frame.height || scrollY > collectionClipView.bounds.origin.y + collectionView.enclosingScrollView!.frame.height {
-            NSAnimationContext.beginGrouping()
-            NSAnimationContext.current().duration = 0.25
-            collectionClipView.animator().setBoundsOrigin(NSPoint(x: 0, y: scrollY - collectionView.enclosingScrollView!.frame.height * CGFloat(autoScrollPosition)/100))
-            NSAnimationContext.endGrouping()
-            
-            collectionView.enclosingScrollView?.flashScrollers()
-        }
+        print("checkScrollLevelOutside")
+//        let scrollY = sender.textSelectionHeight()
+//        if scrollY < collectionClipView.bounds.origin.y + sender.header.frame.height || scrollY > collectionClipView.bounds.origin.y + collectionView.enclosingScrollView!.frame.height {
+//            NSAnimationContext.beginGrouping()
+//            NSAnimationContext.current().duration = 0.25
+//            collectionClipView.animator().setBoundsOrigin(NSPoint(x: 0, y: scrollY - collectionView.enclosingScrollView!.frame.height * CGFloat(autoScrollPosition)/100))
+//            NSAnimationContext.endGrouping()
+//            
+//            collectionView.enclosingScrollView?.flashScrollers()
+//        }
     }
     
     override func mouseDown(with event: NSEvent) {
@@ -185,33 +207,8 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
     
     // MARK: - ––– Notifiers –––
     
-    /// Received from LectureViewController on any change to a given lecture text view.
-    /// Resizes the bottom buffer box
-    internal func notifyHeightUpdate() {
-
-        // REPLACE FOLLOWING
-//        if let lectureController = childViewControllers.filter({$0 is LectureViewController})[nonabsentLectureCount - 1] as? LectureViewController {
-//            // Resize last lecture to keep text in the center of screen.
-//            if lectureController.view.frame.height < lectureScroller.frame.height/2 + 3 {
-//                lectureBottomConstraint.constant = -lectureController.view.frame.height
-//            } else {
-//                lectureBottomConstraint.constant = -lectureScroller.frame.height/2 - 3
-//            }
-//        }
-        
-        // NOTE
-//        collectionView.reloadItems(at: <#T##Set<IndexPath>#>)
-//        collectionView.lastBaselineAnchor
-        
-        
-        // REPLACE WITH THIS
-//        collectionViewBottomConstraint - SET THIS
-    }
-    
     func notifyLectureAddition(lecture: Lecture) {
         collectionView.reloadData()
-        
-        notifyHeightUpdate()
         
         scrollToLecture("Lecture \(lecture.number)")
     }
@@ -265,7 +262,6 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
     @IBOutlet weak var collectionViewBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var collectionClipView: NSClipView!
     
-    
     var headerViews = [LectureHeaderView]()
     var collectionViewItems = [LectureCollectionViewItem]()
     
@@ -283,13 +279,10 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
     
     func numberOfSections(in collectionView: NSCollectionView) -> Int {
         
-//        print("Collection view getting number of sections...")
-        
         headerViews = [LectureHeaderView]()
         collectionViewItems = [LectureCollectionViewItem]()
         
         if selectedCourse != nil {
-            print("    - \(selectedCourse.lectures!.count)")
             return selectedCourse.lectures!.count
         }
         return 0
@@ -304,8 +297,6 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
         // Create LectureCollectionViewItem
         let item = collectionView.makeItem(withIdentifier: "LectureCollectionViewItem", for: indexPath) as! LectureCollectionViewItem
         
-//        print("Int(indexPath[0].toIntMax(): \(Int(indexPath[0].toIntMax()))")
-        
         // Initialize the LectureCollectionViewItem
         let lecture = selectedCourse.lectures!.array[Int(indexPath[0].toIntMax())] as! Lecture
         item.lecture = lecture
@@ -314,8 +305,6 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
         }
         item.owner = self
         item.textView_lecture.parentController = item
-        
-//        print("LectureCollectionViewItem instanced.")
         
         collectionViewItems.append(item)
         return item
@@ -328,8 +317,6 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
         
         // Initialize the LectureHeaderView
         let lecture = selectedCourse.lectures!.array[Int(indexPath[0].toIntMax())] as! Lecture
-//        print("Lecture: \(lecture.number)")
-//        print("    absent - \(lecture.absent)")
         header.label_lectureTitle.stringValue = "Lecture \(lecture.number)"
         header.label_lectureDate.stringValue = "\(lecture.monthInYear())/\(lecture.dayInMonth())/\(lecture.course!.semester!.year % 100)"
         if lecture.title != nil {
@@ -354,9 +341,7 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
                                                name: .NSControlTextDidChange, object: header.label_customTitle)
         header.owner = self
         
-//        print("LectureHeaderView instanced. Index: \(Int(indexPath[0].toIntMax()))")
         if (collectionViewItems.count - 1) >= Int(indexPath[0].toIntMax()) {
-//            print(" -- Setting vars")
             header.collectionViewItem = collectionViewItems[Int(indexPath[0].toIntMax())]
             collectionViewItems[Int(indexPath[0].toIntMax())].header = header
             
@@ -372,19 +357,25 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
     
     func collectionView(_ collectionView: NSCollectionView, layout collectionViewLayout: NSCollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> NSSize {
         
-//        print("Size 1.")
-        //CGFloat(indexPath[0].toIntMax() + 1) * 36
         if (collectionViewItems.count - 1) >= Int(indexPath[0].toIntMax()) {
-            let h = collectionViewItems[Int(indexPath[0].toIntMax())].textHeight()
-            return CGSize(width: collectionView.bounds.width, height: h)
+            
+            var lastHBuffer: CGFloat = 0
+            if Int(indexPath[0].toIntMax()) == (collectionViewItems.count - 1) {
+                // Last object...
+                print("Appling buffer")
+                lastHBuffer = (collectionClipView.enclosingScrollView!.frame.height - 30) * (CGFloat(bottomBufferSpace) / 100)
+            }
+            let h = collectionViewItems[Int(indexPath[0].toIntMax())].lastHeightCheck
+            return CGSize(width: collectionView.bounds.width, height: h + lastHBuffer)
         }
         
+        print("This happened... collectionViewItems.count: \(collectionViewItems.count) vs. Int(indexPath[0].toIntMax()): \(Int(indexPath[0].toIntMax()))")
         return CGSize(width: collectionView.bounds.width, height: 41)
     }
     
     func collectionView(_ collectionView: NSCollectionView, layout collectionViewLayout: NSCollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> NSSize {
         
-//        print("Size 2.")
+        print("Size 2.")
         return NSSize(width: 560, height: 30)
     }
     
@@ -392,18 +383,25 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
     // MARK: - Preferences
     var autoScroll = true
     var autoScrollPosition = 50
+    var bottomBufferSpace = 30
     
     func loadPreferences() {
         if let autoScrollPref = CFPreferencesCopyAppValue(NSString(string: "autoScroll"), kCFPreferencesCurrentApplication) as? String {
-            if autoScrollPref == "YES" {
+            if autoScrollPref == "true" {
                 autoScroll = true
-            } else if autoScrollPref == "NO" {
+            } else if autoScrollPref == "false" {
                 autoScroll = false
             }
         }
-        if let bottomBufferPercent = CFPreferencesCopyAppValue(NSString(string: "autoScrollPositionPercent"), kCFPreferencesCurrentApplication) as? String {
-            if let percent = Int(bottomBufferPercent) {
+        if let autoScrollPercent = CFPreferencesCopyAppValue(NSString(string: "autoScrollPositionPercent"), kCFPreferencesCurrentApplication) as? String {
+            if let percent = Int(autoScrollPercent) {
                 autoScrollPosition = 100 - percent
+            }
+        }
+        if let bottomBufferPercent = CFPreferencesCopyAppValue(NSString(string: "bottomBufferSpace"), kCFPreferencesCurrentApplication) as? String {
+            if let percent = Int(bottomBufferPercent) {
+                bottomBufferSpace = percent
+                print("bottomBufferSpace: \(bottomBufferSpace)")
             }
         }
     }
@@ -571,7 +569,7 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
                 // Scroll to top
                 NSAnimationContext.beginGrouping()
                 NSAnimationContext.current().duration = 0.5
-                lectureClipper.animator().setBoundsOrigin(NSPoint(x: 0, y: 0))
+//                lectureClipper.animator().setBoundsOrigin(NSPoint(x: 0, y: 0))
                 NSAnimationContext.endGrouping()
                 
                 topBarShown(true)

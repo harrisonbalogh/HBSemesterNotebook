@@ -105,8 +105,6 @@ class HXTimeSlotBox: NSView {
         components.minute = minuteStop
         pickerStop.dateValue = calendar.date(from: components)!
         
-        timeSlot.course!.semester!.validateSchedule()
-        
         editBox.notifyTimeSlotChange()
     }
     
@@ -137,8 +135,6 @@ class HXTimeSlotBox: NSView {
         components.minute = minuteStart
         pickerStart.dateValue = calendar.date(from: components)!
         
-        timeSlot.course!.semester!.validateSchedule()
-        
         editBox.notifyTimeSlotChange()
     }
     
@@ -146,9 +142,6 @@ class HXTimeSlotBox: NSView {
         // Available timeslot
         labelWeekday.stringValue = DAY_NAMES[Int(stepperDay.intValue)]
         timeSlot.weekday = Int16(stepperDay.intValue)
-        
-        
-        timeSlot.course!.semester!.validateSchedule()
         
         editBox.notifyTimeSlotChange()
     }

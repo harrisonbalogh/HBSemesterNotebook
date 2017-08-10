@@ -17,11 +17,23 @@ class PreferencesViewController: NSViewController {
     
     // MARK: General Settings
     @IBOutlet weak var labelGeneral: NSTextField!
+    @IBOutlet weak var checkBoxMenuBar: NSButton!
     @IBOutlet weak var checkBoxLaunchWithSystem: NSButton!
     @IBOutlet weak var checkBoxBackgroundRun: NSButton!
     
     @IBAction func action_launchWithSystem(_ sender: NSButton) {
         
+    }
+    @IBAction func action_menuBar(_ sender: NSButton) {
+        if sender.state == NSOnState {
+            if let appDel = NSApp.delegate as? AppDelegate {
+                appDel.createMenuBarIcon()
+            }
+        } else {
+            if let appDel = NSApp.delegate as? AppDelegate {
+                appDel.removeMenuBarIcon()
+            }
+        }
     }
     @IBAction func action_backgroundRun(_ sender: NSButton) {
         
@@ -32,6 +44,8 @@ class PreferencesViewController: NSViewController {
     @IBOutlet weak var checkBoxAutoScroll: NSButton!
     @IBOutlet weak var sliderAutoScrollPercent: NSSlider!
     @IBOutlet weak var labelAutoScrollPercent: NSTextField!
+    @IBOutlet weak var sliderBottomBufferSpace: NSSlider!
+    @IBOutlet weak var labelBottomBufferSpace: NSTextField!
     
     @IBAction func action_toggleAutoScroll(_ sender: NSButton) {
         if sender.state == NSOnState {
@@ -44,7 +58,9 @@ class PreferencesViewController: NSViewController {
     }
     @IBAction func action_sliderAutoScroll(_ sender: NSSlider) {
         labelAutoScrollPercent.stringValue = "\(Int(sender.doubleValue))%"
-        print("\(sender.window!.firstResponder)")
+    }
+    @IBAction func action_sliderBufferSpace(_ sender: NSSlider) {
+        labelBottomBufferSpace.stringValue = "\(Int(clipView.enclosingScrollView!.frame.height * CGFloat(sliderBottomBufferSpace.doubleValue) / 100))px"
     }
     
     // MARK: Alert Settings
@@ -80,6 +96,9 @@ class PreferencesViewController: NSViewController {
     override func viewDidLayout() {
         super.viewDidLayout()
         
+        // The bottom buffer space calculation must be updated when the window changes
+        labelBottomBufferSpace.stringValue = "\(Int(clipView.enclosingScrollView!.frame.height * CGFloat(sliderBottomBufferSpace.doubleValue) / 100))px"
+        
         // Resize the constraint attached to the clipView to provide enough space for
         // the last setting label to be scrollable to the top of the window.
         let h = clipView.enclosingScrollView!.frame.height - lastSettingLabelYPos
@@ -100,8 +119,10 @@ class PreferencesViewController: NSViewController {
         // Save preferences
         CFPreferencesSetAppValue(NSString(string: "autoScroll"), NSString(string: "\(checkBoxAutoScroll.state == NSOnState)"), kCFPreferencesCurrentApplication)
         CFPreferencesSetAppValue(NSString(string: "autoScrollPositionPercent"), NSString(string: "\(Int(sliderAutoScrollPercent.doubleValue))"), kCFPreferencesCurrentApplication)
+        CFPreferencesSetAppValue(NSString(string: "bottomBufferSpace"), NSString(string: "\(Int(sliderBottomBufferSpace.doubleValue))"), kCFPreferencesCurrentApplication)
         
         CFPreferencesSetAppValue(NSString(string: "launchWithSystem"),NSString(string: "\(checkBoxLaunchWithSystem.state == NSOnState)"), kCFPreferencesCurrentApplication)
+        CFPreferencesSetAppValue(NSString(string: "showInMenuBar"),NSString(string: "\(checkBoxMenuBar.state == NSOnState)"), kCFPreferencesCurrentApplication)
         CFPreferencesSetAppValue(NSString(string: "runAfterClose"),NSString(string: "\(checkBoxBackgroundRun.state == NSOnState)"), kCFPreferencesCurrentApplication)
         
         if let alertTime = Int(textFieldLectureAlertTime.stringValue) {
@@ -138,6 +159,13 @@ class PreferencesViewController: NSViewController {
                 checkBoxLaunchWithSystem.state = NSOffState
             }
         }
+        if let menuBarShown = CFPreferencesCopyAppValue(NSString(string: "showInMenuBar"), kCFPreferencesCurrentApplication) as? String {
+            if menuBarShown == "true" {
+                checkBoxMenuBar.state = NSOnState
+            } else if menuBarShown == "false" {
+                checkBoxMenuBar.state = NSOffState
+            }
+        }
         if let backgroundRun = CFPreferencesCopyAppValue(NSString(string: "runAfterClose"), kCFPreferencesCurrentApplication) as? String {
             if backgroundRun == "true" {
                 checkBoxBackgroundRun.state = NSOnState
@@ -153,10 +181,16 @@ class PreferencesViewController: NSViewController {
                 sliderAutoScrollPercent.isEnabled = false
             }
         }
-        if let bottomBufferPercent = CFPreferencesCopyAppValue(NSString(string: "autoScrollPositionPercent"), kCFPreferencesCurrentApplication) as? String {
-            if let percent = Int(bottomBufferPercent) {
+        if let autoScrollPercent = CFPreferencesCopyAppValue(NSString(string: "autoScrollPositionPercent"), kCFPreferencesCurrentApplication) as? String {
+            if let percent = Int(autoScrollPercent) {
                 sliderAutoScrollPercent.doubleValue = Double(percent)
                 labelAutoScrollPercent.stringValue = "\(percent)%"
+            }
+        }
+        if let bottomBufferPercent = CFPreferencesCopyAppValue(NSString(string: "bottomBufferSpace"), kCFPreferencesCurrentApplication) as? String {
+            if let percent = Int(bottomBufferPercent) {
+                sliderBottomBufferSpace.doubleValue = Double(percent)
+                labelBottomBufferSpace.stringValue = "\(Int(clipView.enclosingScrollView!.frame.height * CGFloat(percent) / 100))px"
             }
         }
         if let futureAlertTime = CFPreferencesCopyAppValue(NSString(string: "futureAlertTimeMinutes"), kCFPreferencesCurrentApplication) as? String {

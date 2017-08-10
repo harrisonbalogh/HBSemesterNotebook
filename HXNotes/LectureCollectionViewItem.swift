@@ -20,6 +20,8 @@ class LectureCollectionViewItem: NSCollectionViewItem {
     @IBOutlet weak var dropdownTopConstraint: NSLayoutConstraint!
     
     var textView_lecture: HXTextView!
+    var lastHeightCheck: CGFloat = 0
+    var lastSelectionHeightCheck: CGFloat = 0
     
     var image_corner1: NSImageView!
     var image_corner2: NSImageView!
@@ -28,8 +30,6 @@ class LectureCollectionViewItem: NSCollectionViewItem {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-//        print("VIEW DID LOAD")
         
         findViewController = HXFindViewController(nibName: "HXFindView", bundle: nil)
         self.addChildViewController(findViewController)
@@ -42,11 +42,12 @@ class LectureCollectionViewItem: NSCollectionViewItem {
         
         // Setup textview that isn't embedded in a ScrollView
         textView_lecture = HXTextView()
+        textView_lecture.allowsUndo = true
         textView_lecture.translatesAutoresizingMaskIntoConstraints = false
         textView_lecture.drawsBackground = false
         textView_lecture.importsGraphics = true
         
-        NotificationCenter.default.addObserver(self, selector: #selector(LectureCollectionViewItem.notifyTextViewChange),
+        NotificationCenter.default.addObserver(self, selector: #selector(LectureCollectionViewItem.notifyTextChange),
                                                name: .NSTextDidChange, object: textView_lecture)
         
         self.view.addSubview(textView_lecture)
@@ -93,64 +94,44 @@ class LectureCollectionViewItem: NSCollectionViewItem {
         image_corner2.alphaValue = 0
         image_corner3.alphaValue = 0
         image_corner4.alphaValue = 0
-    }
-    
-    override func viewWillDisappear() {
-        super.viewWillDisappear()
-    }
-    
-    override func viewDidAppear() {
-        super.viewDidAppear()
         
-        owner.notifyHeightUpdate()
     }
     
     override func viewDidLayout() {
         super.viewDidLayout()
         
-//        // Update height of view - Distinguish this from textHeight() method
-//        // Important to calculate height when text container is given a very large height to work with (99999)
-//        // when laying out. textHeight() should be faster (untested) as it creates far fewer temp objects
-//        let txtStorage = NSTextStorage(attributedString: textView_lecture.attributedString())
-//        let txtContainer = NSTextContainer(containerSize: NSSize(width: textView_lecture.frame.width, height: 99999))
-//        let layoutManager = NSLayoutManager()
-//        layoutManager.addTextContainer(txtContainer)
-//        txtStorage.addLayoutManager(layoutManager)
-//        txtStorage.addAttributes([NSFontAttributeName: textView_lecture.font!], range: NSRange(location: 0, length: txtStorage.length))
-//        txtContainer.lineFragmentPadding = 0
-//        layoutManager.glyphRange(for: txtContainer)
-//        // 3 is arbitrary bottom buffer space added
-//        let textHeight = layoutManager.usedRect(for: txtContainer).size.height + 3
-//        
-//        textHeightConstraint.constant = textHeight
+        // Layout CVI if height changed.
+        let heightCheck = collectionHeight()
+        if lastHeightCheck != heightCheck {
+            lastHeightCheck = heightCheck
+            owner.collectionView.collectionViewLayout?.invalidateLayout()
+        }
     }
     
     // MARK: - ––– Auto Scroll and Resizing Helper Functions –––
     
-    /// Return the height to the selected character in the textView
+    /// Return the height to the selected character in the textView. Does not ensure layout
+    /// before calculating, so should only be called after a collectionHeight()
     internal func textSelectionHeight() -> CGFloat {
-        //        if !self.isStyling {
-        //            // If user is not actively editing this lecture's textView, then the request to get selection
-        //            // height came from a clipView resize, not from the user changing the textView text.
-        //            return 0
-        //        }
+        
         let positionOfSelection = textView_lecture.selectedRanges.first!.rangeValue.location
         let rangeToSelection = NSRange(location: 0, length: positionOfSelection)
         let substring = textView_lecture.attributedString().attributedSubstring(from: rangeToSelection)
         let txtStorage = NSTextStorage(attributedString: substring)
-        let txtContainer = NSTextContainer(containerSize: NSSize(width: textView_lecture.frame.width, height: 10000))
+        let txtContainer = NSTextContainer(containerSize: NSSize(width: textView_lecture.frame.width, height: 100000))
         let layoutManager = NSLayoutManager()
         layoutManager.addTextContainer(txtContainer)
         txtStorage.addLayoutManager(layoutManager)
         txtStorage.addAttributes([NSFontAttributeName: textView_lecture.font!], range: NSRange(location: 0, length: txtStorage.length))
         txtContainer.lineFragmentPadding = 0
         layoutManager.glyphRange(for: txtContainer)
-        return view.frame.origin.y + textView_lecture.frame.origin.y + layoutManager.usedRect(for: txtContainer).size.height // height from top of lecture view to top of text
+        return layoutManager.usedRect(for: txtContainer).size.height
     }
+    
     /// Return the height of all the text in the textView
-    func textHeight() -> CGFloat {
+    func collectionHeight() -> CGFloat {
+        textView_lecture.layoutManager?.ensureLayout(for: textView_lecture.textContainer!)
         return textView_lecture.layoutManager!.usedRect(for: textView_lecture.textContainer!).size.height + 18
-        // 3 is arbitrary bottom buffer space added
     }
     
     // MARK: - ––– Styling –––
@@ -176,28 +157,29 @@ class LectureCollectionViewItem: NSCollectionViewItem {
     
     /// Any time the textview text changes, this will resize the textView height and the owning EditorVC's
     /// stack height. Will also update the object model with the new attributed string.
-    func notifyTextViewChange() {
+    func notifyTextChange() {
         
-        // Update height of view
-        owner.collectionView.collectionViewLayout?.invalidateLayout()
-        
-//        print("notifyTextViewChange")
-        
-//        let newHeight = textHeight()
-//        if newHeight != textHeightConstraint.constant {
-//            textHeightConstraint.constant = newHeight
-//            owner.notifyHeightUpdate()
-//        }
+        // Layout CVI if height changed.
+        let heightCheck = collectionHeight()
+        if lastHeightCheck != heightCheck {
+            lastHeightCheck = heightCheck
+            owner.collectionView.collectionViewLayout?.invalidateLayout()
+        }
         
         // Save to Model
         lecture.content = textView_lecture.attributedString()
-        owner.checkScrollLevel(from: self)
-        // Update styling buttons
-//        header.selectionChange()
+        
+        // Check where user is typing to see if it needs to auto scroll
+        let scrollCheck = textSelectionHeight()
+        if lastSelectionHeightCheck != scrollCheck {
+            lastSelectionHeightCheck = scrollCheck
+            owner.checkScrollLevel(from: self)
+        }
     }
     
-    /// Displays styling button visuals when this function receives focus as true.
+    /// Displays visuals when this function receives focus as true.
     func notifyTextViewFocus(_ focus: Bool) {
+        header.notifyTextViewFocus(focus)
         if focus {
             owner.lectureFocused = self
             
@@ -209,7 +191,7 @@ class LectureCollectionViewItem: NSCollectionViewItem {
             image_corner3.animator().alphaValue = 1
             image_corner4.animator().alphaValue = 1
             NSAnimationContext.endGrouping()
-            
+        
         } else {
             
             // Animate hiding corner images
@@ -224,6 +206,7 @@ class LectureCollectionViewItem: NSCollectionViewItem {
             if owner.lectureFocused == self {
                 owner.lectureFocused = nil
             }
+
         }
     }
     

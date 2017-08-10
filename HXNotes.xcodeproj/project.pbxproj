@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		C0009E2B1EC43BE200C80642 /* HXLectureView.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0009E2A1EC43BE200C80642 /* HXLectureView.xib */; };
 		C00367081EA5851500C4DE0C /* HXCourseEditBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00367071EA5851500C4DE0C /* HXCourseEditBox.swift */; };
+		C00382A61F3BA7F700CCFF11 /* MenuBarLectureItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = C00382A51F3BA7F700CCFF11 /* MenuBarLectureItem.xib */; };
+		C00382A81F3BA8E800CCFF11 /* MenuBarLectureItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00382A71F3BA8E800CCFF11 /* MenuBarLectureItem.swift */; };
 		C00719D01EF5FA9100161A7D /* Course+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00719CE1EF5FA9100161A7D /* Course+CoreDataClass.swift */; };
 		C00719D41EF5FC9900161A7D /* Semester+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00719D21EF5FC9900161A7D /* Semester+CoreDataClass.swift */; };
 		C00719D71EF5FE0900161A7D /* HXTimeFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00719D61EF5FE0900161A7D /* HXTimeFormatter.swift */; };
@@ -44,7 +46,7 @@
 		C069202D1F33046600D04234 /* PreferencesView.xib in Resources */ = {isa = PBXBuildFile; fileRef = C069202B1F33046600D04234 /* PreferencesView.xib */; };
 		C06920301F330F2200D04234 /* PreferencesNavViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C069202E1F330F2200D04234 /* PreferencesNavViewController.swift */; };
 		C06920311F330F2200D04234 /* PreferencesNavView.xib in Resources */ = {isa = PBXBuildFile; fileRef = C069202F1F330F2200D04234 /* PreferencesNavView.xib */; };
-		C081A6AA1F19940000C8E1FB /* MenuBarPopover.swift in Sources */ = {isa = PBXBuildFile; fileRef = C081A6A81F19940000C8E1FB /* MenuBarPopover.swift */; };
+		C081A6AA1F19940000C8E1FB /* MenuBarPopoverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C081A6A81F19940000C8E1FB /* MenuBarPopoverViewController.swift */; };
 		C081A6AB1F19940000C8E1FB /* MenuBarPopover.xib in Resources */ = {isa = PBXBuildFile; fileRef = C081A6A91F19940000C8E1FB /* MenuBarPopover.xib */; };
 		C081A6AD1F19991400C8E1FB /* EventMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C081A6AC1F19991400C8E1FB /* EventMonitor.swift */; };
 		C0824D651EEE28C4007DC002 /* HXFindReplaceView.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0824D641EEE28C4007DC002 /* HXFindReplaceView.xib */; };
@@ -113,6 +115,8 @@
 /* Begin PBXFileReference section */
 		C0009E2A1EC43BE200C80642 /* HXLectureView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXLectureView.xib; sourceTree = "<group>"; };
 		C00367071EA5851500C4DE0C /* HXCourseEditBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXCourseEditBox.swift; sourceTree = "<group>"; };
+		C00382A51F3BA7F700CCFF11 /* MenuBarLectureItem.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MenuBarLectureItem.xib; sourceTree = "<group>"; };
+		C00382A71F3BA8E800CCFF11 /* MenuBarLectureItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuBarLectureItem.swift; sourceTree = "<group>"; };
 		C00719CE1EF5FA9100161A7D /* Course+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Course+CoreDataClass.swift"; sourceTree = "<group>"; };
 		C00719D21EF5FC9900161A7D /* Semester+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Semester+CoreDataClass.swift"; sourceTree = "<group>"; };
 		C00719D61EF5FE0900161A7D /* HXTimeFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXTimeFormatter.swift; sourceTree = "<group>"; };
@@ -148,7 +152,7 @@
 		C069202B1F33046600D04234 /* PreferencesView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PreferencesView.xib; sourceTree = "<group>"; };
 		C069202E1F330F2200D04234 /* PreferencesNavViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferencesNavViewController.swift; sourceTree = "<group>"; };
 		C069202F1F330F2200D04234 /* PreferencesNavView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PreferencesNavView.xib; sourceTree = "<group>"; };
-		C081A6A81F19940000C8E1FB /* MenuBarPopover.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuBarPopover.swift; sourceTree = "<group>"; };
+		C081A6A81F19940000C8E1FB /* MenuBarPopoverViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuBarPopoverViewController.swift; sourceTree = "<group>"; };
 		C081A6A91F19940000C8E1FB /* MenuBarPopover.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MenuBarPopover.xib; sourceTree = "<group>"; };
 		C081A6AC1F19991400C8E1FB /* EventMonitor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventMonitor.swift; sourceTree = "<group>"; };
 		C0824D641EEE28C4007DC002 /* HXFindReplaceView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXFindReplaceView.xib; sourceTree = "<group>"; };
@@ -289,9 +293,11 @@
 		C081A6A71F19939A00C8E1FB /* Menu Bar Function */ = {
 			isa = PBXGroup;
 			children = (
-				C081A6A81F19940000C8E1FB /* MenuBarPopover.swift */,
 				C081A6AC1F19991400C8E1FB /* EventMonitor.swift */,
+				C081A6A81F19940000C8E1FB /* MenuBarPopoverViewController.swift */,
 				C081A6A91F19940000C8E1FB /* MenuBarPopover.xib */,
+				C00382A71F3BA8E800CCFF11 /* MenuBarLectureItem.swift */,
+				C00382A51F3BA7F700CCFF11 /* MenuBarLectureItem.xib */,
 			);
 			name = "Menu Bar Function";
 			sourceTree = "<group>";
@@ -579,6 +585,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C00382A61F3BA7F700CCFF11 /* MenuBarLectureItem.xib in Resources */,
 				C06017241F12D638001EDE97 /* HXTimeSlotBox.xib in Resources */,
 				C0B795921EFFA10800A0C527 /* HXAlertDropdown.xib in Resources */,
 				C02DB94F1F019BFF00044001 /* HXAbsentLectureBox.xib in Resources */,
@@ -660,8 +667,9 @@
 				C0D8DB391EF4EFF1009BB53E /* VisualEffectView.swift in Sources */,
 				C0D1A16D1ECAF96D006A17B2 /* HXFlippedClipView.swift in Sources */,
 				C02DB9511F019C5B00044001 /* HXAbsentLectureBox.swift in Sources */,
-				C081A6AA1F19940000C8E1FB /* MenuBarPopover.swift in Sources */,
+				C081A6AA1F19940000C8E1FB /* MenuBarPopoverViewController.swift in Sources */,
 				C02D55B41F135C7500E1AF4F /* TimeSlot+CoreDataClass.swift in Sources */,
+				C00382A81F3BA8E800CCFF11 /* MenuBarLectureItem.swift in Sources */,
 				C081A6AD1F19991400C8E1FB /* EventMonitor.swift in Sources */,
 				C09EBEBD1EAF20B700A6D72C /* MasterViewController.swift in Sources */,
 				C0AAE1361EA2BD12002939B6 /* AppDelegate.swift in Sources */,

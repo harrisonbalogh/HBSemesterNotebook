@@ -108,7 +108,6 @@ import Cocoa
     @IBAction func action_styleUnderline(_ sender: NSButton) {
         
         collectionViewItem.styleUnderline(sender)
-        collectionViewItem.notifyTextViewChange()
     }
     
     @IBAction func action_styleItalicize(_ sender: NSButton) {
@@ -140,7 +139,7 @@ import Cocoa
         button_style_left.state = NSOffState
     }
     func selectionChange() {
-        owner.checkScrollLevelOutside(from: collectionViewItem)
+//        owner.checkScrollLevelOutside(from: collectionViewItem)
         if sharedFontManager.selectedFont == nil || collectionViewItem.textView_lecture.attributedString().length == 0 {
             return
         }

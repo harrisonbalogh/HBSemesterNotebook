@@ -38,7 +38,7 @@ public class Semester: NSManagedObject {
     /// course not found or if more than one course has that name.
     public func retrieveCourse(named: String) -> Course! {
         for case let course as Course in self.courses! {
-            if course.title! == named {
+            if course.title!.lowercased() == named.lowercased() {
                 return course
             }
         }
@@ -155,7 +155,11 @@ public class Semester: NSManagedObject {
     
     // MARK: - Validation
     
-    func validateSchedule() {
+    /// Will set valid or invalid flag on all timeslots for every course in this semester. Will
+    /// return true if there weren't any invalid slots.
+    @discardableResult func validateSchedule() -> Bool {
+        
+        var validSchedule = true
         
         var bufferTime = 5
         if let bufferTimePref = CFPreferencesCopyAppValue(NSString(string: "bufferTimeBetweenCoursesMinutes"), kCFPreferencesCurrentApplication) as? String {
@@ -189,10 +193,18 @@ public class Semester: NSManagedObject {
                             (startB <= startA && startA <= stopB) {
                             // The above checks for any kind of overlap
                             
-                            timeSlot.valid = false
-                            timeSlotValid = false
-                            
-                            otherTimeSlot.valid = false
+                            // If this course has already began, and lectures have been added, the user
+                            // is unable to change time slots in the scheduler, so don't invalidate the
+                            // slots.
+                            if timeSlot.course!.lectures!.count == 0 {
+                                timeSlot.valid = false
+                                timeSlotValid = false
+                                validSchedule = false
+                            }
+                            if otherTimeSlot.course!.lectures!.count == 0 {
+                                otherTimeSlot.valid = false
+                                validSchedule = false
+                            }
                             
                             break courseLoop
                         }
@@ -203,6 +215,8 @@ public class Semester: NSManagedObject {
                 }
             }
         }
+        
+        return validSchedule
     }
     
     // MARK: - Course Creation Helper Functions

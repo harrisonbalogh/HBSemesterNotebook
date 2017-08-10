@@ -18,11 +18,12 @@ public class Course: NSManagedObject {
     // MARK: Creating/Retrieving/Producing Objects
     
     /// Returns a newly created TimeSlot object model for this course. Will fail and return nil
-    /// if the requested time overlaps another timeSlot in the semester or is within 5 minutes of
+    /// if the requested time overlaps another timeSlot in the semester or is within 5 minutes (default, pref value) of
     /// another TimeSlot - this will be ignored if the timeSlot has a -1 weekday. This represents that
     /// the course has not been placed on the schedule - the user cannot go into lectures with any
     /// timeSlots having a -1 weekday property field. NOTE: Temporarily disabled checks since new time slots
     /// should be created using nextTimeSlot(), not newTimeSlot() - in which case nextTimeSlot already checked.
+    /// Old description. TimeSlots now have valid flags
     private func createTimeSlot(on weekday: Int16, from startMinuteOfDay: Int16, to stopMinuteOfDay: Int16, valid: Bool) -> TimeSlot? {
         
         let newTimeSlot = NSEntityDescription.insertNewObject(forEntityName: "TimeSlot", into: appDelegate.managedObjectContext) as! TimeSlot
@@ -257,14 +258,18 @@ public class Course: NSManagedObject {
     
     /// Similar to what nextTimeSlot does but instead of finding the next time slot available, it will
     /// return false if it fails at all.
-    private func validateTimeSlot(on weekday: Int16, from startTime: Int16, to stopTime: Int16) -> Bool {
+    private func validateTimeSlot(on weekday: Int16, from startA: Int16, to stopA: Int16) -> Bool {
+        
         for case let course as Course in self.semester!.courses! {
             for case let timeSlot as TimeSlot in course.timeSlots! {
                 if weekday == timeSlot.weekday {
-                    if (timeSlot.startMinuteOfDay <= startTime && startTime < timeSlot.stopMinuteOfDay + 5) ||
-                        (timeSlot.startMinuteOfDay < stopTime + 5 && stopTime + 5 < timeSlot.stopMinuteOfDay) ||
-                        (startTime <= timeSlot.startMinuteOfDay && timeSlot.startMinuteOfDay < stopTime + 5) ||
-                        (startTime < timeSlot.stopMinuteOfDay + 5 && timeSlot.stopMinuteOfDay + 5 < stopTime) {
+                    
+                    let startB = timeSlot.startMinuteOfDay
+                    let stopB = timeSlot.stopMinuteOfDay
+                    
+                    if (startA <= startB && startB < stopA) ||
+                        (startA < stopB && stopB < stopB) ||
+                        (startB <= startA && startA <= stopB) {
                         // Conflicting time
                         return false
                     }
@@ -341,7 +346,7 @@ public class Course: NSManagedObject {
 //        }
     }
     
-    /// Will produce the next available time slot with a default length of 55 minutes. Can still return
+    /// Will produce the next available time slot with a default length (pref changeable) of 55 minutes. Can still return
     /// nil but this would mean every day has a full schedule... Starts at 8:00AM and searches each day
     /// before 10:00PM.
     func nextTimeSlot() -> TimeSlot {
@@ -350,6 +355,13 @@ public class Course: NSManagedObject {
         if let defaultTimeSpan = CFPreferencesCopyAppValue(NSString(string: "defaultCourseTimeSpanMinutes"), kCFPreferencesCurrentApplication) as? String {
             if let time = Int(defaultTimeSpan) {
                 courseLength = time
+            }
+        }
+        
+        var bufferTime = 5
+        if let bufferTimePref = CFPreferencesCopyAppValue(NSString(string: "bufferTimeBetweenCoursesMinutes"), kCFPreferencesCurrentApplication) as? String {
+            if let time = Int(bufferTimePref) {
+                bufferTime = time
             }
         }
         
@@ -368,9 +380,9 @@ public class Course: NSManagedObject {
             // Unless it got through every course and accompanying timeslots that day without conflicts OR if past
             // 10:00PM stop time.
             while stopTime <= 1320 && !timeAvailableOnDay {
-                timeAvailableOnDay = validateTimeSlot(on: weekday, from: startTime, to: stopTime)
+                timeAvailableOnDay = validateTimeSlot(on: weekday, from: startTime - bufferTime, to: stopTime + bufferTime)
                 if !timeAvailableOnDay {
-                    startTime += 60
+                    startTime += courseLength + bufferTime
                     stopTime = startTime + courseLength
                 }
             }

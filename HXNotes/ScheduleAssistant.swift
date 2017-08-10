@@ -11,14 +11,25 @@ import Foundation
 class ScheduleAssistant: NSObject {
     
     weak var masterVC: MasterViewController!
+    let currentSemester: Semester
     
     // MARK: ___ Initialization ___
     init(masterController: MasterViewController) {
+        let calendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
+        // Get calendar date to deduce semester
+        let yearComponent = calendar.component(.year, from: Date())
+        
+        // This should be adjustable in the settings, assumes Jul-Dec is Fall. Jan-Jun is Spring.
+        var semesterTitle = "spring"
+        if calendar.component(.month, from: Date()) >= 7 {
+            semesterTitle = "fall"
+        }
+        self.currentSemester = Semester.produceSemester(titled: semesterTitle, in: yearComponent)
+        
         super.init()
         
         masterVC = masterController
         
-        let calendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
         // Start minute checks
         let minuteComponent = calendar.component(.minute, from: Date())
         self.perform(#selector(self.notifyMinute), with: nil, afterDelay: Double(60 - minuteComponent))

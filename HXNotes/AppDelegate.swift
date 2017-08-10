@@ -18,20 +18,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         setupDefaults()
         
-        // Menu Bar Icon
-        if let button = statusItem.button {
-            button.image = #imageLiteral(resourceName: "menu_icon@")
-            button.target = self
-            button.action = #selector(self.toggleMenuBarPopover(sender:))
-        }
-        menuBarPopover.contentViewController = MenuBarPopover(nibName: "MenuBarPopover", bundle: nil)
-        
-        eventMonitor = EventMonitor(mask: [NSEventMask.leftMouseDown, NSEventMask.rightMouseDown], handler: {event in
-            if self.menuBarPopover.isShown {
-                self.closeMenuBarPopover(sender: event)
+        // Only add the menubar icon if set to true in preferences
+        if let menuBarShown = CFPreferencesCopyAppValue(NSString(string: "showInMenuBar"), kCFPreferencesCurrentApplication) as? String {
+            if menuBarShown == "true" {
+                createMenuBarIcon()
             }
-        })
-        eventMonitor?.start()
+        }
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
@@ -192,7 +184,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             
             CFPreferencesSetAppValue(NSString(string: "autoScroll"),NSString(string: "\(true)"), kCFPreferencesCurrentApplication)
             CFPreferencesSetAppValue(NSString(string: "autoScrollPositionPercent"),NSString(string: "50"), kCFPreferencesCurrentApplication)
+            CFPreferencesSetAppValue(NSString(string: "bottomBufferSpace"),NSString(string: "30"), kCFPreferencesCurrentApplication)
             CFPreferencesSetAppValue(NSString(string: "launchWithSystem"),NSString(string: "\(false)"), kCFPreferencesCurrentApplication)
+            CFPreferencesSetAppValue(NSString(string: "showInMenuBar"),NSString(string: "\(true)"), kCFPreferencesCurrentApplication)
             CFPreferencesSetAppValue(NSString(string: "runAfterClose"),NSString(string: "\(false)"), kCFPreferencesCurrentApplication)
             CFPreferencesSetAppValue(NSString(string: "futureAlertTimeMinutes"),NSString(string: "5"), kCFPreferencesCurrentApplication)
             // ALWAYS, NO_LECTURES, NO_TIMESLOTS, NEVER
@@ -201,6 +195,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             CFPreferencesSetAppValue(NSString(string: "alertLocation"),NSString(string: "TOPBAR"), kCFPreferencesCurrentApplication)
             CFPreferencesSetAppValue(NSString(string: "defaultCourseTimeSpanMinutes"),NSString(string: "55"), kCFPreferencesCurrentApplication)
             CFPreferencesSetAppValue(NSString(string: "bufferTimeBetweenCoursesMinutes"),NSString(string: "5"), kCFPreferencesCurrentApplication)
+            // SEMESTER_TITLE : SEMESTER_YEAR : COURSE_TITLE or nil if a semester wasn't open on quit
+            CFPreferencesSetAppValue(NSString(string: "previouslyOpenedCourse"),NSString(string: "nil"), kCFPreferencesCurrentApplication)
             
             CFPreferencesAppSynchronize(kCFPreferencesCurrentApplication)
         }
@@ -231,12 +227,41 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     // MARK: - Menu Bar Functionality
     
-    let statusItem = NSStatusBar.system().statusItem(withLength: NSSquareStatusItemLength)
+    var statusItem: NSStatusItem!
     let menuBarPopover = NSPopover()
     var eventMonitor: EventMonitor?
     
+    func createMenuBarIcon() {
+        if statusItem == nil {
+            statusItem = NSStatusBar.system().statusItem(withLength: NSSquareStatusItemLength)
+            // Menu Bar Icon
+            if let button = statusItem.button {
+                button.image = #imageLiteral(resourceName: "menu_icon@")
+                button.target = self
+                button.action = #selector(self.toggleMenuBarPopover(sender:))
+            }
+            menuBarPopover.contentViewController = MenuBarPopoverViewController(nibName: "MenuBarPopover", bundle: nil)
+            
+            eventMonitor = EventMonitor(mask: [NSEventMask.leftMouseDown, NSEventMask.rightMouseDown], handler: {event in
+                if self.menuBarPopover.isShown {
+                    self.closeMenuBarPopover(sender: event)
+                }
+            })
+            eventMonitor?.start()
+        }
+    }
+    func removeMenuBarIcon() {
+        if statusItem != nil {
+            NSStatusBar.system().removeStatusItem(statusItem)
+            statusItem = nil
+            eventMonitor?.stop()
+            eventMonitor = nil
+        }
+    }
+    
     func showMenuBarPopover(sender: AnyObject?) {
         if let button = statusItem.button {
+            
             menuBarPopover.show(relativeTo: button.bounds, of: button, preferredEdge: NSRectEdge.minY)
         }
     }
