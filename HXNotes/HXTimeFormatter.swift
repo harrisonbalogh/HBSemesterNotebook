@@ -30,7 +30,7 @@ class HXTimeFormatter {
         return hourStop + ":" + minuteStop
     }
     /// Change 13 to 1 but keep 12 as 12.
-    public static  func formatTime(_ time: Int) -> Int {
+    public static  func formatHour(_ time: Int) -> Int {
         let t_24 = Double(time)
         let t_12 = t_24 - (ceil(Double(t_24/12)) - 1) * 12
         return Int(t_12)

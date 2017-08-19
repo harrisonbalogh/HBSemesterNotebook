@@ -23,8 +23,10 @@ class HXScheduleBox: NSBox {
             let x = CGFloat(timeSlot.weekday - 1) * w
             // Deducting 480 (8 hours) removes the hours of 12A-8A from being drawn, and deducting 120 (2 hours)
             // removes the hours of 10P-12A.
-            let y = self.bounds.height - self.bounds.height * CGFloat(timeSlot.startMinuteOfDay-480)/(1439-480-120)
-            let h = self.bounds.height * CGFloat(timeSlot.stopMinuteOfDay - timeSlot.startMinuteOfDay)/(1439-480-120)
+            let startMinute = Int(timeSlot.startMinute)
+            let stopMinute = Int(timeSlot.stopMinute)
+            let y = self.bounds.height - self.bounds.height * CGFloat(startMinute-480)/(1439-480-120)
+            let h = self.bounds.height * CGFloat(stopMinute - startMinute)/(1439-480-120)
             
             var textColor = NSColor.black
             var alphaValue: CGFloat = 1
@@ -35,12 +37,12 @@ class HXScheduleBox: NSBox {
             
             let bezPath = NSBezierPath(rect: NSRect(x: x, y: y, width: w, height: -h))
             
-            NSColor(calibratedRed: CGFloat(timeSlot.course!.colorRed), green: CGFloat(timeSlot.course!.colorGreen), blue: CGFloat(timeSlot.course!.colorBlue), alpha: alphaValue).setFill()
+            NSColor(calibratedRed: CGFloat(timeSlot.course!.color!.red), green: CGFloat(timeSlot.course!.color!.green), blue: CGFloat(timeSlot.course!.color!.blue), alpha: alphaValue).setFill()
             bezPath.fill()
             
-            let startString = NSAttributedString(string: HXTimeFormatter.formatTime(timeSlot.startMinuteOfDay), attributes: [NSForegroundColorAttributeName: textColor])
+            let startString = NSAttributedString(string: HXTimeFormatter.formatTime(Int16(startMinute)), attributes: [NSForegroundColorAttributeName: textColor])
             
-            let stopString = NSAttributedString(string: HXTimeFormatter.formatTime(timeSlot.stopMinuteOfDay), attributes: [NSForegroundColorAttributeName: textColor])
+            let stopString = NSAttributedString(string: HXTimeFormatter.formatTime(Int16(stopMinute)), attributes: [NSForegroundColorAttributeName: textColor])
             
             let titleString = NSAttributedString(string: timeSlot.course!.title!, attributes: [NSForegroundColorAttributeName: NSColor.darkGray])
             

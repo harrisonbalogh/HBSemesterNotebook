@@ -51,85 +51,89 @@ class ScheduleAssistant: NSObject {
             semesterTitle = "fall"
         }
         
-        // See if the current semester exists in the persistant store
-        if let currentSemester = Semester.retrieveSemester(titled: semesterTitle, in: yearComponent) {
-            if let futureCourse = currentSemester.futureCourse() {
-                
-                let hour = NSCalendar.current.component(.hour, from: Date())
-                let minute = NSCalendar.current.component(.minute, from: Date())
-                
-                if minute % 5 == 0 {
-                    
-                    let _ = Alert(hour: hour, minute: minute, course: futureCourse.title!, content: "is starting in \(60 - minute) minutes.", question: nil, deny: "Close", action: nil, target: nil, type: .future)
-                } else {
-                    print("   nope.")
-                }
-            }
+        // Continue only if we can get the current semester and if a course will happen in future
+        guard
+            let currentSemester = Semester.retrieveSemester(titled: semesterTitle, in: yearComponent),
+            let futureTimeSlot = currentSemester.futureTimeSlot()
+            else { return }
+        print("Gotteee")
+        let hour = NSCalendar.current.component(.hour, from: Date())
+        let minute = NSCalendar.current.component(.minute, from: Date())
+        
+        if minute % 5 == 0 {
+            
+            let timeTill = Int(futureTimeSlot.startMinute % 60) - minute
+            
+            let _ = Alert(hour: hour, minute: minute, course: futureTimeSlot.course!, content: "is starting in \(timeTill) minutes.", question: nil, deny: "Close", action: nil, target: nil, type: .future)
         }
     }
     
     /// Check if a course is currently happening. This is used to display a "Start Lecture" alert.
     func checkHappening() {
         
-        let calendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
+        let cal = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
         // Get calendar date to deduce semester
-        let yearComponent = calendar.component(.year, from: Date())
+        let yearComponent = cal.component(.year, from: Date())
         
         // This should be adjustable in the settings, assumes Jul-Dec is Fall. Jan-Jun is Spring.
         var semesterTitle = "spring"
-        if calendar.component(.month, from: Date()) >= 7 {
+        if cal.component(.month, from: Date()) >= 7 {
             semesterTitle = "fall"
         }
         
-        // See if the current semester exists in the persistant store
-        if let currentSemester = Semester.retrieveSemester(titled: semesterTitle, in: yearComponent) {
-            if let timeSlotHappening = currentSemester.duringCourse() {
+        // Proceed only if found semester and a course lecture is underway
+        guard
+            let currentSemester = Semester.retrieveSemester(titled: semesterTitle, in: yearComponent),
+            let timeSlotHappening = currentSemester.duringCourse()
+            else { return }
+        
+        if timeSlotHappening.course!.lectures!.count == 0 {
+            // This is the first lecture
+
+            let timeHour = Int(timeSlotHappening.startMinute / 60)
+            let timeMinute = Int(timeSlotHappening.startMinute % 60)
+            let timeStart = timeHour * 60 + timeMinute
+            let minuteOfDay = cal.component(.hour, from: Date()) * 60 + cal.component(.minute, from: Date())
+            
+            // Adjust alert phrasing for various time scenarios
+            var appendTimeUntilLecture = ""
+            if minuteOfDay < timeStart - 1 {
+                appendTimeUntilLecture = "is starting in \(timeStart - minuteOfDay) minutes."
+            } else if minuteOfDay < timeStart {
+                appendTimeUntilLecture = "is starting in \(timeStart - minuteOfDay) minute."
+            } else if minuteOfDay == timeStart || minuteOfDay == timeStart + 1 {
+                appendTimeUntilLecture = "is starting now."
+            } else {
+                appendTimeUntilLecture = "started \(minuteOfDay - timeStart) minutes ago."
+            }
+            
+            let _ = Alert(hour: timeHour, minute: timeMinute, course: timeSlotHappening.course!, content: appendTimeUntilLecture + " Create first lecture?", question: "Yes (Start Course)", deny: "No (Not Yet)", action: #selector(masterVC.sidebarViewController.addLecture), target: masterVC.sidebarViewController, type: .happening)
+        
+        } else {
+            // This is not the first lecture
+            let theoLecCount = timeSlotHappening.course!.theoreticalLectureCount()
+            
+            if theoLecCount != timeSlotHappening.course!.lectures!.count {
+                let date = Date()
+                let minuteOfDay = cal.component(.hour, from: date) * 60 + cal.component(.minute, from: date)
+                let timeHour = Int(timeSlotHappening.startMinute / 60)
+                let timeMinute = Int(timeSlotHappening.startMinute % 60)
+                let timeStart = timeHour * 60 + timeMinute
                 
-                let hour = NSCalendar.current.component(.hour, from: Date())
-                let minute = NSCalendar.current.component(.minute, from: Date())
-                let minuteOfDay = hour * 60 + minute
-                
-                let weekDay = NSCalendar.current.component(.weekday, from: Date())
-                let weekOfYear = NSCalendar.current.component(.weekOfYear, from: Date())
-                
-                // Check if this is the first lecture
-                if timeSlotHappening.course!.theoreticalLectureCount() == 0 && timeSlotHappening.course!.lectures!.count == 0 {
-                    
-                    // Alert english details for specific time of lecture
-                    var appendTimeUntilLecture = ""
-                    if minuteOfDay < timeSlotHappening.startMinuteOfDay - 1 {
-                        appendTimeUntilLecture = "is starting in \(timeSlotHappening.startMinuteOfDay - minuteOfDay) minutes."
-                    } else if Int16(minuteOfDay) < timeSlotHappening.startMinuteOfDay {
-                        appendTimeUntilLecture = "is starting in \(timeSlotHappening.startMinuteOfDay - minuteOfDay) minute."
-                    } else if Int16(minuteOfDay) == timeSlotHappening.startMinuteOfDay || Int16(minuteOfDay) == timeSlotHappening.startMinuteOfDay + 1 {
-                        appendTimeUntilLecture = "is starting now."
-                    } else {
-                        appendTimeUntilLecture = "started \(Int16(minuteOfDay) - timeSlotHappening.startMinuteOfDay) minutes ago."
-                    }
-                    
-                    
-                    let _ = Alert(hour: hour, minute: 0, course: timeSlotHappening.course!.title!, content: appendTimeUntilLecture + " Create first lecture?", question: "Yes (Start Course)", deny: "No (Not Yet)", action: #selector(masterVC.sidebarViewController.addLecture), target: masterVC.sidebarViewController, type: .happening)
+                // Adjust alert phrasing for various time scenarios
+                var appendTimeUntilLecture = ""
+                if minuteOfDay < timeStart - 1 {
+                    appendTimeUntilLecture = "is starting in \(timeStart - minuteOfDay) minutes."
+                } else if minuteOfDay < timeStart {
+                    appendTimeUntilLecture = "is starting in \(timeStart - minuteOfDay) minute."
+                } else if minuteOfDay == timeStart || minuteOfDay == timeStart + 1 {
+                    appendTimeUntilLecture = "is starting now."
                 } else {
-                    
-                    // It's not the first lecture, so check if a lecture was already made for this course.
-                    if timeSlotHappening.course!.retrieveLecture(on: weekDay, in: weekOfYear, at: minuteOfDay) == nil {
-                        
-                        // Alert english details for specific time of lecture
-                        var appendTimeUntilLecture = ""
-                        if minuteOfDay < timeSlotHappening.startMinuteOfDay - 1 {
-                            appendTimeUntilLecture = "is starting in \(timeSlotHappening.startMinuteOfDay - minuteOfDay) minutes."
-                        } else if Int16(minuteOfDay) < timeSlotHappening.startMinuteOfDay {
-                            appendTimeUntilLecture = "is starting in \(timeSlotHappening.startMinuteOfDay - minuteOfDay) minute."
-                        } else if Int16(minuteOfDay) == timeSlotHappening.startMinuteOfDay || Int16(minuteOfDay) == timeSlotHappening.startMinuteOfDay + 1 {
-                            appendTimeUntilLecture = "is starting now."
-                        } else {
-                            appendTimeUntilLecture = "started \(Int16(minuteOfDay) - timeSlotHappening.startMinuteOfDay) minutes ago."
-                        }
-                        
-                        // No lecture exists for this time so give alert
-                        let _ = Alert(hour: hour, minute: 0, course: timeSlotHappening.course!.title!, content: appendTimeUntilLecture + " Create lecture \(timeSlotHappening.course!.theoreticalLectureCount())?", question: "Create Lecture \(timeSlotHappening.course!.theoreticalLectureCount())", deny: "Ignore", action: #selector(masterVC.sidebarViewController.addLecture), target: masterVC.sidebarViewController, type: .happening)
-                    }
+                    appendTimeUntilLecture = "started \(minuteOfDay - timeStart) minutes ago."
                 }
+                
+                // No lecture exists for this time so give alert
+                let _ = Alert(hour: timeHour, minute: timeMinute, course: timeSlotHappening.course!, content: appendTimeUntilLecture + " Create lecture \(theoLecCount)?", question: "Create Lecture \(timeSlotHappening.course!.theoreticalLectureCount())", deny: "Ignore", action: #selector(masterVC.sidebarViewController.addLecture), target: masterVC.sidebarViewController, type: .happening)
             }
         }
     }
@@ -146,15 +150,13 @@ class ScheduleAssistant: NSObject {
     
     /// Do not call this method. A perform() is called and reset on this notifyMinute selector.
     func notifyMinute() {
+        // regress to recalculating the minute
+        let remainingMinute = 60 - Calendar.current.component(.second, from: Date())
+        self.perform(#selector(self.notifyMinute), with: nil, afterDelay: TimeInterval(remainingMinute))
+        // Place below anything to happen on the minute marker...
         
         checkFuture()
         checkHappening()
         checkMissed()
-        
-        // Place code above. The following resets timer. Do not alter.
-        let calendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
-        let dateComponent = calendar.component(.second, from: Date())
-        self.perform(#selector(self.notifyMinute), with: nil, afterDelay: Double(60 - dateComponent))
     }
-    
 }

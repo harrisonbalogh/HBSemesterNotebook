@@ -46,9 +46,7 @@ class SchedulerViewController: NSViewController {
         if editingSemester != nil {
             for case let course as Course in editingSemester.courses! {
                 for case let timeSlot as TimeSlot in course.timeSlots! {
-                    if timeSlot.weekday != -1 {
-                        scheduleBox.addTimeSlotVisual(timeSlot)
-                    }
+                    scheduleBox.addTimeSlotVisual(timeSlot)
                 }
             }
         }

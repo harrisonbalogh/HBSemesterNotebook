@@ -110,7 +110,7 @@ class HXGridBox: NSBox {
     /// Match grid properties with that of provided course object, some
     /// visuals will not display until update:topIndex:botIndex is called
     func update(course: Course) {
-        let theColor = NSColor(red: CGFloat(course.colorRed), green: CGFloat(course.colorGreen), blue: CGFloat(course.colorBlue), alpha: 1)
+        let theColor = NSColor(red: CGFloat(course.color!.red), green: CGFloat(course.color!.green), blue: CGFloat(course.color!.blue), alpha: 1)
         fillColor = theColor
         labelTitle.stringValue = course.title!
         buttonRemove.isHidden = false

@@ -29,7 +29,7 @@ class MenuBarLectureItem: NSView {
     func initialize(with timeSlot: TimeSlot) {
         courseTitleLabel.stringValue = timeSlot.course!.title!
         
-        timeSlotStartLabel.stringValue = "\(HXTimeFormatter.formatTime(timeSlot.startMinuteOfDay))"
+        timeSlotStartLabel.stringValue = "\(HXTimeFormatter.formatTime(timeSlot.startMinute))"
     }
 
     override func draw(_ dirtyRect: NSRect) {

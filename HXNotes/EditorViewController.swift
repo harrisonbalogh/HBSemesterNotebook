@@ -36,15 +36,17 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
             }
             // Setting selectedCourse, immediately updates visuals
             if selectedCourse != nil {
-                
+                collectionView.reloadData()
                 if selectedCourse.lectures!.count != 0 {
-                    collectionView.reloadData()
-                    
                     // Animate showing the lectures
                     NSAnimationContext.beginGrouping()
                     NSAnimationContext.current().duration = 0.25
                     collectionView.animator().alphaValue = 1
                     NSAnimationContext.current().duration = 0.4
+                    NSAnimationContext.current().completionHandler = {
+                        self.labelNoCourse.isHidden = true
+                        self.subLabelNoCourse.isHidden = true
+                    }
                     labelNoCourse.animator().alphaValue = 0
                     subLabelNoCourse.animator().alphaValue = 0
                     NSAnimationContext.endGrouping()
@@ -64,14 +66,16 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
                     dayLoop: for d in 0..<8 {
                         let checkDay = (weekday + d) % 8 + Int(floor(Double((weekday + d) / 8)))
                         for case let timeSlot as TimeSlot in selectedCourse.timeSlots! {
-                            if timeSlot.weekday == weekday && d != 7 {
+                            let timeDay = timeSlot.weekday
+                            let timeStop = timeSlot.stopMinute
+                            if timeDay == weekday && d != 7 {
                                 // If its today, then check the time of day
-                                if timeSlot.stopMinuteOfDay > minuteOfDay {
+                                if timeStop > minuteOfDay {
                                     nextTimeSlot = timeSlot
                                     dayNames[Int(weekday)] = "today"
                                     break dayLoop
                                 }
-                            } else if timeSlot.weekday == checkDay {
+                            } else if timeDay == checkDay {
                                 nextTimeSlot = timeSlot
                                 if d == 7 {
                                     dayNames[Int(weekday)] = "next " + dayNames[Int(weekday)]
@@ -80,12 +84,18 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
                             }
                         }
                     }
-                    
+                    let nextTimeSlotDay = Int(nextTimeSlot.weekday)
+                    let nextTimeSlotStart = Int(nextTimeSlot.startMinute)
+                    labelNoCourse.isHidden = false
+                    subLabelNoCourse.isHidden = false
+                    labelNoCourse.alphaValue = 1
+                    subLabelNoCourse.alphaValue = 1
                     labelNoCourse.stringValue = "No Lectures for " + selectedCourse.title!
-                    subLabelNoCourse.stringValue = "New lectures can only be added during a course's timeslot. Next lecture is \(dayNames[Int(nextTimeSlot.weekday)]) at \(HXTimeFormatter.formatTime(nextTimeSlot.startMinuteOfDay))."
+                    subLabelNoCourse.stringValue = "New lectures can only be added during a course's timeslot. Next lecture is \(dayNames[nextTimeSlotDay]) at \(HXTimeFormatter.formatTime(Int16(nextTimeSlotStart)))."
                 }
-                
             } else {
+                labelNoCourse.isHidden = false
+                subLabelNoCourse.isHidden = false
                 labelNoCourse.stringValue = "No Course Selected"
                 subLabelNoCourse.stringValue = "Courses are selectable to the left."
                 // Animate hiding the lecture
@@ -186,21 +196,6 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
         }
     }
     
-    /// Auto scrolling whenever user changes selection.
-    /// Will only occur when the selection is outside of the visible area (not within the buffer region).
-    internal func checkScrollLevelOutside(from sender: LectureCollectionViewItem) {
-        print("checkScrollLevelOutside")
-//        let scrollY = sender.textSelectionHeight()
-//        if scrollY < collectionClipView.bounds.origin.y + sender.header.frame.height || scrollY > collectionClipView.bounds.origin.y + collectionView.enclosingScrollView!.frame.height {
-//            NSAnimationContext.beginGrouping()
-//            NSAnimationContext.current().duration = 0.25
-//            collectionClipView.animator().setBoundsOrigin(NSPoint(x: 0, y: scrollY - collectionView.enclosingScrollView!.frame.height * CGFloat(autoScrollPosition)/100))
-//            NSAnimationContext.endGrouping()
-//            
-//            collectionView.enclosingScrollView?.flashScrollers()
-//        }
-    }
-    
     override func mouseDown(with event: NSEvent) {
         print("Mouse down.")
     }
@@ -282,8 +277,14 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
         headerViews = [LectureHeaderView]()
         collectionViewItems = [LectureCollectionViewItem]()
         
+        var nonAbsences = 0
         if selectedCourse != nil {
-            return selectedCourse.lectures!.count
+            for case let lecture as Lecture in selectedCourse.lectures! {
+                if !lecture.absent {
+                    nonAbsences += 1
+                }
+            }
+            return nonAbsences
         }
         return 0
     }
@@ -318,7 +319,10 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
         // Initialize the LectureHeaderView
         let lecture = selectedCourse.lectures!.array[Int(indexPath[0].toIntMax())] as! Lecture
         header.label_lectureTitle.stringValue = "Lecture \(lecture.number)"
-        header.label_lectureDate.stringValue = "\(lecture.monthInYear())/\(lecture.dayInMonth())/\(lecture.course!.semester!.year % 100)"
+        let timeMonth = lecture.month
+        let timeDay = lecture.day
+        let timeYear = lecture.course!.semester!.year
+        header.label_lectureDate.stringValue = "\(timeMonth)/\(timeDay)/\(timeYear % 100)"
         if lecture.title != nil {
             header.label_customTitle.stringValue = lecture.title!
             if header.label_customTitle.stringValue == "" {
@@ -335,6 +339,10 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
         header.button_style_left.alphaValue = 0
         header.button_style_center.alphaValue = 0
         header.button_style_right.alphaValue = 0
+        header.button_style_font.alphaValue = 0
+        header.button_style_color.alphaValue = 0
+        header.box_style_color.alphaValue = 0
+        header.label_style_font.alphaValue = 0
         NotificationCenter.default.addObserver(header, selector: #selector(LectureHeaderView.notifyCustomTitleEndEditing),
                                                name: .NSControlTextDidEndEditing, object: header.label_customTitle)
         NotificationCenter.default.addObserver(header, selector: #selector(LectureHeaderView.notifyCustomTitleChange),

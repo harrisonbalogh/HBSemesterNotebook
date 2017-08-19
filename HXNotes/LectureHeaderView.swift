@@ -31,7 +31,6 @@ import Cocoa
         NSColor(calibratedWhite: 1, alpha: 0.9).set()
         NSRectFillUsingOperation(dirtyRect, .sourceOver)
     }
-
     
     // MARK: - ––– Notifiers –––
     
@@ -71,9 +70,13 @@ import Cocoa
             button_style_left.animator().alphaValue = 1
             button_style_center.animator().alphaValue = 1
             button_style_right.animator().alphaValue = 1
+            button_style_font.animator().alphaValue = 1
+            button_style_color.animator().alphaValue = 1
+            label_style_font.animator().alphaValue = 1
+            box_style_color.animator().alphaValue = 1
             NSAnimationContext.endGrouping()
             // Have to shift the customTitle textField to truncate at the closest style button
-            customTitleTrailingConstraint = label_customTitle.trailingAnchor.constraint(equalTo: button_style_underline.leadingAnchor)
+            customTitleTrailingConstraint = label_customTitle.trailingAnchor.constraint(equalTo: button_style_font.leadingAnchor)
         } else {
 
             // Animate hiding the styling buttons
@@ -85,6 +88,10 @@ import Cocoa
             button_style_left.animator().alphaValue = 0
             button_style_center.animator().alphaValue = 0
             button_style_right.animator().alphaValue = 0
+            button_style_font.animator().alphaValue = 0
+            button_style_color.animator().alphaValue = 0
+            label_style_font.animator().alphaValue = 0
+            box_style_color.animator().alphaValue = 0
             NSAnimationContext.endGrouping()
             // Have to shift the customTitle textField to extend to the date label
             customTitleTrailingConstraint = label_customTitle.trailingAnchor.constraint(equalTo: label_lectureDate.leadingAnchor)
@@ -95,6 +102,10 @@ import Cocoa
     
     // MARK: - ––– Styling Functionality –––
 
+    @IBOutlet weak var box_style_color: NSBox!
+    @IBOutlet weak var label_style_font: NSTextField!
+    @IBOutlet weak var button_style_color: NSButton!
+    @IBOutlet weak var button_style_font: NSButton!
     @IBOutlet weak var button_style_underline: NSButton!
     @IBOutlet weak var button_style_italicize: NSButton!
     @IBOutlet weak var button_style_bold: NSButton!
@@ -138,8 +149,17 @@ import Cocoa
         button_style_center.state = NSOffState
         button_style_left.state = NSOffState
     }
+    ///
+    @IBAction func action_styleFont(_ sender: NSButton) {
+        sharedFontManager.orderFrontFontPanel(self)
+    }
+    ///
+    @IBAction func action_styleColor(_ sender: NSButton) {
+        NSApp.orderFrontColorPanel(self)
+    }
+    
+    
     func selectionChange() {
-//        owner.checkScrollLevelOutside(from: collectionViewItem)
         if sharedFontManager.selectedFont == nil || collectionViewItem.textView_lecture.attributedString().length == 0 {
             return
         }
@@ -150,10 +170,22 @@ import Cocoa
             positionOfSelection = collectionViewItem.textView_lecture.attributedString().length - 1
         }
         
-        if collectionViewItem.textView_lecture.attributedString().attribute("NSUnderline", at: positionOfSelection, effectiveRange: nil) != nil {
+        if collectionViewItem.textView_lecture.attributedString().attribute(NSUnderlineStyleAttributeName, at: positionOfSelection, effectiveRange: nil) != nil {
             button_style_underline.state = NSOnState
         } else {
             button_style_underline.state = NSOffState
+        }
+        
+        if let color = collectionViewItem.textView_lecture.attributedString().attribute(NSForegroundColorAttributeName, at: positionOfSelection, effectiveRange: nil) as? NSColor {
+            box_style_color.fillColor = color
+        }
+        
+        if let font = collectionViewItem.textView_lecture.attributedString().attribute(NSFontAttributeName, at: positionOfSelection, effectiveRange: nil) as? NSFont {
+            if let name = font.familyName {
+                label_style_font.stringValue = name
+            } else {
+                label_style_font.stringValue = font.fontName
+            }
         }
         
         if let parStyle = collectionViewItem.textView_lecture.attributedString().attribute("NSParagraphStyle", at: positionOfSelection, effectiveRange: nil) as? NSParagraphStyle {

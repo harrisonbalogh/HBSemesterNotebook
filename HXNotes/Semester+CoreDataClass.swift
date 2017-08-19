@@ -14,28 +14,43 @@ import Cocoa
 @objc(Semester)
 public class Semester: NSManagedObject {
     
+    var cachedDuring: TimeSlot! = nil
+    var cachedFuture: TimeSlot! = nil
+    
+    /// Set to false whenever a TimeSlot is added, removed, or updated under
+    /// the root Semester object. This ensures that validation will not be
+    /// calculated on a Semester that has been previously validated without
+    /// changes to its Courses' TimeSlots.
+    var needsValidate = true
+    
     // Note: about the object model and function names.
     // create'Object' returns a new object.
     // retrieve'Object' returns an object that already exists or nil if it doesn't.
     // produce'Object' returns an object that already exists or a new object if it doesn't.
     
-    // MARK: Creating/Retrieving/Producing Objects
+    // MARK: - Creating/Retrieving/Producing Objects
     
     /// Creates and returns a new persistent Course object. Can never have the same title as another
     /// course.
     public func createCourse() -> Course {
+        
         let newCourse = NSEntityDescription.insertNewObject(forEntityName: "Course", into: managedObjectContext!) as! Course
-        let assignedColor = nextColorAvailable().usingColorSpace(.sRGB)!
-        newCourse.colorRed = Float(assignedColor.redComponent)
-        newCourse.colorGreen = Float(assignedColor.greenComponent)
-        newCourse.colorBlue = Float(assignedColor.blueComponent)
+        
+        let color = NSEntityDescription.insertNewObject(forEntityName: "Color", into: managedObjectContext!) as! Color
+        let nextColor = nextColorAvailable().usingColorSpace(.sRGB)!
+        color.red = Float(nextColor.redComponent)
+        color.green = Float(nextColor.greenComponent)
+        color.blue = Float(nextColor.blueComponent)
+        newCourse.color = color
+        
         newCourse.title = "Untitled \(nextNumberAvailable())"
         newCourse.semester = self
+        
         return newCourse
     }
     
-    /// Retrieves the course with unique name for this semester. Can return nil if
-    /// course not found or if more than one course has that name.
+    /// Retrieves the course with unique name for this semester. Return nil if
+    /// course not found.
     public func retrieveCourse(named: String) -> Course! {
         for case let course as Course in self.courses! {
             if course.title!.lowercased() == named.lowercased() {
@@ -45,7 +60,7 @@ public class Semester: NSManagedObject {
         return nil
     }
     
-    /// Return the semester present at the given year and semester. Will return nil if none exists/
+    /// Return the semester present at the given year and semester. Returns nil if none exists.
     static func retrieveSemester(titled title: String, in year: Int) -> Semester? {
         // Fetch semesters in persistent store. Return if found else return nil.
         let semesterFetch = NSFetchRequest<Semester>(entityName: "Semester")
@@ -86,27 +101,9 @@ public class Semester: NSManagedObject {
     /// Returns a single timeSlot that is currently happening or will start in 5 minutes.
     /// Returns nil if no course is happening at the moment.
     public func duringCourse() -> TimeSlot? {
-        let hour = NSCalendar.current.component(.hour, from: Date())
-        let minute = NSCalendar.current.component(.minute, from: Date())
-        
-        let weekday = NSCalendar.current.component(.weekday, from: Date())
-        let minuteOfDay = hour * 60 + minute
-        
-        courseLoop: for case let course as Course in self.courses! {
-            for case let time as TimeSlot in course.timeSlots! {
-                
-                // If any of the time slots are invalid, don't check them for alerts
-                if !time.valid {
-                    return nil
-                }
-                
-                if Int16(weekday) == time.weekday && Int16(minuteOfDay) > time.startMinuteOfDay - 5 && Int16(minuteOfDay) < time.stopMinuteOfDay {
-                    // during class period
-                    return time
-                }
-                
-                // MODIFY HERE TO STOP ITERATING THROUGH TIME SLOTS AFTER WEEKDAY HAS PASSED SINCE SLOTS ARE IN ORDER
-                
+        for case let course as Course in self.courses! {
+            if let during = course.duringTimeSlot() {
+                return during
             }
         }
         // no class
@@ -114,109 +111,76 @@ public class Semester: NSManagedObject {
     }
     
     /// Returns the earliest course to occur within the next 60 (default, user adjustable CFPreferences) minutes.
-    public func futureCourse() -> Course? {
-        
+    /// Returns nil if no courses are happening for the receiving semester within the futureAlertTimeMinutes time span.
+    public func futureTimeSlot() -> TimeSlot? {
+        // Setup preference value
         var alertTimespan = 60
-        if let alertTimePref = CFPreferencesCopyAppValue(NSString(string: "bufferTimeBetweenCoursesMinutes"), kCFPreferencesCurrentApplication) as? String {
+        if let alertTimePref = CFPreferencesCopyAppValue(NSString(string: "futureAlertTimeMinutes"), kCFPreferencesCurrentApplication) as? String {
             if let time = Int(alertTimePref) {
                 alertTimespan = time
             }
         }
-        
-        var soonestTimeSlot: TimeSlot!
-        
-        let hour = NSCalendar.current.component(.hour, from: Date())
-        let minute = NSCalendar.current.component(.minute, from: Date())
-        
-        let weekday = NSCalendar.current.component(.weekday, from: Date())
-        let minuteOfDay = hour * 60 + minute
-        
+        // Date Today
+        let cal = Calendar.current
+        let date = Date()
+        let weekday = Int16(cal.component(.weekday, from: date))
+        let minuteOfDay = Int16(cal.component(.hour, from: date) * 60 + cal.component(.minute, from: date))
+        // Find soonest time slot
+        var soonest: TimeSlot! = nil
         for case let course as Course in self.courses! {
+            if self.needsValidate {
+                self.validateSchedule()
+            }
+            // Only check valid courses
+            if !self.valid {
+                continue
+            }
+            // This func assumes course timeslots are sorted.
+            if course.needsSort {
+                course.sortTimeSlots()
+            }
             for case let time as TimeSlot in course.timeSlots! {
                 
-                // If any of the time slots are invalid, don't check them for alerts
-                if !time.valid {
-                    return nil
-                }
-                
-                if Int16(weekday) == time.weekday && Int16(minuteOfDay) < time.startMinuteOfDay && Int16(minuteOfDay) > time.startMinuteOfDay - alertTimespan {
-                    // Course approaching within timespan.
-                    if soonestTimeSlot == nil || time.startMinuteOfDay < soonestTimeSlot.startMinuteOfDay {
-                        soonestTimeSlot = time
+                if weekday == time.weekday && minuteOfDay >= time.startMinute - alertTimespan && minuteOfDay < time.startMinute {
+                    // Course approaching within timespan. Check if its earlier than previous find
+                    if soonest == nil || time.startMinute < soonest.startMinute {
+                        soonest = time
                     }
+                } else {
+                    print("Engh. Not in the correct time.")
                 }
             }
         }
-        if soonestTimeSlot == nil {
-            return nil
-        }
-        return soonestTimeSlot.course
+        return soonest
     }
     
     // MARK: - Validation
     
-    /// Will set valid or invalid flag on all timeslots for every course in this semester. Will
-    /// return true if there weren't any invalid slots.
+    /// Does a validation check on every TimeSlot for all Course objects in the receiving Semester.
+    /// If any invalid TimeSlots are found, this function will return false and update the valid flag
+    /// to false on all offending TimeSlots, Course, and Semester - or update valid flags to true.
     @discardableResult func validateSchedule() -> Bool {
         
-        var validSchedule = true
+        var timeQueue = [TimeSlot]()
         
-        var bufferTime = 5
-        if let bufferTimePref = CFPreferencesCopyAppValue(NSString(string: "bufferTimeBetweenCoursesMinutes"), kCFPreferencesCurrentApplication) as? String {
-            if let time = Int(bufferTimePref) {
-                bufferTime = time
-            }
-        }
-        
-        // Check each course's timeSlots against every other timeSlot
+        self.valid = true
         for case let course as Course in self.courses! {
-            for case let timeSlot as TimeSlot in course.timeSlots! {
-                
-                var timeSlotValid = true
-                
-                courseLoop: for case let otherCourse as Course in self.courses! {
-                    for case let otherTimeSlot as TimeSlot in otherCourse.timeSlots! {
-                        
-                        let startA = otherTimeSlot.startMinuteOfDay
-                        let stopA = otherTimeSlot.stopMinuteOfDay
-                        let startB = timeSlot.startMinuteOfDay
-                        let stopB = timeSlot.stopMinuteOfDay
-                        
-                        if otherTimeSlot.weekday != timeSlot.weekday || otherTimeSlot == timeSlot {
-                            continue
-                        } else if otherTimeSlot.weekday > timeSlot.weekday {
-                            // Since timeSlots are always sorted in chronological order, we can stop
-                            // iterating once the day is passed the checked time slot day
-                            break courseLoop
-                        } else if (startA <= startB - bufferTime && startB - bufferTime < stopA) ||
-                            (startA < stopB + bufferTime && stopB + bufferTime < stopB) ||
-                            (startB <= startA && startA <= stopB) {
-                            // The above checks for any kind of overlap
-                            
-                            // If this course has already began, and lectures have been added, the user
-                            // is unable to change time slots in the scheduler, so don't invalidate the
-                            // slots.
-                            if timeSlot.course!.lectures!.count == 0 {
-                                timeSlot.valid = false
-                                timeSlotValid = false
-                                validSchedule = false
-                            }
-                            if otherTimeSlot.course!.lectures!.count == 0 {
-                                otherTimeSlot.valid = false
-                                validSchedule = false
-                            }
-                            
-                            break courseLoop
-                        }
-                    }
-                }
-                if timeSlotValid {
-                    timeSlot.valid = true
-                }
+            course.valid = true
+            for case let time as TimeSlot in course.timeSlots! {
+                time.valid = true
+                timeQueue.append(time)
             }
         }
         
-        return validSchedule
+        for t in 0..<timeQueue.count {
+            for s in (t+1)..<timeQueue.count {
+                timeQueue[t].validate(against: timeQueue[s])
+            }
+        }
+        
+        // All code should check if semester needs validation before calling validateSchedule
+        needsValidate = false
+        return self.valid
     }
     
     // MARK: - Course Creation Helper Functions
@@ -253,9 +217,10 @@ public class Semester: NSManagedObject {
         for color in COLORS_ORDERED {
             var colorAvailable = true
             for case let course as Course in self.courses! {
-                if Int(color.redComponent * 1000) == Int(course.colorRed * 1000) &&
-                    Int(color.greenComponent * 1000) == Int(course.colorGreen * 1000) &&
-                    Int(color.blueComponent * 1000) == Int(course.colorBlue * 1000) {
+                
+                if Int(color.redComponent * 1000) == Int(course.color!.red * 1000) &&
+                    Int(color.greenComponent * 1000) == Int(course.color!.green * 1000) &&
+                    Int(color.blueComponent * 1000) == Int(course.color!.blue * 1000) {
                     colorAvailable = false
                     break
                 }

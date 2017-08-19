@@ -12,18 +12,6 @@ class HXTimeSlotBox: NSView {
     
     let DAY_NAMES = ["", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 
-    /// Return a new instance of a HXLectureLedger based on the nib template.
-    static func instance(with timeSlot: TimeSlot, for editBox: HXCourseEditBox) -> HXTimeSlotBox! {
-        var theObjects: NSArray = []
-        Bundle.main.loadNibNamed("HXTimeSlotBox", owner: nil, topLevelObjects: &theObjects)
-        // Get NSView from top level objects returned from nib load
-        if let newBox = theObjects.filter({$0 is HXTimeSlotBox}).first as? HXTimeSlotBox {
-            newBox.initialize(with: timeSlot, for: editBox)
-            return newBox
-        }
-        return nil
-    }
-
     weak var timeSlot: TimeSlot!
     weak var editBox: HXCourseEditBox!
     
@@ -35,6 +23,20 @@ class HXTimeSlotBox: NSView {
     
     @IBOutlet weak var stepperDayWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var trashButtonWidthConstraint: NSLayoutConstraint!
+    
+    // MARK: - Instance & Initialize
+    
+    /// Return a new instance of a HXLectureLedger based on the nib template.
+    static func instance(with timeSlot: TimeSlot, for editBox: HXCourseEditBox) -> HXTimeSlotBox! {
+        var theObjects: NSArray = []
+        Bundle.main.loadNibNamed("HXTimeSlotBox", owner: nil, topLevelObjects: &theObjects)
+        // Get NSView from top level objects returned from nib load
+        if let newBox = theObjects.filter({$0 is HXTimeSlotBox}).first as? HXTimeSlotBox {
+            newBox.initialize(with: timeSlot, for: editBox)
+            return newBox
+        }
+        return nil
+    }
     
     private func initialize(with timeSlot: TimeSlot, for editBox: HXCourseEditBox) {
         self.timeSlot = timeSlot
@@ -51,90 +53,57 @@ class HXTimeSlotBox: NSView {
             trashButtonWidthConstraint.constant = 0
         }
         
-        let hourStart = Int(timeSlot.startMinuteOfDay / 60)
-        let minuteStart = Int(timeSlot.startMinuteOfDay % 60)
-        let hourStop = Int(timeSlot.stopMinuteOfDay / 60)
-        let minuteStop = Int(timeSlot.stopMinuteOfDay % 60)
+        var dateComp = DateComponents()
+        dateComp.weekday = Int(timeSlot.weekday)
+        dateComp.hour = Int(timeSlot.startMinute / 60)
+        dateComp.minute = Int(timeSlot.startMinute % 60)
+        pickerStart.dateValue = Calendar.current.date(from: dateComp)!
+        dateComp.hour = Int(timeSlot.stopMinute / 60)
+        dateComp.minute = Int(timeSlot.stopMinute % 60)
+        pickerStop.dateValue = Calendar.current.date(from: dateComp)!
         
-        let calendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
-        var components = calendar.components([.hour, .minute], from: Date())
-        
-        components.hour = hourStart
-        components.minute = minuteStart
-        pickerStart.dateValue = calendar.date(from: components)!
-        
-        components.hour = hourStop
-        components.minute = minuteStop
-        pickerStop.dateValue = calendar.date(from: components)!
-        
-        if timeSlot.weekday == -1 {
-            labelWeekday.stringValue = "No Space!"
-            stepperDay.isEnabled = false
-        } else {
-            labelWeekday.stringValue = DAY_NAMES[Int(timeSlot.weekday)]
-            stepperDay.intValue = Int32(timeSlot.weekday)
-        }
+        labelWeekday.stringValue = DAY_NAMES[Int(timeSlot.weekday)]
+        stepperDay.intValue = Int32(timeSlot.weekday)
         
         editBox.notifyTimeSlotChange()
     }
     
+    // MARK: - UI Handlers
     
     @IBAction func action_pickerStart(_ sender: Any) {
-        let minuteComponent = NSCalendar.current.component(.minute, from: pickerStart.dateValue)
-        let hourComponent = NSCalendar.current.component(.hour, from: pickerStart.dateValue)
-        let startTime = Int16(hourComponent * 60 + minuteComponent)
-        var stopTime: Int16!
-        let timeSlotLength = timeSlot.stopMinuteOfDay - timeSlot.startMinuteOfDay
+        let cal = Calendar.current
+        let newStart = cal.component(.hour, from: pickerStart.dateValue) * 60 + cal.component(.minute, from: pickerStart.dateValue)
         
-        // Check if new start time is passed old stop time
-        if startTime > timeSlot.stopMinuteOfDay - 5 {
-            stopTime = startTime + timeSlotLength
-        } else {
-            stopTime = timeSlot.stopMinuteOfDay
+        if Int(newStart) > timeSlot.stopMinute - 5 {
+            // Shift pickerStop if pickerStart is being set to a time later than pickerStop
+            // add timeslot's previous length to pickerStop and timeSlot.stop
+            var dateComp = DateComponents()
+            dateComp.hour = Int((newStart + (timeSlot.stopMinute - timeSlot.startMinute)) / 60)
+            dateComp.minute = Int((newStart + (timeSlot.stopMinute - timeSlot.startMinute)) % 60)
+            pickerStop.dateValue = cal.date(from: dateComp)!
+            timeSlot.stopMinute = Int16(newStart + Int(timeSlot.stopMinute - timeSlot.startMinute))
         }
         
-        timeSlot.stopMinuteOfDay = stopTime
-        timeSlot.startMinuteOfDay = startTime
-        
-        // Update pickerStop
-        let calendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
-        var components = calendar.components([.hour, .minute], from: Date())
-        let hourStop = Int(timeSlot.stopMinuteOfDay / 60)
-        let minuteStop = Int(timeSlot.stopMinuteOfDay % 60)
-        components.hour = hourStop
-        components.minute = minuteStop
-        pickerStop.dateValue = calendar.date(from: components)!
-        
+        timeSlot.startMinute = Int16(newStart)
         editBox.notifyTimeSlotChange()
     }
     
     
     @IBAction func action_pickerStop(_ sender: Any) {
-        let minuteComponent = NSCalendar.current.component(.minute, from: pickerStop.dateValue)
-        let hourComponent = NSCalendar.current.component(.hour, from: pickerStop.dateValue)
-        let stopTime = Int16(hourComponent * 60 + minuteComponent)
-        var startTime: Int16!
-        let timeSlotLength = timeSlot.stopMinuteOfDay - timeSlot.startMinuteOfDay
+        let cal = Calendar.current
+        let newStop = cal.component(.hour, from: pickerStop.dateValue) * 60 + cal.component(.minute, from: pickerStop.dateValue)
         
-        // Check if new stop time is before old start time
-        if timeSlot.startMinuteOfDay > stopTime - 5 {
-            startTime = stopTime - timeSlotLength
-        } else {
-            startTime = timeSlot.startMinuteOfDay
+        if Int16(newStop) < timeSlot.startMinute + 5 {
+            // Shift pickerStart if pickerStop is being set to a time earlier than pickerStart
+            // decrease timeslot's previous length to pickerStart and start
+            var dateComp = DateComponents()
+            dateComp.hour = Int((newStop - (timeSlot.stopMinute - timeSlot.startMinute)) / 60)
+            dateComp.minute = Int((newStop - (timeSlot.stopMinute - timeSlot.startMinute)) % 60)
+            pickerStart.dateValue = cal.date(from: dateComp)!
+            timeSlot.startMinute = Int16(newStop - (timeSlot.stopMinute - timeSlot.startMinute))
         }
         
-        timeSlot.stopMinuteOfDay = stopTime
-        timeSlot.startMinuteOfDay = startTime
-        
-        // Update pickerStart
-        let calendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
-        var components = calendar.components([.hour, .minute], from: Date())
-        let hourStart = Int(timeSlot.startMinuteOfDay / 60)
-        let minuteStart = Int(timeSlot.startMinuteOfDay % 60)
-        components.hour = hourStart
-        components.minute = minuteStart
-        pickerStart.dateValue = calendar.date(from: components)!
-        
+        timeSlot.stopMinute = Int16(newStop)
         editBox.notifyTimeSlotChange()
     }
     
@@ -142,7 +111,6 @@ class HXTimeSlotBox: NSView {
         // Available timeslot
         labelWeekday.stringValue = DAY_NAMES[Int(stepperDay.intValue)]
         timeSlot.weekday = Int16(stepperDay.intValue)
-        
         editBox.notifyTimeSlotChange()
     }
 

@@ -49,9 +49,9 @@ class HXCourseDragBox: NSBox {
     func updateWithCourse(_ course: Course) {
         labelCourse.stringValue = course.title!
         boxDrag.fillColor = NSColor(
-            red: CGFloat(course.colorRed),
-            green: CGFloat(course.colorGreen),
-            blue: CGFloat(course.colorBlue),
+            red: CGFloat(course.color!.red),
+            green: CGFloat(course.color!.green),
+            blue: CGFloat(course.color!.blue),
             alpha: 1)
     }
 }

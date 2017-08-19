@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11762"/>
+        <capability name="box content view" minToolsVersion="7.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -36,6 +37,55 @@
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="juy-8Y-TA4" userLabel="Font Label">
+                    <rect key="frame" x="210" y="7" width="82" height="16"/>
+                    <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Font" id="pgz-t0-X7u">
+                        <font key="font" metaFont="system" size="12"/>
+                        <color key="textColor" red="0.35308140519999998" green="0.34494185449999998" blue="0.3531225026" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <button translatesAutoresizingMaskIntoConstraints="NO" id="85s-J8-vSP" userLabel="Button Font">
+                    <rect key="frame" x="206" y="6" width="90" height="19"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="19" id="0Yh-GA-rs0"/>
+                        <constraint firstAttribute="width" constant="90" id="fKz-Du-8E9"/>
+                    </constraints>
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="icon_text_font" imagePosition="only" alignment="center" alternateImage="icon_text_underline_alt" imageScaling="proportionallyUpOrDown" inset="2" id="Nwg-3z-VDd">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="action_styleFont:" target="-2" id="C5n-Q1-urZ"/>
+                    </connections>
+                </button>
+                <box boxType="custom" cornerRadius="8" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="RfA-Yb-qR4" userLabel="Color Fill">
+                    <rect key="frame" x="301" y="8" width="15" height="15"/>
+                    <view key="contentView" id="t15-cY-nrH">
+                        <rect key="frame" x="1" y="1" width="13" height="13"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    </view>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="15" id="Oqo-iH-4sI"/>
+                        <constraint firstAttribute="width" constant="15" id="pLO-CU-1k5"/>
+                    </constraints>
+                    <color key="borderColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <color key="fillColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                </box>
+                <button translatesAutoresizingMaskIntoConstraints="NO" id="uxJ-px-vFT" userLabel="Button Color">
+                    <rect key="frame" x="299" y="6" width="19" height="19"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="19" id="KvT-68-PMs"/>
+                        <constraint firstAttribute="width" constant="19" id="gYR-oN-FyQ"/>
+                    </constraints>
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="icon_text_empty" imagePosition="overlaps" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="6FS-JF-DHZ">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="action_styleColor:" target="-2" id="Y7w-VT-zJe"/>
+                    </connections>
+                </button>
                 <button translatesAutoresizingMaskIntoConstraints="NO" id="Vxg-NA-8VZ" userLabel="Button Underline">
                     <rect key="frame" x="333" y="6" width="19" height="19"/>
                     <constraints>
@@ -137,18 +187,27 @@
                 <constraint firstItem="Vxg-NA-8VZ" firstAttribute="centerY" secondItem="tdf-0T-lf3" secondAttribute="centerY" id="2aA-AY-0cj"/>
                 <constraint firstItem="8Md-on-UBW" firstAttribute="centerY" secondItem="mMz-pT-UFk" secondAttribute="centerY" constant="-1" id="2nC-zc-idf"/>
                 <constraint firstItem="WcU-I9-xGv" firstAttribute="centerY" secondItem="8Md-on-UBW" secondAttribute="centerY" constant="2" id="5VZ-zr-iWa"/>
+                <constraint firstItem="RfA-Yb-qR4" firstAttribute="centerY" secondItem="uxJ-px-vFT" secondAttribute="centerY" id="B20-Di-Ocr"/>
+                <constraint firstItem="uxJ-px-vFT" firstAttribute="centerY" secondItem="Vxg-NA-8VZ" secondAttribute="centerY" id="BRV-ug-Eqy"/>
                 <constraint firstItem="Vxy-Jl-2uI" firstAttribute="leading" secondItem="WcU-I9-xGv" secondAttribute="trailing" id="E7G-px-DlN"/>
                 <constraint firstItem="tdf-0T-lf3" firstAttribute="leading" secondItem="Vxg-NA-8VZ" secondAttribute="trailing" constant="3" id="Q1m-3s-CUw"/>
+                <constraint firstItem="juy-8Y-TA4" firstAttribute="trailing" secondItem="85s-J8-vSP" secondAttribute="trailing" constant="-6" id="RkO-3M-zFJ"/>
                 <constraint firstItem="6cW-rj-HSR" firstAttribute="leading" secondItem="tdf-0T-lf3" secondAttribute="trailing" constant="3" id="aw3-zq-c1R"/>
                 <constraint firstItem="mMz-pT-UFk" firstAttribute="centerY" secondItem="JT4-FN-tGf" secondAttribute="centerY" id="bq1-x4-NLe"/>
                 <constraint firstItem="6cW-rj-HSR" firstAttribute="centerY" secondItem="Vxy-Jl-2uI" secondAttribute="centerY" id="cUf-0c-Y0w"/>
+                <constraint firstItem="uxJ-px-vFT" firstAttribute="leading" secondItem="85s-J8-vSP" secondAttribute="trailing" constant="3" id="eEm-DC-f1m"/>
                 <constraint firstItem="mMz-pT-UFk" firstAttribute="leading" secondItem="JT4-FN-tGf" secondAttribute="leading" constant="10" id="eKp-Au-MLO"/>
                 <constraint firstItem="vxh-f6-xv1" firstAttribute="leading" secondItem="Erc-k2-LMv" secondAttribute="trailing" constant="3" id="ebo-Vv-5rP"/>
+                <constraint firstItem="85s-J8-vSP" firstAttribute="centerY" secondItem="uxJ-px-vFT" secondAttribute="centerY" id="edv-iD-AFv"/>
+                <constraint firstItem="juy-8Y-TA4" firstAttribute="leading" secondItem="85s-J8-vSP" secondAttribute="leading" constant="6" id="fLL-Ir-89h"/>
                 <constraint firstItem="bxh-0r-g8Z" firstAttribute="leading" secondItem="vxh-f6-xv1" secondAttribute="trailing" constant="3" id="fxG-7v-aIg"/>
                 <constraint firstItem="WcU-I9-xGv" firstAttribute="leading" secondItem="8Md-on-UBW" secondAttribute="trailing" constant="6" id="hf0-Gs-uw4"/>
+                <constraint firstItem="Vxg-NA-8VZ" firstAttribute="leading" secondItem="uxJ-px-vFT" secondAttribute="trailing" constant="15" id="o1X-T4-Js0"/>
+                <constraint firstItem="RfA-Yb-qR4" firstAttribute="centerX" secondItem="uxJ-px-vFT" secondAttribute="centerX" id="pwt-bz-B84"/>
                 <constraint firstAttribute="trailing" secondItem="Vxy-Jl-2uI" secondAttribute="trailing" constant="18" id="qWs-46-gYP"/>
                 <constraint firstItem="tdf-0T-lf3" firstAttribute="centerY" secondItem="6cW-rj-HSR" secondAttribute="centerY" id="qXf-Sv-wKW"/>
                 <constraint firstItem="Vxy-Jl-2uI" firstAttribute="centerY" secondItem="JT4-FN-tGf" secondAttribute="centerY" id="t8J-b2-dfw"/>
+                <constraint firstItem="WcU-I9-xGv" firstAttribute="centerY" secondItem="juy-8Y-TA4" secondAttribute="centerY" constant="1" id="v2B-51-jmQ"/>
                 <constraint firstItem="Erc-k2-LMv" firstAttribute="centerY" secondItem="6cW-rj-HSR" secondAttribute="centerY" id="vKH-Jn-30s"/>
                 <constraint firstItem="Vxy-Jl-2uI" firstAttribute="leading" secondItem="bxh-0r-g8Z" secondAttribute="trailing" constant="10" id="w0i-MX-Wp1"/>
                 <constraint firstItem="Erc-k2-LMv" firstAttribute="leading" secondItem="6cW-rj-HSR" secondAttribute="trailing" constant="15" id="yU0-Mp-Qny"/>
@@ -156,8 +215,11 @@
                 <constraint firstItem="bxh-0r-g8Z" firstAttribute="centerY" secondItem="vxh-f6-xv1" secondAttribute="centerY" id="zjU-mk-aa4"/>
             </constraints>
             <connections>
+                <outlet property="box_style_color" destination="RfA-Yb-qR4" id="EaR-ip-Zwb"/>
                 <outlet property="button_style_bold" destination="6cW-rj-HSR" id="127-LN-mr3"/>
                 <outlet property="button_style_center" destination="vxh-f6-xv1" id="G5E-h1-UOd"/>
+                <outlet property="button_style_color" destination="uxJ-px-vFT" id="KOP-xF-kYP"/>
+                <outlet property="button_style_font" destination="85s-J8-vSP" id="Kfr-hL-Z0s"/>
                 <outlet property="button_style_italicize" destination="tdf-0T-lf3" id="TZk-RO-sc3"/>
                 <outlet property="button_style_left" destination="Erc-k2-LMv" id="MXg-dw-b5e"/>
                 <outlet property="button_style_right" destination="bxh-0r-g8Z" id="NUl-rc-BNc"/>
@@ -166,6 +228,7 @@
                 <outlet property="label_customTitle" destination="WcU-I9-xGv" id="XN5-Tw-thx"/>
                 <outlet property="label_lectureDate" destination="Vxy-Jl-2uI" id="Cfe-ha-Fu7"/>
                 <outlet property="label_lectureTitle" destination="mMz-pT-UFk" id="V4K-uc-nbO"/>
+                <outlet property="label_style_font" destination="juy-8Y-TA4" id="FCQ-0D-Ztk"/>
                 <outlet property="label_titleDivider" destination="8Md-on-UBW" id="7lq-T7-rvk"/>
             </connections>
         </view>
@@ -175,6 +238,8 @@
         <image name="icon_text_bold_alt" width="19" height="19"/>
         <image name="icon_text_center" width="19" height="19"/>
         <image name="icon_text_center_alt" width="19" height="19"/>
+        <image name="icon_text_empty" width="19" height="19"/>
+        <image name="icon_text_font" width="90" height="19"/>
         <image name="icon_text_italic" width="19" height="19"/>
         <image name="icon_text_italic_alt" width="19" height="19"/>
         <image name="icon_text_left" width="19" height="19"/>

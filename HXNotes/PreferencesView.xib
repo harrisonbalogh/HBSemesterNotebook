@@ -983,7 +983,7 @@ Never: Delete confirmation will never be requested.</string>
                         <rect key="frame" x="0.0" y="1174" width="551" height="16"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
-                    <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="0.0068027210884353817" horizontal="NO" id="wfy-a3-T08">
+                    <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="wfy-a3-T08">
                         <rect key="frame" x="535" y="0.0" width="16" height="1190"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>

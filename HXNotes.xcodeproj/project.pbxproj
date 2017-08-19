@@ -22,7 +22,6 @@
 		C025FD9D1EC2A68F0090A287 /* HXWeekBox.xib in Resources */ = {isa = PBXBuildFile; fileRef = C025FD9C1EC2A68F0090A287 /* HXWeekBox.xib */; };
 		C025FDA31EC2E29B0090A287 /* HXLectureBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C025FDA21EC2E29B0090A287 /* HXLectureBox.swift */; };
 		C02A8AC81F38AADC00B7CD5D /* pref.plist in Resources */ = {isa = PBXBuildFile; fileRef = C02A8AC71F38AADC00B7CD5D /* pref.plist */; };
-		C02D55B41F135C7500E1AF4F /* TimeSlot+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = C02D55B21F135C7500E1AF4F /* TimeSlot+CoreDataClass.swift */; };
 		C02DB94F1F019BFF00044001 /* HXAbsentLectureBox.xib in Resources */ = {isa = PBXBuildFile; fileRef = C02DB94E1F019BFF00044001 /* HXAbsentLectureBox.xib */; };
 		C02DB9511F019C5B00044001 /* HXAbsentLectureBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C02DB9501F019C5B00044001 /* HXAbsentLectureBox.swift */; };
 		C03AF8161EB856860028BA68 /* MasterWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C03AF8151EB856860028BA68 /* MasterWindowController.swift */; };
@@ -57,7 +56,7 @@
 		C09B452A1EDFAED5007CCC05 /* HXCourseAddBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C09B45291EDFAED5007CCC05 /* HXCourseAddBox.swift */; };
 		C09EBEBD1EAF20B700A6D72C /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C09EBEBC1EAF20B700A6D72C /* MasterViewController.swift */; };
 		C0A156FD1ED9120100F4DBC1 /* SidebarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0A156FC1ED9120100F4DBC1 /* SidebarViewController.swift */; };
-		C0A9B5B71F10BEBF001F7A5C /* Lecture+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0A9B5B51F10BEBF001F7A5C /* Lecture+CoreDataClass.swift */; };
+		C0A5327F1F43EB3100829C1F /* TimeSlot+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0A5327E1F43EB3100829C1F /* TimeSlot+CoreDataClass.swift */; };
 		C0AAE1361EA2BD12002939B6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0AAE1351EA2BD12002939B6 /* AppDelegate.swift */; };
 		C0AAE13D1EA2BD12002939B6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C0AAE13C1EA2BD12002939B6 /* Assets.xcassets */; };
 		C0AAE1401EA2BD12002939B6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C0AAE13E1EA2BD12002939B6 /* Main.storyboard */; };
@@ -128,7 +127,6 @@
 		C025FD9C1EC2A68F0090A287 /* HXWeekBox.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXWeekBox.xib; sourceTree = "<group>"; };
 		C025FDA21EC2E29B0090A287 /* HXLectureBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXLectureBox.swift; sourceTree = "<group>"; };
 		C02A8AC71F38AADC00B7CD5D /* pref.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = pref.plist; sourceTree = "<group>"; };
-		C02D55B21F135C7500E1AF4F /* TimeSlot+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "TimeSlot+CoreDataClass.swift"; path = "../TimeSlot+CoreDataClass.swift"; sourceTree = "<group>"; };
 		C02DB94E1F019BFF00044001 /* HXAbsentLectureBox.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXAbsentLectureBox.xib; sourceTree = "<group>"; };
 		C02DB9501F019C5B00044001 /* HXAbsentLectureBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXAbsentLectureBox.swift; sourceTree = "<group>"; };
 		C03AF8151EB856860028BA68 /* MasterWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MasterWindowController.swift; sourceTree = "<group>"; };
@@ -163,7 +161,7 @@
 		C09B45291EDFAED5007CCC05 /* HXCourseAddBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXCourseAddBox.swift; sourceTree = "<group>"; };
 		C09EBEBC1EAF20B700A6D72C /* MasterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MasterViewController.swift; sourceTree = "<group>"; };
 		C0A156FC1ED9120100F4DBC1 /* SidebarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SidebarViewController.swift; sourceTree = "<group>"; };
-		C0A9B5B51F10BEBF001F7A5C /* Lecture+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Lecture+CoreDataClass.swift"; path = "../Lecture+CoreDataClass.swift"; sourceTree = "<group>"; };
+		C0A5327E1F43EB3100829C1F /* TimeSlot+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TimeSlot+CoreDataClass.swift"; sourceTree = "<group>"; };
 		C0AAE1321EA2BD12002939B6 /* HXNotes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HXNotes.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0AAE1351EA2BD12002939B6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C0AAE13C1EA2BD12002939B6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -225,8 +223,7 @@
 			children = (
 				C00719D21EF5FC9900161A7D /* Semester+CoreDataClass.swift */,
 				C00719CE1EF5FA9100161A7D /* Course+CoreDataClass.swift */,
-				C0A9B5B51F10BEBF001F7A5C /* Lecture+CoreDataClass.swift */,
-				C02D55B21F135C7500E1AF4F /* TimeSlot+CoreDataClass.swift */,
+				C0A5327E1F43EB3100829C1F /* TimeSlot+CoreDataClass.swift */,
 				C00719D61EF5FE0900161A7D /* HXTimeFormatter.swift */,
 			);
 			name = Model;
@@ -638,7 +635,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				C0B795991EFFA12700A0C527 /* HXAlertSidebar.swift in Sources */,
-				C0A9B5B71F10BEBF001F7A5C /* Lecture+CoreDataClass.swift in Sources */,
 				C022319D1F115669009A421B /* SchedulerViewController.swift in Sources */,
 				C06017261F12D67B001EDE97 /* HXTimeSlotBox.swift in Sources */,
 				C087C2701EEFE8F300E70469 /* HXFindReplaceViewController.swift in Sources */,
@@ -653,6 +649,7 @@
 				C049A6411F3429F100685CF9 /* LectureCollectionViewItem.swift in Sources */,
 				C04B12161F33E93F002E05E9 /* HXStickyHeaderView.swift in Sources */,
 				C069202C1F33046600D04234 /* PreferencesViewController.swift in Sources */,
+				C0A5327F1F43EB3100829C1F /* TimeSlot+CoreDataClass.swift in Sources */,
 				C09B452A1EDFAED5007CCC05 /* HXCourseAddBox.swift in Sources */,
 				C0D235EE1EA5369B00AB039A /* CalendarViewController.swift in Sources */,
 				C0A156FD1ED9120100F4DBC1 /* SidebarViewController.swift in Sources */,
@@ -668,7 +665,6 @@
 				C0D1A16D1ECAF96D006A17B2 /* HXFlippedClipView.swift in Sources */,
 				C02DB9511F019C5B00044001 /* HXAbsentLectureBox.swift in Sources */,
 				C081A6AA1F19940000C8E1FB /* MenuBarPopoverViewController.swift in Sources */,
-				C02D55B41F135C7500E1AF4F /* TimeSlot+CoreDataClass.swift in Sources */,
 				C00382A81F3BA8E800CCFF11 /* MenuBarLectureItem.swift in Sources */,
 				C081A6AD1F19991400C8E1FB /* EventMonitor.swift in Sources */,
 				C09EBEBD1EAF20B700A6D72C /* MasterViewController.swift in Sources */,

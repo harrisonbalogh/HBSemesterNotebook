@@ -37,77 +37,86 @@ class SidebarViewController: NSViewController {
     @IBOutlet weak var semesterButtonAnimated: NSButton!
     @IBOutlet weak var semButtonAnimBotConstraint: NSLayoutConstraint!
     @IBOutlet weak var yearLabel: NSTextField!
+    @IBOutlet weak var yearLabelAnimated: NSTextField!
+    @IBOutlet weak var yrButtonBotConstraint: NSLayoutConstraint!
+    @IBOutlet weak var yrButtonAnimBotConstraint: NSLayoutConstraint!
+    
     var lastYearUsed = 0
     @IBAction func action_incrementTime(_ sender: NSButton) {
+        sender.isEnabled = false
         
         semButtonAnimBotConstraint.constant = -30
         if self.semesterButton.title == "Spring" {
             self.semesterButtonAnimated.title = "Fall"
-            let recoloredText = NSMutableAttributedString(attributedString: self.semesterButtonAnimated.attributedTitle)
-            recoloredText.addAttribute(NSForegroundColorAttributeName, value: NSColor.white, range: NSMakeRange(0,self.semesterButtonAnimated.attributedTitle.length))
-            self.semesterButtonAnimated.attributedTitle = recoloredText
         } else {
             self.semesterButtonAnimated.title = "Spring"
-            let recoloredText = NSMutableAttributedString(attributedString: self.semesterButtonAnimated.attributedTitle)
-            recoloredText.addAttribute(NSForegroundColorAttributeName, value: NSColor.white, range: NSMakeRange(0,self.semesterButtonAnimated.attributedTitle.length))
-            self.semesterButtonAnimated.attributedTitle = recoloredText
+            self.yearLabelAnimated.stringValue = "\(Int(self.yearLabel.stringValue)! + 1)"
+            yrButtonAnimBotConstraint.constant = -30
         }
+        let recoloredText = NSMutableAttributedString(attributedString: self.semesterButtonAnimated.attributedTitle)
+        recoloredText.addAttribute(NSForegroundColorAttributeName, value: NSColor.white, range: NSMakeRange(0,self.semesterButtonAnimated.attributedTitle.length))
+        self.semesterButtonAnimated.attributedTitle = recoloredText
         
         NSAnimationContext.beginGrouping()
         NSAnimationContext.current().duration = 0.2
         NSAnimationContext.current().completionHandler = {
             if self.semesterButton.title == "Spring" {
                 self.semesterButton.title = "Fall"
-                let recoloredText = NSMutableAttributedString(attributedString: self.semesterButton.attributedTitle)
-                recoloredText.addAttribute(NSForegroundColorAttributeName, value: NSColor.white, range: NSMakeRange(0,self.semesterButton.attributedTitle.length))
-                self.semesterButton.attributedTitle = recoloredText
             } else {
                 self.semesterButton.title = "Spring"
-                let recoloredText = NSMutableAttributedString(attributedString: self.semesterButton.attributedTitle)
-                recoloredText.addAttribute(NSForegroundColorAttributeName, value: NSColor.white, range: NSMakeRange(0,self.semesterButton.attributedTitle.length))
-                self.semesterButton.attributedTitle = recoloredText
                 self.yearLabel.stringValue = "\(Int(self.yearLabel.stringValue)! + 1)"
+                self.yrButtonBotConstraint.constant = 0
             }
+            let recoloredText = NSMutableAttributedString(attributedString: self.semesterButton.attributedTitle)
+            recoloredText.addAttribute(NSForegroundColorAttributeName, value: NSColor.white, range: NSMakeRange(0,self.semesterButton.attributedTitle.length))
+            self.semesterButton.attributedTitle = recoloredText
             self.semButtonBotConstraint.constant = 0
             self.tempAction_date()
+            sender.isEnabled = true
         }
         self.semButtonBotConstraint.animator().constant = -semesterButton.frame.height
+        if self.semesterButton.title == "Fall" {
+            self.yrButtonBotConstraint.animator().constant = semesterButton.frame.height
+        }
         NSAnimationContext.endGrouping()
     }
     @IBAction func action_decrementTime(_ sender: NSButton) {
+        sender.isEnabled = false
         
         semButtonAnimBotConstraint.constant = 30
-        if self.semesterButton.title == "Spring" {
-            self.semesterButtonAnimated.title = "Fall"
-            let recoloredText = NSMutableAttributedString(attributedString: self.semesterButtonAnimated.attributedTitle)
-            recoloredText.addAttribute(NSForegroundColorAttributeName, value: NSColor.white, range: NSMakeRange(0,self.semesterButtonAnimated.attributedTitle.length))
-            self.semesterButtonAnimated.attributedTitle = recoloredText
-        } else {
+        yrButtonAnimBotConstraint.constant = 30
+        if self.semesterButton.title == "Fall" {
             self.semesterButtonAnimated.title = "Spring"
-            let recoloredText = NSMutableAttributedString(attributedString: self.semesterButtonAnimated.attributedTitle)
-            recoloredText.addAttribute(NSForegroundColorAttributeName, value: NSColor.white, range: NSMakeRange(0,self.semesterButtonAnimated.attributedTitle.length))
-            self.semesterButtonAnimated.attributedTitle = recoloredText
+        } else {
+            self.semesterButtonAnimated.title = "Fall"
+            self.yearLabelAnimated.stringValue = "\(Int(self.yearLabel.stringValue)! - 1)"
         }
+        let recoloredText = NSMutableAttributedString(attributedString: self.semesterButtonAnimated.attributedTitle)
+        recoloredText.addAttribute(NSForegroundColorAttributeName, value: NSColor.white, range: NSMakeRange(0,self.semesterButtonAnimated.attributedTitle.length))
+        self.semesterButtonAnimated.attributedTitle = recoloredText
 
         NSAnimationContext.beginGrouping()
         NSAnimationContext.current().duration = 0.2
         NSAnimationContext.current().completionHandler = {
             if self.semesterButton.title == "Fall" {
                 self.semesterButton.title = "Spring"
-                let recoloredText = NSMutableAttributedString(attributedString: self.semesterButton.attributedTitle)
-                recoloredText.addAttribute(NSForegroundColorAttributeName, value: NSColor.white, range: NSMakeRange(0,self.semesterButton.attributedTitle.length))
-                self.semesterButton.attributedTitle = recoloredText
+                
             } else {
                 self.semesterButton.title = "Fall"
-                let recoloredText = NSMutableAttributedString(attributedString: self.semesterButton.attributedTitle)
-                recoloredText.addAttribute(NSForegroundColorAttributeName, value: NSColor.white, range: NSMakeRange(0,self.semesterButton.attributedTitle.length))
-                self.semesterButton.attributedTitle = recoloredText
                 self.yearLabel.stringValue = "\(Int(self.yearLabel.stringValue)! - 1)"
+                self.yrButtonBotConstraint.constant = 0
             }
+            let recoloredText = NSMutableAttributedString(attributedString: self.semesterButton.attributedTitle)
+            recoloredText.addAttribute(NSForegroundColorAttributeName, value: NSColor.white, range: NSMakeRange(0,self.semesterButton.attributedTitle.length))
+            self.semesterButton.attributedTitle = recoloredText
             self.semButtonBotConstraint.constant = 0
             self.tempAction_date()
+            sender.isEnabled = true
         }
         self.semButtonBotConstraint.animator().constant = semesterButton.frame.height
+        if self.semesterButton.title == "Spring" {
+            self.yrButtonBotConstraint.animator().constant = -semesterButton.frame.height
+        }
         NSAnimationContext.endGrouping()
     }
     
@@ -219,6 +228,10 @@ class SidebarViewController: NSViewController {
     // MARK: ––– Initialization –––
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+//        // Sidebar needs to keep an updated representation of the data objects in persistence.
+//        NotificationCenter.default.addObserver(self, selector: #selector(notifyContextObjectsUpdate(notification:)),
+//                                               name: .NSManagedObjectContextObjectsDidChange, object: appDelegate.managedObjectContext)
     }
     
     override func viewDidAppear() {
@@ -376,11 +389,13 @@ class SidebarViewController: NSViewController {
             ledgerStackView.insertArrangedSubview(lectureStackView, at: index)
         }
         for case let lecture as Lecture in course.lectures! {
+            print("GTTBOT: loadLectures() - pushLecture")
             pushLecture( lecture )
         }
     }
     /// Handles purely the visual aspect of lectures. Internal use only. Adds a new HXLectureBox and possibly HXWeekBox to the ledgerStackView.
     private func pushLecture(_ lecture: Lecture) {
+        print("GTTBOT: pushLecture")
         // Insert the lecture stack view if it isn't already created.
         if lectureStackView.superview == nil {
             lectureStackView = NSStackView()
@@ -388,14 +403,17 @@ class SidebarViewController: NSViewController {
             lectureStackView.spacing = 0
             ledgerStackView.addArrangedSubview(lectureStackView)
         }
-        // Insert weekbox on first lecture, then insert every time weekInYear changes from previous lecture.
+        // Insert weekbox on first lecture, then insert every time week changes from previous lecture.
         if selectedCourse.lectures!.count == 1 {
             lectureStackView.addArrangedSubview(HXWeekBox.instance(withNumber: (weekCount+1)))
             weekCount += 1
         } else {
-            let prevLecWeekInYear = (selectedCourse.lectures![selectedCourse.lectures!.count-2] as! Lecture).weekOfYear
-            let currentLecWeekInYear = (selectedCourse.lectures!.lastObject as! Lecture).weekOfYear
-            if currentLecWeekInYear != prevLecWeekInYear {
+            // Following week deducation requires sorted time slots
+            if lecture.course!.needsSort {
+                lecture.course!.sortTimeSlots()
+            }
+            // If the lecture requested to be pushed is the first time slot in the week, it must be a new week
+            if lecture.course!.timeSlots?.index(of: lecture.timeSlot!) == 0 {
                 lectureStackView.addArrangedSubview(HXWeekBox.instance(withNumber: (weekCount+1)))
                 weekCount += 1
             }
@@ -406,7 +424,8 @@ class SidebarViewController: NSViewController {
             lectureStackView.addArrangedSubview(newBox!)
             newBox!.widthAnchor.constraint(equalTo: ledgerStackView.widthAnchor).isActive = true
         } else {
-            let newBox = HXLectureBox.instance(numbered: lecture.number, dated: "\(lecture.monthInYear())/\(lecture.dayInMonth())/\(lecture.course!.semester!.year % 100)", owner: self)
+            let year = lecture.course!.semester!.year
+            let newBox = HXLectureBox.instance(numbered: lecture.number, dated: "\(lecture.month)/\(lecture.day)/\(year % 100)", owner: self)
             lectureStackView.addArrangedSubview(newBox!)
             newBox?.widthAnchor.constraint(equalTo: ledgerStackView.widthAnchor).isActive = true
         }
@@ -547,12 +566,16 @@ class SidebarViewController: NSViewController {
         // See if the current semester exists in the persistant store
         if let currentSemester = Semester.retrieveSemester(titled: semesterTitle, in: yearComponent) {
             if let timeSlotHappening = currentSemester.duringCourse() {
-                if timeSlotHappening.course!.theoreticalLectureCount() - timeSlotHappening.course!.lectures!.count == 1 || timeSlotHappening.course!.theoreticalLectureCount() == 0 {
-                    let newLec = timeSlotHappening.course!.createLecture(during: timeSlotHappening.course!.duringTimeSlot()!, absent: nil)
-                    // Following two lines won't have any visual effect if they are setting the same value. See didSet
-                    selectedSemester = currentSemester
-                    selectedCourse = timeSlotHappening.course!
+                if timeSlotHappening.course!.theoreticalLectureCount() != timeSlotHappening.course!.lectures!.count || timeSlotHappening.course!.theoreticalLectureCount() == 0 {
+                    if selectedSemester != currentSemester {
+                        selectedSemester = currentSemester
+                    }
+                    if selectedCourse != timeSlotHappening.course! {
+                        selectedCourse = timeSlotHappening.course!
+                    }
                     // Displays lecture in the ledgerStackView
+                    print("GTTBOT: addLecture() before pushLecture")
+                    let newLec = timeSlotHappening.course!.createLecture(during: timeSlotHappening.course!.duringTimeSlot()!, on: nil, in: nil)
                     pushLecture( newLec )
                     // Displays lecture in the lectureStackView
                     masterViewController.notifyLectureAddition(lecture: newLec)
@@ -563,7 +586,7 @@ class SidebarViewController: NSViewController {
                 // User probably waited too long to accept lecture, so display error
                 let hour = NSCalendar.current.component(.hour, from: NSDate() as Date)
                 let minute = NSCalendar.current.component(.minute, from: NSDate() as Date)
-                let _ = Alert(hour: hour, minute: minute, course: "Error:", content: "Can't add a new lecture when a course isn't happening.", question: nil, deny: "Close", action: nil, target: nil, type: .custom)
+                let _ = Alert(hour: hour, minute: minute, course: nil, content: "Can't add a new lecture when a course isn't happening.", question: nil, deny: "Close", action: nil, target: nil, type: .custom)
             }
         }
     }
@@ -593,6 +616,25 @@ class SidebarViewController: NSViewController {
     }
     
     // MARK: ––– Notifiers –––
+    
+//    /// Received from Notification Center on a managed object context change.
+//    func notifyContextObjectsUpdate(notification: NSNotification) {
+//        guard let userInfo = notification.userInfo else { return }
+//        
+//        if let inserts = userInfo[NSInsertedObjectsKey] as? Set<NSManagedObject>, inserts.count > 0 {
+//            if inserts.filter({$0 is TimeSlot}).count > 0 {
+//                // New TimeSlot added
+//            }
+//        }
+//        if let updates = userInfo[NSUpdatedObjectsKey] as? Set<NSManagedObject>, updates.count > 0 {
+//            //updates.flatMap({ $0 as? TimeSlot })
+//            updates.filter({
+//                $0 is TimeSlot && ($0.changedValues().keys.contains("startTime") || $0.changedValues().keys.contains("stopTime"))}).count > 0 {
+//                    // Timeslot changed
+//                }
+//        }
+//        if let
+//    }
     
     ///
     func notifyTimeSlotChange() {

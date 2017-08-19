@@ -60,8 +60,13 @@ class Alert {
                 if Alert.alertQueue[0].minute < 10 {
                     minute = "0" + minute
                 }
-                newController.label_time.stringValue = "\(HXTimeFormatter.formatTime(Alert.alertQueue[0].hour)):\(minute)"
-                newController.label_course.stringValue = Alert.alertQueue[0].course
+                newController.label_time.stringValue = "\(HXTimeFormatter.formatHour(Alert.alertQueue[0].hour)):\(minute)"
+                
+                if Alert.alertQueue[0].course == nil {
+                    newController.label_course.stringValue = "Error"
+                } else {
+                    newController.label_course.stringValue = Alert.alertQueue[0].course!.title!
+                }
                 newController.label_content.stringValue = Alert.alertQueue[0].content
                 if Alert.alertQueue[0].question == nil {
                     newController.label_accept.isHidden = true
@@ -100,9 +105,11 @@ class Alert {
         }
     }
     
+    // MARK: - App Alert controls above
+    
     let hour: Int
     let minute: Int
-    let course: String
+    let course: Course?
     let content: String
     let question: String?
     let deny: String
@@ -112,7 +119,7 @@ class Alert {
     
     /// Question parameter is the label applied to accepting the notification's action but can be
     /// provided with a nil in order for the accept button not to be displayed.
-    init(hour: Int, minute: Int, course: String, content: String, question: String?, deny: String, action: Selector?, target: AnyObject?, type: AlertType) {
+    init(hour: Int, minute: Int, course: Course?, content: String, question: String?, deny: String, action: Selector?, target: AnyObject?, type: AlertType) {
         self.hour = hour
         self.minute = minute
         self.course = course
@@ -144,13 +151,13 @@ class Alert {
         // Check if course is happening, in which case remove the future alerts
         if type == .happening {
             for x in 0..<Alert.alertQueue.count {
-                if Alert.alertQueue[x].type == .future && Alert.alertQueue[x].course == course {
+                if (Alert.alertQueue[x].type == .happening || Alert.alertQueue[x].type == .future) && Alert.alertQueue[x].course == course {
                     Alert.remove(at: x)
                     break
                 }
             }
         }
-
+        
         // Check if this alert does not already exist
         if !Alert.alertQueue.contains(where: {
             $0.hour == self.hour &&
@@ -167,7 +174,7 @@ class Alert {
     }
     
     /// This initializer will assume the hour and minute is the current calendar time. Convenience initializer.
-    convenience init(course: String, content: String, question: String?, deny: String, action: Selector?, target: AnyObject?, type: AlertType) {
+    convenience init(course: Course?, content: String, question: String?, deny: String, action: Selector?, target: AnyObject?, type: AlertType) {
         let hour = NSCalendar.current.component(.hour, from: NSDate() as Date)
         let minute = NSCalendar.current.component(.minute, from: NSDate() as Date)
         
@@ -212,7 +219,7 @@ class Alert {
     
     /// Probably used after a .deletion alert has been confirmed, will remove
     /// all alerts with the provided course title.
-    public static func flushAlerts(for course: String) {
+    public static func flushAlerts(for course: Course) {
         print("Flush alerts for \(course)")
         for x in stride(from: Alert.alertQueue.count - 1, through: 0, by: -1) {
             if Alert.alertQueue[x].course == course {
@@ -223,7 +230,7 @@ class Alert {
     
     public static func checkExpiredAlerts() {
         for x in 0..<alertQueue.count {
-            if alertQueue[x].type == .happening {
+            if alertQueue[x].type == .happening && alertQueue[x].course != nil {
                 
                 let calendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
                 // Get calendar date to deduce semester
@@ -236,11 +243,9 @@ class Alert {
                 }
                 
                 if let currentSemester = Semester.retrieveSemester(titled: semesterTitle, in: yearComponent) {
-                    if let course = currentSemester.retrieveCourse(named: alertQueue[x].course) {
-                        if course.duringTimeSlot() == nil {
-                            // Course is not happening at the moment... So this alert doesn't apply anymore.
-                            Alert.remove(at: x)
-                        }
+                    if alertQueue[x].course!.duringTimeSlot() == nil {
+                        // Course is not happening at the moment... So this alert doesn't apply anymore.
+                        Alert.remove(at: x)
                     }
                 }
                 

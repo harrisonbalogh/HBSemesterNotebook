@@ -51,7 +51,7 @@ class HXCourseEditBox: NSView {
             timeSlotAddViewHeightConstraint.constant = 0
         }
         
-        let theColor = NSColor(red: CGFloat(course.colorRed), green: CGFloat(course.colorGreen), blue: CGFloat(course.colorBlue), alpha: 1)
+        let theColor = NSColor(red: CGFloat(course.color!.red), green: CGFloat(course.color!.green), blue: CGFloat(course.color!.blue), alpha: 1)
         self.boxDrag.fillColor = theColor
         
         self.parentController = parent
@@ -101,7 +101,7 @@ class HXCourseEditBox: NSView {
             return
         }
         
-        let _ = Alert(course: self.course.title!, content: "is to be removed." + lectureInfo + " Confirm removal?", question: "Remove Course", deny: "Cancel", action: #selector(self.confirmRemoveCourse), target: self, type: .deletion)
+        let _ = Alert(course: self.course, content: "is to be removed." + lectureInfo + " Confirm removal?", question: "Remove Course", deny: "Cancel", action: #selector(self.confirmRemoveCourse), target: self, type: .deletion)
 
     }
 
@@ -117,7 +117,7 @@ class HXCourseEditBox: NSView {
     }
     
     func confirmRemoveCourse() {
-        Alert.flushAlerts(for: course.title!)
+        Alert.flushAlerts(for: course)
         parentController.removeCourse(self)
     }
     
@@ -232,6 +232,6 @@ class HXCourseEditBox: NSView {
     // MARK: - Notifiers
     func notifyTimeSlotChange() {
         parentController.notifyTimeSlotChange()
-        course.sortTimeSlots()
+        course.needsSort = true
     }
 }

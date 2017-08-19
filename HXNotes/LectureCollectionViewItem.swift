@@ -42,6 +42,9 @@ class LectureCollectionViewItem: NSCollectionViewItem {
         
         // Setup textview that isn't embedded in a ScrollView
         textView_lecture = HXTextView()
+        textView_lecture.isRichText = true
+        textView_lecture.importsGraphics = true
+        textView_lecture.layoutManager!.allowsNonContiguousLayout = true
         textView_lecture.allowsUndo = true
         textView_lecture.translatesAutoresizingMaskIntoConstraints = false
         textView_lecture.drawsBackground = false
@@ -113,7 +116,6 @@ class LectureCollectionViewItem: NSCollectionViewItem {
     /// Return the height to the selected character in the textView. Does not ensure layout
     /// before calculating, so should only be called after a collectionHeight()
     internal func textSelectionHeight() -> CGFloat {
-        
         let positionOfSelection = textView_lecture.selectedRanges.first!.rangeValue.location
         let rangeToSelection = NSRange(location: 0, length: positionOfSelection)
         let substring = textView_lecture.attributedString().attributedSubstring(from: rangeToSelection)
@@ -170,11 +172,11 @@ class LectureCollectionViewItem: NSCollectionViewItem {
         lecture.content = textView_lecture.attributedString()
         
         // Check where user is typing to see if it needs to auto scroll
-        let scrollCheck = textSelectionHeight()
-        if lastSelectionHeightCheck != scrollCheck {
-            lastSelectionHeightCheck = scrollCheck
-            owner.checkScrollLevel(from: self)
-        }
+//        let scrollCheck = textSelectionHeight()
+//        if lastSelectionHeightCheck != scrollCheck {
+//            lastSelectionHeightCheck = scrollCheck
+//            owner.checkScrollLevel(from: self)
+//        }
     }
     
     /// Displays visuals when this function receives focus as true.

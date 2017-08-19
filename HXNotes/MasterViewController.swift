@@ -328,6 +328,9 @@ class MasterViewController: NSViewController {
             // Only push a new calendar if the editor is showing.
             popEditor()
             pushCalendar(semester: semester)
+        } else {
+            schedulerViewController.initialize(with: semester)
+            schedulerViewController.notifyTimeSlotChange()
         }
     }
     ///

@@ -70,21 +70,23 @@ class MenuBarPopoverViewController: NSViewController {
         let hour = NSCalendar.current.component(.hour, from: Date())
         let minute = NSCalendar.current.component(.minute, from: Date())
         
-        let weekday = Int16(NSCalendar.current.component(.weekday, from: Date()))
-        let minuteOfDay = Int16(hour * 60 + minute)
+        let weekday = NSCalendar.current.component(.weekday, from: Date())
+        let minuteOfDay = hour * 60 + minute
         
         timeSlotsToday = [TimeSlot]()
         var timeSlotsTomorrow = [TimeSlot]()
         
         for case let course as Course in semester.courses! {
             for case let timeSlot as TimeSlot in course.timeSlots! {
-                if timeSlot.weekday == weekday {
-                    if timeSlot.stopMinuteOfDay > minuteOfDay {
+                let timeDay = Int(timeSlot.weekday)
+                let timeStop = Int(timeSlot.stopMinute)
+                if timeDay == weekday {
+                    if timeStop > minuteOfDay {
                         timeSlotsToday.append(timeSlot)
                     }
                 } else {
                     let dayTomorrow = ((weekday + 1) % 8) + Int(floor(Double((weekday+1) / 8)))
-                    if timeSlot.weekday == dayTomorrow {
+                    if timeDay == dayTomorrow {
                         timeSlotsTomorrow.append(timeSlot)
                     }
                 }
@@ -98,7 +100,7 @@ class MenuBarPopoverViewController: NSViewController {
             showMoreButton.title = "No upcoming lectures today."
             stackViewHeightConstraint.constant = 0
         } else {
-            timeSlotsToday.sort(by: {$0.startMinuteOfDay < $1.startMinuteOfDay})
+            timeSlotsToday.sort(by: {$0.startMinute < $1.startMinute})
             
             for timeSlot in timeSlotsToday {
                 let item = MenuBarLectureItem.instance(with: timeSlot)!
@@ -123,8 +125,9 @@ class MenuBarPopoverViewController: NSViewController {
         if timeSlotsTomorrow.count == 0 {
             tomorrowLabel.stringValue = "No lectures tomorrow."
         } else {
-            timeSlotsTomorrow.sort(by: {$0.startMinuteOfDay < $1.startMinuteOfDay})
-            tomorrowLabel.stringValue = "First lecture tomorrow is at \(HXTimeFormatter.formatTime(timeSlotsTomorrow[0].startMinuteOfDay)) for \(timeSlotsTomorrow[0].course!.title!)."
+            timeSlotsTomorrow.sort(by: {$0.startMinute < $1.startMinute})
+            let start = timeSlotsTomorrow[0].startMinute
+            tomorrowLabel.stringValue = "First lecture tomorrow is at \(HXTimeFormatter.formatTime(start)) for \(timeSlotsTomorrow[0].course!.title!)."
         }
     }
 }
