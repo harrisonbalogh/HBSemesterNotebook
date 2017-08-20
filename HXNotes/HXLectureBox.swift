@@ -11,7 +11,7 @@ import Cocoa
 class HXLectureBox: NSBox {
     
     /// Return a new instance of a HXLectureLedger based on the nib template.
-    static func instance(numbered number: Int16, dated date: String, owner: SidebarViewController) -> HXLectureBox! {
+    static func instance(numbered number: Int16, dated date: String, owner: CoursePageViewController) -> HXLectureBox! {
         var theObjects: NSArray = []
         Bundle.main.loadNibNamed("HXLectureBox", owner: nil, topLevelObjects: &theObjects)
         // Get NSView from top level objects returned from nib load
@@ -26,9 +26,9 @@ class HXLectureBox: NSBox {
     @IBOutlet weak var labelDate: NSTextField!
     @IBOutlet weak var imageLecture: NSImageView!
     
-    weak var parentController: SidebarViewController!
+    weak var parentController: CoursePageViewController!
     
-    func initialize(numbered number: Int, dated date: String, owner: SidebarViewController) {
+    func initialize(numbered number: Int, dated date: String, owner: CoursePageViewController) {
         
         labelTitle.stringValue = "Lecture \(number)"
         
@@ -39,7 +39,7 @@ class HXLectureBox: NSBox {
     
     @IBAction func action_clickLecture(_ sender: Any) {
         
-        parentController.select(lecture: labelTitle.stringValue)
+//        parentController.select(lecture: labelTitle.stringValue)
         
     }
     

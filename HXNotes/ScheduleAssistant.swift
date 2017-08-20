@@ -107,7 +107,7 @@ class ScheduleAssistant: NSObject {
                 appendTimeUntilLecture = "started \(minuteOfDay - timeStart) minutes ago."
             }
             
-            let _ = Alert(hour: timeHour, minute: timeMinute, course: timeSlotHappening.course!, content: appendTimeUntilLecture + " Create first lecture?", question: "Yes (Start Course)", deny: "No (Not Yet)", action: #selector(masterVC.sidebarViewController.addLecture), target: masterVC.sidebarViewController, type: .happening)
+            let _ = Alert(hour: timeHour, minute: timeMinute, course: timeSlotHappening.course!, content: appendTimeUntilLecture + " Create first lecture?", question: "Yes (Start Course)", deny: "No (Not Yet)", action: #selector(masterVC.sidebarPageController.addLecture), target: masterVC.sidebarPageController, type: .happening)
         
         } else {
             // This is not the first lecture
@@ -133,7 +133,7 @@ class ScheduleAssistant: NSObject {
                 }
                 
                 // No lecture exists for this time so give alert
-                let _ = Alert(hour: timeHour, minute: timeMinute, course: timeSlotHappening.course!, content: appendTimeUntilLecture + " Create lecture \(theoLecCount)?", question: "Create Lecture \(timeSlotHappening.course!.theoreticalLectureCount())", deny: "Ignore", action: #selector(masterVC.sidebarViewController.addLecture), target: masterVC.sidebarViewController, type: .happening)
+                let _ = Alert(hour: timeHour, minute: timeMinute, course: timeSlotHappening.course!, content: appendTimeUntilLecture + " Create lecture \(theoLecCount)?", question: "Create Lecture \(timeSlotHappening.course!.theoreticalLectureCount())", deny: "Ignore", action: #selector(masterVC.sidebarPageController.addLecture), target: masterVC.sidebarPageController, type: .happening)
             }
         }
     }

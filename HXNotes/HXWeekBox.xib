@@ -18,7 +18,7 @@
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <textField identifier="week_label_title" horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HR4-GH-oNx">
-                        <rect key="frame" x="28" y="0.0" width="42" height="14"/>
+                        <rect key="frame" x="2" y="0.0" width="42" height="14"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="Week 1" id="AWQ-SK-cWa">
                             <font key="font" metaFont="smallSystem"/>
                             <color key="textColor" red="0.24251953125000003" green="0.24251953125000003" blue="0.24251953125000003" alpha="0.84999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
@@ -27,7 +27,7 @@
                     </textField>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="HR4-GH-oNx" firstAttribute="leading" secondItem="M2J-u5-Hoo" secondAttribute="leading" constant="30" id="B8v-CA-PPz"/>
+                    <constraint firstItem="HR4-GH-oNx" firstAttribute="leading" secondItem="M2J-u5-Hoo" secondAttribute="leading" constant="4" id="B8v-CA-PPz"/>
                     <constraint firstAttribute="bottom" secondItem="HR4-GH-oNx" secondAttribute="bottom" id="VkS-mG-Yz2"/>
                 </constraints>
             </view>

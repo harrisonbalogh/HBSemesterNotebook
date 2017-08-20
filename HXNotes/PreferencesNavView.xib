@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11762"/>
+        <capability name="box content view" minToolsVersion="7.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
         <capability name="stacking Non-gravity area distributions on NSStackView" minToolsVersion="7.0" minSystemVersion="10.11"/>
         <capability name="system font weights other than Regular or Bold" minToolsVersion="7.0"/>
@@ -22,11 +23,22 @@
         <customView translatesAutoresizingMaskIntoConstraints="NO" id="Hz6-mo-xeY">
             <rect key="frame" x="0.0" y="0.0" width="269" height="470"/>
             <subviews>
+                <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="EEr-rO-A94">
+                    <rect key="frame" x="0.0" y="0.0" width="269" height="470"/>
+                    <view key="contentView" id="8sq-iQ-7Tf">
+                        <rect key="frame" x="0.0" y="0.0" width="269" height="470"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    </view>
+                    <color key="fillColor" red="0.92937167553191491" green="0.92937167553191491" blue="0.92937167553191491" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                </box>
+                <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="EMb-EB-OoI">
+                    <rect key="frame" x="0.0" y="467" width="269" height="5"/>
+                </box>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dbh-pC-PMY">
                     <rect key="frame" x="68" y="443" width="132" height="27"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Preferences" id="UY1-ef-txd">
                         <font key="font" metaFont="systemBold" size="22"/>
-                        <color key="textColor" red="1" green="1" blue="1" alpha="0.84999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
@@ -112,12 +124,19 @@
                 </scrollView>
             </subviews>
             <constraints>
+                <constraint firstItem="EMb-EB-OoI" firstAttribute="top" secondItem="EEr-rO-A94" secondAttribute="top" id="4UW-kZ-31k"/>
+                <constraint firstItem="EMb-EB-OoI" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" id="G2q-7p-8PY"/>
                 <constraint firstAttribute="trailing" secondItem="2LU-we-Lv1" secondAttribute="trailing" id="IBq-mA-AzQ"/>
                 <constraint firstAttribute="bottom" secondItem="2LU-we-Lv1" secondAttribute="bottom" id="Q9z-af-GXm"/>
                 <constraint firstItem="2LU-we-Lv1" firstAttribute="top" secondItem="Dbh-pC-PMY" secondAttribute="bottom" constant="7" id="Qrz-2d-D7f"/>
+                <constraint firstItem="EEr-rO-A94" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" id="UKL-UM-rFP"/>
                 <constraint firstItem="Dbh-pC-PMY" firstAttribute="centerX" secondItem="Hz6-mo-xeY" secondAttribute="centerX" id="V01-bE-JCj"/>
+                <constraint firstAttribute="bottom" secondItem="EEr-rO-A94" secondAttribute="bottom" id="a5V-p1-Gun"/>
                 <constraint firstItem="Dbh-pC-PMY" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" id="aeD-kn-tRL"/>
                 <constraint firstItem="2LU-we-Lv1" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" constant="5" id="ceH-iJ-yhg"/>
+                <constraint firstItem="EEr-rO-A94" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" id="ey3-em-kAO"/>
+                <constraint firstAttribute="trailing" secondItem="EEr-rO-A94" secondAttribute="trailing" id="kbS-Xv-j2I"/>
+                <constraint firstAttribute="trailing" secondItem="EMb-EB-OoI" secondAttribute="trailing" id="qDJ-J7-n99"/>
             </constraints>
             <point key="canvasLocation" x="143.5" y="232"/>
         </customView>

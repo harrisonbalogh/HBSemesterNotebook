@@ -18,7 +18,7 @@
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <imageView identifier="lecture_image" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="L6d-o0-tmR">
-                        <rect key="frame" x="30" y="8" width="30" height="30"/>
+                        <rect key="frame" x="4" y="8" width="30" height="30"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="30" id="mfL-uz-SOs"/>
                             <constraint firstAttribute="height" constant="30" id="vXg-R4-wvq"/>
@@ -26,10 +26,10 @@
                         <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="icon_pencil" id="act-XA-u8L"/>
                     </imageView>
                     <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="wKk-gO-Paf">
-                        <rect key="frame" x="68" y="20" width="108" height="5"/>
+                        <rect key="frame" x="42" y="20" width="134" height="5"/>
                     </box>
                     <textField identifier="lecture_label_title" horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LVh-cI-Rwu">
-                        <rect key="frame" x="66" y="23" width="37" height="17"/>
+                        <rect key="frame" x="40" y="23" width="37" height="17"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="Label" id="cuP-eW-x0u">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" red="0.35308140519999998" green="0.34494185449999998" blue="0.3531225026" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -37,7 +37,7 @@
                         </textFieldCell>
                     </textField>
                     <textField identifier="lecture_label_date" horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kOz-iL-Isi">
-                        <rect key="frame" x="66" y="6" width="46" height="16"/>
+                        <rect key="frame" x="40" y="6" width="46" height="16"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="1/23/17" id="QZO-bc-xpH">
                             <font key="font" metaFont="cellTitle"/>
                             <color key="textColor" red="0.35308140516281128" green="0.34494185447692871" blue="0.35312250256538391" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -68,7 +68,7 @@
                     <constraint firstItem="wKk-gO-Paf" firstAttribute="leading" secondItem="L6d-o0-tmR" secondAttribute="trailing" constant="8" id="m9h-fM-OCp"/>
                     <constraint firstItem="L6d-o0-tmR" firstAttribute="top" secondItem="rmH-cL-yEB" secondAttribute="top" constant="4" id="nlS-TG-evd"/>
                     <constraint firstItem="kOz-iL-Isi" firstAttribute="leading" secondItem="wKk-gO-Paf" secondAttribute="leading" id="q3H-r4-0A4"/>
-                    <constraint firstItem="L6d-o0-tmR" firstAttribute="leading" secondItem="rmH-cL-yEB" secondAttribute="leading" constant="30" id="tE0-hf-qnp"/>
+                    <constraint firstItem="L6d-o0-tmR" firstAttribute="leading" secondItem="rmH-cL-yEB" secondAttribute="leading" constant="4" id="tE0-hf-qnp"/>
                     <constraint firstItem="LVh-cI-Rwu" firstAttribute="leading" secondItem="wKk-gO-Paf" secondAttribute="leading" id="yG7-XC-ezS"/>
                 </constraints>
             </view>

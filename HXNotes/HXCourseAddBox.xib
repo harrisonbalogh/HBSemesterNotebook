@@ -3,7 +3,6 @@
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11762"/>
-        <capability name="box content view" minToolsVersion="7.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -14,33 +13,13 @@
             <rect key="frame" x="0.0" y="0.0" width="130" height="30"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
-                <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="Jks-JN-wya">
-                    <rect key="frame" x="0.0" y="-2" width="130" height="5"/>
-                </box>
-                <textField identifier="course_label_title" horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uzc-KG-1z8" customClass="CourseLabel" customModule="HXNotes" customModuleProvider="target">
-                    <rect key="frame" x="18" y="7" width="80" height="17"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="17" id="QUn-CQ-xyX"/>
-                    </constraints>
-                    <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="left" title="Add Course" usesSingleLineMode="YES" id="QVI-iU-P4o">
-                        <font key="font" metaFont="systemBold"/>
-                        <color key="textColor" red="0.95657150909999999" green="0.93424886910000005" blue="0.9619015957" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                    </textFieldCell>
-                </textField>
-                <box identifier="course_box_drag" boxType="custom" cornerRadius="5" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="GEF-Kj-szg" userLabel="Drag Box">
-                    <rect key="frame" x="5" y="10" width="10" height="10"/>
-                    <view key="contentView" id="l0D-0c-OpA">
-                        <rect key="frame" x="1" y="1" width="8" height="8"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                    </view>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="10" id="XpH-cH-nZF"/>
-                        <constraint firstAttribute="height" constant="10" id="nys-wr-hxT"/>
-                    </constraints>
-                    <color key="borderColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                    <color key="fillColor" red="1" green="1" blue="1" alpha="0.75" colorSpace="custom" customColorSpace="sRGB"/>
-                </box>
+                <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="vnU-jX-Dlo">
+                    <rect key="frame" x="24" y="3" width="81" height="19"/>
+                    <buttonCell key="cell" type="roundRect" title="Add Course" bezelStyle="roundedRect" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Kls-9f-TFL">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="cellTitle"/>
+                    </buttonCell>
+                </button>
                 <button identifier="add_button_id" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="BFf-6y-M4q">
                     <rect key="frame" x="0.0" y="0.0" width="130" height="30"/>
                     <constraints>
@@ -51,26 +30,15 @@
                         <font key="font" metaFont="systemBold"/>
                     </buttonCell>
                 </button>
-                <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="TsE-FB-3z4">
-                    <rect key="frame" x="0.0" y="-2" width="130" height="5"/>
-                </box>
             </subviews>
             <constraints>
-                <constraint firstItem="GEF-Kj-szg" firstAttribute="centerY" secondItem="uzc-KG-1z8" secondAttribute="centerY" id="0Ap-wz-fG1"/>
-                <constraint firstAttribute="trailing" secondItem="Jks-JN-wya" secondAttribute="trailing" id="0Nf-gj-BW4"/>
                 <constraint firstItem="BFf-6y-M4q" firstAttribute="leading" secondItem="ImR-CX-SWb" secondAttribute="leading" id="0eI-75-Mcf"/>
-                <constraint firstItem="uzc-KG-1z8" firstAttribute="leading" secondItem="GEF-Kj-szg" secondAttribute="trailing" constant="5" id="AFw-At-cQK"/>
-                <constraint firstItem="Jks-JN-wya" firstAttribute="leading" secondItem="ImR-CX-SWb" secondAttribute="leading" id="B8Q-5i-um0"/>
-                <constraint firstAttribute="bottom" secondItem="TsE-FB-3z4" secondAttribute="bottom" id="JjI-oo-gPX"/>
                 <constraint firstAttribute="trailing" secondItem="BFf-6y-M4q" secondAttribute="trailing" id="MD0-E1-zoW"/>
-                <constraint firstAttribute="bottom" secondItem="Jks-JN-wya" secondAttribute="bottom" id="YqA-mC-L1O"/>
                 <constraint firstItem="BFf-6y-M4q" firstAttribute="top" secondItem="ImR-CX-SWb" secondAttribute="top" id="c38-9s-PIZ"/>
-                <constraint firstItem="uzc-KG-1z8" firstAttribute="centerY" secondItem="ImR-CX-SWb" secondAttribute="centerY" id="cJu-w0-0ax"/>
                 <constraint firstItem="BFf-6y-M4q" firstAttribute="centerX" secondItem="ImR-CX-SWb" secondAttribute="centerX" id="grf-aU-epx"/>
                 <constraint firstAttribute="bottom" secondItem="BFf-6y-M4q" secondAttribute="bottom" id="jRN-lD-ajy"/>
-                <constraint firstAttribute="trailing" secondItem="TsE-FB-3z4" secondAttribute="trailing" id="l3u-2b-Kny"/>
-                <constraint firstItem="TsE-FB-3z4" firstAttribute="leading" secondItem="ImR-CX-SWb" secondAttribute="leading" id="neW-9U-RNt"/>
-                <constraint firstItem="GEF-Kj-szg" firstAttribute="leading" secondItem="ImR-CX-SWb" secondAttribute="leading" constant="5" id="ywA-UC-CP0"/>
+                <constraint firstItem="vnU-jX-Dlo" firstAttribute="centerY" secondItem="ImR-CX-SWb" secondAttribute="centerY" constant="2" id="v7W-Or-xG5"/>
+                <constraint firstItem="vnU-jX-Dlo" firstAttribute="centerX" secondItem="ImR-CX-SWb" secondAttribute="centerX" id="ymo-2u-Vgc"/>
             </constraints>
             <connections>
                 <outlet property="addCourseButton" destination="BFf-6y-M4q" id="vee-6n-wMc"/>

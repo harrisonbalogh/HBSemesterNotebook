@@ -116,6 +116,6 @@ class HXTimeSlotBox: NSView {
 
     @IBAction func removeTimeSlotBox(_ sender: Any) {
         self.removeFromSuperview()
-        editBox.removeTimeSlot(timeSlot)
+        editBox.notifyTimeSlotRemoved(timeSlot)
     }
 }

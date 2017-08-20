@@ -18,16 +18,15 @@
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <imageView identifier="lecture_image" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="byp-lW-a6j">
-                        <rect key="frame" x="30" y="8" width="30" height="30"/>
+                        <rect key="frame" x="4" y="8" width="30" height="30"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="30" id="dC9-i1-P49"/>
                             <constraint firstAttribute="height" constant="30" id="qe1-Gr-cZ4"/>
                         </constraints>
                         <imageCell key="cell" enabled="NO" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="icon_pencil" id="AVW-Kw-Tf5"/>
                     </imageView>
-                    <textField identifier="lecture_label_title" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5z7-dw-k7S">
-                        <rect key="frame" x="66" y="14" width="47" height="17"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textField identifier="lecture_label_title" horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5z7-dw-k7S">
+                        <rect key="frame" x="36" y="13" width="47" height="17"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="Absent" id="b0K-MA-G9j">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" red="0.35308140519999998" green="0.34494185449999998" blue="0.3531225026" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -36,9 +35,11 @@
                     </textField>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="byp-lW-a6j" firstAttribute="leading" secondItem="ocE-95-l6S" secondAttribute="leading" constant="30" id="2hZ-yc-EZn"/>
+                    <constraint firstItem="byp-lW-a6j" firstAttribute="leading" secondItem="ocE-95-l6S" secondAttribute="leading" constant="4" id="2hZ-yc-EZn"/>
                     <constraint firstAttribute="bottom" secondItem="byp-lW-a6j" secondAttribute="bottom" constant="8" id="3NK-iK-KFc"/>
+                    <constraint firstItem="5z7-dw-k7S" firstAttribute="centerY" secondItem="ocE-95-l6S" secondAttribute="centerY" id="6pw-uZ-I3j"/>
                     <constraint firstItem="byp-lW-a6j" firstAttribute="top" secondItem="ocE-95-l6S" secondAttribute="top" constant="4" id="Dl8-EH-dMx"/>
+                    <constraint firstItem="5z7-dw-k7S" firstAttribute="leading" secondItem="byp-lW-a6j" secondAttribute="trailing" constant="4" id="Uz1-iD-9Zv"/>
                 </constraints>
             </view>
             <point key="canvasLocation" x="141" y="205"/>

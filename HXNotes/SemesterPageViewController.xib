@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11762" systemVersion="16G29" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11762"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+        <capability name="stacking Non-gravity area distributions on NSStackView" minToolsVersion="7.0" minSystemVersion="10.11"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="SemesterPageViewController" customModule="HXNotes" customModuleProvider="target">
+            <connections>
+                <outlet property="courseStackView" destination="mXj-nQ-3Pp" id="ljY-Mc-7Yg"/>
+                <outlet property="view" destination="Hz6-mo-xeY" id="0bl-1N-x8E"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView identifier="semesterPage" autoresizesSubviews="NO" id="Hz6-mo-xeY">
+            <rect key="frame" x="0.0" y="0.0" width="153" height="369"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <scrollView borderType="none" horizontalLineScroll="0.0" horizontalPageScroll="0.0" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="AFm-8D-XOL">
+                    <rect key="frame" x="0.0" y="0.0" width="153" height="369"/>
+                    <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="RNp-7w-Yw4" customClass="HXFlippedClipView" customModule="HXNotes" customModuleProvider="target">
+                        <rect key="frame" x="0.0" y="0.0" width="153" height="369"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mXj-nQ-3Pp">
+                                <rect key="frame" x="0.0" y="1" width="153" height="368"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="368" placeholder="YES" id="4fj-lZ-xpp"/>
+                                </constraints>
+                            </stackView>
+                        </subviews>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="mXj-nQ-3Pp" secondAttribute="trailing" id="8ql-LJ-iz9"/>
+                            <constraint firstItem="mXj-nQ-3Pp" firstAttribute="top" secondItem="RNp-7w-Yw4" secondAttribute="top" id="HRN-a4-S9L"/>
+                            <constraint firstItem="mXj-nQ-3Pp" firstAttribute="leading" secondItem="RNp-7w-Yw4" secondAttribute="leading" id="kAV-xT-Ltv"/>
+                        </constraints>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </clipView>
+                    <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="F9E-Ca-kh2">
+                        <rect key="frame" x="-100" y="-100" width="153" height="16"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </scroller>
+                    <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="QTh-gU-xeZ">
+                        <rect key="frame" x="137" y="0.0" width="16" height="369"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </scroller>
+                </scrollView>
+            </subviews>
+            <constraints>
+                <constraint firstItem="AFm-8D-XOL" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" id="EdA-MV-iwr"/>
+                <constraint firstItem="AFm-8D-XOL" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" id="Tlm-w8-SJB"/>
+                <constraint firstAttribute="bottom" secondItem="AFm-8D-XOL" secondAttribute="bottom" id="UOi-sg-aId"/>
+                <constraint firstAttribute="trailing" secondItem="AFm-8D-XOL" secondAttribute="trailing" id="q52-q2-lxp"/>
+            </constraints>
+            <point key="canvasLocation" x="-26.5" y="169.5"/>
+        </customView>
+    </objects>
+</document>

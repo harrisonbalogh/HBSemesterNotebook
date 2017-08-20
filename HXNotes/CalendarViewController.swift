@@ -203,7 +203,7 @@ class CalendarViewController: NSViewController {
     /// Add a timeslot model and update gridBox visuals
     private func addTimeSlot(for course: Course, atDay day: Int, atHour hour: Int) {
 //        pushTimeSlot( newTimeSlot(for: course, atDay: day, atHour: hour), for: course)
-        masterViewController.notifyTimeSlotAddition()
+//        masterViewController.notifyTimeSlotAddition()
     }
     /// Remove a timeslot model and update gridBox visuals
     private func removeTimeSlot(_ x: Int, _ y: Int) {

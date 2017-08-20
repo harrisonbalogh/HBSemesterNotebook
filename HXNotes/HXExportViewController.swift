@@ -39,7 +39,7 @@ class HXExportViewController: NSViewController {
             
             label_lectureSelection.stringValue = "all lectures"
             
-            textField_name.stringValue = parent.masterViewController.sidebarViewController.selectedCourse.title! + " Lectures - \(parent.masterViewController.sidebarViewController.selectedCourse.semester!.title!.capitalized) \(parent.masterViewController.sidebarViewController.selectedCourse.semester!.year)"
+            textField_name.stringValue = parent.selectedCourse.title! + " Lectures - \(parent.selectedCourse.semester!.title!.capitalized) \(parent.selectedCourse.semester!.year)"
             
         }
         
@@ -122,7 +122,7 @@ class HXExportViewController: NSViewController {
             if let parent = self.parent as? LectureCollectionViewItem {
                 textField_name.stringValue = parent.lecture.course!.title! + " Lecture \(parent.lecture.number) - \(parent.lecture.course!.semester!.year) \(parent.lecture.course!.semester!.title!.capitalized)"
             } else if let parent = self.parent as? EditorViewController {
-                textField_name.stringValue = parent.masterViewController.sidebarViewController.selectedCourse.title! + " Lectures - \(parent.masterViewController.sidebarViewController.selectedCourse.semester!.title!.capitalized) \(parent.masterViewController.sidebarViewController.selectedCourse.semester!.year)"
+                textField_name.stringValue = parent.selectedCourse.title! + " Lectures - \(parent.selectedCourse.semester!.title!.capitalized) \(parent.selectedCourse.semester!.year)"
             }
         } else {
             textField_name.stringValue = input

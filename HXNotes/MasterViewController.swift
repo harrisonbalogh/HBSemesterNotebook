@@ -14,10 +14,11 @@ class MasterViewController: NSViewController {
     // MARK: View references
     @IBOutlet weak var container_content: NSView!
     @IBOutlet weak var container_sideBar: NSView!
+    @IBOutlet weak var splitView_sidebar: NSView!
     @IBOutlet weak var sidebarBGBox: VisualEffectView!
     
     // Children controllers
-    var sidebarViewController: SidebarViewController!
+    var sidebarPageController: SidebarPageController!
     // The following 2 controllers fill container_content as is needed
 //    private var calendarViewController: CalendarViewController!
     private var schedulerViewController: SchedulerViewController!
@@ -52,46 +53,39 @@ class MasterViewController: NSViewController {
     }
     override func viewDidAppear() {
         super.viewDidAppear()
-        for case let sidebarVC as SidebarViewController in self.childViewControllers {
-            self.sidebarViewController = sidebarVC
-            self.sidebarViewController.masterViewController = self
+        
+        for case let sidebarPC as SidebarPageController in self.childViewControllers {
+            self.sidebarPageController = sidebarPC
+            sidebarPC.masterVC = self
         }
         
-        var noPrev = true
-        if let prevOpenCourse = CFPreferencesCopyAppValue(NSString(string: "previouslyOpenedCourse"), kCFPreferencesCurrentApplication) as? String {
-            if prevOpenCourse != "nil" {
-                let parseSem = prevOpenCourse.substring(to: (prevOpenCourse.range(of: ":")?.lowerBound)!)
-                let remain = prevOpenCourse.substring(from: (prevOpenCourse.range(of: ":")?.upperBound)!)
-                let parseYr = remain.substring(to: (remain.range(of: ":")?.lowerBound)!)
-                let parseCourse = remain.substring(from: (remain.range(of: ":")?.upperBound)!)
-                
-                let semester = Semester.produceSemester(titled: parseSem.lowercased(), in: Int(parseYr)!)
-                noPrev = false
-                sidebarViewController.setDate(semester: semester)
-                
-                if parseCourse != "nil" {
-                    sidebarViewController.selectedCourse = semester.retrieveCourse(named: parseCourse)
-                }
-            }
+//        var recoloredText = NSMutableAttributedString(attributedString: semesterButton.attributedTitle)
+//        recoloredText.addAttribute(NSForegroundColorAttributeName, value: NSColor.red, range: NSMakeRange(0,semesterButton.attributedTitle.length))
+//        semesterButton.attributedTitle = recoloredText
+//        
+//        recoloredText = NSMutableAttributedString(attributedString: semesterButtonAnimated.attributedTitle)
+//        recoloredText.addAttribute(NSForegroundColorAttributeName, value: NSColor.red, range: NSMakeRange(0,semesterButtonAnimated.attributedTitle.length))
+//        semesterButtonAnimated.attributedTitle = recoloredText
+    }
+    
+    override func viewWillDisappear() {
+        super.viewWillDisappear()
+        
+        var course = ""
+        if self.sidebarPageController.selectedCourse == nil {
+            course = "nil"
+        } else {
+            course = self.sidebarPageController.selectedCourse.title!
         }
         
-        if noPrev {
-            let calendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
-            // Get calendar date to deduce semester
-            let yearComponent = calendar.component(.year, from: Date())
-            
-            // This should be adjustable in the settings, assumes Jul-Dec is Fall. Jan-Jun is Spring.
-            var semesterTitle = "spring"
-            if calendar.component(.month, from: Date()) >= 7 {
-                semesterTitle = "fall"
-            }
-            // Set the current semester displayed in the SidebarVC - might want to remeber last selected semester
-            sidebarViewController.setDate(semester: Semester.produceSemester(titled: semesterTitle, in: yearComponent))
-        }
+        let key = semesterButton.title.uppercased() + ":" + yearLabel.stringValue + ":" + course
+        
+        CFPreferencesSetAppValue(NSString(string: "previouslyOpenedCourse"),NSString(string: key), kCFPreferencesCurrentApplication)
+        
+        CFPreferencesAppSynchronize(kCFPreferencesCurrentApplication)
     }
     
     // MARK: - ––– Preferences –––
-    @IBOutlet weak var preferencesButton: NSButton!
     var prefNav: PreferencesNavViewController!
     var prefNavLeadingAnchor: NSLayoutConstraint!
     var pref: PreferencesViewController!
@@ -115,28 +109,24 @@ class MasterViewController: NSViewController {
             
             prefNav = PreferencesNavViewController(nibName: "PreferencesNavView", bundle: nil)!
             self.addChildViewController(prefNav)
-            self.view.addSubview(prefNav.view)
-            prefNav.view.frame = sidebarBGBox.frame
+            splitView_sidebar.addSubview(prefNav.view)
+            prefNav.view.frame = splitView_sidebar.frame
             prefNav.view.widthAnchor.constraint(equalToConstant: prefNav.view.frame.width).isActive = true
-            prefNav.view.topAnchor.constraint(equalTo: container_sideBar.topAnchor).isActive = true
-            prefNav.view.bottomAnchor.constraint(equalTo: container_sideBar.bottomAnchor).isActive = true
+            prefNav.view.topAnchor.constraint(equalTo: splitView_sidebar.topAnchor, constant: 30).isActive = true
+            prefNav.view.bottomAnchor.constraint(equalTo: splitView_sidebar.bottomAnchor).isActive = true
             prefNavLeadingAnchor = prefNav.view.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: -sidebarBGBox.frame.width)
             prefNavLeadingAnchor.isActive = true
             prefNav.preferencesVC = pref
-            
-            // Update button
-            preferencesButton.image = #imageLiteral(resourceName: "icon_drawer")
             
             // Animate the box to reveal it since its initially off-screen (and fade stuff behind it)
             NSAnimationContext.beginGrouping()
             NSAnimationContext.current().duration = 0.25
             NSAnimationContext.current().completionHandler = {
-                self.container_sideBar.isHidden = true
-                self.container_sideBar.alphaValue = 1
+                self.editSemesterButton.isEnabled = false
             }
             prefNavLeadingAnchor.animator().constant = 0
             prefTrailingAnchor.animator().constant = 0
-            container_sideBar.animator().alphaValue = 0
+            editSemesterButton.animator().alphaValue = 0
             NSAnimationContext.endGrouping()
         }
     }
@@ -146,12 +136,7 @@ class MasterViewController: NSViewController {
         if prefNav == nil {
             displayPreferences()
         } else {
-            // Update button
-            preferencesButton.image = #imageLiteral(resourceName: "icon_settings")
-            
-            // Recall hidden stuff. Slide away the preferences view, then remove it.
-            container_sideBar.alphaValue = 0
-            container_sideBar.isHidden = false
+            self.editSemesterButton.isEnabled = true
             NSAnimationContext.beginGrouping()
             NSAnimationContext.current().duration = 0.25
             NSAnimationContext.current().completionHandler = {
@@ -172,20 +157,12 @@ class MasterViewController: NSViewController {
                     self.editorViewController.loadPreferences()
                     self.editorViewController.collectionView.collectionViewLayout?.invalidateLayout()
                 }
-                if self.schedulerViewController != nil {
-                    self.sidebarViewController.selectedSemester.validateSchedule()
-                    self.sidebarViewController.notifyTimeSlotChange()
-                } else {
-                    // Check if the preference changes invalidated any time slots
-                    if !self.sidebarViewController.selectedSemester.validateSchedule() {
-                        print("Not valid!")
-                        self.sidebarViewController.selectedSemester = self.sidebarViewController.selectedSemester
-                    }
-                }
+                self.sidebarPageController.selectedSemester.validateSchedule()
+                self.sidebarPageController.notifyTimeSlotChange()
             }
             prefNavLeadingAnchor.animator().constant = -sidebarBGBox.frame.width
             prefTrailingAnchor.animator().constant = container_content.frame.width
-            container_sideBar.animator().alphaValue = 1
+            editSemesterButton.animator().alphaValue = 1
             NSAnimationContext.endGrouping()
         }
     }
@@ -233,6 +210,16 @@ class MasterViewController: NSViewController {
     
     // MARK: ––– Sidebar Visuals ––– 
     
+    @IBOutlet weak var editSemesterButton: NSButton!
+    
+    @IBAction func action_sidebarMode(_ sender: NSButton) {
+        if sender.state == NSOnState {
+            sidebarPageController.scheduling = false
+        } else {
+            sidebarPageController.scheduling = true
+        }
+    }
+    
     func sideBarShown(_ visible: Bool) {
         NSAnimationContext.beginGrouping()
         NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
@@ -251,6 +238,135 @@ class MasterViewController: NSViewController {
 //        } else {
 //            sideBarShown(true)
 //        }
+    }
+    
+    // MARK: ––– Semester Selection –––
+    
+    @IBOutlet weak var semesterButton: NSButton!
+    @IBOutlet weak var semButtonBotConstraint: NSLayoutConstraint!
+    @IBOutlet weak var semesterButtonAnimated: NSButton!
+    @IBOutlet weak var semButtonAnimBotConstraint: NSLayoutConstraint!
+    @IBOutlet weak var yearLabel: NSTextField!
+    @IBOutlet weak var yearLabelAnimated: NSTextField!
+    @IBOutlet weak var yrButtonBotConstraint: NSLayoutConstraint!
+    @IBOutlet weak var yrButtonAnimBotConstraint: NSLayoutConstraint!
+    
+    func updateDate() {
+        if let yr = Int(yearLabel.stringValue) {
+            lastYearUsed = yr
+        } else {
+            yearLabel.stringValue = "\(lastYearUsed)"
+        }
+        
+        if Int(yearLabel.stringValue) != nil {
+            if semesterButton.title == "Spring" {
+                self.sidebarPageController.selectedSemester = Semester.produceSemester(titled: "spring", in: Int(yearLabel.stringValue)!)
+            } else {
+                self.sidebarPageController.selectedSemester = Semester.produceSemester(titled: "fall", in: Int(yearLabel.stringValue)!)
+            }
+        }
+    }
+    func setDate(semester: Semester) {
+        lastYearUsed = Int(semester.year)
+        yearLabel.stringValue = "\(lastYearUsed)"
+        self.sidebarPageController.selectedSemester = semester
+        
+        semesterButton.title = self.sidebarPageController.selectedSemester.title!.capitalized
+    }
+    
+    var lastYearUsed = 0
+    @IBAction func action_incrementTime(_ sender: NSButton) {
+        sender.isEnabled = false
+        
+        sidebarPageController.navigateBack(self)
+        
+        semButtonAnimBotConstraint.constant = -30
+        if self.semesterButton.title == "Spring" {
+            self.semesterButtonAnimated.title = "Fall"
+        } else {
+            self.semesterButtonAnimated.title = "Spring"
+            self.yearLabelAnimated.stringValue = "\(Int(self.yearLabel.stringValue)! + 1)"
+            yrButtonAnimBotConstraint.constant = -30
+        }
+//        let recoloredText = NSMutableAttributedString(attributedString: self.semesterButtonAnimated.attributedTitle)
+//        recoloredText.addAttribute(NSForegroundColorAttributeName, value: NSColor.white, range: NSMakeRange(0,self.semesterButtonAnimated.attributedTitle.length))
+//        self.semesterButtonAnimated.attributedTitle = recoloredText
+        
+        NSAnimationContext.beginGrouping()
+        NSAnimationContext.current().duration = 0.2
+        NSAnimationContext.current().completionHandler = {
+            if self.semesterButton.title == "Spring" {
+                self.semesterButton.title = "Fall"
+            } else {
+                self.semesterButton.title = "Spring"
+                self.yearLabel.stringValue = "\(Int(self.yearLabel.stringValue)! + 1)"
+                self.yrButtonBotConstraint.constant = 0
+            }
+//            let recoloredText = NSMutableAttributedString(attributedString: self.semesterButton.attributedTitle)
+//            recoloredText.addAttribute(NSForegroundColorAttributeName, value: NSColor.white, range: NSMakeRange(0,self.semesterButton.attributedTitle.length))
+//            self.semesterButton.attributedTitle = recoloredText
+            self.semButtonBotConstraint.constant = 0
+            self.updateDate()
+            sender.isEnabled = true
+        }
+        self.semButtonBotConstraint.animator().constant = -semesterButton.frame.height
+        if self.semesterButton.title == "Fall" {
+            self.yrButtonBotConstraint.animator().constant = semesterButton.frame.height
+        }
+        NSAnimationContext.endGrouping()
+    }
+    @IBAction func action_decrementTime(_ sender: NSButton) {
+        sender.isEnabled = false
+        
+        sidebarPageController.navigateBack(self)
+        
+        semButtonAnimBotConstraint.constant = 30
+        yrButtonAnimBotConstraint.constant = 30
+        if self.semesterButton.title == "Fall" {
+            self.semesterButtonAnimated.title = "Spring"
+        } else {
+            self.semesterButtonAnimated.title = "Fall"
+            self.yearLabelAnimated.stringValue = "\(Int(self.yearLabel.stringValue)! - 1)"
+        }
+//        let recoloredText = NSMutableAttributedString(attributedString: self.semesterButtonAnimated.attributedTitle)
+//        recoloredText.addAttribute(NSForegroundColorAttributeName, value: NSColor.white, range: NSMakeRange(0,self.semesterButtonAnimated.attributedTitle.length))
+//        self.semesterButtonAnimated.attributedTitle = recoloredText
+        
+        NSAnimationContext.beginGrouping()
+        NSAnimationContext.current().duration = 0.2
+        NSAnimationContext.current().completionHandler = {
+            if self.semesterButton.title == "Fall" {
+                self.semesterButton.title = "Spring"
+                
+            } else {
+                self.semesterButton.title = "Fall"
+                self.yearLabel.stringValue = "\(Int(self.yearLabel.stringValue)! - 1)"
+                self.yrButtonBotConstraint.constant = 0
+            }
+//            let recoloredText = NSMutableAttributedString(attributedString: self.semesterButton.attributedTitle)
+//            recoloredText.addAttribute(NSForegroundColorAttributeName, value: NSColor.white, range: NSMakeRange(0,self.semesterButton.attributedTitle.length))
+//            self.semesterButton.attributedTitle = recoloredText
+            self.semButtonBotConstraint.constant = 0
+            self.updateDate()
+            sender.isEnabled = true
+        }
+        self.semButtonBotConstraint.animator().constant = semesterButton.frame.height
+        if self.semesterButton.title == "Spring" {
+            self.yrButtonBotConstraint.animator().constant = -semesterButton.frame.height
+        }
+        NSAnimationContext.endGrouping()
+    }
+    
+    @IBAction func action_semesterButton(_ sender: NSButton) {
+        if semesterButton.title == "Fall" {
+            action_decrementTime(sender)
+        } else {
+            action_incrementTime(sender)
+        }
+    }
+    @IBAction func action_editYear(_ sender: Any) {
+        NSApp.keyWindow?.makeFirstResponder(self)
+        updateDate()
     }
     
     // MARK: ––– Notifiers –––
@@ -280,38 +396,12 @@ class MasterViewController: NSViewController {
     func notifyCourseRename(from oldName: String) {
 //        calendarViewController.reloadTimeslotTitles(named: oldName)
     }
-    ///
-    func notifyCourseDragStart(editBox: HXCourseEditBox, to loc: NSPoint) {
-        // Update drag box visuals to match course being dragged
-        courseDragBox.updateWithCourse(editBox.course)
-        // Add drag box back to the superview
-        self.view.addSubview(courseDragBox)
-        // Try and move these to dragBox initialize in viewDidLoad()
-        courseDragBox.removeConstraints(courseDragBox.constraints)
-        dragBoxConstraintLead = courseDragBox.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: loc.x - editBox.boxDrag.frame.origin.x - editBox.boxDrag.frame.width/2)
-        dragBoxConstraintTop = courseDragBox.topAnchor.constraint(equalTo: self.view.topAnchor, constant: self.view.bounds.height - loc.y - editBox.boxDrag.frame.origin.y - editBox.boxDrag.frame.height/2)
-        dragBoxConstraintLead.isActive = true
-        dragBoxConstraintTop.isActive = true
-        courseDragBox.widthAnchor.constraint(equalToConstant: editBox.bounds.width + 2).isActive = true
-        courseDragBox.heightAnchor.constraint(equalToConstant: editBox.bounds.height + 1).isActive = true
-    }
-    ///
-    func notifyCourseDragMoved(editBox: HXCourseEditBox, to loc: NSPoint) {
-        dragBoxConstraintLead.constant = loc.x - editBox.boxDrag.frame.origin.x - editBox.boxDrag.frame.width/2
-        dragBoxConstraintTop.constant = self.view.bounds.height - loc.y - editBox.boxDrag.frame.origin.y - editBox.boxDrag.frame.height/2
-//        calendarViewController.drag()
-    }
-    ///
-    func notifyCourseDragEnd(course: Course, at loc: NSPoint) {
-        self.courseDragBox.removeFromSuperview()
-//        calendarViewController.drop(course: course, at: loc)
-    }
     /// From EditorVC to SidebarVC
     func notifyLectureFocus(is lectureCVI: LectureCollectionViewItem?) {
         if lectureCVI == nil {
-            sidebarViewController.focus(lecture: nil)
+//            sidebarViewController.focus(lecture: nil)
         } else {
-            sidebarViewController.focus(lecture: lectureCVI!.lecture)
+//            sidebarViewController.focus(lecture: lectureCVI!.lecture)
         }
     }
     /// from SidebarVC to EditorVC
@@ -322,26 +412,29 @@ class MasterViewController: NSViewController {
     func notifyLectureAddition(lecture: Lecture) {
         editorViewController.notifyLectureAddition(lecture: lecture)
     }
-    ///
-    func notifySemesterEditing(semester: Semester) {
-        if schedulerViewController == nil {
-            // Only push a new calendar if the editor is showing.
-            popEditor()
-            pushCalendar(semester: semester)
-        } else {
-            schedulerViewController.initialize(with: semester)
-            schedulerViewController.notifyTimeSlotChange()
-        }
-    }
-    ///
-    func notifySemesterViewing(semester: Semester) {
-        if editorViewController == nil {
-            // Only push a new editor if the calendar is showing.
-            popCalendar()
-            pushEditor()
+    func notifySemester(_ semester: Semester, is scheduling: Bool) {
+        if scheduling {
+            
+            if schedulerViewController == nil {
+                // Only push a new calendar if the editor is showing.
+                popEditor()
+                pushCalendar(semester: semester)
+            } else {
+                schedulerViewController.initialize(with: semester)
+                schedulerViewController.notifyTimeSlotChange()
+            }
             
         } else {
-            editorViewController.selectedCourse = nil
+            
+            if editorViewController == nil {
+                // Only push a new editor if the calendar is showing.
+                popCalendar()
+                pushEditor()
+                
+            } else {
+                editorViewController.selectedCourse = nil
+            }
+            
         }
     }
     ///
@@ -349,14 +442,6 @@ class MasterViewController: NSViewController {
         if schedulerViewController != nil {
             schedulerViewController.notifyTimeSlotChange()
         }
-    }
-    /// 
-    func notifyTimeSlotAddition() {
-        sidebarViewController.notifyTimeSlotAdded()
-    }
-    ///
-    func notifyTimeSlotDeletion() {
-        sidebarViewController.notifyTimeSlotRemoved()
     }
     ///
     func notifyExport() {
@@ -381,5 +466,13 @@ class MasterViewController: NSViewController {
         if editorViewController != nil {
             editorViewController.notifyFindAndReplace()
         }
+    }
+    ///
+    func notifyInvalidSemester() {
+        editSemesterButton.isEnabled = false
+    }
+    ///
+    func notifyValidSemester() {
+        editSemesterButton.isEnabled = true
     }
 }
