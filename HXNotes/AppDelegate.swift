@@ -197,6 +197,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             CFPreferencesSetAppValue(NSString(string: "bufferTimeBetweenCoursesMinutes"),NSString(string: "5"), kCFPreferencesCurrentApplication)
             // SEMESTER_TITLE : SEMESTER_YEAR : COURSE_TITLE or nil if a semester wasn't open on quit
             CFPreferencesSetAppValue(NSString(string: "previouslyOpenedCourse"),NSString(string: "nil"), kCFPreferencesCurrentApplication)
+            CFPreferencesSetAppValue(NSString(string: "assumeSingleSelection"),NSString(string: "nil"), kCFPreferencesCurrentApplication)
             
             CFPreferencesAppSynchronize(kCFPreferencesCurrentApplication)
         }

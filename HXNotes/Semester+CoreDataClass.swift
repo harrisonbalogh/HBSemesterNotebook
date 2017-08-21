@@ -43,7 +43,7 @@ public class Semester: NSManagedObject {
         color.blue = Float(nextColor.blueComponent)
         newCourse.color = color
         
-        newCourse.title = "Untitled \(nextNumberAvailable())"
+        newCourse.title = "Untitled \(nextCourseNumberAvailable())"
         newCourse.semester = self
         
         return newCourse
@@ -146,8 +146,6 @@ public class Semester: NSManagedObject {
                     if soonest == nil || time.startMinute < soonest.startMinute {
                         soonest = time
                     }
-                } else {
-                    print("Engh. Not in the correct time.")
                 }
             }
         }
@@ -186,7 +184,7 @@ public class Semester: NSManagedObject {
     // MARK: - Course Creation Helper Functions
     
     /// Return the first number available in the semester for untitled courses.
-    public func nextNumberAvailable() -> Int {
+    public func nextCourseNumberAvailable() -> Int {
         // Find next available number for naming Course
         var nextCourseNumber = 1
         var seekingNumber = true

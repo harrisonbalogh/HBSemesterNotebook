@@ -116,6 +116,9 @@ class Alert {
     let action: Selector?
     let target: AnyObject?
     let type: AlertType
+    /// This indicates that an alert is deleted even if it may still be in the alertQueue.
+    /// This occurs when an alert is still sliding off screen.
+    var removed = false
     
     /// Question parameter is the label applied to accepting the notification's action but can be
     /// provided with a nil in order for the accept button not to be displayed.
@@ -143,6 +146,7 @@ class Alert {
         if type == .future {
             for x in 0..<Alert.alertQueue.count {
                 if Alert.alertQueue[x].type == .future && Alert.alertQueue[x].course == course {
+                    print("remove cus of future \(type)")
                     Alert.remove(at: x)
                     break
                 }
@@ -152,6 +156,7 @@ class Alert {
         if type == .happening {
             for x in 0..<Alert.alertQueue.count {
                 if (Alert.alertQueue[x].type == .happening || Alert.alertQueue[x].type == .future) && Alert.alertQueue[x].course == course {
+                    print("remove cus of future or happenin \(type)")
                     Alert.remove(at: x)
                     break
                 }
@@ -160,10 +165,13 @@ class Alert {
         
         // Check if this alert does not already exist
         if !Alert.alertQueue.contains(where: {
+            !$0.removed &&
             $0.hour == self.hour &&
             $0.minute == self.minute &&
             $0.course == self.course &&
-            $0.content == self.content }) {
+            $0.content == self.content}) {
+            
+            print("Continuing to add new alert \(type)")
             
             Alert.alertQueue.append(self)
             
@@ -183,6 +191,12 @@ class Alert {
     
     /// Dequeue alert.
     @objc public static func closeAlert() {
+        
+        if Alert.alertQueue.count == 0 {
+            return
+        }
+        
+        Alert.alertQueue[0].removed = true
         
         if let controller = Alert.alertControllers[0] as? HXAlertDropdown {
             print("Closing dropdown alert.")

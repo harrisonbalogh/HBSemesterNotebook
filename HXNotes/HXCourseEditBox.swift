@@ -72,6 +72,7 @@ class HXCourseEditBox: NSView {
         
         if confirmationFrequency == "NEVER" {
             confirmRemoveCourse()
+            return
         }
         
         if self.course.timeSlots!.count == 0 && confirmationFrequency != "ALWAYS" {

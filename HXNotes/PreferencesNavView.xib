@@ -15,6 +15,7 @@
                 <outlet property="buttonEditor" destination="AUU-Kx-yyY" id="mFZ-in-OQn"/>
                 <outlet property="buttonGeneral" destination="2k2-lm-cbh" id="ZMC-Pd-fwW"/>
                 <outlet property="buttonScheduler" destination="u5u-ao-Xps" id="uti-Tw-cNo"/>
+                <outlet property="buttonSidebar" destination="2LU-we-Lv1" id="ses-La-LP7"/>
                 <outlet property="view" destination="Hz6-mo-xeY" id="0bl-1N-x8E"/>
             </connections>
         </customObject>
@@ -49,10 +50,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="16" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="i0X-fv-Ycw">
-                                <rect key="frame" x="0.0" y="258" width="262" height="176"/>
+                                <rect key="frame" x="0.0" y="210" width="262" height="224"/>
                                 <subviews>
                                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="2k2-lm-cbh">
-                                        <rect key="frame" x="0.0" y="144" width="108" height="32"/>
+                                        <rect key="frame" x="0.0" y="192" width="108" height="32"/>
                                         <buttonCell key="cell" type="bevel" title="General" bezelStyle="rounded" image="settings_icon_general" imagePosition="left" alignment="left" imageScaling="proportionallyDown" inset="2" id="P1A-1A-pbf">
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                             <font key="font" metaFont="systemSemibold" size="18"/>
@@ -62,7 +63,7 @@
                                         </connections>
                                     </button>
                                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="AUU-Kx-yyY">
-                                        <rect key="frame" x="0.0" y="96" width="90" height="32"/>
+                                        <rect key="frame" x="0.0" y="144" width="90" height="32"/>
                                         <buttonCell key="cell" type="bevel" title="Editor" bezelStyle="rounded" image="settings_icon_editor" imagePosition="left" alignment="left" imageScaling="proportionallyDown" inset="2" id="IZV-nK-cfy">
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                             <font key="font" metaFont="systemSemibold" size="17"/>
@@ -72,7 +73,7 @@
                                         </connections>
                                     </button>
                                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="9zn-YI-izz">
-                                        <rect key="frame" x="0.0" y="48" width="93" height="32"/>
+                                        <rect key="frame" x="0.0" y="96" width="93" height="32"/>
                                         <buttonCell key="cell" type="bevel" title="Alerts" bezelStyle="rounded" image="settings_icon_alert" imagePosition="left" alignment="left" imageScaling="proportionallyDown" inset="2" id="sfg-bV-Kcr">
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                             <font key="font" metaFont="systemSemibold" size="18"/>
@@ -82,7 +83,7 @@
                                         </connections>
                                     </button>
                                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="u5u-ao-Xps">
-                                        <rect key="frame" x="0.0" y="0.0" width="128" height="32"/>
+                                        <rect key="frame" x="0.0" y="48" width="128" height="32"/>
                                         <buttonCell key="cell" type="bevel" title="Scheduler" bezelStyle="rounded" image="settings_icon_scheduler" imagePosition="left" alignment="left" imageScaling="proportionallyDown" inset="2" id="9PR-hF-8Gs">
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                             <font key="font" metaFont="systemSemibold" size="18"/>
@@ -91,14 +92,26 @@
                                             <action selector="action_scheduler:" target="-2" id="x76-m5-hA4"/>
                                         </connections>
                                     </button>
+                                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="YYB-nQ-MNz">
+                                        <rect key="frame" x="0.0" y="0.0" width="108" height="32"/>
+                                        <buttonCell key="cell" type="bevel" title="Sidebar" bezelStyle="rounded" image="settings_icon_sidebar" imagePosition="left" alignment="left" imageScaling="proportionallyDown" inset="2" id="p3R-lH-l2z">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="systemSemibold" size="18"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <action selector="action_sidebar:" target="-2" id="LOF-55-azM"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <visibilityPriorities>
                                     <integer value="1000"/>
                                     <integer value="1000"/>
                                     <integer value="1000"/>
                                     <integer value="1000"/>
+                                    <integer value="1000"/>
                                 </visibilityPriorities>
                                 <customSpacing>
+                                    <real value="3.4028234663852886e+38"/>
                                     <real value="3.4028234663852886e+38"/>
                                     <real value="3.4028234663852886e+38"/>
                                     <real value="3.4028234663852886e+38"/>
@@ -146,5 +159,6 @@
         <image name="settings_icon_editor" width="38" height="38"/>
         <image name="settings_icon_general" width="38" height="38"/>
         <image name="settings_icon_scheduler" width="38" height="38"/>
+        <image name="settings_icon_sidebar" width="38" height="38"/>
     </resources>
 </document>

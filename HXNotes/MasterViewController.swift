@@ -15,20 +15,12 @@ class MasterViewController: NSViewController {
     @IBOutlet weak var container_content: NSView!
     @IBOutlet weak var container_sideBar: NSView!
     @IBOutlet weak var splitView_sidebar: NSView!
-    @IBOutlet weak var sidebarBGBox: VisualEffectView!
     
     // Children controllers
     var sidebarPageController: SidebarPageController!
     // The following 2 controllers fill container_content as is needed
-//    private var calendarViewController: CalendarViewController!
     private var schedulerViewController: SchedulerViewController!
     var editorViewController: EditorViewController!
-    
-    // Course drag box for moving courses
-    var courseDragBox: HXCourseDragBox = HXCourseDragBox.instance()
-    // These constraints control the position of courseDragBox
-    var dragBoxConstraintLead: NSLayoutConstraint!
-    var dragBoxConstraintTop: NSLayoutConstraint!
     
     let appDelegate = NSApplication.shared().delegate as! AppDelegate
     
@@ -38,12 +30,6 @@ class MasterViewController: NSViewController {
         
         NSApp.keyWindow?.makeFirstResponder(self)
         NSApp.keyWindow?.initialFirstResponder = self.view
-        
-        sidebarBGBox.state = .active
-        sidebarBGBox.blendingMode = .behindWindow
-        sidebarBGBox.appearance = NSAppearance(named: NSAppearanceNameVibrantDark)
-//        sidebarBGBox.appearance = NSAppearance(named: NSAppearanceNameVibrantLight)
-        sidebarBGBox.material = .appearanceBased
         
         Alert.masterViewController = self
         
@@ -58,14 +44,6 @@ class MasterViewController: NSViewController {
             self.sidebarPageController = sidebarPC
             sidebarPC.masterVC = self
         }
-        
-//        var recoloredText = NSMutableAttributedString(attributedString: semesterButton.attributedTitle)
-//        recoloredText.addAttribute(NSForegroundColorAttributeName, value: NSColor.red, range: NSMakeRange(0,semesterButton.attributedTitle.length))
-//        semesterButton.attributedTitle = recoloredText
-//        
-//        recoloredText = NSMutableAttributedString(attributedString: semesterButtonAnimated.attributedTitle)
-//        recoloredText.addAttribute(NSForegroundColorAttributeName, value: NSColor.red, range: NSMakeRange(0,semesterButtonAnimated.attributedTitle.length))
-//        semesterButtonAnimated.attributedTitle = recoloredText
     }
     
     override func viewWillDisappear() {
@@ -114,7 +92,7 @@ class MasterViewController: NSViewController {
             prefNav.view.widthAnchor.constraint(equalToConstant: prefNav.view.frame.width).isActive = true
             prefNav.view.topAnchor.constraint(equalTo: splitView_sidebar.topAnchor, constant: 30).isActive = true
             prefNav.view.bottomAnchor.constraint(equalTo: splitView_sidebar.bottomAnchor).isActive = true
-            prefNavLeadingAnchor = prefNav.view.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: -sidebarBGBox.frame.width)
+            prefNavLeadingAnchor = prefNav.view.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: -container_sideBar.frame.width)
             prefNavLeadingAnchor.isActive = true
             prefNav.preferencesVC = pref
             
@@ -157,10 +135,11 @@ class MasterViewController: NSViewController {
                     self.editorViewController.loadPreferences()
                     self.editorViewController.collectionView.collectionViewLayout?.invalidateLayout()
                 }
+                self.sidebarPageController.loadPreferences()
                 self.sidebarPageController.selectedSemester.validateSchedule()
                 self.sidebarPageController.notifyTimeSlotChange()
             }
-            prefNavLeadingAnchor.animator().constant = -sidebarBGBox.frame.width
+            prefNavLeadingAnchor.animator().constant = -container_sideBar.frame.width
             prefTrailingAnchor.animator().constant = container_content.frame.width
             editSemesterButton.animator().alphaValue = 1
             NSAnimationContext.endGrouping()

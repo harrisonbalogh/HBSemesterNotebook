@@ -22,12 +22,9 @@ class SemesterPageViewController: NSViewController {
     override func viewDidAppear() {
         super.viewDidAppear()
         
-        print("sidebarVC.selectedSemester: \(sidebarVC.selectedSemester)")
-        
         if sidebarVC.selectedSemester != nil {
             return
         }
-        print("    sidebarVC.selectedSemester: \(sidebarVC.selectedSemester)")
         
         // Start with last semester opened
         var noPrev = true
@@ -40,7 +37,7 @@ class SemesterPageViewController: NSViewController {
                 
                 let semester = Semester.produceSemester(titled: parseSem.lowercased(), in: Int(parseYr)!)
                 noPrev = false
-                print("Remember")
+
                 sidebarVC.masterVC.setDate(semester: semester)
                 
                 if parseCourse != "nil" {
@@ -57,7 +54,7 @@ class SemesterPageViewController: NSViewController {
             let calendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
             // Get calendar date to deduce semester
             let yearComponent = calendar.component(.year, from: Date())
-            print("Today's date")
+            
             // This should be adjustable in the settings, assumes Jul-Dec is Fall. Jan-Jun is Spring.
             var semesterTitle = "spring"
             if calendar.component(.month, from: Date()) >= 7 {
@@ -156,6 +153,8 @@ class SemesterPageViewController: NSViewController {
     func action_addCourse() {
         // Creates new course data model and puts new view in ledgerStackView
         pushEditableCourseToStackView( sidebarVC.selectedSemester.createCourse() )
+        
+        notifyTimeSlotUpdated()
     }
     
     // MARK: - Notifiers

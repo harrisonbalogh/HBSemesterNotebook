@@ -9,6 +9,8 @@
 import Cocoa
 
 class SidebarPageController: NSPageController, NSPageControllerDelegate {
+    
+    var singleSelectPref = true
 
     @IBOutlet var semesterVC: SemesterPageViewController!
     @IBOutlet var courseVC: CoursePageViewController!
@@ -22,6 +24,18 @@ class SidebarPageController: NSPageController, NSPageControllerDelegate {
         
         semesterVC.sidebarVC = self
         courseVC.sidebarVC = self
+        
+        loadPreferences()
+    }
+    
+    func loadPreferences() {
+        if let singleSelect = CFPreferencesCopyAppValue(NSString(string: "assumeSingleSelection"), kCFPreferencesCurrentApplication) as? String {
+            if singleSelect == "true" {
+                singleSelectPref = true
+            } else if singleSelect == "false" {
+                singleSelectPref = false
+            }
+        }
     }
     
     override func viewDidLayout() {
@@ -51,13 +65,6 @@ class SidebarPageController: NSPageController, NSPageControllerDelegate {
     /// Slide to course page
     func next(from course: Course) {
         selectedCourse = course
-        
-        NSAnimationContext.beginGrouping()
-        NSAnimationContext.current().duration = 2
-        semesterVC.view.animator().alphaValue = 0
-        NSAnimationContext.endGrouping()
-        
-        self.navigateForward(self)
     }
     /// Slide to semester page
     func prev() {
@@ -71,8 +78,11 @@ class SidebarPageController: NSPageController, NSPageControllerDelegate {
     /// This assumes that an alert called addLecture.
     public func addLecture() {
         
-        // This assumes that an alert called addLecture.
-        Alert.closeAlert()
+        // Hide the static button
+        if selectedCourse != nil {
+            courseVC.addButton.isHidden = true
+            courseVC.addButton.isEnabled = false
+        }
         
         let calendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
         // Get calendar date to deduce semester
@@ -94,13 +104,16 @@ class SidebarPageController: NSPageController, NSPageControllerDelegate {
                     if selectedCourse != timeSlotHappening.course! {
                         selectedCourse = timeSlotHappening.course!
                     }
+                    
+                    Alert.flushAlerts(for: selectedCourse)
+                    
                     // Displays lecture in the lectureStackView
-                    let _ = timeSlotHappening.course!.createLecture(during: timeSlotHappening.course!.duringTimeSlot()!, on: nil, in: nil)
+                    let newLec = timeSlotHappening.course!.createLecture(during: timeSlotHappening.course!.duringTimeSlot()!, on: nil, in: nil)
                     
                     courseVC.loadLectures()
                     
                     // Displays lecture in the lectureStackView
-//                    masterViewController.notifyLectureAddition(lecture: newLec)
+                    masterVC.notifyLectureAddition(lecture: newLec)
                 } else {
                     print("No lectures to add??? Theoretical count: \(timeSlotHappening.course!.theoreticalLectureCount())")
                 }
@@ -118,16 +131,16 @@ class SidebarPageController: NSPageController, NSPageControllerDelegate {
     /// The current semester displayed in the sidebar. Setting this value will update visuals.
     var selectedSemester: Semester! {
         didSet {
-            self.navigateBack(self)
+            if selectedCourse != nil {
+                self.selectedCourse = nil
+            }
             
             self.scheduling = !scheduleCheck()
             
-            if selectedSemester.courses!.count == 1 {
-                // Only 1 course in semester, so select it
+            // This can be changed in preferences
+            if selectedSemester.courses!.count == 1 && singleSelectPref {
+                // Only 1 course in semester, so select it if preference set
                 selectedCourse = (selectedSemester.courses![0] as! Course)
-            } else {
-                // Prevent getting called twice since lectureCheck() called on selectedCourse set (above).
-                AppDelegate.scheduleAssistant.checkHappening()
             }
         }
     }
@@ -135,13 +148,19 @@ class SidebarPageController: NSPageController, NSPageControllerDelegate {
     /// The current course displayed in the sidebar. Setting this value will update visuals.
     var selectedCourse: Course! {
         didSet {
-            self.navigateBack(self)
-            
-            // Notify masterViewController that a course was selected
-            masterVC.notifyCourseSelection(course: selectedCourse)
             
             if selectedCourse == nil {
+                print("                                                Nil selected course")
+                self.navigateBack(self)
                 masterVC.notifySemester(selectedSemester, is: false)
+                return
+            }
+            if oldValue == nil || selectedCourse != oldValue {
+                self.navigateForward(self)
+                self.navigateForward(self)
+                
+                // Notify masterViewController that a course was selected
+                masterVC.notifyCourseSelection(course: selectedCourse)
             }
         }
     }
@@ -150,7 +169,11 @@ class SidebarPageController: NSPageController, NSPageControllerDelegate {
     /// that allow the changing of the schedule or the browsing of course content.
     var scheduling = false {
         didSet {
-            self.navigateBack(self)
+            
+            if scheduling && selectedCourse != nil {
+                selectedCourse = nil
+            }
+            
             scheduleCheck()
             
             if scheduling {

@@ -56,7 +56,7 @@ class ScheduleAssistant: NSObject {
             let currentSemester = Semester.retrieveSemester(titled: semesterTitle, in: yearComponent),
             let futureTimeSlot = currentSemester.futureTimeSlot()
             else { return }
-        print("Gotteee")
+        
         let hour = NSCalendar.current.component(.hour, from: Date())
         let minute = NSCalendar.current.component(.minute, from: Date())
         
@@ -69,7 +69,8 @@ class ScheduleAssistant: NSObject {
     }
     
     /// Check if a course is currently happening. This is used to display a "Start Lecture" alert.
-    func checkHappening() {
+    /// Will return if a course is happening but it is discardable.
+    @discardableResult func checkHappening() -> Bool {
         
         let cal = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
         // Get calendar date to deduce semester
@@ -85,7 +86,7 @@ class ScheduleAssistant: NSObject {
         guard
             let currentSemester = Semester.retrieveSemester(titled: semesterTitle, in: yearComponent),
             let timeSlotHappening = currentSemester.duringCourse()
-            else { return }
+            else { return false }
         
         if timeSlotHappening.course!.lectures!.count == 0 {
             // This is the first lecture
@@ -107,8 +108,15 @@ class ScheduleAssistant: NSObject {
                 appendTimeUntilLecture = "started \(minuteOfDay - timeStart) minutes ago."
             }
             
+            // Notify the static button to appear if necessary
+            if masterVC.sidebarPageController.selectedCourse == timeSlotHappening.course {
+                masterVC.sidebarPageController.courseVC.addButton.isEnabled = true
+                masterVC.sidebarPageController.courseVC.addButton.isHidden = false
+            }
+            
             let _ = Alert(hour: timeHour, minute: timeMinute, course: timeSlotHappening.course!, content: appendTimeUntilLecture + " Create first lecture?", question: "Yes (Start Course)", deny: "No (Not Yet)", action: #selector(masterVC.sidebarPageController.addLecture), target: masterVC.sidebarPageController, type: .happening)
-        
+            return true
+            
         } else {
             // This is not the first lecture
             let theoLecCount = timeSlotHappening.course!.theoreticalLectureCount()
@@ -132,10 +140,18 @@ class ScheduleAssistant: NSObject {
                     appendTimeUntilLecture = "started \(minuteOfDay - timeStart) minutes ago."
                 }
                 
+                // Notify the static button to appear if necessary
+                if masterVC.sidebarPageController.selectedCourse == timeSlotHappening.course {
+                    masterVC.sidebarPageController.courseVC.addButton.isEnabled = true
+                    masterVC.sidebarPageController.courseVC.addButton.isHidden = false
+                }
+                
                 // No lecture exists for this time so give alert
                 let _ = Alert(hour: timeHour, minute: timeMinute, course: timeSlotHappening.course!, content: appendTimeUntilLecture + " Create lecture \(theoLecCount)?", question: "Create Lecture \(timeSlotHappening.course!.theoreticalLectureCount())", deny: "Ignore", action: #selector(masterVC.sidebarPageController.addLecture), target: masterVC.sidebarPageController, type: .happening)
+                return true
             }
         }
+        return false
     }
     
     /// Check if a course was just missed. This will remove any .happening alerts for the

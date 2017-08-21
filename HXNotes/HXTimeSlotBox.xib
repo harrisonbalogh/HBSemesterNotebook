@@ -27,7 +27,7 @@
                         <constraint firstAttribute="width" constant="14" id="Gua-AT-q4l"/>
                         <constraint firstAttribute="height" constant="14" id="Ze5-t3-ZJG"/>
                     </constraints>
-                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="trash_icon_inverse" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="gTs-aO-g8M">
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="trash_icon" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="gTs-aO-g8M">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -138,6 +138,6 @@
         </customView>
     </objects>
     <resources>
-        <image name="trash_icon_inverse" width="25" height="25"/>
+        <image name="trash_icon" width="25" height="25"/>
     </resources>
 </document>

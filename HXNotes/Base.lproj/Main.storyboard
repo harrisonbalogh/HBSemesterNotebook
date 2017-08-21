@@ -801,9 +801,9 @@
                                                                 </constraints>
                                                             </box>
                                                             <box boxType="custom" borderWidth="0.0" title="Box" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="VEN-XY-TRH" userLabel="Time">
-                                                                <rect key="frame" x="0.0" y="321" width="50" height="24.5"/>
+                                                                <rect key="frame" x="0.0" y="320.5" width="50" height="25"/>
                                                                 <view key="contentView" id="kVM-2n-iCx">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="50" height="24.5"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="50" height="25"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <subviews>
                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="urZ-NJ-uJU">
@@ -822,13 +822,13 @@
                                                                 </view>
                                                             </box>
                                                             <box boxType="custom" borderWidth="0.0" title="Box" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="ecY-fD-iWz" userLabel="Time">
-                                                                <rect key="frame" x="0.0" y="296.5" width="50" height="24.5"/>
+                                                                <rect key="frame" x="0.0" y="296" width="50" height="24.5"/>
                                                                 <view key="contentView" id="41C-SM-ugX">
                                                                     <rect key="frame" x="0.0" y="0.0" width="50" height="24.5"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <subviews>
                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="84J-oO-hTl">
-                                                                            <rect key="frame" x="-1" y="11.5" width="32" height="13"/>
+                                                                            <rect key="frame" x="-1" y="11" width="32" height="13"/>
                                                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="10:00" id="3HI-j2-FeS">
                                                                                 <font key="font" metaFont="system" size="10"/>
                                                                                 <color key="textColor" name="scrollBarColor" catalog="System" colorSpace="catalog"/>
@@ -843,7 +843,7 @@
                                                                 </view>
                                                             </box>
                                                             <box boxType="custom" borderWidth="0.0" title="Box" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="eSH-Aa-qLP" userLabel="Time">
-                                                                <rect key="frame" x="0.0" y="272" width="50" height="24.5"/>
+                                                                <rect key="frame" x="0.0" y="271.5" width="50" height="24.5"/>
                                                                 <view key="contentView" id="7ZE-L9-buG">
                                                                     <rect key="frame" x="0.0" y="0.0" width="50" height="24.5"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -864,9 +864,9 @@
                                                                 </view>
                                                             </box>
                                                             <box boxType="custom" borderWidth="0.0" title="Box" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="fST-LS-FMh" userLabel="Time">
-                                                                <rect key="frame" x="0.0" y="247" width="50" height="25"/>
+                                                                <rect key="frame" x="0.0" y="247" width="50" height="24.5"/>
                                                                 <view key="contentView" id="kcs-gi-U5P">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="50" height="25"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="50" height="24.5"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <subviews>
                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3L3-t6-JES">
@@ -912,7 +912,7 @@
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <subviews>
                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zln-Pf-cnV">
-                                                                            <rect key="frame" x="-1" y="11" width="27" height="13"/>
+                                                                            <rect key="frame" x="-1" y="11.5" width="27" height="13"/>
                                                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="2:00" id="ldD-zU-XvK">
                                                                                 <font key="font" metaFont="system" size="10"/>
                                                                                 <color key="textColor" name="scrollBarColor" catalog="System" colorSpace="catalog"/>
@@ -954,7 +954,7 @@
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <subviews>
                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OS3-qb-adQ">
-                                                                            <rect key="frame" x="-1" y="11" width="27" height="13"/>
+                                                                            <rect key="frame" x="-1" y="11.5" width="27" height="13"/>
                                                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="4:00" id="j5u-gQ-gox">
                                                                                 <font key="font" metaFont="system" size="10"/>
                                                                                 <color key="textColor" name="scrollBarColor" catalog="System" colorSpace="catalog"/>
@@ -990,13 +990,13 @@
                                                                 </view>
                                                             </box>
                                                             <box boxType="custom" borderWidth="0.0" title="Box" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="JAW-3q-Bbu" userLabel="Time">
-                                                                <rect key="frame" x="0.0" y="98" width="50" height="25"/>
+                                                                <rect key="frame" x="0.0" y="98.5" width="50" height="24.5"/>
                                                                 <view key="contentView" id="Zge-nY-ypx">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="50" height="25"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="50" height="24.5"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <subviews>
                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hEA-5l-hst">
-                                                                            <rect key="frame" x="-1" y="11.5" width="27" height="13"/>
+                                                                            <rect key="frame" x="-1" y="11" width="27" height="13"/>
                                                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="6:00" id="gPX-7B-uBl">
                                                                                 <font key="font" metaFont="system" size="10"/>
                                                                                 <color key="textColor" name="scrollBarColor" catalog="System" colorSpace="catalog"/>
@@ -1011,13 +1011,13 @@
                                                                 </view>
                                                             </box>
                                                             <box boxType="custom" borderWidth="0.0" title="Box" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="tIX-j8-f3Z" userLabel="Time">
-                                                                <rect key="frame" x="0.0" y="73.5" width="50" height="24.5"/>
+                                                                <rect key="frame" x="0.0" y="74" width="50" height="24.5"/>
                                                                 <view key="contentView" id="9ho-zp-pM7">
                                                                     <rect key="frame" x="0.0" y="0.0" width="50" height="24.5"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <subviews>
                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FHe-GB-Ejy">
-                                                                            <rect key="frame" x="-1" y="11.5" width="26" height="13"/>
+                                                                            <rect key="frame" x="-1" y="11" width="26" height="13"/>
                                                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="7:00" id="l8n-Gb-DbU">
                                                                                 <font key="font" metaFont="system" size="10"/>
                                                                                 <color key="textColor" name="scrollBarColor" catalog="System" colorSpace="catalog"/>
@@ -1032,13 +1032,13 @@
                                                                 </view>
                                                             </box>
                                                             <box boxType="custom" borderWidth="0.0" title="Box" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="BR8-bg-UqV" userLabel="Time">
-                                                                <rect key="frame" x="0.0" y="49" width="50" height="24.5"/>
+                                                                <rect key="frame" x="0.0" y="49.5" width="50" height="24.5"/>
                                                                 <view key="contentView" id="85N-fG-uyO">
                                                                     <rect key="frame" x="0.0" y="0.0" width="50" height="24.5"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <subviews>
                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Chp-fU-1Zx">
-                                                                            <rect key="frame" x="-1" y="11" width="27" height="13"/>
+                                                                            <rect key="frame" x="-1" y="11.5" width="27" height="13"/>
                                                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="8:00" id="WCG-LZ-8zA">
                                                                                 <font key="font" metaFont="system" size="10"/>
                                                                                 <color key="textColor" name="scrollBarColor" catalog="System" colorSpace="catalog"/>
@@ -1053,9 +1053,9 @@
                                                                 </view>
                                                             </box>
                                                             <box boxType="custom" borderWidth="0.0" title="Box" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="7Fo-6n-cmU" userLabel="Time">
-                                                                <rect key="frame" x="0.0" y="24.5" width="50" height="24.5"/>
+                                                                <rect key="frame" x="0.0" y="24.5" width="50" height="25"/>
                                                                 <view key="contentView" id="L3S-bZ-GXN">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="50" height="24.5"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="50" height="25"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <subviews>
                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hGk-Rl-KCi">
@@ -1348,9 +1348,12 @@
                                         <rect key="frame" x="0.0" y="0.0" width="158" height="480"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <subviews>
-                                            <customView alphaValue="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="EV5-mz-vfc" userLabel="Sidebar BG" customClass="VisualEffectView" customModule="HXNotes" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.0" width="158" height="480"/>
-                                            </customView>
+                                            <containerView horizontalCompressionResistancePriority="550" translatesAutoresizingMaskIntoConstraints="NO" id="tfW-KJ-YDg" userLabel="Sidebar Container">
+                                                <rect key="frame" x="0.0" y="0.0" width="158" height="420"/>
+                                                <connections>
+                                                    <segue destination="OSy-wx-obc" kind="embed" id="YzP-oS-foJ"/>
+                                                </connections>
+                                            </containerView>
                                             <box horizontalCompressionResistancePriority="550" boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="vSY-bc-5JG" userLabel="Edit Box">
                                                 <rect key="frame" x="0.0" y="420" width="158" height="30"/>
                                                 <view key="contentView" id="6li-0p-SSt">
@@ -1460,13 +1463,7 @@
                                                     <constraint firstAttribute="height" constant="30" id="0QO-FA-Lmy"/>
                                                 </constraints>
                                             </box>
-                                            <containerView horizontalCompressionResistancePriority="550" translatesAutoresizingMaskIntoConstraints="NO" id="tfW-KJ-YDg" userLabel="Sidebar Container">
-                                                <rect key="frame" x="0.0" y="0.0" width="158" height="420"/>
-                                                <connections>
-                                                    <segue destination="OSy-wx-obc" kind="embed" id="YzP-oS-foJ"/>
-                                                </connections>
-                                            </containerView>
-                                            <button focusRingType="none" translatesAutoresizingMaskIntoConstraints="NO" id="nfr-UP-oJD">
+                                            <button focusRingType="none" translatesAutoresizingMaskIntoConstraints="NO" id="nfr-UP-oJD" userLabel="Preferences Button">
                                                 <rect key="frame" x="133" y="454" width="20" height="20"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="20" id="K0n-op-bST"/>
@@ -1496,16 +1493,12 @@
                                             </button>
                                         </subviews>
                                         <constraints>
-                                            <constraint firstAttribute="trailing" secondItem="EV5-mz-vfc" secondAttribute="trailing" id="1uM-jG-JF2"/>
-                                            <constraint firstAttribute="bottom" secondItem="EV5-mz-vfc" secondAttribute="bottom" id="2AB-RR-t2y"/>
                                             <constraint firstItem="nfr-UP-oJD" firstAttribute="leading" secondItem="mab-sP-D2q" secondAttribute="trailing" constant="5" id="71x-O7-zf2"/>
                                             <constraint firstAttribute="trailing" secondItem="tfW-KJ-YDg" secondAttribute="trailing" id="7QQ-JF-sB4"/>
-                                            <constraint firstItem="EV5-mz-vfc" firstAttribute="leading" secondItem="BBr-tT-C3k" secondAttribute="leading" id="Bdq-JV-mLe"/>
                                             <constraint firstItem="tfW-KJ-YDg" firstAttribute="top" secondItem="vSY-bc-5JG" secondAttribute="bottom" id="Dpa-mx-U96"/>
                                             <constraint firstAttribute="trailing" secondItem="vSY-bc-5JG" secondAttribute="trailing" id="J3q-C2-Fvn"/>
                                             <constraint firstItem="nfr-UP-oJD" firstAttribute="top" secondItem="BBr-tT-C3k" secondAttribute="top" constant="6" id="LjH-kw-snj"/>
                                             <constraint firstAttribute="width" relation="lessThanOrEqual" constant="500" id="MZN-54-iOq"/>
-                                            <constraint firstItem="EV5-mz-vfc" firstAttribute="top" secondItem="BBr-tT-C3k" secondAttribute="top" id="Pkv-07-yHP"/>
                                             <constraint firstItem="vSY-bc-5JG" firstAttribute="top" secondItem="BBr-tT-C3k" secondAttribute="top" constant="30" id="PlI-y0-qTH"/>
                                             <constraint firstItem="mab-sP-D2q" firstAttribute="top" secondItem="BBr-tT-C3k" secondAttribute="top" constant="6" id="V5K-pt-bpf"/>
                                             <constraint firstItem="vSY-bc-5JG" firstAttribute="leading" secondItem="BBr-tT-C3k" secondAttribute="leading" id="bZT-zc-x5S"/>
@@ -1563,7 +1556,6 @@
                         <outlet property="semButtonBotConstraint" destination="e05-76-MpQ" id="qgL-gf-WqX"/>
                         <outlet property="semesterButton" destination="syF-n2-jAD" id="byz-DS-uCt"/>
                         <outlet property="semesterButtonAnimated" destination="1ak-oi-wV3" id="Lhf-Hv-PZ4"/>
-                        <outlet property="sidebarBGBox" destination="EV5-mz-vfc" id="nOf-lL-1NP"/>
                         <outlet property="splitView_sidebar" destination="BBr-tT-C3k" id="2C5-ob-zIx"/>
                         <outlet property="yearLabel" destination="4AM-VA-tDY" id="dqg-w6-evv"/>
                         <outlet property="yearLabelAnimated" destination="Obx-Xd-hkg" id="Aba-ed-6t1"/>

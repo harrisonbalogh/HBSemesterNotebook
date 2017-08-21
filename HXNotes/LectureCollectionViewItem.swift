@@ -10,7 +10,23 @@ import Cocoa
 
 class LectureCollectionViewItem: NSCollectionViewItem {
     
-    weak var lecture: Lecture!
+    weak var lecture: Lecture! {
+        didSet {
+            if oldValue == nil {
+                print(" MY OLD VALUE WAS NIL")
+            } else {
+                print(" MY OLD VALUE WAS \(oldValue.content!.string)")
+            }
+            
+            if lecture == nil {
+                print("  MY NEW VALUE IS NIL")
+            } else {
+                print("  MY NEW VALUE IS \(lecture.content!.string)")
+            }
+            
+            
+        }
+    }
     
     weak var owner: EditorViewController!
     
@@ -49,9 +65,6 @@ class LectureCollectionViewItem: NSCollectionViewItem {
         textView_lecture.translatesAutoresizingMaskIntoConstraints = false
         textView_lecture.drawsBackground = false
         textView_lecture.importsGraphics = true
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(LectureCollectionViewItem.notifyTextChange),
-                                               name: .NSTextDidChange, object: textView_lecture)
         
         self.view.addSubview(textView_lecture)
         textView_lecture.topAnchor.constraint(equalTo: box_dropdown.bottomAnchor, constant: 9).isActive = true
@@ -109,6 +122,12 @@ class LectureCollectionViewItem: NSCollectionViewItem {
             lastHeightCheck = heightCheck
             owner.collectionView.collectionViewLayout?.invalidateLayout()
         }
+    }
+    
+    override func viewDidDisappear() {
+        super.viewDidDisappear()
+        
+        self.lecture = nil
     }
     
     // MARK: - ––– Auto Scroll and Resizing Helper Functions –––
@@ -169,6 +188,7 @@ class LectureCollectionViewItem: NSCollectionViewItem {
         }
         
         // Save to Model
+        print("    textView_lecture.attributedString() save: \(textView_lecture.attributedString().string)")
         lecture.content = textView_lecture.attributedString()
         
         // Check where user is typing to see if it needs to auto scroll

@@ -26,7 +26,7 @@ class HXAlertDropdown: NSViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        if let view = self.view as? VisualEffectView {
+        if let view = self.view as? NSVisualEffectView {
             view.state = .active
             view.blendingMode = .behindWindow
             view.appearance = NSAppearance(named: NSAppearanceNameVibrantDark)

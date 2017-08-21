@@ -52,9 +52,9 @@ class HXFindViewController: NSViewController {
                 foundLecturesToFoundIndices = [[Int]]()
                 lectureIndex = [0, -1]
                 var controllerIndex = 0
-                for lectureCVI in parent.collectionViewItems {
+                for case let lecture as Lecture in parent.selectedCourse.lectures! {
                     foundLecturesToFoundIndices.append([Int]())
-                    var searchThroughText = lectureCVI.textView_lecture.string!
+                    var searchThroughText = lecture.content!.string
                     var loc = searchThroughText.lowercased().range(of: findString)
                     var indexFound = 0
                     while loc != nil {
@@ -139,29 +139,29 @@ class HXFindViewController: NSViewController {
             }
             
             // If owned by a TopbarVC
-            if let parent = self.parent as? EditorViewController {
-                let lectureCVI = parent.collectionViewItems[0]
-                // Check if currently checking occurence is beyond number of occurences. Reset to zero.
-                if lectureIndex[1] >= foundLecturesToFoundIndices[lectureIndex[0]].count - 1 {
-                    lectureIndex[1] = 0
-                    // Reset occurrence count, so want to move to next lectureCVI, find next one that has occurrences
-                    // Also reset selection of last lectureVC
-                    lectureCVI.textView_lecture.setSelectedRange(NSMakeRange(0, 0))
-                    repeat {
-                        if lectureIndex[0] >= foundLecturesToFoundIndices.count - 1 {
-                            lectureIndex[0] = 0
-                        } else {
-                            lectureIndex[0] += 1
-                        }
-                    } while foundLecturesToFoundIndices[lectureIndex[0]].count == 0
-                    
-                } else {
-                    // Else increment to next occurrence
-                    lectureIndex[1] += 1
-                }
-                let range = NSMakeRange(foundLecturesToFoundIndices[lectureIndex[0]][lectureIndex[1]], findString.characters.count)
-                goToAndHighlight(for: lectureCVI, at: range)
-            }
+//            if let parent = self.parent as? EditorViewController {
+//                let lectureCVI = parent.collectionViewItems[0]
+//                // Check if currently checking occurence is beyond number of occurences. Reset to zero.
+//                if lectureIndex[1] >= foundLecturesToFoundIndices[lectureIndex[0]].count - 1 {
+//                    lectureIndex[1] = 0
+//                    // Reset occurrence count, so want to move to next lectureCVI, find next one that has occurrences
+//                    // Also reset selection of last lectureVC
+//                    lectureCVI.textView_lecture.setSelectedRange(NSMakeRange(0, 0))
+//                    repeat {
+//                        if lectureIndex[0] >= foundLecturesToFoundIndices.count - 1 {
+//                            lectureIndex[0] = 0
+//                        } else {
+//                            lectureIndex[0] += 1
+//                        }
+//                    } while foundLecturesToFoundIndices[lectureIndex[0]].count == 0
+//                    
+//                } else {
+//                    // Else increment to next occurrence
+//                    lectureIndex[1] += 1
+//                }
+//                let range = NSMakeRange(foundLecturesToFoundIndices[lectureIndex[0]][lectureIndex[1]], findString.characters.count)
+//                goToAndHighlight(for: lectureCVI, at: range)
+//            }
         } else if findString != textField_find.stringValue && textField_find.stringValue != "" {
             
             findString = textField_find.stringValue
@@ -191,29 +191,29 @@ class HXFindViewController: NSViewController {
                 }
             }
             
-            // If owned by a TopbarVC
-            if let parent = self.parent as? EditorViewController {
-                let lectureCVI = parent.collectionViewItems[lectureIndex[0]]
-                // Check if currently checking occurence is below 0. Reset to previous lecture's count.
-                if lectureIndex[1] <= 0 {
-                    // Reset occurrence count, so want to move to previous lectureVC, find previous one that has occurrences
-                    // Also reset selection of previous lectureVC
-                    lectureCVI.textView_lecture.setSelectedRange(NSMakeRange(0, 0))
-                    repeat {
-                        if lectureIndex[0] <= 0 {
-                            lectureIndex[0] = foundLecturesToFoundIndices.count - 1
-                        } else {
-                            lectureIndex[0] -= 1
-                        }
-                    } while foundLecturesToFoundIndices[lectureIndex[0]].count == 0
-                    lectureIndex[1] = foundLecturesToFoundIndices[lectureIndex[0]].count - 1
-                } else {
-                    // Else decrement to previous occurrence
-                    lectureIndex[1] -= 1
-                }
-                let range = NSMakeRange(foundLecturesToFoundIndices[lectureIndex[0]][lectureIndex[1]], findString.characters.count)
-                goToAndHighlight(for: lectureCVI, at: range)
-            }
+//            // If owned by a TopbarVC
+//            if let parent = self.parent as? EditorViewController {
+//                let lectureCVI = parent.collectionViewItems[lectureIndex[0]]
+//                // Check if currently checking occurence is below 0. Reset to previous lecture's count.
+//                if lectureIndex[1] <= 0 {
+//                    // Reset occurrence count, so want to move to previous lectureVC, find previous one that has occurrences
+//                    // Also reset selection of previous lectureVC
+//                    lectureCVI.textView_lecture.setSelectedRange(NSMakeRange(0, 0))
+//                    repeat {
+//                        if lectureIndex[0] <= 0 {
+//                            lectureIndex[0] = foundLecturesToFoundIndices.count - 1
+//                        } else {
+//                            lectureIndex[0] -= 1
+//                        }
+//                    } while foundLecturesToFoundIndices[lectureIndex[0]].count == 0
+//                    lectureIndex[1] = foundLecturesToFoundIndices[lectureIndex[0]].count - 1
+//                } else {
+//                    // Else decrement to previous occurrence
+//                    lectureIndex[1] -= 1
+//                }
+//                let range = NSMakeRange(foundLecturesToFoundIndices[lectureIndex[0]][lectureIndex[1]], findString.characters.count)
+//                goToAndHighlight(for: lectureCVI, at: range)
+//            }
         } else if findString != textField_find.stringValue && textField_find.stringValue != "" {
             
             findString = textField_find.stringValue

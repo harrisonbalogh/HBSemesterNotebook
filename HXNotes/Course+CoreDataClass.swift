@@ -72,6 +72,34 @@ public class Course: NSManagedObject {
         return newLecture
     }
     
+    /// Returns a newly created Work object model for this course.
+    func createWork() -> Work {
+        
+        let appDelegate = NSApplication.shared().delegate as! AppDelegate
+        
+        let newWork = NSEntityDescription.insertNewObject(forEntityName: "Work", into: appDelegate.managedObjectContext) as! Work
+        
+        newWork.course = self
+        newWork.title = "Untitled Work \(nextWorkNumberAvailable())"
+        newWork.createDate = Date()
+        
+        return newWork
+    }
+    
+    /// Returns a newly created Test object model for this course.
+    func createTest() -> Test {
+        
+        let appDelegate = NSApplication.shared().delegate as! AppDelegate
+        
+        let newTest = NSEntityDescription.insertNewObject(forEntityName: "Test", into: appDelegate.managedObjectContext) as! Test
+        
+        newTest.course = self
+        newTest.title = "Untitled Test \(nextTestNumberAvailable())"
+        newTest.createDate = Date()
+        
+        return newTest
+    }
+    
     /// Return the lecture at the given date, or nil if none exists.
     func retrieveLecture(on date: Date) -> Lecture? {
         
@@ -95,12 +123,32 @@ public class Course: NSManagedObject {
         return nil
     }
     
+    /// Retrieves the course with unique name for this semester. Return nil if
+    /// course not found.
+    public func retrieveWork(named: String) -> Work! {
+        for case let work as Work in self.work! {
+            if work.title!.lowercased() == named.lowercased() {
+                return work
+            }
+        }
+        return nil
+    }
+    
+    /// Retrieves the course with unique name for this semester. Return nil if
+    /// course not found.
+    public func retrieveTest(named: String) -> Test! {
+        for case let test as Test in self.tests! {
+            if test.title!.lowercased() == named.lowercased() {
+                return test
+            }
+        }
+        return nil
+    }
+    
     // MARK: - Schedule Assistant Helper Functions
     
     /// Returns the time slot that is currently happening for this course
     func duringTimeSlot() -> TimeSlot? {
-        
-//        print("  duringTimeSlot?")
         
         if self.semester!.needsValidate {
             self.semester!.validateSchedule()
@@ -120,16 +168,14 @@ public class Course: NSManagedObject {
         let minuteOfDay = Int16(cal.component(.hour, from: Date()) * 60 + cal.component(.minute, from: Date()))
         
         for case let time as TimeSlot in self.timeSlots! {
-            
             let timeDay = time.weekday
             let timeStart = time.startMinute
             let timeStop = time.stopMinute
             
             if weekday == timeDay && timeStart - 5 < minuteOfDay && minuteOfDay < timeStop {
                 // during class period
-                print("Not during class period!")
                 return time
-            } else if weekday > timeDay || (weekday == timeDay && minuteOfDay < timeStart - 5){
+            } else if weekday < timeDay || (weekday == timeDay && minuteOfDay < timeStart - 5){
                 // Timeslots are sorted, so we don't need to continue searching past today's date
                 break
             }
@@ -144,10 +190,8 @@ public class Course: NSManagedObject {
     /// lectures orderedSet is sorted. If this function returns zero, it means there aren't
     /// any courses yet. Verified multiple times to be performing the correct logic.
     func theoreticalLectureCount() -> Int {
-        print("theoreticalLectureCount... ")
         // Zero is only returned for a course that hasn't started yet.
         if lectures!.count == 0 {
-            print("    is pre(1) returned")
             return 0
         }
         
@@ -229,7 +273,6 @@ public class Course: NSManagedObject {
             count += indexToday - indexFirst + 1
         }
         
-        print("   Return: \(count)")
         return count
     }
     
@@ -405,10 +448,7 @@ public class Course: NSManagedObject {
         // If there is a time slot currently in progress, do not yet add an absent lecture for it, so reduce number
         // to fill in since theoreticalLectureCount includes courses based on start time - not finish time.
         if self.duringTimeSlot() != nil {
-            print("Exclude last lecture to fill")
             lecturesToFill -= 1
-        } else {
-            print("Use entire theoLecCount - no lectures happening atm")
         }
         
         // No lectures to create if the amount of lectures is the same as the expected amount of lectures to this date
@@ -431,7 +471,7 @@ public class Course: NSManagedObject {
             
             let nextLecMonth = Int(lastLecture.month) + Int(Int(lastLecture.day + daysBtwnLec) / monthDays[Int(lastLecture.month)])
             let nextLecDay = Int(lastLecture.day + daysBtwnLec) % monthDays[Int(lastLecture.month)]
-            print("BLAM BLAM BLAM")
+            
             let _ = createLecture(during: self.timeSlots![(lastTimeSlotIndex + 1 + x) % self.timeSlots!.count] as! TimeSlot,
                                   on: nextLecDay, in: nextLecMonth)
         }
@@ -487,5 +527,37 @@ public class Course: NSManagedObject {
             }
         }
         return createTimeSlot(on: 2, from: 480, to: 535, valid: false)!
+    }
+    
+    // MARK: - Creation Helper Functions
+    
+    /// Return the first number available in the semester for untitled work.
+    public func nextWorkNumberAvailable() -> Int {
+        // Find next available number for naming Work
+        var nextWorkNumber = 1
+        var seekingNumber = true
+        repeat {
+            if (retrieveWork(named: "Untitled Work \(nextWorkNumber)")) == nil {
+                seekingNumber = false
+            } else {
+                nextWorkNumber += 1
+            }
+        } while(seekingNumber)
+        return nextWorkNumber
+    }
+    
+    /// Return the first number available in the semester for untitled work.
+    public func nextTestNumberAvailable() -> Int {
+        // Find next available number for naming Work
+        var nextTestNumber = 1
+        var seekingNumber = true
+        repeat {
+            if (retrieveTest(named: "Untitled Test \(nextTestNumber)")) == nil {
+                seekingNumber = false
+            } else {
+                nextTestNumber += 1
+            }
+        } while(seekingNumber)
+        return nextTestNumber
     }
 }

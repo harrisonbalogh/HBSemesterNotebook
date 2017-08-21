@@ -74,8 +74,8 @@ class PreferencesViewController: NSViewController {
     @IBAction func action_lectureAlertTime(_ sender: NSTextField) {
         sender.window!.makeFirstResponder(nilResponderButton)
     }
-    @IBAction func action_deleteConfirmation(_ sender: NSButton) {
-
+    @IBAction func action_radioButtonFrequency(_ sender: NSButton) {
+        // NSButton's with radio style need to have same target:action to update each other.
     }
     
     // MARK: Scheduler Settings
@@ -89,6 +89,10 @@ class PreferencesViewController: NSViewController {
     @IBAction func action_timeslotBuffertime(_ sender: NSTextField) {
         sender.window!.makeFirstResponder(nilResponderButton)
     }
+    
+    // MARK: Sidebar Settings
+    @IBOutlet weak var labelSidebar: NSTextField!
+    @IBOutlet weak var checkBoxSingleCourseSelect: NSButton!
     
     
     // MARK: - Loading / Unloading
@@ -144,6 +148,7 @@ class PreferencesViewController: NSViewController {
         if let bufferTime = Int(textFieldTimeslotBufferTime.stringValue) {
             CFPreferencesSetAppValue(NSString(string: "bufferTimeBetweenCoursesMinutes"),NSString(string: "\(bufferTime)"), kCFPreferencesCurrentApplication)
         }
+        CFPreferencesSetAppValue(NSString(string: "assumeSingleSelection"), NSString(string: "\(checkBoxSingleCourseSelect.state == NSOnState)"), kCFPreferencesCurrentApplication)
         
         CFPreferencesAppSynchronize(kCFPreferencesCurrentApplication)
     }
@@ -226,6 +231,13 @@ class PreferencesViewController: NSViewController {
         if let bufferTime = CFPreferencesCopyAppValue(NSString(string: "bufferTimeBetweenCoursesMinutes"), kCFPreferencesCurrentApplication) as? String {
             if let time = Int(bufferTime) {
                 textFieldTimeslotBufferTime.stringValue = "\(time)"
+            }
+        }
+        if let singleSelect = CFPreferencesCopyAppValue(NSString(string: "assumeSingleSelection"), kCFPreferencesCurrentApplication) as? String {
+            if singleSelect == "true" {
+                checkBoxSingleCourseSelect.state = NSOnState
+            } else if singleSelect == "false" {
+                checkBoxSingleCourseSelect.state = NSOffState
             }
         }
     }

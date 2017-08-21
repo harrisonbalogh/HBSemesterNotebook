@@ -11,11 +11,11 @@
         <attribute name="title" attributeType="String" defaultValueString="Untitled" syncable="YES"/>
         <attribute name="valid" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES" syncable="YES"/>
         <relationship name="color" maxCount="1" deletionRule="Cascade" destinationEntity="Color" inverseName="course" inverseEntity="Color" syncable="YES"/>
-        <relationship name="lectures" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Lecture" inverseName="course" inverseEntity="Lecture" syncable="YES"/>
+        <relationship name="lectures" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="Lecture" inverseName="course" inverseEntity="Lecture" syncable="YES"/>
         <relationship name="semester" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Semester" inverseName="courses" inverseEntity="Semester" syncable="YES"/>
-        <relationship name="tests" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Test" inverseName="course" inverseEntity="Test" syncable="YES"/>
+        <relationship name="tests" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="Test" inverseName="course" inverseEntity="Test" syncable="YES"/>
         <relationship name="timeSlots" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="TimeSlot" inverseName="course" inverseEntity="TimeSlot" syncable="YES"/>
-        <relationship name="work" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Work" inverseName="course" inverseEntity="Work" syncable="YES"/>
+        <relationship name="work" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="Work" inverseName="course" inverseEntity="Work" syncable="YES"/>
     </entity>
     <entity name="Highlight" representedClassName="Highlight" syncable="YES" codeGenerationType="class">
         <attribute name="line" attributeType="Integer 16" minValueString="0" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
