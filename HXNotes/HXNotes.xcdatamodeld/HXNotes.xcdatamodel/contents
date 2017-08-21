@@ -39,6 +39,7 @@
         <relationship name="courses" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="Course" inverseName="semester" inverseEntity="Course" syncable="YES"/>
     </entity>
     <entity name="Test" representedClassName="Test" syncable="YES" codeGenerationType="class">
+        <attribute name="completed" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="createDate" optional="YES" attributeType="Transformable" minValueString="1" maxValueString="7" customClassName="Date" syncable="YES"/>
         <attribute name="date" optional="YES" attributeType="Transformable" minValueString="0" customClassName="Date" syncable="YES"/>
         <attribute name="title" attributeType="String" defaultValueString="Untitled Test" syncable="YES"/>
@@ -53,6 +54,7 @@
         <relationship name="lectures" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Lecture" inverseName="timeSlot" inverseEntity="Lecture" syncable="YES"/>
     </entity>
     <entity name="Work" representedClassName="Work" syncable="YES" codeGenerationType="class">
+        <attribute name="completed" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="createDate" optional="YES" attributeType="Transformable" minValueString="1" maxValueString="7" customClassName="Date" syncable="YES"/>
         <attribute name="date" optional="YES" attributeType="Transformable" minValueString="0" customClassName="Date" syncable="YES"/>
         <attribute name="reoccurring" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES" syncable="YES"/>
@@ -65,8 +67,8 @@
         <element name="Highlight" positionX="5373" positionY="10278" width="128" height="73"/>
         <element name="Lecture" positionX="5544" positionY="10188" width="108" height="178"/>
         <element name="Semester" positionX="5697" positionY="9936" width="128" height="103"/>
-        <element name="Test" positionX="5544" positionY="9950" width="108" height="103"/>
+        <element name="Test" positionX="5544" positionY="9914" width="108" height="118"/>
         <element name="TimeSlot" positionX="5697" positionY="10233" width="128" height="133"/>
-        <element name="Work" positionX="5544" positionY="10062" width="108" height="118"/>
+        <element name="Work" positionX="5544" positionY="10044" width="108" height="133"/>
     </elements>
 </model>

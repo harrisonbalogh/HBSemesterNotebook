@@ -174,5 +174,14 @@ class ScheduleAssistant: NSObject {
         checkFuture()
         checkHappening()
         checkMissed()
+        
+        if masterVC.sidebarPageController.selectedCourse != nil {
+            if masterVC.sidebarPageController.selectedCourse.checkWork() {
+                masterVC.sidebarPageController.courseVC.loadWork()
+            }
+            if masterVC.sidebarPageController.selectedCourse.checkTests() {
+                masterVC.sidebarPageController.courseVC.loadTests()
+            }
+        }
     }
 }

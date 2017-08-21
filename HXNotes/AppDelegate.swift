@@ -198,6 +198,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             // SEMESTER_TITLE : SEMESTER_YEAR : COURSE_TITLE or nil if a semester wasn't open on quit
             CFPreferencesSetAppValue(NSString(string: "previouslyOpenedCourse"),NSString(string: "nil"), kCFPreferencesCurrentApplication)
             CFPreferencesSetAppValue(NSString(string: "assumeSingleSelection"),NSString(string: "nil"), kCFPreferencesCurrentApplication)
+            // DAYS:HOURS:MINUTES or nil if never auto completed work/exams
+            CFPreferencesSetAppValue(NSString(string: "assumePassedCompletion"),NSString(string: "0:0:55"), kCFPreferencesCurrentApplication)
+            CFPreferencesSetAppValue(NSString(string: "assumePassedTaken"),NSString(string: "0:0:30"), kCFPreferencesCurrentApplication)
             
             CFPreferencesAppSynchronize(kCFPreferencesCurrentApplication)
         }

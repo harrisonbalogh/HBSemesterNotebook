@@ -124,10 +124,10 @@ public class Course: NSManagedObject {
     }
     
     /// Retrieves the course with unique name for this semester. Return nil if
-    /// course not found.
+    /// course not found. Will not return work that has been marked as completed.
     public func retrieveWork(named: String) -> Work! {
         for case let work as Work in self.work! {
-            if work.title!.lowercased() == named.lowercased() {
+            if !work.completed && work.title!.lowercased() == named.lowercased() {
                 return work
             }
         }
@@ -135,10 +135,10 @@ public class Course: NSManagedObject {
     }
     
     /// Retrieves the course with unique name for this semester. Return nil if
-    /// course not found.
+    /// course not found. Will not return a test that has been marked as completed.
     public func retrieveTest(named: String) -> Test! {
         for case let test as Test in self.tests! {
-            if test.title!.lowercased() == named.lowercased() {
+            if !test.completed && test.title!.lowercased() == named.lowercased() {
                 return test
             }
         }
@@ -181,6 +181,105 @@ public class Course: NSManagedObject {
             }
         }
         return nil
+    }
+    
+    /// Will return true if work had to be marked as completed. Will return false if no work
+    /// was updated.
+    @discardableResult func checkWork() -> Bool {
+        
+        var needsReload = false
+        
+        var autoDays = 0
+        var autoHours = 0
+        var autoMins = 55
+        if let assumeComplete = CFPreferencesCopyAppValue(NSString(string: "assumePassedCompletion"), kCFPreferencesCurrentApplication) as? String {
+            if assumeComplete == "nil" {
+                // Preference has been set to not automatically complete work. So return false
+                return false
+            } else {
+                let parseDays = assumeComplete.substring(to: (assumeComplete.range(of: ":")?.lowerBound)!)
+                let remain = assumeComplete.substring(from: (assumeComplete.range(of: ":")?.upperBound)!)
+                let parseHrs = remain.substring(to: (remain.range(of: ":")?.lowerBound)!)
+                let parseMins = remain.substring(from: (remain.range(of: ":")?.upperBound)!)
+                autoDays = Int(parseDays)!
+                autoHours = Int(parseHrs)!
+                autoMins  = Int(parseMins)!
+            }
+        }
+        
+        let date = Date()
+        
+        for case let work as Work in self.work! {
+            
+            if work.completed {
+                continue
+            }
+
+            guard let workDate = work.date else { continue }
+            
+            var workDateWithAssume = workDate.addingTimeInterval(TimeInterval(autoDays * 24 * 60 * 60))
+            workDateWithAssume = workDateWithAssume.addingTimeInterval(TimeInterval(autoHours * 60 * 60))
+            workDateWithAssume = workDateWithAssume.addingTimeInterval(TimeInterval(autoMins * 60))
+            
+            if date.timeIntervalSince(workDateWithAssume) >= 0 {
+                // Reached or passed the due date for this work
+                needsReload = true
+                work.completed = true
+                let _ = Alert(course: self, content: "\(work.title!) has been marked as completed.", question: nil, deny: "Close", action: nil, target: nil, type: .completed)
+            }
+        }
+
+        return needsReload
+    }
+    
+    /// Will return true if a test had to be marked as completed. Will return false if no test
+    /// was updated.
+    @discardableResult func checkTests() -> Bool {
+        
+        var needsReload = false
+        
+        var autoDays = 0
+        var autoHours = 0
+        var autoMins = 55
+        if let assumeTaken = CFPreferencesCopyAppValue(NSString(string: "assumePassedTaken"), kCFPreferencesCurrentApplication) as? String {
+            if assumeTaken == "nil" {
+                // Preference has been set to not automatically complete work. So return false
+                return false
+            } else {
+                let parseDays = assumeTaken.substring(to: (assumeTaken.range(of: ":")?.lowerBound)!)
+                let remain = assumeTaken.substring(from: (assumeTaken.range(of: ":")?.upperBound)!)
+                let parseHrs = remain.substring(to: (remain.range(of: ":")?.lowerBound)!)
+                let parseMins = remain.substring(from: (remain.range(of: ":")?.upperBound)!)
+                autoDays = Int(parseDays)!
+                autoHours = Int(parseHrs)!
+                autoMins  = Int(parseMins)!
+            }
+        }
+        
+        let date = Date()
+        
+        for case let test as Test in self.tests! {
+            
+            if test.completed {
+               continue
+            }
+            
+            guard let testDate = test.date else { continue }
+            
+            var testDateWithAssume = testDate.addingTimeInterval(TimeInterval(autoDays * 24 * 60 * 60))
+            testDateWithAssume = testDateWithAssume.addingTimeInterval(TimeInterval(autoHours * 60 * 60))
+            testDateWithAssume = testDateWithAssume.addingTimeInterval(TimeInterval(autoMins * 60))
+            
+            if date.timeIntervalSince(testDateWithAssume) >= 0 {
+                // Reached or passed the due date for this work
+                needsReload = true
+                test.completed = true
+                
+                let _ = Alert(course: self, content: "\(test.title!) has been marked as completed.", question: nil, deny: "Close", action: nil, target: nil, type: .completed)
+            }
+        }
+        
+        return needsReload
     }
     
     // MARK: - Calculated Properties

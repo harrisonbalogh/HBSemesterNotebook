@@ -32,6 +32,9 @@ class CoursePageViewController: NSViewController {
         
         courseLabel.stringValue = sidebarVC.selectedCourse.title!
         
+        sidebarVC.selectedCourse.checkWork()
+        sidebarVC.selectedCourse.checkTests()
+        
         loadLectures()
         loadTests()
         loadWork()
@@ -138,7 +141,7 @@ class CoursePageViewController: NSViewController {
     var workDetailsPopover: NSPopover!
     
     func noWorkCheck() {
-        if sidebarVC.selectedCourse.work!.count == 0 {
+        if sidebarVC.selectedCourse.work!.filter({!($0 as! Work).completed}).count == 0 {
             noWorkLabel.alphaValue = 1
             noWorkLabel.isHidden = false
         } else {
@@ -158,7 +161,9 @@ class CoursePageViewController: NSViewController {
         
         // Add all work
         for case let work as Work in sidebarVC.selectedCourse.work! {
-            push(work: work )
+            if !work.completed {
+                push(work: work )
+            }
         }
         
         noWorkCheck()
@@ -189,7 +194,7 @@ class CoursePageViewController: NSViewController {
     var testDetailsPopover: NSPopover!
     
     func noTestsCheck() {
-        if sidebarVC.selectedCourse.tests!.count == 0 {
+        if sidebarVC.selectedCourse.tests!.filter({!($0 as! Test).completed}).count == 0 {
             noTestsLabel.alphaValue = 1
             noTestsLabel.isHidden = false
         } else {
@@ -209,7 +214,9 @@ class CoursePageViewController: NSViewController {
         
         // Add all tests
         for case let test as Test in sidebarVC.selectedCourse.tests! {
-            push(test: test )
+            if !test.completed {
+                push(test: test )
+            }
         }
         
         noTestsCheck()

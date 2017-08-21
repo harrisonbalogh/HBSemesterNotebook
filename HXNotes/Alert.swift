@@ -18,6 +18,7 @@ class Alert {
         case future
         case happening
         case deletion
+        case completed
         case custom
     }
     
@@ -65,7 +66,7 @@ class Alert {
                 if Alert.alertQueue[0].course == nil {
                     newController.label_course.stringValue = "Error"
                 } else {
-                    newController.label_course.stringValue = Alert.alertQueue[0].course!.title!
+                    newController.label_course.stringValue = Alert.alertQueue[0].course!.title! + ":"
                 }
                 newController.label_content.stringValue = Alert.alertQueue[0].content
                 if Alert.alertQueue[0].question == nil {
@@ -146,7 +147,6 @@ class Alert {
         if type == .future {
             for x in 0..<Alert.alertQueue.count {
                 if Alert.alertQueue[x].type == .future && Alert.alertQueue[x].course == course {
-                    print("remove cus of future \(type)")
                     Alert.remove(at: x)
                     break
                 }
@@ -156,7 +156,6 @@ class Alert {
         if type == .happening {
             for x in 0..<Alert.alertQueue.count {
                 if (Alert.alertQueue[x].type == .happening || Alert.alertQueue[x].type == .future) && Alert.alertQueue[x].course == course {
-                    print("remove cus of future or happenin \(type)")
                     Alert.remove(at: x)
                     break
                 }
@@ -170,8 +169,6 @@ class Alert {
             $0.minute == self.minute &&
             $0.course == self.course &&
             $0.content == self.content}) {
-            
-            print("Continuing to add new alert \(type)")
             
             Alert.alertQueue.append(self)
             

@@ -28,6 +28,8 @@ class ExamAdderViewController: NSViewController {
             datePicker.dateValue = examBox.test!.date!
         }
         
+        datePicker.minDate = Date().addingTimeInterval(TimeInterval(60))
+        
     }
     
     @IBAction func action_textFieldEdit(_ sender: NSButton) {

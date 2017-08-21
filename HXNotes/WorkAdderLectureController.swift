@@ -27,6 +27,8 @@ class WorkAdderLectureController: NSViewController {
         } else {
             datePicker.dateValue = workBox.work!.date!
         }
+        
+        datePicker.minDate = Date().addingTimeInterval(TimeInterval(60))
     }
     
     @IBAction func action_textFieldEdit(_ sender: NSButton) {
