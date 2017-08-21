@@ -16,7 +16,7 @@ class PreferencesNavViewController: NSViewController {
     @IBOutlet weak var buttonEditor: NSButton!
     @IBOutlet weak var buttonAlerts: NSButton!
     @IBOutlet weak var buttonScheduler: NSButton!
-    @IBOutlet weak var buttonSidebar: NSScrollView!
+    @IBOutlet weak var buttonSidebar: NSButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()

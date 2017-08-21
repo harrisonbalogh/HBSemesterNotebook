@@ -15,7 +15,7 @@
                 <outlet property="buttonEditor" destination="AUU-Kx-yyY" id="mFZ-in-OQn"/>
                 <outlet property="buttonGeneral" destination="2k2-lm-cbh" id="ZMC-Pd-fwW"/>
                 <outlet property="buttonScheduler" destination="u5u-ao-Xps" id="uti-Tw-cNo"/>
-                <outlet property="buttonSidebar" destination="2LU-we-Lv1" id="ses-La-LP7"/>
+                <outlet property="buttonSidebar" destination="YYB-nQ-MNz" id="0RH-6f-6T6"/>
                 <outlet property="view" destination="Hz6-mo-xeY" id="0bl-1N-x8E"/>
             </connections>
         </customObject>
@@ -43,7 +43,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <scrollView borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2LU-we-Lv1">
+                <scrollView borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2LU-we-Lv1" userLabel="Scroll View">
                     <rect key="frame" x="5" y="0.0" width="264" height="436"/>
                     <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="8hz-I8-ZO8" customClass="HXFlippedClipView" customModule="HXNotes" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="264" height="436"/>

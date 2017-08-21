@@ -151,7 +151,7 @@
                 </box>
                 <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="djt-Re-Ji2">
                     <rect key="frame" x="4" y="3" width="44" height="19"/>
-                    <buttonCell key="cell" type="roundRect" title="Done" bezelStyle="roundedRect" image="5F8B110D-806E-44D5-B302-42EC14B22FD5" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="vWh-0R-NWp">
+                    <buttonCell key="cell" type="roundRect" title="Done" bezelStyle="roundedRect" image="4D0C8942-6164-4446-97CA-C9777572358D" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="vWh-0R-NWp">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="cellTitle"/>
                     </buttonCell>
@@ -161,7 +161,7 @@
                 </button>
                 <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="UsK-i0-tad">
                     <rect key="frame" x="226" y="3" width="51" height="19"/>
-                    <buttonCell key="cell" type="roundRect" title="Delete" bezelStyle="roundedRect" image="DF136ACE-4833-44BC-BFCA-32B23CE7B2A6" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Va8-Vx-UBg">
+                    <buttonCell key="cell" type="roundRect" title="Delete" bezelStyle="roundedRect" image="8CC47227-BAA3-40CE-9DD0-F5937E29EE4C" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Va8-Vx-UBg">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="cellTitle"/>
                     </buttonCell>
@@ -222,7 +222,7 @@
         </customView>
     </objects>
     <resources>
-        <image name="5F8B110D-806E-44D5-B302-42EC14B22FD5" width="1" height="1">
+        <image name="4D0C8942-6164-4446-97CA-C9777572358D" width="1" height="1">
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGPT5YJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK4HCBMU
 GR4fIyQrLjE3OlUkbnVsbNUJCgsMDQ4PEBESVk5TU2l6ZVYkY2xhc3NcTlNJbWFnZUZsYWdzVk5TUmVw
@@ -273,7 +273,7 @@ ALAAswC1ALcAuQC7AMAA1wDZANsJiwmQCZsJpAm3CbsJxgnPCdQJ3AnfCeQJ8wn3Cf4KBgoTChgKGgoc
 CiEKKQosCjEKOQo8Ck4KUQpWAAAAAAAAAgEAAAAAAAAAQQAAAAAAAAAAAAAAAAAAClg
 </mutableData>
         </image>
-        <image name="DF136ACE-4833-44BC-BFCA-32B23CE7B2A6" width="1" height="1">
+        <image name="8CC47227-BAA3-40CE-9DD0-F5937E29EE4C" width="1" height="1">
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGPT5YJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK4HCBMU
 GR4fIyQrLjE3OlUkbnVsbNUJCgsMDQ4PEBESVk5TU2l6ZVYkY2xhc3NcTlNJbWFnZUZsYWdzVk5TUmVw
