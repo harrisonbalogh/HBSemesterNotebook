@@ -144,6 +144,7 @@ class ScheduleAssistant: NSObject {
                 if masterVC.sidebarPageController.selectedCourse == timeSlotHappening.course {
                     masterVC.sidebarPageController.courseVC.addButton.isEnabled = true
                     masterVC.sidebarPageController.courseVC.addButton.isHidden = false
+                    masterVC.sidebarPageController.courseVC.addButton.title = "Lecture \(masterVC.sidebarPageController.selectedCourse.theoreticalLectureCount())"
                 }
                 
                 // No lecture exists for this time so give alert
@@ -159,6 +160,10 @@ class ScheduleAssistant: NSObject {
     func checkMissed() {
         
         Alert.checkExpiredAlerts()
+        
+        if masterVC.sidebarPageController.selectedCourse != nil {
+            masterVC.sidebarPageController.selectedCourse.fillAbsentLectures()
+        }
         
     }
     

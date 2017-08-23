@@ -328,6 +328,7 @@ class PreferencesViewController: NSViewController {
                 textFieldAssumeCompleteHours.isEnabled = false
                 textFieldAssumeCompleteMinutes.isEnabled = false
             } else {
+                print("assume taken is \(assumeTaken)")
                 let parseDays = assumeTaken.substring(to: (assumeTaken.range(of: ":")?.lowerBound)!)
                 let remain = assumeTaken.substring(from: (assumeTaken.range(of: ":")?.upperBound)!)
                 let parseHrs = remain.substring(to: (remain.range(of: ":")?.lowerBound)!)

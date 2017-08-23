@@ -1,5 +1,5 @@
 //
-//  WorkAdderLectureController.swift
+//  TestAdderLectureController.swift
 //  HXNotes
 //
 //  Created by Harrison Balogh on 8/20/17.
@@ -8,23 +8,23 @@
 
 import Cocoa
 
-class WorkAdderLectureController: NSViewController {
-
+class TestAdderViewController: NSViewController {
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do view setup here.
     }
     
     weak var owner: CoursePageViewController!
-    weak var workBox: HXWorkBox!
+    weak var testBox: HXTestBox!
     
     override func viewDidAppear() {
         super.viewDidAppear()
         
-        if workBox.work!.customTitle {
-            textField_title.stringValue = workBox.work!.title!
+        if testBox.test!.customTitle {
+            textField_title.stringValue = testBox.test!.title!
         } else {
-            textField_title.placeholderString = workBox.work!.title!
+            textField_title.placeholderString = testBox.test!.title!
         }
         
         let nextTimeSlotIndex = owner.sidebarVC.selectedCourse.nextTimeSlotIndex()
@@ -36,35 +36,35 @@ class WorkAdderLectureController: NSViewController {
             lectureTimeStackView.addArrangedSubview(newBox)
             newBox.widthAnchor.constraint(equalTo: lectureTimeStackView.widthAnchor).isActive = true
             
-            guard let selectedTime = workBox.work!.turnIn else { continue }
+            guard let selectedTime = testBox.test!.location else { continue }
             
             if timeSlot == selectedTime {
                 newBox.select()
             }
         }
         
-        if workBox.work!.date != nil {
+        if testBox.test!.date != nil {
             
-            if workBox.work!.turnIn == nil {
+            if testBox.test!.location == nil {
                 
                 trailingStackConstraint.constant = self.view.bounds.width
-                datePicker.dateValue = workBox.work!.date!
-                timePicker.dateValue = workBox.work!.date!
+                datePicker.dateValue = testBox.test!.date!
+                timePicker.dateValue = testBox.test!.date!
             }
         }
         
         datePicker.minDate = Date().addingTimeInterval(TimeInterval(60))
         timePicker.minDate = Date().addingTimeInterval(TimeInterval(60))
         
-        descriptionTextView.string = workBox.work!.content!
+        descriptionTextView.string = testBox.test!.content!
         
         NotificationCenter.default.addObserver(self, selector: #selector(action_descriptionUpdate),
                                                name: .NSTextDidChange, object: descriptionTextView)
     }
     @IBOutlet weak var completeButton: NSButton!
     @IBAction func action_complete(_ sender: NSButton) {
-        workBox.work!.completed = true
-        owner.loadWork()
+        testBox.test!.completed = true
+        owner.loadTests()
     }
     
     @IBOutlet weak var textField_title: NSTextField!
@@ -72,39 +72,39 @@ class WorkAdderLectureController: NSViewController {
         let text = sender.stringValue.trimmingCharacters(in: .whitespaces)
         // If user leaves the title box empty, a name will be generated...
         if text == "" {
-            // ... based on work's due date
-            if workBox.work!.date == nil {
+            // ... based on tests' due date
+            if testBox.test!.date == nil {
                 
-                workBox.work!.title! = workBox.work!.course!.nextWorkTitleAvailable(with: "Undated Work ")
+                testBox.test!.title! = testBox.test!.course!.nextTestTitleAvailable(with: "Undated Test ")
                 
             } else {
                 
-                workBox.work!.title! = "Placeholder"
+                testBox.test!.title! = "Placeholder"
                 
-                // Adjust if work is due today
+                // Adjust if test is due today
                 let weekday = Calendar.current.component(.weekday, from: Date())
                 let minuteOfDay = Calendar.current.component(.hour, from: Date()) * 60 + Calendar.current.component(.minute, from: Date())
-                let weekdayWork = Calendar.current.component(.weekday, from: workBox.work!.date!)
-                let minuteOfDayWork = Calendar.current.component(.hour, from: workBox.work!.date!) * 60 + Calendar.current.component(.minute, from: workBox.work!.date!)
+                let weekdayTest = Calendar.current.component(.weekday, from: testBox.test!.date!)
+                let minuteOfDayTest = Calendar.current.component(.hour, from: testBox.test!.date!) * 60 + Calendar.current.component(.minute, from: testBox.test!.date!)
                 
                 var ENGLISH_DAYS = ["","Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
-                if weekday == weekdayWork && minuteOfDay < minuteOfDayWork {
+                if weekday == weekdayTest && minuteOfDay < minuteOfDayTest {
                     ENGLISH_DAYS[weekday] = "Today"
                 }
-                let day = ENGLISH_DAYS[weekdayWork]
+                let day = ENGLISH_DAYS[weekdayTest]
                 
-                workBox.work!.title! = workBox.work!.course!.nextWorkTitleAvailable(with: "\(day) Work ")
+                testBox.test!.title! = testBox.test!.course!.nextTestTitleAvailable(with: "\(day) Test ")
                 
             }
             
-            sender.placeholderString = workBox.work!.title!
-            workBox.work!.customTitle = false
+            sender.placeholderString = testBox.test!.title!
+            testBox.test!.customTitle = false
         } else {
-            workBox.work!.customTitle = true
-            workBox.work!.title! = text
+            testBox.test!.customTitle = true
+            testBox.test!.title! = text
         }
         
-        owner.notifyRenamed(work: workBox.work!)
+        owner.notifyRenamed(test: testBox.test!)
     }
     
     @IBOutlet weak var trailingStackConstraint: NSLayoutConstraint!
@@ -125,13 +125,13 @@ class WorkAdderLectureController: NSViewController {
     @IBOutlet weak var datePicker: NSDatePicker!
     @IBOutlet weak var timePicker: NSDatePicker!
     @IBOutlet weak var toggleReoccurring: NSButton!
-
+    
     @IBAction func action_close(_ sender: NSButton) {
-        owner.notifyCloseWorkDetails()
+        owner.notifyCloseTestDetails()
     }
     
     @IBAction func action_delete(_ sender: NSButton) {
-        owner.notifyDelete(work: workBox.work!)
+        owner.notifyDelete(test: testBox.test!)
     }
     
     @IBAction func action_datePicker(_ sender: NSDatePicker) {
@@ -139,46 +139,46 @@ class WorkAdderLectureController: NSViewController {
         for case let view as HXLectureTimeBox in lectureTimeStackView.arrangedSubviews {
             view.deselect()
         }
-        workBox.work!.turnIn = nil
+        testBox.test!.location = nil
         
         if sender == datePicker {
             timePicker.dateValue = datePicker.dateValue
         }
         
-        workBox.work!.date = timePicker.dateValue
+        testBox.test!.date = timePicker.dateValue
         
-        generateWorkTitle()
+        generateTestTitle()
         
-        owner.notifyDated(work: workBox.work!)
+        owner.notifyDated(test: testBox.test!)
     }
     
     @IBOutlet var descriptionTextView: NSTextView!
     func action_descriptionUpdate() {
-        workBox.work!.content = descriptionTextView.string
+        testBox.test!.content = descriptionTextView.string
     }
     
     // MARK: Convenience Methods
     
-    func generateWorkTitle() {
-        if !workBox.work!.customTitle {
-            workBox.work!.title! = "Placeholder"
+    func generateTestTitle() {
+        if !testBox.test!.customTitle {
+            testBox.test!.title! = "Placeholder"
             
-            // Adjust if work is due today
+            // Adjust if test is due today
             let weekday = Calendar.current.component(.weekday, from: Date())
             let minuteOfDay = Calendar.current.component(.hour, from: Date()) * 60 + Calendar.current.component(.minute, from: Date())
-            let weekdayWork = Calendar.current.component(.weekday, from: workBox.work!.date!)
-            let minuteOfDayWork = Calendar.current.component(.hour, from: workBox.work!.date!) * 60 + Calendar.current.component(.minute, from: workBox.work!.date!)
+            let weekdayTest = Calendar.current.component(.weekday, from: testBox.test!.date!)
+            let minuteOfDayTest = Calendar.current.component(.hour, from: testBox.test!.date!) * 60 + Calendar.current.component(.minute, from: testBox.test!.date!)
             
             var ENGLISH_DAYS = ["","Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
-            if weekday == weekdayWork && minuteOfDay < minuteOfDayWork {
+            if weekday == weekdayTest && minuteOfDay < minuteOfDayTest {
                 ENGLISH_DAYS[weekday] = "Today"
             }
-            let day = ENGLISH_DAYS[weekdayWork]
+            let day = ENGLISH_DAYS[weekdayTest]
             
-            workBox.work!.title! = workBox.work!.course!.nextWorkTitleAvailable(with: "\(day) Work ")
-            textField_title.placeholderString = workBox.work!.title!
+            testBox.test!.title! = testBox.test!.course!.nextTestTitleAvailable(with: "\(day) Test ")
+            textField_title.placeholderString = testBox.test!.title!
             
-            owner.notifyRenamed(work: workBox.work!)
+            owner.notifyRenamed(test: testBox.test!)
         }
     }
     
@@ -189,7 +189,7 @@ class WorkAdderLectureController: NSViewController {
         for case let view as HXLectureTimeBox in lectureTimeStackView.arrangedSubviews {
             view.deselect()
         }
-        workBox.work!.turnIn = timeSlot
+        testBox.test!.location = timeSlot
         
         // Calculating date from today's date to next lecture time slot selected...
         
@@ -205,7 +205,7 @@ class WorkAdderLectureController: NSViewController {
         let toHour = Int(timeSlot.startMinute / 60)
         let toMinute = Int(timeSlot.startMinute % 60)
         let toMinuteOfDay = toHour * 60 + toMinute
-
+        
         var dueDate = date
         if weekday < toWeekday {
             
@@ -228,11 +228,11 @@ class WorkAdderLectureController: NSViewController {
             
         }
         
-        workBox.work!.date = dueDate
+        testBox.test!.date = dueDate
         
-        generateWorkTitle()
+        generateTestTitle()
         
-        owner.notifyDated(work: workBox.work!)
+        owner.notifyDated(test: testBox.test!)
     }
     
 }

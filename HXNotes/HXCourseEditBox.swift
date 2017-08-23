@@ -96,7 +96,7 @@ class HXCourseEditBox: NSView {
 
     /// Adds a timeSlot for this course
     @IBAction func addTimeSlot(_ sender: Any) {
-        let newBox = HXTimeSlotBox.instance(with: course.nextTimeSlot(), for: self)
+        let newBox = HXTimeSlotBox.instance(with: course.nextTimeSlotSpace(), for: self)
         let index = course.timeSlots!.index(of: newBox!.timeSlot)
         timeSlotStackView.insertArrangedSubview(newBox!, at: index + 1)
         

@@ -45,6 +45,7 @@ class CoursePageViewController: NSViewController {
         if AppDelegate.scheduleAssistant.checkHappening() {
             addButton.isEnabled = true
             addButton.isHidden = false
+            addButton.title = "Lecture \(max(sidebarVC.selectedCourse.theoreticalLectureCount(), 1))"
         } else {
             addButton.isEnabled = false
             addButton.isHidden = true
@@ -161,7 +162,9 @@ class CoursePageViewController: NSViewController {
         
         // Add all work
         for case let work as Work in sidebarVC.selectedCourse.work! {
+            
             if !work.completed {
+                generateTitle(for: work)
                 push(work: work )
             }
         }
@@ -170,7 +173,7 @@ class CoursePageViewController: NSViewController {
     }
     
     func push(work: Work) {
-        workStackView.addArrangedSubview(HXWorkBox.instance(with: work, for: self))
+        workStackView.addArrangedSubview(HXWorkBox.instance(with: work, for: self)!)
     }
     
     func flushWork() {
@@ -188,7 +191,7 @@ class CoursePageViewController: NSViewController {
     }
     
     // MARK: - Populating Tests
-    @IBOutlet weak var examStackView: NSStackView!
+    @IBOutlet weak var testStackView: NSStackView!
     @IBOutlet weak var buttonAddTest: NSButton!
     @IBOutlet weak var noTestsLabel: NSTextField!
     var testDetailsPopover: NSPopover!
@@ -203,7 +206,7 @@ class CoursePageViewController: NSViewController {
         }
     }
     
-    @IBAction func action_addExams(_ sender: NSButton) {
+    @IBAction func action_addTests(_ sender: NSButton) {
         push(test: sidebarVC.selectedCourse.createTest() )
         
         noTestsCheck()
@@ -215,6 +218,7 @@ class CoursePageViewController: NSViewController {
         // Add all tests
         for case let test as Test in sidebarVC.selectedCourse.tests! {
             if !test.completed {
+                generateTitle(for: test)
                 push(test: test )
             }
         }
@@ -223,21 +227,65 @@ class CoursePageViewController: NSViewController {
     }
     
     func push(test: Test) {
-        examStackView.addArrangedSubview(HXExamBox.instance(with: test, for: self))
+        testStackView.addArrangedSubview(HXTestBox.instance(with: test, for: self)!)
     }
     
     func flushTests() {
-        for subview in examStackView.arrangedSubviews {
+        for subview in testStackView.arrangedSubviews {
             subview.removeFromSuperview()
         }
         
         noTestsCheck()
     }
     
-    func pop(examBox: HXExamBox) {
-        examBox.removeFromSuperview()
+    func pop(testBox: HXTestBox) {
+        testBox.removeFromSuperview()
         
         noTestsCheck()
+    }
+    
+    // MARK: - Convenience Methods
+    
+    private func generateTitle(for work: Work) {
+        if !work.customTitle && work.date != nil {
+            
+            // Adjust if work is due today
+            let weekday = Calendar.current.component(.weekday, from: Date())
+            let minuteOfDay = Calendar.current.component(.hour, from: Date()) * 60 + Calendar.current.component(.minute, from: Date())
+            let weekdayWork = Calendar.current.component(.weekday, from: work.date!)
+            let minuteOfDayWork = Calendar.current.component(.hour, from: work.date!) * 60 + Calendar.current.component(.minute, from: work.date!)
+            
+            work.title! = "Placeholder"
+            
+            var ENGLISH_DAYS = ["","Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
+            if weekday == weekdayWork && minuteOfDay < minuteOfDayWork {
+                ENGLISH_DAYS[weekday] = "Today"
+            }
+            let day = ENGLISH_DAYS[weekdayWork]
+            
+            work.title! = work.course!.nextWorkTitleAvailable(with: "\(day) Work ")
+        }
+    }
+    
+    private func generateTitle(for test: Test) {
+        if !test.customTitle && test.date != nil {
+            
+            // Adjust if work is due today
+            let weekday = Calendar.current.component(.weekday, from: Date())
+            let minuteOfDay = Calendar.current.component(.hour, from: Date()) * 60 + Calendar.current.component(.minute, from: Date())
+            let weekdayTest = Calendar.current.component(.weekday, from: test.date!)
+            let minuteOfDayTest = Calendar.current.component(.hour, from: test.date!) * 60 + Calendar.current.component(.minute, from: test.date!)
+            
+            test.title! = "Placeholder"
+            
+            var ENGLISH_DAYS = ["","Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
+            if weekday == weekdayTest && minuteOfDay < minuteOfDayTest {
+                ENGLISH_DAYS[weekday] = "Today"
+            }
+            let day = ENGLISH_DAYS[weekdayTest]
+            
+            test.title! = test.course!.nextWorkTitleAvailable(with: "\(day) Test ")
+        }
     }
     
     // MARK: - Notifiers
@@ -258,23 +306,35 @@ class CoursePageViewController: NSViewController {
         }
     }
     
-    func notifyReveal(examBox: HXExamBox) {
+    func notifyReveal(testBox: HXTestBox) {
         if testDetailsPopover != nil {
             if testDetailsPopover.isShown {
+                if let testAVC = testDetailsPopover.contentViewController as? TestAdderViewController {
+                    if testAVC.testBox == testBox {
+                        testDetailsPopover.performClose(self)
+                        return
+                    }
+                }
                 testDetailsPopover.performClose(self)
             }
         }
         testDetailsPopover = NSPopover()
-        let examAVC = ExamAdderViewController(nibName: "ExamAdderViewController", bundle: nil)
-        examAVC?.owner = self
-        examAVC?.examBox = examBox
-        testDetailsPopover.contentViewController = examAVC
-        testDetailsPopover.show(relativeTo: examBox.buttonDetails.bounds, of: examBox.buttonDetails, preferredEdge: NSRectEdge.maxX)
+        let testAVC = TestAdderViewController(nibName: "TestAdderViewController", bundle: nil)
+        testAVC?.owner = self
+        testAVC?.testBox = testBox
+        testDetailsPopover.contentViewController = testAVC
+        testDetailsPopover.show(relativeTo: testBox.buttonDetails.bounds, of: testBox.buttonDetails, preferredEdge: NSRectEdge.maxX)
         
     }
     func notifyReveal(workBox: HXWorkBox) {
         if workDetailsPopover != nil {
             if workDetailsPopover.isShown {
+                if let workAVC = workDetailsPopover.contentViewController as? WorkAdderLectureController {
+                    if workAVC.workBox == workBox {
+                        workDetailsPopover.performClose(self)
+                        return
+                    }
+                }
                 workDetailsPopover.performClose(self)
             }
         }
@@ -287,13 +347,13 @@ class CoursePageViewController: NSViewController {
     }
     
     func notifyDelete(test: Test) {
-        for case let testBox as HXExamBox in examStackView.arrangedSubviews {
+        for case let testBox as HXTestBox in testStackView.arrangedSubviews {
             if testBox.test! == test {
                 // Update model
                 appDelegate.managedObjectContext.delete( test )
                 appDelegate.saveAction(self)
                 // Update visuals
-                pop(examBox: testBox)
+                pop(testBox: testBox)
                 break
             }
         }
@@ -311,9 +371,9 @@ class CoursePageViewController: NSViewController {
         }
     }
     func notifyRenamed(test: Test) {
-        for case let testBox as HXExamBox in examStackView.arrangedSubviews {
+        for case let testBox as HXTestBox in testStackView.arrangedSubviews {
             if testBox.test! == test {
-                testBox.labelExam.stringValue = test.title!
+                testBox.labelTest.stringValue = test.title!
                 break
             }
         }
@@ -327,12 +387,20 @@ class CoursePageViewController: NSViewController {
         }
     }
     func notifyDated(test: Test) {
-        for case let testBox as HXExamBox in examStackView.arrangedSubviews {
+        for case let testBox as HXTestBox in testStackView.arrangedSubviews {
             if testBox.test! == test {
                 let day = Calendar.current.component(.day, from: test.date!)
                 let month = Calendar.current.component(.month, from: test.date!)
                 let year = Calendar.current.component(.year, from: test.date!)
-                testBox.labelDate.stringValue = "\(month)/\(day)/\(year % 100)"
+                let weekday = Calendar.current.component(.weekday, from: test.date!)
+                let minuteOfDay = Calendar.current.component(.hour, from: test.date!) * 60 + Calendar.current.component(.minute, from: test.date!)
+                let weekdayToday = Calendar.current.component(.weekday, from: Date())
+                let minuteOfDayToday = Calendar.current.component(.hour, from: Date()) * 60 + Calendar.current.component(.minute, from: Date())
+                if weekdayToday == weekday && minuteOfDayToday < minuteOfDay {
+                    testBox.labelDate.stringValue = HXTimeFormatter.formatTime(Int16(minuteOfDay))
+                } else {
+                    testBox.labelDate.stringValue = "\(month)/\(day)/\(year % 100)"
+                }
                 break
             }
         }
@@ -343,7 +411,15 @@ class CoursePageViewController: NSViewController {
                 let day = Calendar.current.component(.day, from: work.date!)
                 let month = Calendar.current.component(.month, from: work.date!)
                 let year = Calendar.current.component(.year, from: work.date!)
-                workBox.labelDate.stringValue = "\(month)/\(day)/\(year % 100)"
+                let weekday = Calendar.current.component(.weekday, from: work.date!)
+                let minuteOfDay = Calendar.current.component(.hour, from: work.date!) * 60 + Calendar.current.component(.minute, from: work.date!)
+                let weekdayToday = Calendar.current.component(.weekday, from: Date())
+                let minuteOfDayToday = Calendar.current.component(.hour, from: Date()) * 60 + Calendar.current.component(.minute, from: Date())
+                if weekdayToday == weekday && minuteOfDayToday < minuteOfDay {
+                    workBox.labelDate.stringValue = HXTimeFormatter.formatTime(Int16(minuteOfDay))
+                } else {
+                    workBox.labelDate.stringValue = "\(month)/\(day)/\(year % 100)"
+                }
                 break
             }
         }

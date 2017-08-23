@@ -159,6 +159,8 @@ public class Semester: NSManagedObject {
     /// to false on all offending TimeSlots, Course, and Semester - or update valid flags to true.
     @discardableResult func validateSchedule() -> Bool {
         
+        print("Validate bebe")
+        
         var timeQueue = [TimeSlot]()
         
         self.valid = true

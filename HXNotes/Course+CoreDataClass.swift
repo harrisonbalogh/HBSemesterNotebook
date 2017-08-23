@@ -47,19 +47,25 @@ public class Course: NSManagedObject {
     /// it can be retrieved based on the current date. Otherwise, for the case of an absent lecture, provide
     /// the day and month that this lecture occurred on.
     func createLecture(during timeSlot: TimeSlot, on day: Int?, in month: Int?) -> Lecture {
+        print("CREATING LECTURE")
         
         let appDelegate = NSApplication.shared().delegate as! AppDelegate
+        
+        // The first theo count will return 0 so change this to lecture 1.
+        let lecNumber = max(Int16(self.theoreticalLectureCount()), 1)
         
         let newLecture = NSEntityDescription.insertNewObject(forEntityName: "Lecture", into: appDelegate.managedObjectContext) as! Lecture
         
         newLecture.course = self
         newLecture.timeSlot = timeSlot
-        newLecture.number = Int16(self.theoreticalLectureCount())
+        newLecture.number = lecNumber
+        newLecture.content = NSAttributedString(string: "")
         
         if day == nil || month == nil {
             let cal = Calendar.current
             let date = Date()
             
+            newLecture.absent = false
             newLecture.day = Int16(cal.component(.day, from: date))
             newLecture.month = Int16(cal.component(.month, from: date))
         } else {
@@ -80,7 +86,9 @@ public class Course: NSManagedObject {
         let newWork = NSEntityDescription.insertNewObject(forEntityName: "Work", into: appDelegate.managedObjectContext) as! Work
         
         newWork.course = self
-        newWork.title = "Untitled Work \(nextWorkNumberAvailable())"
+        newWork.title = nextWorkTitleAvailable(with: "Undated Work ")
+        newWork.content = ""
+        newWork.customTitle = false
         newWork.createDate = Date()
         
         return newWork
@@ -94,7 +102,9 @@ public class Course: NSManagedObject {
         let newTest = NSEntityDescription.insertNewObject(forEntityName: "Test", into: appDelegate.managedObjectContext) as! Test
         
         newTest.course = self
-        newTest.title = "Untitled Test \(nextTestNumberAvailable())"
+        newTest.title = nextTestTitleAvailable(with: "Undated Test ")
+        newTest.content = ""
+        newTest.customTitle = false
         newTest.createDate = Date()
         
         return newTest
@@ -291,6 +301,7 @@ public class Course: NSManagedObject {
     func theoreticalLectureCount() -> Int {
         // Zero is only returned for a course that hasn't started yet.
         if lectures!.count == 0 {
+            print("theoreticalLectureCount: RETURNING ZERORORORORORO")
             return 0
         }
         
@@ -372,6 +383,7 @@ public class Course: NSManagedObject {
             count += indexToday - indexFirst + 1
         }
         
+        print("theoreticalLectureCount: \(count) AKDJFKASDKLFHALKJSDHFLKJHASLDKFHKLASHDFLKJHAS")
         return count
     }
     
@@ -535,6 +547,8 @@ public class Course: NSManagedObject {
     /// be guaranteed to be sorted else it will produce incorrect results.
     func fillAbsentLectures() {
         
+        print("filAbsentLectures")
+        
         // This function doesn't do anything if course hasn't started yet.
         if self.lectures!.count == 0 {
             return
@@ -579,7 +593,7 @@ public class Course: NSManagedObject {
     /// Will produce the next available time slot with a default length (pref changeable) of 55 minutes. Can still return
     /// nil but this would mean every day has a full schedule... Starts at 8:00AM and searches each day
     /// before 10:00PM.
-    func nextTimeSlot() -> TimeSlot {
+    func nextTimeSlotSpace() -> TimeSlot {
         
         var courseLength = 55
         if let defaultTimeSpan = CFPreferencesCopyAppValue(NSString(string: "defaultCourseTimeSpanMinutes"), kCFPreferencesCurrentApplication) as? String {
@@ -628,35 +642,85 @@ public class Course: NSManagedObject {
         return createTimeSlot(on: 2, from: 480, to: 535, valid: false)!
     }
     
+    /// From the current date:time, get the next timeSlot that will occur.
+    func nextTimeSlot() -> TimeSlot {
+        if needsSort {
+            self.sortTimeSlots()
+        }
+        
+        let date = Date()
+        let cal = Calendar.current
+        
+        let weekday = Int16(cal.component(.weekday, from: date))
+        let minuteOfDay = Int16(cal.component(.hour, from: date) * 60 + cal.component(.minute, from: date))
+        
+        // Iterate until the first TimeSlot that is not before the current time
+        for case let timeSlot as TimeSlot in self.timeSlots! {
+            if weekday < timeSlot.weekday || (weekday == timeSlot.weekday && timeSlot.startMinute < minuteOfDay) {
+                continue
+            }
+            return timeSlot
+        }
+        // Otherwise we're passed all TimeSlots, so roll over to next week and return the first TimeSlot.
+        return self.timeSlots!.firstObject as! TimeSlot
+    }
+    /// See nextTimeSlot() - this version returns the index of the TimeSlot rather than the TimeSlot itself.
+    func nextTimeSlotIndex() -> Int {
+        if needsSort {
+            self.sortTimeSlots()
+        }
+        
+        let date = Date()
+        let cal = Calendar.current
+        
+        let weekday = Int16(cal.component(.weekday, from: date))
+        let minuteOfDay = Int16(cal.component(.hour, from: date) * 60 + cal.component(.minute, from: date))
+        
+        var index = 0
+        
+        for case let timeSlot as TimeSlot in self.timeSlots! {
+            if weekday > timeSlot.weekday || (weekday == timeSlot.weekday && timeSlot.startMinute < minuteOfDay) {
+                index += 1
+                continue
+            }
+            return index
+        }
+        return 0
+    }
+    
     // MARK: - Creation Helper Functions
     
-    /// Return the first number available in the semester for untitled work.
-    public func nextWorkNumberAvailable() -> Int {
+    /// Return the first title available in the semester for work with the
+    /// specified prefixed title text. Example: nextWorkTitleAvailable(with: "Undated Work ")
+    public func nextWorkTitleAvailable(with prefix: String) -> String {
         // Find next available number for naming Work
         var nextWorkNumber = 1
         var seekingNumber = true
         repeat {
-            if (retrieveWork(named: "Untitled Work \(nextWorkNumber)")) == nil {
+            if (retrieveWork(named: prefix + "\(nextWorkNumber)")) == nil {
                 seekingNumber = false
             } else {
                 nextWorkNumber += 1
             }
         } while(seekingNumber)
-        return nextWorkNumber
+        
+        return prefix + "\(nextWorkNumber)"
     }
     
-    /// Return the first number available in the semester for untitled work.
-    public func nextTestNumberAvailable() -> Int {
+    /// Return the first title available in the semester for a test with the
+    /// specified prefixed title text. Example: nextTestTitleAvailable(with: "Undated Test ")
+    public func nextTestTitleAvailable(with prefix: String) -> String {
         // Find next available number for naming Work
         var nextTestNumber = 1
         var seekingNumber = true
         repeat {
-            if (retrieveTest(named: "Untitled Test \(nextTestNumber)")) == nil {
+            if (retrieveTest(named: prefix + "\(nextTestNumber)")) == nil {
                 seekingNumber = false
             } else {
                 nextTestNumber += 1
             }
         } while(seekingNumber)
-        return nextTestNumber
+        
+        return prefix + "\(nextTestNumber)"
     }
 }

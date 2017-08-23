@@ -11,15 +11,15 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="CoursePageViewController" customModule="HXNotes" customModuleProvider="target">
             <connections>
-                <outlet property="addButton" destination="fdD-R2-ajP" id="fc4-25-pDC"/>
+                <outlet property="addButton" destination="JN2-lt-rjk" id="Ooi-QA-Nzj"/>
                 <outlet property="buttonAddTest" destination="JcK-aM-0wI" id="P5S-IP-yko"/>
                 <outlet property="buttonAddWork" destination="XWK-Mc-tWl" id="wYA-FW-j3C"/>
                 <outlet property="courseLabel" destination="oZJ-mb-bJa" id="JcN-3j-niD"/>
-                <outlet property="examStackView" destination="yYa-pA-UJj" id="HtZ-jw-2pL"/>
                 <outlet property="lectureStackView" destination="krr-Ht-jYx" id="wVk-6k-4qG"/>
                 <outlet property="noLecturesLabel" destination="O3M-Ge-grQ" id="wSR-kv-gv0"/>
                 <outlet property="noTestsLabel" destination="7Ny-td-hT2" id="Sfb-6S-CtT"/>
                 <outlet property="noWorkLabel" destination="caO-UR-m1z" id="5BV-0Q-oi4"/>
+                <outlet property="testStackView" destination="yYa-pA-UJj" id="ky2-wO-fW3"/>
                 <outlet property="view" destination="Hz6-mo-xeY" id="0bl-1N-x8E"/>
                 <outlet property="workStackView" destination="i9W-oJ-ouz" id="7Hw-PZ-dge"/>
             </connections>
@@ -76,9 +76,9 @@
                                     </scroller>
                                 </scrollView>
                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="O3M-Ge-grQ" userLabel="No Work Due">
-                                    <rect key="frame" x="50.5" y="46.5" width="73" height="16"/>
+                                    <rect key="frame" x="50" y="46" width="73" height="16"/>
                                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="No Lectures" id="0FL-96-Dee">
-                                        <font key="font" metaFont="system" size="12"/>
+                                        <font key="font" metaFont="cellTitle"/>
                                         <color key="textColor" red="0.50759640959999996" green="0.50759640959999996" blue="0.50759640959999996" alpha="0.84999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                     </textFieldCell>
@@ -94,27 +94,22 @@
                                 <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="LWz-Ii-kfi">
                                     <rect key="frame" x="0.0" y="106" width="174" height="5"/>
                                 </box>
-                                <button hidden="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fdD-R2-ajP">
-                                    <rect key="frame" x="156" y="113" width="12" height="12"/>
-                                    <constraints>
-                                        <constraint firstAttribute="width" constant="12" id="SK2-A9-jLZ"/>
-                                        <constraint firstAttribute="height" constant="12" id="yHU-iN-IHa"/>
-                                    </constraints>
-                                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSAddTemplate" imagePosition="only" alignment="center" enabled="NO" imageScaling="proportionallyUpOrDown" inset="2" id="UNn-yU-1Pi">
+                                <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="JN2-lt-rjk">
+                                    <rect key="frame" x="90" y="110" width="82" height="17"/>
+                                    <buttonCell key="cell" type="inline" title="Lecture 3" bezelStyle="inline" image="NSAddTemplate" imagePosition="left" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="QLf-E9-log">
                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                        <font key="font" metaFont="system"/>
+                                        <font key="font" metaFont="smallSystemBold"/>
                                     </buttonCell>
                                     <connections>
-                                        <action selector="action_addLecture:" target="-2" id="Prz-kJ-vdU"/>
+                                        <action selector="action_addLecture:" target="-2" id="4lu-wU-bE8"/>
                                     </connections>
                                 </button>
                             </subviews>
                             <constraints>
                                 <constraint firstItem="LWz-Ii-kfi" firstAttribute="leading" secondItem="zhb-YD-iHb" secondAttribute="leading" id="2q1-wX-H6i"/>
-                                <constraint firstItem="fdD-R2-ajP" firstAttribute="centerY" secondItem="gpv-fH-H49" secondAttribute="centerY" id="5aM-D9-qT8"/>
+                                <constraint firstItem="JN2-lt-rjk" firstAttribute="centerY" secondItem="gpv-fH-H49" secondAttribute="centerY" id="5FR-nB-qRC"/>
                                 <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="LWz-Ii-kfi" secondAttribute="bottom" id="7Fs-ZN-84e"/>
                                 <constraint firstAttribute="bottom" secondItem="DBn-qV-v1h" secondAttribute="bottom" id="7Qn-5g-hdT"/>
-                                <constraint firstAttribute="trailing" secondItem="fdD-R2-ajP" secondAttribute="trailing" constant="6" id="91c-XS-PuC"/>
                                 <constraint firstItem="DBn-qV-v1h" firstAttribute="leading" secondItem="zhb-YD-iHb" secondAttribute="leading" id="AP3-ad-bPx"/>
                                 <constraint firstItem="gpv-fH-H49" firstAttribute="leading" secondItem="zhb-YD-iHb" secondAttribute="leading" constant="4" id="D7k-zo-aOe"/>
                                 <constraint firstItem="O3M-Ge-grQ" firstAttribute="centerX" secondItem="DBn-qV-v1h" secondAttribute="centerX" id="FlE-rt-fo4"/>
@@ -162,7 +157,7 @@
                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="caO-UR-m1z" userLabel="No Work Due">
                                     <rect key="frame" x="47" y="59" width="79" height="16"/>
                                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="No Work Due" id="Toe-Y1-gF0">
-                                        <font key="font" metaFont="system" size="12"/>
+                                        <font key="font" metaFont="cellTitle"/>
                                         <color key="textColor" red="0.50759640957446805" green="0.50759640957446805" blue="0.50759640957446805" alpha="0.84999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                     </textFieldCell>
@@ -192,14 +187,27 @@
                                         <action selector="action_addDue:" target="-2" id="VLX-wA-Nwl"/>
                                     </connections>
                                 </button>
+                                <button horizontalHuggingPriority="100" verticalHuggingPriority="750" horizontalCompressionResistancePriority="100" springLoaded="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RRc-1I-iMI">
+                                    <rect key="frame" x="91" y="133" width="61" height="21"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" constant="61" id="17f-6u-YuB"/>
+                                        <constraint firstAttribute="height" constant="21" id="HJY-nL-VuB"/>
+                                    </constraints>
+                                    <buttonCell key="cell" type="bevel" title="Created" alternateTitle="Due Date" bezelStyle="rounded" alignment="center" state="on" imageScaling="proportionallyDown" inset="2" id="WcN-N5-nIE">
+                                        <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
+                                        <font key="font" metaFont="system"/>
+                                    </buttonCell>
+                                </button>
                             </subviews>
                             <constraints>
                                 <constraint firstItem="wZ5-aQ-L55" firstAttribute="leading" secondItem="zQy-cK-qqi" secondAttribute="leading" id="0yM-fg-24D"/>
                                 <constraint firstItem="pmf-qs-YPk" firstAttribute="top" secondItem="zQy-cK-qqi" secondAttribute="top" constant="3" id="6Gy-mD-M6H"/>
+                                <constraint firstItem="XWK-Mc-tWl" firstAttribute="leading" secondItem="RRc-1I-iMI" secondAttribute="trailing" constant="4" id="7SA-K9-VO4"/>
                                 <constraint firstItem="wZ5-aQ-L55" firstAttribute="top" secondItem="pmf-qs-YPk" secondAttribute="bottom" constant="3" id="CYg-r8-dSO"/>
                                 <constraint firstAttribute="bottom" secondItem="wZ5-aQ-L55" secondAttribute="bottom" id="Chu-3Y-wz1"/>
                                 <constraint firstItem="pmf-qs-YPk" firstAttribute="leading" secondItem="zQy-cK-qqi" secondAttribute="leading" constant="4" id="PcP-pe-5aG"/>
                                 <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="bdx-nV-hdl" secondAttribute="bottom" id="Wqb-AO-xIB"/>
+                                <constraint firstItem="RRc-1I-iMI" firstAttribute="centerY" secondItem="XWK-Mc-tWl" secondAttribute="centerY" id="YVh-DV-lhm"/>
                                 <constraint firstItem="bdx-nV-hdl" firstAttribute="leading" secondItem="zQy-cK-qqi" secondAttribute="leading" id="cgI-JP-klQ"/>
                                 <constraint firstItem="caO-UR-m1z" firstAttribute="centerX" secondItem="wZ5-aQ-L55" secondAttribute="centerX" id="mcd-22-fj4"/>
                                 <constraint firstItem="XWK-Mc-tWl" firstAttribute="centerY" secondItem="pmf-qs-YPk" secondAttribute="centerY" id="ndf-wD-THR"/>
@@ -246,7 +254,7 @@
                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7Ny-td-hT2" userLabel="No Work Due">
                                     <rect key="frame" x="26" y="59" width="122" height="16"/>
                                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="No Upcoming Exams" id="7bV-1a-vaq">
-                                        <font key="font" metaFont="system" size="12"/>
+                                        <font key="font" metaFont="cellTitle"/>
                                         <color key="textColor" red="0.50759640959999996" green="0.50759640959999996" blue="0.50759640959999996" alpha="0.84999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                     </textFieldCell>
@@ -273,7 +281,7 @@
                                         <font key="font" metaFont="system"/>
                                     </buttonCell>
                                     <connections>
-                                        <action selector="action_addExams:" target="-2" id="2Pp-8U-TkS"/>
+                                        <action selector="action_addTests:" target="-2" id="EgA-Ke-k4K"/>
                                     </connections>
                                 </button>
                             </subviews>
@@ -335,6 +343,7 @@
                 <constraint firstItem="oZJ-mb-bJa" firstAttribute="leading" secondItem="zVk-Uo-YGZ" secondAttribute="trailing" constant="2" id="UB1-0d-fRi"/>
                 <constraint firstAttribute="trailing" secondItem="DSD-hT-hJj" secondAttribute="trailing" id="bFT-xe-njU"/>
                 <constraint firstItem="9fe-aM-wTV" firstAttribute="top" secondItem="oZJ-mb-bJa" secondAttribute="bottom" constant="2" id="paZ-TS-rDb"/>
+                <constraint firstAttribute="trailing" secondItem="JN2-lt-rjk" secondAttribute="trailing" constant="2" id="qGg-oU-F2y"/>
                 <constraint firstItem="9fe-aM-wTV" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" id="ufz-fL-ITT"/>
                 <constraint firstAttribute="bottom" secondItem="DSD-hT-hJj" secondAttribute="bottom" id="z0Q-jW-2tf"/>
             </constraints>

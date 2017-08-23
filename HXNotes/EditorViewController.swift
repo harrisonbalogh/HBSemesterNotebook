@@ -164,7 +164,10 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
             if updates.filter({ $0 is Lecture && $0.changedValues().keys.contains("content") }).count > 0 {
                 // Timeslot changed
                 for update in updates {
-                    print("  Content update: \((update.changedValues()["content"] as! NSAttributedString).string)")
+                    if update.changedValues().keys.contains(where: {$0 == "content"}) {
+                        print("  Content update: \((update.changedValues()["content"] as! NSAttributedString).string)")
+                    }
+                    
                 }
             }
         }
@@ -303,20 +306,24 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
     }
     
     func numberOfSections(in collectionView: NSCollectionView) -> Int {
-        
-        var nonAbsences = 0
-        if selectedCourse != nil {
-            for case let lecture as Lecture in selectedCourse.lectures! {
-                if !lecture.absent {
-                    nonAbsences += 1
-                }
-            }
-            print("Numbering: (\(nonAbsences))")
-            return nonAbsences
+        if selectedCourse == nil || selectedCourse.lectures == nil {
+            return 0
         }
+        return selectedCourse.lectures!.count
         
-        print("Numbering: 0")
-        return 0
+//        var nonAbsences = 0
+//        if selectedCourse != nil {
+//            for case let lecture as Lecture in selectedCourse.lectures! {
+//                if !lecture.absent {
+//                    nonAbsences += 1
+//                }
+//            }
+//            print("Numbering: (\(nonAbsences))")
+//            return nonAbsences
+//        }
+//        
+//        print("Numbering: 0")
+//        return 0
     }
     
     func collectionView(_ collectionView: NSCollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -338,6 +345,9 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
         let lecture = selectedCourse.lectures!.object(at: Int(indexPath[0].toIntMax())) as! Lecture
         print("    Printing all lecture content...")
         for case let lecture2 as Lecture in selectedCourse.lectures! {
+            if lecture2.content == nil {
+                continue
+            }
             print("      con: \(lecture2.content!.string)")
         }
         print("    • lecture number: \(lecture.number)")
@@ -434,7 +444,12 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
     }
     
     func calculateCollectionViewItemHeight(from lecture: Lecture) -> CGFloat {
-        let txtStorage = NSTextStorage(attributedString: lecture.content!)
+        var txtStorage: NSTextStorage!
+        if lecture.content == nil {
+            txtStorage = NSTextStorage(string: "")
+        } else {
+            txtStorage = NSTextStorage(attributedString: lecture.content!)
+        }
         let txtContainer = NSTextContainer(containerSize: NSSize(width: collectionView.bounds.width, height: 100000))
         let layoutManager = NSLayoutManager()
         layoutManager.addTextContainer(txtContainer)

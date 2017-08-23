@@ -41,7 +41,13 @@ class SidebarPageController: NSPageController, NSPageControllerDelegate {
     override func viewDidLayout() {
         super.viewDidLayout()
         
-        courseVC.view.layout()
+        if semesterVC != nil {
+            semesterVC.view.frame = self.view.bounds
+        }
+        
+        if courseVC != nil {
+            courseVC.view.frame = self.view.bounds
+        }
     }
     
     // MARK: - Page Controller Delegate methods
@@ -103,6 +109,8 @@ class SidebarPageController: NSPageController, NSPageControllerDelegate {
                     }
                     if selectedCourse != timeSlotHappening.course! {
                         selectedCourse = timeSlotHappening.course!
+                    } else {
+                        selectedCourse.fillAbsentLectures()
                     }
                     
                     Alert.flushAlerts(for: selectedCourse)
