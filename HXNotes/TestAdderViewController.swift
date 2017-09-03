@@ -16,7 +16,7 @@ class TestAdderViewController: NSViewController {
     }
     
     weak var owner: CoursePageViewController!
-    weak var testBox: HXTestBox!
+    weak var testBox: CourseTestBox!
     
     override func viewDidAppear() {
         super.viewDidAppear()

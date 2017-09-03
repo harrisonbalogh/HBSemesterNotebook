@@ -70,7 +70,7 @@
                         <rect key="frame" x="1" y="1" width="137" height="76"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textView drawsBackground="NO" importsGraphics="NO" usesFontPanel="YES" findStyle="panel" continuousSpellChecking="YES" allowsUndo="YES" usesRuler="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" dashSubstitution="YES" spellingCorrection="YES" smartInsertDelete="YES" id="WUy-qU-5Ax">
+                            <textView drawsBackground="NO" importsGraphics="NO" allowsUndo="YES" allowsNonContiguousLayout="YES" smartInsertDelete="YES" id="WUy-qU-5Ax">
                                 <rect key="frame" x="0.0" y="0.0" width="139" height="76"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -113,7 +113,7 @@
                     </textFieldCell>
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="R74-XZ-Kr0">
-                    <rect key="frame" x="27.5" y="181" width="94" height="17"/>
+                    <rect key="frame" x="27" y="181" width="94" height="17"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="During Lecture" id="Nlt-Aw-UqL">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>

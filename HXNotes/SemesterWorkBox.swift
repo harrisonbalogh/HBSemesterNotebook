@@ -8,15 +8,15 @@
 
 import Cocoa
 
-class HXWorkBox: NSView {
-
+class SemesterWorkBox: NSView {
+    
     /// Return a new instance of a HXCourseBox based on the nib template.
-    static func instance(with work: Work, for courseVC: CoursePageViewController) -> HXWorkBox! {
+    static func instance(with work: Work, owner: SemesterPageViewController) -> SemesterWorkBox! {
         var theObjects: NSArray = []
-        Bundle.main.loadNibNamed("HXWorkBox", owner: nil, topLevelObjects: &theObjects)
+        Bundle.main.loadNibNamed("SemesterWorkBox", owner: nil, topLevelObjects: &theObjects)
         // Get NSView from top level objects returned from nib load
-        if let newBox = theObjects.filter({$0 is HXWorkBox}).first as? HXWorkBox {
-            newBox.initialize(with: work, for: courseVC)
+        if let newBox = theObjects.filter({$0 is SemesterWorkBox}).first as? SemesterWorkBox {
+            newBox.initialize(with: work, owner: owner)
             return newBox
         }
         return nil
@@ -24,12 +24,12 @@ class HXWorkBox: NSView {
     
     @IBOutlet weak var labelWork: NSTextField!
     @IBOutlet weak var labelDate: NSTextField!
-    @IBOutlet weak var buttonDetails: NSButton!
+    @IBOutlet weak var boxFill: NSBox!
     
     weak var work: Work!
-    weak var parent: CoursePageViewController!
+    weak var owner: SemesterPageViewController!
     
-    func initialize(with work: Work, for courseVC: CoursePageViewController) {
+    func initialize(with work: Work, owner: SemesterPageViewController) {
         labelWork.stringValue = work.title!
         if work.date == nil {
             labelDate.stringValue = ""
@@ -49,10 +49,13 @@ class HXWorkBox: NSView {
         }
         
         self.work = work
-        self.parent = courseVC
+        self.owner = owner
     }
     
-    @IBAction func action_showDetails(_ sender: NSButton) {
-        parent.notifyReveal(workBox: self)
-    }    
+    @IBAction func action_select(_ sender: NSButton) {
+        boxFill.fillColor = NSColor.lightGray
+        self.needsDisplay = true
+        owner.notifySelected(work: work)
+    }
+    
 }

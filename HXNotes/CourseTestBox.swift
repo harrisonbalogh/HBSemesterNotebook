@@ -8,28 +8,28 @@
 
 import Cocoa
 
-class HXTestBox: NSView {
+class CourseTestBox: NSView {
     
     /// Return a new instance of a HXCourseBox based on the nib template.
-    static func instance(with test: Test, for courseVC: CoursePageViewController) -> HXTestBox! {
+    static func instance(with test: Test, owner: CoursePageViewController) -> CourseTestBox! {
         var theObjects: NSArray = []
-        Bundle.main.loadNibNamed("HXTestBox", owner: nil, topLevelObjects: &theObjects)
+        Bundle.main.loadNibNamed("CourseTestBox", owner: nil, topLevelObjects: &theObjects)
         // Get NSView from top level objects returned from nib load
-        if let newBox = theObjects.filter({$0 is HXTestBox}).first as? HXTestBox {
-            newBox.initialize(with: test, for: courseVC)
+        if let newBox = theObjects.filter({$0 is CourseTestBox}).first as? CourseTestBox {
+            newBox.initialize(with: test, owner: owner)
             return newBox
         }
         return nil
     }
-
+    
     @IBOutlet weak var labelTest: NSTextField!
     @IBOutlet weak var labelDate: NSTextField!
     @IBOutlet weak var buttonDetails: NSButton!
     
     weak var test: Test!
-    weak var parent: CoursePageViewController!
+    weak var owner: CoursePageViewController!
     
-    func initialize(with test: Test, for courseVC: CoursePageViewController) {
+    func initialize(with test: Test, owner: CoursePageViewController) {
         labelTest.stringValue = test.title!
         if test.date == nil {
             labelDate.stringValue = ""
@@ -49,10 +49,10 @@ class HXTestBox: NSView {
         }
         
         self.test = test
-        self.parent = courseVC
+        self.owner = owner
     }
     
     @IBAction func action_showDetails(_ sender: NSButton) {
-        parent.notifyReveal(testBox: self)
+        owner.notifyReveal(testBox: self)
     }
 }

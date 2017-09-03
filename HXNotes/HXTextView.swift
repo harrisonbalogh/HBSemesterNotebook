@@ -10,16 +10,19 @@ import Cocoa
 
 class HXTextView: NSTextView {
 
-    weak var parentController: LectureCollectionViewItem!
+    weak var parentController: LectureEditorViewController!
     
     override func becomeFirstResponder() -> Bool {
         super.becomeFirstResponder()
-        parentController.notifyTextViewFocus(true)
+//        parentController.notifyTextViewFocus(true)
+        parentController.notifyContentFocus(is: true)
         return true
     }
     override func resignFirstResponder() -> Bool {
         super.resignFirstResponder()
-        parentController.notifyTextViewFocus(false)
+//        parentController.notifyTextViewFocus(false)
+        parentController.notifyContentFocus(is: false)
         return true
     }
+    
 }

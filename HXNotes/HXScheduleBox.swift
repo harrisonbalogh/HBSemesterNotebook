@@ -13,20 +13,40 @@ class HXScheduleBox: NSBox {
     private var timeSlotVisuals = [TimeSlot]()
     
     private var trackingArea: NSTrackingArea!
-
+    
+    
+    // Schedule Time Bounds
+    private let DEFAULT_EARLIEST = 480 // 8:00
+    private let DEFAULT_LATEST = 1319 // 9:59
+    private var earliestTime = 480
+    private var latestTime = 1319
+    // This are only shown if a class is present on these days
+    private var showSaturday = false
+    private var showSunday = false
+    
     override func draw(_ dirtyRect: NSRect) {
         super.draw(dirtyRect)
 
         // Drawing code here.
         for timeSlot in timeSlotVisuals {
-            let w = self.bounds.width/7
-            let x = CGFloat(timeSlot.weekday - 1) * w
+            
+            var days: CGFloat = 5
+            if showSaturday { days += 1 }
+            if showSunday { days += 1 }
+            
+            var day = timeSlot.weekday
+            if !showSunday { day -= 1 }
+            let w = self.bounds.width/days
+            let x = CGFloat(day - 1) * w
             // Deducting 480 (8 hours) removes the hours of 12A-8A from being drawn, and deducting 120 (2 hours)
             // removes the hours of 10P-12A.
-            let startMinute = Int(timeSlot.startMinute)
-            let stopMinute = Int(timeSlot.stopMinute)
-            let y = self.bounds.height - self.bounds.height * CGFloat(startMinute-480)/(1439-480-120)
-            let h = self.bounds.height * CGFloat(stopMinute - startMinute)/(1439-480-120)
+            let start = Int(timeSlot.startMinute)
+            let stop = Int(timeSlot.stopMinute)
+            
+            let minutesShown = CGFloat(latestTime - earliestTime + 1)
+            
+            let y = self.bounds.height - self.bounds.height * CGFloat(start - earliestTime)/(minutesShown)
+            let h = self.bounds.height * CGFloat(stop - start)/(minutesShown)
             
             var textColor = NSColor.black
             var alphaValue: CGFloat = 1
@@ -40,9 +60,9 @@ class HXScheduleBox: NSBox {
             NSColor(calibratedRed: CGFloat(timeSlot.course!.color!.red), green: CGFloat(timeSlot.course!.color!.green), blue: CGFloat(timeSlot.course!.color!.blue), alpha: alphaValue).setFill()
             bezPath.fill()
             
-            let startString = NSAttributedString(string: HXTimeFormatter.formatTime(Int16(startMinute)), attributes: [NSForegroundColorAttributeName: textColor])
+            let startString = NSAttributedString(string: HXTimeFormatter.formatTime(Int16(start)), attributes: [NSForegroundColorAttributeName: textColor])
             
-            let stopString = NSAttributedString(string: HXTimeFormatter.formatTime(Int16(stopMinute)), attributes: [NSForegroundColorAttributeName: textColor])
+            let stopString = NSAttributedString(string: HXTimeFormatter.formatTime(Int16(stop)), attributes: [NSForegroundColorAttributeName: textColor])
             
             let titleString = NSAttributedString(string: timeSlot.course!.title!, attributes: [NSForegroundColorAttributeName: NSColor.darkGray])
             
@@ -93,10 +113,35 @@ class HXScheduleBox: NSBox {
     // MARK: - Drawing Schedule Boxes
 
     func addTimeSlotVisual(_ timeSlot: TimeSlot) {
+        
+        let start = Int(timeSlot.startMinute)
+        let stop = Int(timeSlot.stopMinute)
+        
+        // Extend the scheduler outside its normal bounds if required
+        if start < earliestTime {
+            earliestTime = Int(start / 60) * 60
+        }
+        if stop > latestTime {
+            latestTime = Int(stop / 60 + 1) * 60 - 1
+        }
+        if timeSlot.weekday == 1 {
+            showSunday = true
+        }
+        if timeSlot.weekday == 7 {
+            showSaturday = true
+        }
+        
         timeSlotVisuals.append(timeSlot)
     }
     
     func clearTimeSlotVisuals() {
+        
+        // Reset scheduler bounds extension from unusual schedules
+        earliestTime = DEFAULT_EARLIEST
+        latestTime = DEFAULT_LATEST
+        showSaturday = false
+        showSunday = false
+        
         timeSlotVisuals = [TimeSlot]()
     }
     

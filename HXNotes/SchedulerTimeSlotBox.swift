@@ -8,12 +8,12 @@
 
 import Cocoa
 
-class HXTimeSlotBox: NSView {
+class SchedulerTimeSlotBox: NSView {
     
     let DAY_NAMES = ["", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
-
+    
     weak var timeSlot: TimeSlot!
-    weak var editBox: HXCourseEditBox!
+    weak var courseBox: SchedulerCourseBox!
     
     @IBOutlet weak var buttonTrash: NSButton!
     @IBOutlet weak var pickerStart: NSDatePicker!
@@ -27,20 +27,20 @@ class HXTimeSlotBox: NSView {
     // MARK: - Instance & Initialize
     
     /// Return a new instance of a HXLectureLedger based on the nib template.
-    static func instance(with timeSlot: TimeSlot, for editBox: HXCourseEditBox) -> HXTimeSlotBox! {
+    static func instance(with timeSlot: TimeSlot, for courseBox: SchedulerCourseBox) -> SchedulerTimeSlotBox! {
         var theObjects: NSArray = []
-        Bundle.main.loadNibNamed("HXTimeSlotBox", owner: nil, topLevelObjects: &theObjects)
+        Bundle.main.loadNibNamed("SchedulerTimeSlotBox", owner: nil, topLevelObjects: &theObjects)
         // Get NSView from top level objects returned from nib load
-        if let newBox = theObjects.filter({$0 is HXTimeSlotBox}).first as? HXTimeSlotBox {
-            newBox.initialize(with: timeSlot, for: editBox)
+        if let newBox = theObjects.filter({$0 is SchedulerTimeSlotBox}).first as? SchedulerTimeSlotBox {
+            newBox.initialize(with: timeSlot, for: courseBox)
             return newBox
         }
         return nil
     }
     
-    private func initialize(with timeSlot: TimeSlot, for editBox: HXCourseEditBox) {
+    private func initialize(with timeSlot: TimeSlot, for courseBox: SchedulerCourseBox) {
         self.timeSlot = timeSlot
-        self.editBox = editBox
+        self.courseBox = courseBox
         
         if timeSlot.course!.lectures!.count > 0 {
             buttonTrash.isEnabled = false
@@ -53,7 +53,7 @@ class HXTimeSlotBox: NSView {
             trashButtonWidthConstraint.constant = 0
         }
         
-        var dateComp = DateComponents()
+        var dateComp = Calendar.current.dateComponents([.year, .month, .day], from: pickerStart.dateValue)
         dateComp.weekday = Int(timeSlot.weekday)
         dateComp.hour = Int(timeSlot.startMinute / 60)
         dateComp.minute = Int(timeSlot.startMinute % 60)
@@ -64,8 +64,6 @@ class HXTimeSlotBox: NSView {
         
         labelWeekday.stringValue = DAY_NAMES[Int(timeSlot.weekday)]
         stepperDay.intValue = Int32(timeSlot.weekday)
-        
-        editBox.notifyTimeSlotChange()
     }
     
     // MARK: - UI Handlers
@@ -77,7 +75,7 @@ class HXTimeSlotBox: NSView {
         if Int(newStart) > timeSlot.stopMinute - 5 {
             // Shift pickerStop if pickerStart is being set to a time later than pickerStop
             // add timeslot's previous length to pickerStop and timeSlot.stop
-            var dateComp = DateComponents()
+            var dateComp = Calendar.current.dateComponents([.year, .month, .day], from: pickerStart.dateValue)
             dateComp.hour = Int((newStart + (timeSlot.stopMinute - timeSlot.startMinute)) / 60)
             dateComp.minute = Int((newStart + (timeSlot.stopMinute - timeSlot.startMinute)) % 60)
             pickerStop.dateValue = cal.date(from: dateComp)!
@@ -85,9 +83,8 @@ class HXTimeSlotBox: NSView {
         }
         
         timeSlot.startMinute = Int16(newStart)
-        editBox.notifyTimeSlotChange()
+        courseBox.notifyTimeSlotChange()
     }
-    
     
     @IBAction func action_pickerStop(_ sender: Any) {
         let cal = Calendar.current
@@ -96,7 +93,7 @@ class HXTimeSlotBox: NSView {
         if Int16(newStop) < timeSlot.startMinute + 5 {
             // Shift pickerStart if pickerStop is being set to a time earlier than pickerStart
             // decrease timeslot's previous length to pickerStart and start
-            var dateComp = DateComponents()
+            var dateComp = Calendar.current.dateComponents([.year, .month, .day], from: pickerStart.dateValue)
             dateComp.hour = Int((newStop - (timeSlot.stopMinute - timeSlot.startMinute)) / 60)
             dateComp.minute = Int((newStop - (timeSlot.stopMinute - timeSlot.startMinute)) % 60)
             pickerStart.dateValue = cal.date(from: dateComp)!
@@ -104,18 +101,18 @@ class HXTimeSlotBox: NSView {
         }
         
         timeSlot.stopMinute = Int16(newStop)
-        editBox.notifyTimeSlotChange()
+        courseBox.notifyTimeSlotChange()
     }
     
     @IBAction func action_stepper(_ sender: Any) {
         // Available timeslot
         labelWeekday.stringValue = DAY_NAMES[Int(stepperDay.intValue)]
         timeSlot.weekday = Int16(stepperDay.intValue)
-        editBox.notifyTimeSlotChange()
+        courseBox.notifyTimeSlotChange()
     }
-
+    
     @IBAction func removeTimeSlotBox(_ sender: Any) {
         self.removeFromSuperview()
-        editBox.notifyTimeSlotRemoved(timeSlot)
+        courseBox.notifyTimeSlotRemoved(timeSlot)
     }
 }

@@ -53,7 +53,7 @@ class Alert {
                 // Constraints
                 newController.topConstraint = newController.view.topAnchor.constraint(equalTo: masterViewController.view.topAnchor, constant: -30)
                 newController.topConstraint.isActive = true
-                newController.view.leadingAnchor.constraint(equalTo: masterViewController.container_content.leadingAnchor).isActive = true
+                newController.view.leadingAnchor.constraint(equalTo: masterViewController.splitView_content.leadingAnchor).isActive = true
                 newController.view.trailingAnchor.constraint(equalTo: masterViewController.view.trailingAnchor).isActive = true
                 
                 // Visuals
@@ -219,7 +219,6 @@ class Alert {
     
     /// Use this instead of Alert.alertQueue.remove(at:), will check if the alert is visible.
     private static func remove(at index: Int) {
-        print("Remove alert \(index)")
         if index > 0 {
             Alert.alertQueue.remove(at: index)
         } else if Alert.alertShowing {
@@ -231,7 +230,6 @@ class Alert {
     /// Probably used after a .deletion alert has been confirmed, will remove
     /// all alerts with the provided course title.
     public static func flushAlerts(for course: Course) {
-        print("Flush alerts for \(course)")
         for x in stride(from: Alert.alertQueue.count - 1, through: 0, by: -1) {
             if Alert.alertQueue[x].course == course {
                 Alert.remove(at: x)

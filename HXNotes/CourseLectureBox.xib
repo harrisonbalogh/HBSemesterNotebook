@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11762" systemVersion="16G29" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11762"/>
+        <capability name="box content view" minToolsVersion="7.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+        <capability name="system font weights other than Regular or Bold" minToolsVersion="7.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner"/>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <box boxType="custom" borderWidth="0.0" title="Box" id="fd8-fU-Dr7" customClass="CourseLectureBox" customModule="HXNotes" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="186" height="44"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <view key="contentView" id="vqz-N1-xQd">
+                <rect key="frame" x="0.0" y="0.0" width="186" height="44"/>
+                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                <subviews>
+                    <imageView identifier="lecture_image" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="UBg-Es-jV5">
+                        <rect key="frame" x="158" y="23" width="12" height="12"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="12" id="NDr-1u-dTm"/>
+                            <constraint firstAttribute="width" constant="12" id="vNW-tv-7Rj"/>
+                        </constraints>
+                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="icon_pencil" id="qjB-gP-odn"/>
+                    </imageView>
+                    <box verticalHuggingPriority="750" alphaValue="0.0" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="86t-bh-e68">
+                        <rect key="frame" x="16" y="19" width="140" height="5"/>
+                    </box>
+                    <textField identifier="lecture_label_title" horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="97T-y4-ki8">
+                        <rect key="frame" x="14" y="21" width="70" height="18"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="Number #" id="goM-bH-DPj">
+                            <font key="font" metaFont="systemMedium" size="14"/>
+                            <color key="textColor" red="0.35308140519999998" green="0.34494185449999998" blue="0.3531225026" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField identifier="lecture_label_date" horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HpC-7q-GtQ">
+                        <rect key="frame" x="104" y="22" width="54" height="16"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="12/13/93" id="rJj-4F-U9J">
+                            <font key="font" metaFont="cellTitle"/>
+                            <color key="textColor" red="0.35308140519999998" green="0.34494185449999998" blue="0.3531225026" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField horizontalHuggingPriority="100" verticalHuggingPriority="750" horizontalCompressionResistancePriority="100" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WOd-2w-smS">
+                        <rect key="frame" x="14" y="6" width="80" height="17"/>
+                        <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Custom Title" placeholderString="Untitled" id="PLi-3m-r2w">
+                            <font key="font" metaFont="systemLight" size="13"/>
+                            <color key="textColor" red="0.32928856379999999" green="0.32928856379999999" blue="0.32928856379999999" alpha="0.87623131789999997" colorSpace="custom" customColorSpace="sRGB"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <button identifier="lecture_button_overlay" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="NUM-72-6Rl">
+                        <rect key="frame" x="0.0" y="0.0" width="186" height="44"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="44" id="CoS-y0-SWj"/>
+                        </constraints>
+                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" alignment="center" transparent="YES" imageScaling="proportionallyDown" inset="2" id="Urw-ae-ofn">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="action_clickLecture:" target="fd8-fU-Dr7" id="clX-65-UHQ"/>
+                        </connections>
+                    </button>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="86t-bh-e68" firstAttribute="leading" secondItem="vqz-N1-xQd" secondAttribute="leading" constant="16" id="4bn-zH-Dhx"/>
+                    <constraint firstItem="WOd-2w-smS" firstAttribute="top" secondItem="86t-bh-e68" secondAttribute="bottom" constant="-2" id="8Wt-yJ-JD3"/>
+                    <constraint firstAttribute="trailing" secondItem="86t-bh-e68" secondAttribute="trailing" constant="30" id="BUD-Hi-vR1"/>
+                    <constraint firstItem="NUM-72-6Rl" firstAttribute="leading" secondItem="vqz-N1-xQd" secondAttribute="leading" id="HLo-gr-xIs"/>
+                    <constraint firstAttribute="bottom" secondItem="NUM-72-6Rl" secondAttribute="bottom" id="HsH-MC-7G9"/>
+                    <constraint firstAttribute="trailing" secondItem="NUM-72-6Rl" secondAttribute="trailing" id="QuD-7B-bG2"/>
+                    <constraint firstItem="86t-bh-e68" firstAttribute="top" secondItem="HpC-7q-GtQ" secondAttribute="bottom" id="SJH-pW-MxG"/>
+                    <constraint firstItem="UBg-Es-jV5" firstAttribute="centerY" secondItem="HpC-7q-GtQ" secondAttribute="centerY" constant="1" id="SVT-WI-aNc"/>
+                    <constraint firstItem="NUM-72-6Rl" firstAttribute="top" secondItem="vqz-N1-xQd" secondAttribute="top" id="YX7-hn-O8C"/>
+                    <constraint firstItem="UBg-Es-jV5" firstAttribute="leading" secondItem="HpC-7q-GtQ" secondAttribute="trailing" constant="2" id="aiu-Rr-7LE"/>
+                    <constraint firstAttribute="trailing" secondItem="UBg-Es-jV5" secondAttribute="trailing" constant="16" id="cIA-Ln-vuX"/>
+                    <constraint firstItem="WOd-2w-smS" firstAttribute="leading" secondItem="86t-bh-e68" secondAttribute="leading" id="gI3-II-yON"/>
+                    <constraint firstItem="86t-bh-e68" firstAttribute="centerY" secondItem="vqz-N1-xQd" secondAttribute="centerY" id="keU-nm-eZh"/>
+                    <constraint firstItem="97T-y4-ki8" firstAttribute="leading" secondItem="86t-bh-e68" secondAttribute="leading" id="otv-z7-kh8"/>
+                    <constraint firstItem="97T-y4-ki8" firstAttribute="bottom" secondItem="86t-bh-e68" secondAttribute="bottom" id="qzP-ga-1aQ"/>
+                </constraints>
+            </view>
+            <connections>
+                <outlet property="imageLecture" destination="UBg-Es-jV5" id="Fk1-NS-TZH"/>
+                <outlet property="labelCustomTitle" destination="WOd-2w-smS" id="Wcr-YB-Bn2"/>
+                <outlet property="labelDate" destination="HpC-7q-GtQ" id="nTw-iE-fXi"/>
+                <outlet property="labelTitle" destination="97T-y4-ki8" id="75S-ux-YtG"/>
+            </connections>
+            <point key="canvasLocation" x="141" y="205"/>
+        </box>
+    </objects>
+    <resources>
+        <image name="icon_pencil" width="30" height="30"/>
+    </resources>
+</document>

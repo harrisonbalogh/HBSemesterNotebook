@@ -8,22 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		C0009E2B1EC43BE200C80642 /* HXLectureView.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0009E2A1EC43BE200C80642 /* HXLectureView.xib */; };
-		C00367081EA5851500C4DE0C /* HXCourseEditBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00367071EA5851500C4DE0C /* HXCourseEditBox.swift */; };
 		C00382A61F3BA7F700CCFF11 /* MenuBarLectureItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = C00382A51F3BA7F700CCFF11 /* MenuBarLectureItem.xib */; };
 		C00382A81F3BA8E800CCFF11 /* MenuBarLectureItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00382A71F3BA8E800CCFF11 /* MenuBarLectureItem.swift */; };
 		C00719D01EF5FA9100161A7D /* Course+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00719CE1EF5FA9100161A7D /* Course+CoreDataClass.swift */; };
 		C00719D41EF5FC9900161A7D /* Semester+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00719D21EF5FC9900161A7D /* Semester+CoreDataClass.swift */; };
 		C00719D71EF5FE0900161A7D /* HXTimeFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00719D61EF5FE0900161A7D /* HXTimeFormatter.swift */; };
 		C0150EE81EA5AD6800BBBFA6 /* CourseLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0150EE71EA5AD6800BBBFA6 /* CourseLabel.swift */; };
-		C02231971F114DD7009A421B /* HXScheduler.xib in Resources */ = {isa = PBXBuildFile; fileRef = C02231961F114DD7009A421B /* HXScheduler.xib */; };
 		C022319B1F114E51009A421B /* HXScheduleBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C022319A1F114E51009A421B /* HXScheduleBox.swift */; };
-		C022319D1F115669009A421B /* SchedulerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C022319C1F115669009A421B /* SchedulerViewController.swift */; };
-		C025FD9B1EC2A4970090A287 /* HXLectureBox.xib in Resources */ = {isa = PBXBuildFile; fileRef = C025FD9A1EC2A4970090A287 /* HXLectureBox.xib */; };
-		C025FD9D1EC2A68F0090A287 /* HXWeekBox.xib in Resources */ = {isa = PBXBuildFile; fileRef = C025FD9C1EC2A68F0090A287 /* HXWeekBox.xib */; };
-		C025FDA31EC2E29B0090A287 /* HXLectureBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C025FDA21EC2E29B0090A287 /* HXLectureBox.swift */; };
 		C02A8AC81F38AADC00B7CD5D /* pref.plist in Resources */ = {isa = PBXBuildFile; fileRef = C02A8AC71F38AADC00B7CD5D /* pref.plist */; };
-		C02DB94F1F019BFF00044001 /* HXAbsentLectureBox.xib in Resources */ = {isa = PBXBuildFile; fileRef = C02DB94E1F019BFF00044001 /* HXAbsentLectureBox.xib */; };
-		C02DB9511F019C5B00044001 /* HXAbsentLectureBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C02DB9501F019C5B00044001 /* HXAbsentLectureBox.swift */; };
 		C03AF8161EB856860028BA68 /* MasterWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C03AF8151EB856860028BA68 /* MasterWindowController.swift */; };
 		C049A6411F3429F100685CF9 /* LectureCollectionViewItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C049A63F1F3429F100685CF9 /* LectureCollectionViewItem.swift */; };
 		C049A6421F3429F100685CF9 /* LectureCollectionViewItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = C049A6401F3429F100685CF9 /* LectureCollectionViewItem.xib */; };
@@ -35,20 +27,35 @@
 		C057FD191EE4A01800A62D9F /* HXExportView.xib in Resources */ = {isa = PBXBuildFile; fileRef = C057FD181EE4A01800A62D9F /* HXExportView.xib */; };
 		C057FD1D1EE4B0BC00A62D9F /* HXFindViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C057FD1C1EE4B0BC00A62D9F /* HXFindViewController.swift */; };
 		C057FD201EE4B0CA00A62D9F /* HXExportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C057FD1E1EE4B0CA00A62D9F /* HXExportViewController.swift */; };
-		C06017241F12D638001EDE97 /* HXTimeSlotBox.xib in Resources */ = {isa = PBXBuildFile; fileRef = C06017231F12D638001EDE97 /* HXTimeSlotBox.xib */; };
-		C06017261F12D67B001EDE97 /* HXTimeSlotBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06017251F12D67B001EDE97 /* HXTimeSlotBox.swift */; };
 		C0613E7D1F4A367600389D44 /* WorkAdderLectureController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0613E7B1F4A367600389D44 /* WorkAdderLectureController.swift */; };
 		C0613E7E1F4A367600389D44 /* WorkAdderLectureController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0613E7C1F4A367600389D44 /* WorkAdderLectureController.xib */; };
 		C0613E821F4A369A00389D44 /* TestAdderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0613E801F4A369A00389D44 /* TestAdderViewController.swift */; };
 		C0613E831F4A369A00389D44 /* TestAdderViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0613E811F4A369A00389D44 /* TestAdderViewController.xib */; };
-		C0613E851F4A6BF000389D44 /* HXWorkBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0613E841F4A6BF000389D44 /* HXWorkBox.swift */; };
-		C0613E871F4A6C0100389D44 /* HXWorkBox.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0613E861F4A6C0100389D44 /* HXWorkBox.xib */; };
-		C0613E891F4A6C3C00389D44 /* HXTestBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0613E881F4A6C3C00389D44 /* HXTestBox.swift */; };
-		C0613E8B1F4A6C4500389D44 /* HXTestBox.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0613E8A1F4A6C4500389D44 /* HXTestBox.xib */; };
 		C069202C1F33046600D04234 /* PreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C069202A1F33046600D04234 /* PreferencesViewController.swift */; };
 		C069202D1F33046600D04234 /* PreferencesView.xib in Resources */ = {isa = PBXBuildFile; fileRef = C069202B1F33046600D04234 /* PreferencesView.xib */; };
 		C06920301F330F2200D04234 /* PreferencesNavViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C069202E1F330F2200D04234 /* PreferencesNavViewController.swift */; };
 		C06920311F330F2200D04234 /* PreferencesNavView.xib in Resources */ = {isa = PBXBuildFile; fileRef = C069202F1F330F2200D04234 /* PreferencesNavView.xib */; };
+		C06DE32B1F507EAD00E5DCC8 /* SchedulerPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06DE3291F507EAD00E5DCC8 /* SchedulerPageViewController.swift */; };
+		C06DE32C1F507EAD00E5DCC8 /* SchedulerPageViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C06DE32A1F507EAD00E5DCC8 /* SchedulerPageViewController.xib */; };
+		C06DE3391F509AC100E5DCC8 /* CourseLectureBox.xib in Resources */ = {isa = PBXBuildFile; fileRef = C06DE3381F509AC100E5DCC8 /* CourseLectureBox.xib */; };
+		C06DE33B1F509ACD00E5DCC8 /* CourseWorkBox.xib in Resources */ = {isa = PBXBuildFile; fileRef = C06DE33A1F509ACD00E5DCC8 /* CourseWorkBox.xib */; };
+		C06DE33D1F509AD600E5DCC8 /* CourseTestBox.xib in Resources */ = {isa = PBXBuildFile; fileRef = C06DE33C1F509AD600E5DCC8 /* CourseTestBox.xib */; };
+		C06DE33F1F509AE400E5DCC8 /* SemesterCourseBox.xib in Resources */ = {isa = PBXBuildFile; fileRef = C06DE33E1F509AE400E5DCC8 /* SemesterCourseBox.xib */; };
+		C06DE3411F509AF200E5DCC8 /* SemesterWorkBox.xib in Resources */ = {isa = PBXBuildFile; fileRef = C06DE3401F509AF200E5DCC8 /* SemesterWorkBox.xib */; };
+		C06DE3431F509AFC00E5DCC8 /* SemesterTestBox.xib in Resources */ = {isa = PBXBuildFile; fileRef = C06DE3421F509AFC00E5DCC8 /* SemesterTestBox.xib */; };
+		C06DE3451F509B0600E5DCC8 /* SchedulerCourseBox.xib in Resources */ = {isa = PBXBuildFile; fileRef = C06DE3441F509B0600E5DCC8 /* SchedulerCourseBox.xib */; };
+		C06DE3471F509B2D00E5DCC8 /* SchedulerCourseBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06DE3461F509B2D00E5DCC8 /* SchedulerCourseBox.swift */; };
+		C06DE3491F509B3B00E5DCC8 /* SemesterCourseBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06DE3481F509B3B00E5DCC8 /* SemesterCourseBox.swift */; };
+		C06DE34B1F509B4600E5DCC8 /* SemesterWorkBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06DE34A1F509B4600E5DCC8 /* SemesterWorkBox.swift */; };
+		C06DE34D1F509B4E00E5DCC8 /* SemesterTestBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06DE34C1F509B4E00E5DCC8 /* SemesterTestBox.swift */; };
+		C06DE34F1F509B5900E5DCC8 /* CourseLectureBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06DE34E1F509B5900E5DCC8 /* CourseLectureBox.swift */; };
+		C06DE3511F509B6200E5DCC8 /* CourseWorkBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06DE3501F509B6200E5DCC8 /* CourseWorkBox.swift */; };
+		C06DE3531F509B6A00E5DCC8 /* CourseTestBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06DE3521F509B6A00E5DCC8 /* CourseTestBox.swift */; };
+		C06DE3551F50C3F800E5DCC8 /* CourseWeekBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06DE3541F50C3F800E5DCC8 /* CourseWeekBox.swift */; };
+		C06DE3571F50C41900E5DCC8 /* SchedulerTimeSlotBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06DE3561F50C41900E5DCC8 /* SchedulerTimeSlotBox.swift */; };
+		C06DE3591F50C41F00E5DCC8 /* CourseWeekBox.xib in Resources */ = {isa = PBXBuildFile; fileRef = C06DE3581F50C41F00E5DCC8 /* CourseWeekBox.xib */; };
+		C06DE35B1F50C42600E5DCC8 /* SchedulerTimeSlotBox.xib in Resources */ = {isa = PBXBuildFile; fileRef = C06DE35A1F50C42600E5DCC8 /* SchedulerTimeSlotBox.xib */; };
+		C07B2A8B1F4E3CBD001D2F44 /* LectureEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C07B2A891F4E3CBD001D2F44 /* LectureEditorViewController.swift */; };
 		C081A6AA1F19940000C8E1FB /* MenuBarPopoverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C081A6A81F19940000C8E1FB /* MenuBarPopoverViewController.swift */; };
 		C081A6AB1F19940000C8E1FB /* MenuBarPopover.xib in Resources */ = {isa = PBXBuildFile; fileRef = C081A6A91F19940000C8E1FB /* MenuBarPopover.xib */; };
 		C081A6AD1F19991400C8E1FB /* EventMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C081A6AC1F19991400C8E1FB /* EventMonitor.swift */; };
@@ -60,9 +67,6 @@
 		C084BDB41F47F91700D624DF /* CoursePageViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C084BDB21F47F91700D624DF /* CoursePageViewController.xib */; };
 		C087C2701EEFE8F300E70469 /* HXFindReplaceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C087C26E1EEFE8F300E70469 /* HXFindReplaceViewController.swift */; };
 		C095D7811EB9461900BBE7CB /* EditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C095D7801EB9461900BBE7CB /* EditorViewController.swift */; };
-		C095D7831EB9578700BBE7CB /* HXCourseEditBox.xib in Resources */ = {isa = PBXBuildFile; fileRef = C095D7821EB9578700BBE7CB /* HXCourseEditBox.xib */; };
-		C09B45261EDFADCB007CCC05 /* HXCourseAddBox.xib in Resources */ = {isa = PBXBuildFile; fileRef = C09B45251EDFADCB007CCC05 /* HXCourseAddBox.xib */; };
-		C09B452A1EDFAED5007CCC05 /* HXCourseAddBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C09B45291EDFAED5007CCC05 /* HXCourseAddBox.swift */; };
 		C09EBEBD1EAF20B700A6D72C /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C09EBEBC1EAF20B700A6D72C /* MasterViewController.swift */; };
 		C0A5327F1F43EB3100829C1F /* TimeSlot+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0A5327E1F43EB3100829C1F /* TimeSlot+CoreDataClass.swift */; };
 		C0AAE1361EA2BD12002939B6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0AAE1351EA2BD12002939B6 /* AppDelegate.swift */; };
@@ -70,7 +74,7 @@
 		C0AAE1401EA2BD12002939B6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C0AAE13E1EA2BD12002939B6 /* Main.storyboard */; };
 		C0AAE14B1EA2BD13002939B6 /* HXNotesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0AAE14A1EA2BD13002939B6 /* HXNotesTests.swift */; };
 		C0AAE1561EA2BD13002939B6 /* HXNotesUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0AAE1551EA2BD13002939B6 /* HXNotesUITests.swift */; };
-		C0B68EF71EC3EA1E00E86439 /* HXWeekBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B68EF61EC3EA1E00E86439 /* HXWeekBox.swift */; };
+		C0AFE7E41F548EFA007ECF7C /* View.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0AFE7E31F548EFA007ECF7C /* View.xib */; };
 		C0B795911EFFA10800A0C527 /* HXAlertDropdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B7958F1EFFA10800A0C527 /* HXAlertDropdown.swift */; };
 		C0B795921EFFA10800A0C527 /* HXAlertDropdown.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0B795901EFFA10800A0C527 /* HXAlertDropdown.xib */; };
 		C0B795951EFFA11D00A0C527 /* HXAlertOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B795931EFFA11D00A0C527 /* HXAlertOverlay.swift */; };
@@ -78,13 +82,12 @@
 		C0B795991EFFA12700A0C527 /* HXAlertSidebar.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B795971EFFA12700A0C527 /* HXAlertSidebar.swift */; };
 		C0B7959A1EFFA12700A0C527 /* HXAlertSidebar.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0B795981EFFA12700A0C527 /* HXAlertSidebar.xib */; };
 		C0B795A01EFFA7BB00A0C527 /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B7959F1EFFA7BB00A0C527 /* Alert.swift */; };
+		C0CBC7B31F5A227E0012E7E9 /* LectureEditor.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0CBC7B21F5A227E0012E7E9 /* LectureEditor.xib */; };
 		C0D1A16D1ECAF96D006A17B2 /* HXFlippedClipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D1A16C1ECAF96D006A17B2 /* HXFlippedClipView.swift */; };
 		C0D7CEE71F0DF48800062B59 /* HXNotes.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C0D7CEE51F0DF48800062B59 /* HXNotes.xcdatamodeld */; };
 		C0E96E741ED7641000705A35 /* HXTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0E96E731ED7641000705A35 /* HXTextView.swift */; };
 		C0EF973C1F4D74540062B9A8 /* HXLectureTimeBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0EF973B1F4D74540062B9A8 /* HXLectureTimeBox.swift */; };
 		C0EF973E1F4D747D0062B9A8 /* HXLectureTimeBox.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0EF973D1F4D747D0062B9A8 /* HXLectureTimeBox.xib */; };
-		C0FD6C231EC273C200338F1C /* HXCourseBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0FD6C221EC273C200338F1C /* HXCourseBox.swift */; };
-		C0FD6C261EC273DA00338F1C /* HXCourseBox.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0FD6C251EC273DA00338F1C /* HXCourseBox.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -118,22 +121,14 @@
 
 /* Begin PBXFileReference section */
 		C0009E2A1EC43BE200C80642 /* HXLectureView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXLectureView.xib; sourceTree = "<group>"; };
-		C00367071EA5851500C4DE0C /* HXCourseEditBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXCourseEditBox.swift; sourceTree = "<group>"; };
 		C00382A51F3BA7F700CCFF11 /* MenuBarLectureItem.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MenuBarLectureItem.xib; sourceTree = "<group>"; };
 		C00382A71F3BA8E800CCFF11 /* MenuBarLectureItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuBarLectureItem.swift; sourceTree = "<group>"; };
 		C00719CE1EF5FA9100161A7D /* Course+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Course+CoreDataClass.swift"; sourceTree = "<group>"; };
 		C00719D21EF5FC9900161A7D /* Semester+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Semester+CoreDataClass.swift"; sourceTree = "<group>"; };
 		C00719D61EF5FE0900161A7D /* HXTimeFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXTimeFormatter.swift; sourceTree = "<group>"; };
 		C0150EE71EA5AD6800BBBFA6 /* CourseLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CourseLabel.swift; sourceTree = "<group>"; };
-		C02231961F114DD7009A421B /* HXScheduler.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXScheduler.xib; sourceTree = "<group>"; };
 		C022319A1F114E51009A421B /* HXScheduleBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXScheduleBox.swift; sourceTree = "<group>"; };
-		C022319C1F115669009A421B /* SchedulerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SchedulerViewController.swift; sourceTree = "<group>"; };
-		C025FD9A1EC2A4970090A287 /* HXLectureBox.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXLectureBox.xib; sourceTree = "<group>"; };
-		C025FD9C1EC2A68F0090A287 /* HXWeekBox.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXWeekBox.xib; sourceTree = "<group>"; };
-		C025FDA21EC2E29B0090A287 /* HXLectureBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXLectureBox.swift; sourceTree = "<group>"; };
 		C02A8AC71F38AADC00B7CD5D /* pref.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = pref.plist; sourceTree = "<group>"; };
-		C02DB94E1F019BFF00044001 /* HXAbsentLectureBox.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXAbsentLectureBox.xib; sourceTree = "<group>"; };
-		C02DB9501F019C5B00044001 /* HXAbsentLectureBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXAbsentLectureBox.swift; sourceTree = "<group>"; };
 		C03AF8151EB856860028BA68 /* MasterWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MasterWindowController.swift; sourceTree = "<group>"; };
 		C049A63F1F3429F100685CF9 /* LectureCollectionViewItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LectureCollectionViewItem.swift; sourceTree = "<group>"; };
 		C049A6401F3429F100685CF9 /* LectureCollectionViewItem.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LectureCollectionViewItem.xib; sourceTree = "<group>"; };
@@ -145,20 +140,35 @@
 		C057FD181EE4A01800A62D9F /* HXExportView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXExportView.xib; sourceTree = "<group>"; };
 		C057FD1C1EE4B0BC00A62D9F /* HXFindViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXFindViewController.swift; sourceTree = "<group>"; };
 		C057FD1E1EE4B0CA00A62D9F /* HXExportViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXExportViewController.swift; sourceTree = "<group>"; };
-		C06017231F12D638001EDE97 /* HXTimeSlotBox.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXTimeSlotBox.xib; sourceTree = "<group>"; };
-		C06017251F12D67B001EDE97 /* HXTimeSlotBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXTimeSlotBox.swift; sourceTree = "<group>"; };
 		C0613E7B1F4A367600389D44 /* WorkAdderLectureController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkAdderLectureController.swift; sourceTree = "<group>"; };
 		C0613E7C1F4A367600389D44 /* WorkAdderLectureController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WorkAdderLectureController.xib; sourceTree = "<group>"; };
 		C0613E801F4A369A00389D44 /* TestAdderViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestAdderViewController.swift; sourceTree = "<group>"; };
 		C0613E811F4A369A00389D44 /* TestAdderViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TestAdderViewController.xib; sourceTree = "<group>"; };
-		C0613E841F4A6BF000389D44 /* HXWorkBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXWorkBox.swift; sourceTree = "<group>"; };
-		C0613E861F4A6C0100389D44 /* HXWorkBox.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXWorkBox.xib; sourceTree = "<group>"; };
-		C0613E881F4A6C3C00389D44 /* HXTestBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXTestBox.swift; sourceTree = "<group>"; };
-		C0613E8A1F4A6C4500389D44 /* HXTestBox.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXTestBox.xib; sourceTree = "<group>"; };
 		C069202A1F33046600D04234 /* PreferencesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferencesViewController.swift; sourceTree = "<group>"; };
 		C069202B1F33046600D04234 /* PreferencesView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PreferencesView.xib; sourceTree = "<group>"; };
 		C069202E1F330F2200D04234 /* PreferencesNavViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferencesNavViewController.swift; sourceTree = "<group>"; };
 		C069202F1F330F2200D04234 /* PreferencesNavView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PreferencesNavView.xib; sourceTree = "<group>"; };
+		C06DE3291F507EAD00E5DCC8 /* SchedulerPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SchedulerPageViewController.swift; sourceTree = "<group>"; };
+		C06DE32A1F507EAD00E5DCC8 /* SchedulerPageViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SchedulerPageViewController.xib; sourceTree = "<group>"; };
+		C06DE3381F509AC100E5DCC8 /* CourseLectureBox.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CourseLectureBox.xib; sourceTree = "<group>"; };
+		C06DE33A1F509ACD00E5DCC8 /* CourseWorkBox.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CourseWorkBox.xib; sourceTree = "<group>"; };
+		C06DE33C1F509AD600E5DCC8 /* CourseTestBox.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CourseTestBox.xib; sourceTree = "<group>"; };
+		C06DE33E1F509AE400E5DCC8 /* SemesterCourseBox.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SemesterCourseBox.xib; sourceTree = "<group>"; };
+		C06DE3401F509AF200E5DCC8 /* SemesterWorkBox.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SemesterWorkBox.xib; sourceTree = "<group>"; };
+		C06DE3421F509AFC00E5DCC8 /* SemesterTestBox.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SemesterTestBox.xib; sourceTree = "<group>"; };
+		C06DE3441F509B0600E5DCC8 /* SchedulerCourseBox.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SchedulerCourseBox.xib; sourceTree = "<group>"; };
+		C06DE3461F509B2D00E5DCC8 /* SchedulerCourseBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SchedulerCourseBox.swift; sourceTree = "<group>"; };
+		C06DE3481F509B3B00E5DCC8 /* SemesterCourseBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SemesterCourseBox.swift; sourceTree = "<group>"; };
+		C06DE34A1F509B4600E5DCC8 /* SemesterWorkBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SemesterWorkBox.swift; sourceTree = "<group>"; };
+		C06DE34C1F509B4E00E5DCC8 /* SemesterTestBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SemesterTestBox.swift; sourceTree = "<group>"; };
+		C06DE34E1F509B5900E5DCC8 /* CourseLectureBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CourseLectureBox.swift; sourceTree = "<group>"; };
+		C06DE3501F509B6200E5DCC8 /* CourseWorkBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CourseWorkBox.swift; sourceTree = "<group>"; };
+		C06DE3521F509B6A00E5DCC8 /* CourseTestBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CourseTestBox.swift; sourceTree = "<group>"; };
+		C06DE3541F50C3F800E5DCC8 /* CourseWeekBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CourseWeekBox.swift; sourceTree = "<group>"; };
+		C06DE3561F50C41900E5DCC8 /* SchedulerTimeSlotBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SchedulerTimeSlotBox.swift; sourceTree = "<group>"; };
+		C06DE3581F50C41F00E5DCC8 /* CourseWeekBox.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CourseWeekBox.xib; sourceTree = "<group>"; };
+		C06DE35A1F50C42600E5DCC8 /* SchedulerTimeSlotBox.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SchedulerTimeSlotBox.xib; sourceTree = "<group>"; };
+		C07B2A891F4E3CBD001D2F44 /* LectureEditorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LectureEditorViewController.swift; sourceTree = "<group>"; };
 		C081A6A81F19940000C8E1FB /* MenuBarPopoverViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuBarPopoverViewController.swift; sourceTree = "<group>"; };
 		C081A6A91F19940000C8E1FB /* MenuBarPopover.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MenuBarPopover.xib; sourceTree = "<group>"; };
 		C081A6AC1F19991400C8E1FB /* EventMonitor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventMonitor.swift; sourceTree = "<group>"; };
@@ -170,9 +180,6 @@
 		C084BDB21F47F91700D624DF /* CoursePageViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CoursePageViewController.xib; sourceTree = "<group>"; };
 		C087C26E1EEFE8F300E70469 /* HXFindReplaceViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXFindReplaceViewController.swift; sourceTree = "<group>"; };
 		C095D7801EB9461900BBE7CB /* EditorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditorViewController.swift; sourceTree = "<group>"; };
-		C095D7821EB9578700BBE7CB /* HXCourseEditBox.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXCourseEditBox.xib; sourceTree = "<group>"; };
-		C09B45251EDFADCB007CCC05 /* HXCourseAddBox.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXCourseAddBox.xib; sourceTree = "<group>"; };
-		C09B45291EDFAED5007CCC05 /* HXCourseAddBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXCourseAddBox.swift; sourceTree = "<group>"; };
 		C09EBEBC1EAF20B700A6D72C /* MasterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MasterViewController.swift; sourceTree = "<group>"; };
 		C0A5327E1F43EB3100829C1F /* TimeSlot+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TimeSlot+CoreDataClass.swift"; sourceTree = "<group>"; };
 		C0AAE1321EA2BD12002939B6 /* HXNotes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HXNotes.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -186,7 +193,7 @@
 		C0AAE1511EA2BD13002939B6 /* HXNotesUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HXNotesUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0AAE1551EA2BD13002939B6 /* HXNotesUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HXNotesUITests.swift; sourceTree = "<group>"; };
 		C0AAE1571EA2BD13002939B6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		C0B68EF61EC3EA1E00E86439 /* HXWeekBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXWeekBox.swift; sourceTree = "<group>"; };
+		C0AFE7E31F548EFA007ECF7C /* View.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = View.xib; sourceTree = "<group>"; };
 		C0B7958F1EFFA10800A0C527 /* HXAlertDropdown.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXAlertDropdown.swift; sourceTree = "<group>"; };
 		C0B795901EFFA10800A0C527 /* HXAlertDropdown.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXAlertDropdown.xib; sourceTree = "<group>"; };
 		C0B795931EFFA11D00A0C527 /* HXAlertOverlay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXAlertOverlay.swift; sourceTree = "<group>"; };
@@ -194,13 +201,12 @@
 		C0B795971EFFA12700A0C527 /* HXAlertSidebar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXAlertSidebar.swift; sourceTree = "<group>"; };
 		C0B795981EFFA12700A0C527 /* HXAlertSidebar.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXAlertSidebar.xib; sourceTree = "<group>"; };
 		C0B7959F1EFFA7BB00A0C527 /* Alert.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Alert.swift; sourceTree = "<group>"; };
+		C0CBC7B21F5A227E0012E7E9 /* LectureEditor.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LectureEditor.xib; sourceTree = "<group>"; };
 		C0D1A16C1ECAF96D006A17B2 /* HXFlippedClipView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXFlippedClipView.swift; sourceTree = "<group>"; };
 		C0D7CEE61F0DF48800062B59 /* HXNotes.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = HXNotes.xcdatamodel; sourceTree = "<group>"; };
 		C0E96E731ED7641000705A35 /* HXTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXTextView.swift; sourceTree = "<group>"; };
 		C0EF973B1F4D74540062B9A8 /* HXLectureTimeBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXLectureTimeBox.swift; sourceTree = "<group>"; };
 		C0EF973D1F4D747D0062B9A8 /* HXLectureTimeBox.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXLectureTimeBox.xib; sourceTree = "<group>"; };
-		C0FD6C221EC273C200338F1C /* HXCourseBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXCourseBox.swift; sourceTree = "<group>"; };
-		C0FD6C251EC273DA00338F1C /* HXCourseBox.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXCourseBox.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -265,28 +271,24 @@
 			name = "NIB Templates";
 			sourceTree = "<group>";
 		};
-		C0613E7A1F4A292100389D44 /* Work Functionality */ = {
+		C0613E7A1F4A292100389D44 /* Work Adder Functionality */ = {
 			isa = PBXGroup;
 			children = (
 				C0613E7B1F4A367600389D44 /* WorkAdderLectureController.swift */,
 				C0613E7C1F4A367600389D44 /* WorkAdderLectureController.xib */,
-				C0613E841F4A6BF000389D44 /* HXWorkBox.swift */,
-				C0613E861F4A6C0100389D44 /* HXWorkBox.xib */,
 				C0EF973B1F4D74540062B9A8 /* HXLectureTimeBox.swift */,
 				C0EF973D1F4D747D0062B9A8 /* HXLectureTimeBox.xib */,
 			);
-			name = "Work Functionality";
+			name = "Work Adder Functionality";
 			sourceTree = "<group>";
 		};
-		C0613E7F1F4A368100389D44 /* Exam Functionality */ = {
+		C0613E7F1F4A368100389D44 /* Exam Adder Functionality */ = {
 			isa = PBXGroup;
 			children = (
 				C0613E801F4A369A00389D44 /* TestAdderViewController.swift */,
 				C0613E811F4A369A00389D44 /* TestAdderViewController.xib */,
-				C0613E881F4A6C3C00389D44 /* HXTestBox.swift */,
-				C0613E8A1F4A6C4500389D44 /* HXTestBox.xib */,
 			);
-			name = "Exam Functionality";
+			name = "Exam Adder Functionality";
 			sourceTree = "<group>";
 		};
 		C06920291F33044500D04234 /* Preferences */ = {
@@ -299,21 +301,49 @@
 			name = Preferences;
 			sourceTree = "<group>";
 		};
-		C07EE84A1EA8426700B87035 /* Views */ = {
+		C06DE32D1F50992200E5DCC8 /* Sidebar Scheduler */ = {
 			isa = PBXGroup;
 			children = (
-				C022319A1F114E51009A421B /* HXScheduleBox.swift */,
-				C07EE84B1EA8428300B87035 /* NIB Templates */,
+				C06DE3291F507EAD00E5DCC8 /* SchedulerPageViewController.swift */,
+				C06DE32A1F507EAD00E5DCC8 /* SchedulerPageViewController.xib */,
+				C06DE3461F509B2D00E5DCC8 /* SchedulerCourseBox.swift */,
+				C06DE3441F509B0600E5DCC8 /* SchedulerCourseBox.xib */,
+				C06DE3561F50C41900E5DCC8 /* SchedulerTimeSlotBox.swift */,
+				C06DE35A1F50C42600E5DCC8 /* SchedulerTimeSlotBox.xib */,
 			);
-			name = Views;
+			name = "Sidebar Scheduler";
 			sourceTree = "<group>";
 		};
-		C07EE84B1EA8428300B87035 /* NIB Templates */ = {
+		C06DE32E1F50992E00E5DCC8 /* Sidebar Semester */ = {
 			isa = PBXGroup;
 			children = (
-				C02231961F114DD7009A421B /* HXScheduler.xib */,
+				C084BDAD1F47F90A00D624DF /* SemesterPageViewController.swift */,
+				C084BDAE1F47F90A00D624DF /* SemesterPageViewController.xib */,
+				C06DE3481F509B3B00E5DCC8 /* SemesterCourseBox.swift */,
+				C06DE33E1F509AE400E5DCC8 /* SemesterCourseBox.xib */,
+				C06DE34A1F509B4600E5DCC8 /* SemesterWorkBox.swift */,
+				C06DE3401F509AF200E5DCC8 /* SemesterWorkBox.xib */,
+				C06DE34C1F509B4E00E5DCC8 /* SemesterTestBox.swift */,
+				C06DE3421F509AFC00E5DCC8 /* SemesterTestBox.xib */,
 			);
-			name = "NIB Templates";
+			name = "Sidebar Semester";
+			sourceTree = "<group>";
+		};
+		C06DE32F1F50993C00E5DCC8 /* Sidebar Course */ = {
+			isa = PBXGroup;
+			children = (
+				C084BDB11F47F91700D624DF /* CoursePageViewController.swift */,
+				C084BDB21F47F91700D624DF /* CoursePageViewController.xib */,
+				C06DE34E1F509B5900E5DCC8 /* CourseLectureBox.swift */,
+				C06DE3381F509AC100E5DCC8 /* CourseLectureBox.xib */,
+				C06DE3541F50C3F800E5DCC8 /* CourseWeekBox.swift */,
+				C06DE3581F50C41F00E5DCC8 /* CourseWeekBox.xib */,
+				C06DE3501F509B6200E5DCC8 /* CourseWorkBox.swift */,
+				C06DE33A1F509ACD00E5DCC8 /* CourseWorkBox.xib */,
+				C06DE3521F509B6A00E5DCC8 /* CourseTestBox.swift */,
+				C06DE33C1F509AD600E5DCC8 /* CourseTestBox.xib */,
+			);
+			name = "Sidebar Course";
 			sourceTree = "<group>";
 		};
 		C081A6A71F19939A00C8E1FB /* Menu Bar Function */ = {
@@ -328,53 +358,23 @@
 			name = "Menu Bar Function";
 			sourceTree = "<group>";
 		};
-		C095D77F1EB945EA00BBE7CB /* Editor Functionality */ = {
+		C095D77F1EB945EA00BBE7CB /* Lecture Editor Functionality */ = {
 			isa = PBXGroup;
 			children = (
 				C095D7801EB9461900BBE7CB /* EditorViewController.swift */,
+				C07B2A891F4E3CBD001D2F44 /* LectureEditorViewController.swift */,
 				C0FD6C211EC273AB00338F1C /* Views */,
 			);
-			name = "Editor Functionality";
-			sourceTree = "<group>";
-		};
-		C09B452B1EDFD76C007CCC05 /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				C0FD6C221EC273C200338F1C /* HXCourseBox.swift */,
-				C00367071EA5851500C4DE0C /* HXCourseEditBox.swift */,
-				C06017251F12D67B001EDE97 /* HXTimeSlotBox.swift */,
-				C025FDA21EC2E29B0090A287 /* HXLectureBox.swift */,
-				C02DB9501F019C5B00044001 /* HXAbsentLectureBox.swift */,
-				C0B68EF61EC3EA1E00E86439 /* HXWeekBox.swift */,
-				C09B45291EDFAED5007CCC05 /* HXCourseAddBox.swift */,
-				C09B452C1EDFD786007CCC05 /* NIB Templates */,
-			);
-			name = Views;
-			sourceTree = "<group>";
-		};
-		C09B452C1EDFD786007CCC05 /* NIB Templates */ = {
-			isa = PBXGroup;
-			children = (
-				C084BDB21F47F91700D624DF /* CoursePageViewController.xib */,
-				C084BDAE1F47F90A00D624DF /* SemesterPageViewController.xib */,
-				C0FD6C251EC273DA00338F1C /* HXCourseBox.xib */,
-				C095D7821EB9578700BBE7CB /* HXCourseEditBox.xib */,
-				C06017231F12D638001EDE97 /* HXTimeSlotBox.xib */,
-				C09B45251EDFADCB007CCC05 /* HXCourseAddBox.xib */,
-				C025FD9A1EC2A4970090A287 /* HXLectureBox.xib */,
-				C02DB94E1F019BFF00044001 /* HXAbsentLectureBox.xib */,
-				C025FD9C1EC2A68F0090A287 /* HXWeekBox.xib */,
-			);
-			name = "NIB Templates";
+			name = "Lecture Editor Functionality";
 			sourceTree = "<group>";
 		};
 		C0A156FB1ED911E600F4DBC1 /* Sidebar */ = {
 			isa = PBXGroup;
 			children = (
 				C084BDAB1F47F33D00D624DF /* SidebarPageController.swift */,
-				C084BDAD1F47F90A00D624DF /* SemesterPageViewController.swift */,
-				C084BDB11F47F91700D624DF /* CoursePageViewController.swift */,
-				C09B452B1EDFD76C007CCC05 /* Views */,
+				C06DE32D1F50992200E5DCC8 /* Sidebar Scheduler */,
+				C06DE32E1F50992E00E5DCC8 /* Sidebar Semester */,
+				C06DE32F1F50993C00E5DCC8 /* Sidebar Course */,
 			);
 			name = Sidebar;
 			sourceTree = "<group>";
@@ -410,13 +410,16 @@
 				C04F7A141F0DA39A00490938 /* Schedule Assistant */,
 				C0B7958E1EFFA0EC00A0C527 /* Alerts */,
 				C0A156FB1ED911E600F4DBC1 /* Sidebar */,
-				C095D77F1EB945EA00BBE7CB /* Editor Functionality */,
+				C095D77F1EB945EA00BBE7CB /* Lecture Editor Functionality */,
 				C0D687BE1EA4948A00BF1D05 /* Scheduler Functionality */,
+				C0AFE7E21F548EE9007ECF7C /* Semester Display */,
 				C081A6A71F19939A00C8E1FB /* Menu Bar Function */,
 				C06920291F33044500D04234 /* Preferences */,
-				C0613E7A1F4A292100389D44 /* Work Functionality */,
-				C0613E7F1F4A368100389D44 /* Exam Functionality */,
+				C0613E7A1F4A292100389D44 /* Work Adder Functionality */,
+				C0613E7F1F4A368100389D44 /* Exam Adder Functionality */,
 				C0089FC31EF5F593003F960B /* Model */,
+				C0D1A16C1ECAF96D006A17B2 /* HXFlippedClipView.swift */,
+				C00719D61EF5FE0900161A7D /* HXTimeFormatter.swift */,
 				C0AAE1411EA2BD12002939B6 /* Info.plist */,
 				C02A8AC71F38AADC00B7CD5D /* pref.plist */,
 				C0D7CEE51F0DF48800062B59 /* HXNotes.xcdatamodeld */,
@@ -442,6 +445,14 @@
 			path = HXNotesUITests;
 			sourceTree = "<group>";
 		};
+		C0AFE7E21F548EE9007ECF7C /* Semester Display */ = {
+			isa = PBXGroup;
+			children = (
+				C0AFE7E31F548EFA007ECF7C /* View.xib */,
+			);
+			name = "Semester Display";
+			sourceTree = "<group>";
+		};
 		C0B7958E1EFFA0EC00A0C527 /* Alerts */ = {
 			isa = PBXGroup;
 			children = (
@@ -465,9 +476,7 @@
 		C0D687BE1EA4948A00BF1D05 /* Scheduler Functionality */ = {
 			isa = PBXGroup;
 			children = (
-				C022319C1F115669009A421B /* SchedulerViewController.swift */,
-				C00719D61EF5FE0900161A7D /* HXTimeFormatter.swift */,
-				C07EE84A1EA8426700B87035 /* Views */,
+				C022319A1F114E51009A421B /* HXScheduleBox.swift */,
 			);
 			name = "Scheduler Functionality";
 			sourceTree = "<group>";
@@ -477,7 +486,6 @@
 			children = (
 				C049A63F1F3429F100685CF9 /* LectureCollectionViewItem.swift */,
 				C049A6471F3433A400685CF9 /* LectureHeaderView.swift */,
-				C0D1A16C1ECAF96D006A17B2 /* HXFlippedClipView.swift */,
 				C0E96E731ED7641000705A35 /* HXTextView.swift */,
 				C057FD1C1EE4B0BC00A62D9F /* HXFindViewController.swift */,
 				C087C26E1EEFE8F300E70469 /* HXFindReplaceViewController.swift */,
@@ -498,6 +506,7 @@
 				C0824D641EEE28C4007DC002 /* HXFindReplaceView.xib */,
 				C057FD161EE4A00F00A62D9F /* HXPrintView.xib */,
 				C057FD181EE4A01800A62D9F /* HXExportView.xib */,
+				C0CBC7B21F5A227E0012E7E9 /* LectureEditor.xib */,
 			);
 			name = "NIB Templates";
 			sourceTree = "<group>";
@@ -613,38 +622,40 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C0613E871F4A6C0100389D44 /* HXWorkBox.xib in Resources */,
 				C00382A61F3BA7F700CCFF11 /* MenuBarLectureItem.xib in Resources */,
-				C06017241F12D638001EDE97 /* HXTimeSlotBox.xib in Resources */,
+				C06DE33D1F509AD600E5DCC8 /* CourseTestBox.xib in Resources */,
 				C0B795921EFFA10800A0C527 /* HXAlertDropdown.xib in Resources */,
-				C02DB94F1F019BFF00044001 /* HXAbsentLectureBox.xib in Resources */,
 				C057FD171EE4A00F00A62D9F /* HXPrintView.xib in Resources */,
 				C02A8AC81F38AADC00B7CD5D /* pref.plist in Resources */,
 				C084BDB01F47F90A00D624DF /* SemesterPageViewController.xib in Resources */,
-				C025FD9D1EC2A68F0090A287 /* HXWeekBox.xib in Resources */,
 				C057FD151EE4A00300A62D9F /* HXFindView.xib in Resources */,
-				C02231971F114DD7009A421B /* HXScheduler.xib in Resources */,
+				C06DE3431F509AFC00E5DCC8 /* SemesterTestBox.xib in Resources */,
 				C069202D1F33046600D04234 /* PreferencesView.xib in Resources */,
-				C025FD9B1EC2A4970090A287 /* HXLectureBox.xib in Resources */,
-				C09B45261EDFADCB007CCC05 /* HXCourseAddBox.xib in Resources */,
+				C06DE33F1F509AE400E5DCC8 /* SemesterCourseBox.xib in Resources */,
+				C06DE32C1F507EAD00E5DCC8 /* SchedulerPageViewController.xib in Resources */,
+				C06DE3591F50C41F00E5DCC8 /* CourseWeekBox.xib in Resources */,
+				C06DE33B1F509ACD00E5DCC8 /* CourseWorkBox.xib in Resources */,
 				C057FD191EE4A01800A62D9F /* HXExportView.xib in Resources */,
 				C0AAE13D1EA2BD12002939B6 /* Assets.xcassets in Resources */,
 				C081A6AB1F19940000C8E1FB /* MenuBarPopover.xib in Resources */,
 				C0EF973E1F4D747D0062B9A8 /* HXLectureTimeBox.xib in Resources */,
 				C084BDB41F47F91700D624DF /* CoursePageViewController.xib in Resources */,
 				C0009E2B1EC43BE200C80642 /* HXLectureView.xib in Resources */,
+				C0AFE7E41F548EFA007ECF7C /* View.xib in Resources */,
 				C0AAE1401EA2BD12002939B6 /* Main.storyboard in Resources */,
+				C06DE3411F509AF200E5DCC8 /* SemesterWorkBox.xib in Resources */,
 				C049A6421F3429F100685CF9 /* LectureCollectionViewItem.xib in Resources */,
+				C0CBC7B31F5A227E0012E7E9 /* LectureEditor.xib in Resources */,
+				C06DE3391F509AC100E5DCC8 /* CourseLectureBox.xib in Resources */,
+				C06DE35B1F50C42600E5DCC8 /* SchedulerTimeSlotBox.xib in Resources */,
 				C049A6441F34322000685CF9 /* LectureHeaderView.xib in Resources */,
 				C06920311F330F2200D04234 /* PreferencesNavView.xib in Resources */,
 				C0B7959A1EFFA12700A0C527 /* HXAlertSidebar.xib in Resources */,
 				C0613E831F4A369A00389D44 /* TestAdderViewController.xib in Resources */,
-				C0FD6C261EC273DA00338F1C /* HXCourseBox.xib in Resources */,
 				C0824D651EEE28C4007DC002 /* HXFindReplaceView.xib in Resources */,
-				C095D7831EB9578700BBE7CB /* HXCourseEditBox.xib in Resources */,
 				C0613E7E1F4A367600389D44 /* WorkAdderLectureController.xib in Resources */,
 				C0B795961EFFA11D00A0C527 /* HXAlertOverlay.xib in Resources */,
-				C0613E8B1F4A6C4500389D44 /* HXTestBox.xib in Resources */,
+				C06DE3451F509B0600E5DCC8 /* SchedulerCourseBox.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -670,48 +681,49 @@
 			buildActionMask = 2147483647;
 			files = (
 				C0B795991EFFA12700A0C527 /* HXAlertSidebar.swift in Sources */,
-				C022319D1F115669009A421B /* SchedulerViewController.swift in Sources */,
-				C06017261F12D67B001EDE97 /* HXTimeSlotBox.swift in Sources */,
 				C087C2701EEFE8F300E70469 /* HXFindReplaceViewController.swift in Sources */,
 				C00719D71EF5FE0900161A7D /* HXTimeFormatter.swift in Sources */,
+				C06DE3551F50C3F800E5DCC8 /* CourseWeekBox.swift in Sources */,
 				C057FD1D1EE4B0BC00A62D9F /* HXFindViewController.swift in Sources */,
 				C0B795951EFFA11D00A0C527 /* HXAlertOverlay.swift in Sources */,
 				C04F7A161F0DA3BB00490938 /* ScheduleAssistant.swift in Sources */,
-				C0FD6C231EC273C200338F1C /* HXCourseBox.swift in Sources */,
 				C0EF973C1F4D74540062B9A8 /* HXLectureTimeBox.swift in Sources */,
 				C084BDAC1F47F33D00D624DF /* SidebarPageController.swift in Sources */,
 				C0D7CEE71F0DF48800062B59 /* HXNotes.xcdatamodeld in Sources */,
-				C0B68EF71EC3EA1E00E86439 /* HXWeekBox.swift in Sources */,
+				C06DE3571F50C41900E5DCC8 /* SchedulerTimeSlotBox.swift in Sources */,
 				C0613E7D1F4A367600389D44 /* WorkAdderLectureController.swift in Sources */,
 				C03AF8161EB856860028BA68 /* MasterWindowController.swift in Sources */,
 				C049A6411F3429F100685CF9 /* LectureCollectionViewItem.swift in Sources */,
 				C069202C1F33046600D04234 /* PreferencesViewController.swift in Sources */,
 				C0A5327F1F43EB3100829C1F /* TimeSlot+CoreDataClass.swift in Sources */,
-				C09B452A1EDFAED5007CCC05 /* HXCourseAddBox.swift in Sources */,
+				C06DE32B1F507EAD00E5DCC8 /* SchedulerPageViewController.swift in Sources */,
 				C0B795A01EFFA7BB00A0C527 /* Alert.swift in Sources */,
-				C00367081EA5851500C4DE0C /* HXCourseEditBox.swift in Sources */,
+				C06DE34D1F509B4E00E5DCC8 /* SemesterTestBox.swift in Sources */,
 				C0B795911EFFA10800A0C527 /* HXAlertDropdown.swift in Sources */,
-				C0613E891F4A6C3C00389D44 /* HXTestBox.swift in Sources */,
+				C06DE3531F509B6A00E5DCC8 /* CourseTestBox.swift in Sources */,
 				C0150EE81EA5AD6800BBBFA6 /* CourseLabel.swift in Sources */,
 				C084BDAF1F47F90A00D624DF /* SemesterPageViewController.swift in Sources */,
 				C049A6481F3433A400685CF9 /* LectureHeaderView.swift in Sources */,
 				C00719D41EF5FC9900161A7D /* Semester+CoreDataClass.swift in Sources */,
 				C022319B1F114E51009A421B /* HXScheduleBox.swift in Sources */,
-				C025FDA31EC2E29B0090A287 /* HXLectureBox.swift in Sources */,
 				C0D1A16D1ECAF96D006A17B2 /* HXFlippedClipView.swift in Sources */,
-				C02DB9511F019C5B00044001 /* HXAbsentLectureBox.swift in Sources */,
 				C081A6AA1F19940000C8E1FB /* MenuBarPopoverViewController.swift in Sources */,
 				C00382A81F3BA8E800CCFF11 /* MenuBarLectureItem.swift in Sources */,
 				C081A6AD1F19991400C8E1FB /* EventMonitor.swift in Sources */,
 				C0613E821F4A369A00389D44 /* TestAdderViewController.swift in Sources */,
+				C06DE3491F509B3B00E5DCC8 /* SemesterCourseBox.swift in Sources */,
 				C09EBEBD1EAF20B700A6D72C /* MasterViewController.swift in Sources */,
+				C06DE34F1F509B5900E5DCC8 /* CourseLectureBox.swift in Sources */,
 				C084BDB31F47F91700D624DF /* CoursePageViewController.swift in Sources */,
+				C07B2A8B1F4E3CBD001D2F44 /* LectureEditorViewController.swift in Sources */,
+				C06DE34B1F509B4600E5DCC8 /* SemesterWorkBox.swift in Sources */,
+				C06DE3511F509B6200E5DCC8 /* CourseWorkBox.swift in Sources */,
 				C0AAE1361EA2BD12002939B6 /* AppDelegate.swift in Sources */,
 				C0E96E741ED7641000705A35 /* HXTextView.swift in Sources */,
+				C06DE3471F509B2D00E5DCC8 /* SchedulerCourseBox.swift in Sources */,
 				C00719D01EF5FA9100161A7D /* Course+CoreDataClass.swift in Sources */,
 				C06920301F330F2200D04234 /* PreferencesNavViewController.swift in Sources */,
 				C057FD201EE4B0CA00A62D9F /* HXExportViewController.swift in Sources */,
-				C0613E851F4A6BF000389D44 /* HXWorkBox.swift in Sources */,
 				C095D7811EB9461900BBE7CB /* EditorViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

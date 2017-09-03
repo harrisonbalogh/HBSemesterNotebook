@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11762" systemVersion="16G29" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11762"/>
+        <capability name="box content view" minToolsVersion="7.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner"/>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView id="PdY-xb-7IA" customClass="SemesterWorkBox" customModule="HXNotes" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="220" height="25"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="k3m-st-5vb" userLabel="Fill Box">
+                    <rect key="frame" x="0.0" y="0.0" width="220" height="25"/>
+                    <view key="contentView" id="6g9-ST-ioX">
+                        <rect key="frame" x="0.0" y="0.0" width="220" height="25"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    </view>
+                </box>
+                <textField horizontalHuggingPriority="5" verticalHuggingPriority="750" horizontalCompressionResistancePriority="100" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kfH-R6-31l">
+                    <rect key="frame" x="2" y="4" width="148" height="17"/>
+                    <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Untitled Work 1" id="w1V-tP-kiA">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KEc-6a-T5A">
+                    <rect key="frame" x="148" y="6" width="50" height="14"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="12/13/93" id="SBB-3V-jSw">
+                        <font key="font" metaFont="smallSystem"/>
+                        <color key="textColor" name="keyboardFocusIndicatorColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="jrU-r3-PbZ">
+                    <rect key="frame" x="0.0" y="0.0" width="220" height="25"/>
+                    <buttonCell key="cell" type="bevel" bezelStyle="rounded" alignment="center" imageScaling="proportionallyDown" inset="2" id="qJM-Bd-APk">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="action_select:" target="PdY-xb-7IA" id="NUY-wz-I9Y"/>
+                    </connections>
+                </button>
+            </subviews>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="jrU-r3-PbZ" secondAttribute="bottom" id="5Wp-8z-HXj"/>
+                <constraint firstAttribute="trailing" secondItem="k3m-st-5vb" secondAttribute="trailing" id="5oF-p4-qOa"/>
+                <constraint firstAttribute="bottom" secondItem="kfH-R6-31l" secondAttribute="bottom" constant="4" id="8SH-q2-yea"/>
+                <constraint firstAttribute="bottom" secondItem="k3m-st-5vb" secondAttribute="bottom" id="9VM-T5-GXz"/>
+                <constraint firstAttribute="trailing" secondItem="jrU-r3-PbZ" secondAttribute="trailing" id="AuR-SD-VSx"/>
+                <constraint firstItem="kfH-R6-31l" firstAttribute="top" secondItem="PdY-xb-7IA" secondAttribute="top" constant="4" id="JGA-EC-H8n"/>
+                <constraint firstItem="KEc-6a-T5A" firstAttribute="leading" secondItem="kfH-R6-31l" secondAttribute="trailing" constant="2" id="L5o-m0-JIJ"/>
+                <constraint firstItem="k3m-st-5vb" firstAttribute="top" secondItem="PdY-xb-7IA" secondAttribute="top" id="LTi-hC-gQM"/>
+                <constraint firstItem="kfH-R6-31l" firstAttribute="leading" secondItem="PdY-xb-7IA" secondAttribute="leading" constant="4" id="Qx1-rG-IE5"/>
+                <constraint firstItem="KEc-6a-T5A" firstAttribute="centerY" secondItem="PdY-xb-7IA" secondAttribute="centerY" id="U7Q-jJ-8KF"/>
+                <constraint firstItem="jrU-r3-PbZ" firstAttribute="leading" secondItem="PdY-xb-7IA" secondAttribute="leading" id="XPa-Rb-KcC"/>
+                <constraint firstAttribute="trailing" secondItem="KEc-6a-T5A" secondAttribute="trailing" constant="24" id="YVi-A8-JAn"/>
+                <constraint firstItem="k3m-st-5vb" firstAttribute="leading" secondItem="PdY-xb-7IA" secondAttribute="leading" id="eVS-8Y-ZgQ"/>
+                <constraint firstItem="jrU-r3-PbZ" firstAttribute="top" secondItem="PdY-xb-7IA" secondAttribute="top" id="mTW-aJ-Pe4"/>
+                <constraint firstItem="kfH-R6-31l" firstAttribute="centerY" secondItem="PdY-xb-7IA" secondAttribute="centerY" id="zKp-BX-GrO"/>
+            </constraints>
+            <connections>
+                <outlet property="boxFill" destination="k3m-st-5vb" id="C87-Jv-JGQ"/>
+                <outlet property="labelDate" destination="KEc-6a-T5A" id="o2j-fO-3iL"/>
+                <outlet property="labelWork" destination="kfH-R6-31l" id="P9o-gC-6xS"/>
+            </connections>
+            <point key="canvasLocation" x="64" y="201.5"/>
+        </customView>
+    </objects>
+</document>

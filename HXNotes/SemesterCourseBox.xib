@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11762" systemVersion="16G29" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11762"/>
+        <capability name="box content view" minToolsVersion="7.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+        <capability name="system font weights other than Regular or Bold" minToolsVersion="7.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner"/>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView id="Q4Q-Df-lLR" customClass="SemesterCourseBox" customModule="HXNotes" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="168" height="30"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="SZQ-MM-l95">
+                    <rect key="frame" x="0.0" y="0.0" width="168" height="30"/>
+                    <view key="contentView" id="nZY-56-RkP">
+                        <rect key="frame" x="0.0" y="0.0" width="168" height="30"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    </view>
+                </box>
+                <textField identifier="course_title_label" horizontalHuggingPriority="249" verticalHuggingPriority="750" horizontalCompressionResistancePriority="749" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DHm-LB-cDL">
+                    <rect key="frame" x="2" y="5" width="133" height="19"/>
+                    <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Title" id="YbH-5C-O2B">
+                        <font key="font" metaFont="systemSemibold" size="16"/>
+                        <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <textField identifier="course_days_label" horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tfp-0r-xPB">
+                    <rect key="frame" x="131" y="6" width="31" height="17"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="M, T" id="Pb7-sp-CBL">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" red="0.41828124999999999" green="0.41828124999999999" blue="0.41828124999999999" alpha="0.84999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" name="disabledControlTextColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <box hidden="YES" verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="vqi-f4-g4E">
+                    <rect key="frame" x="0.0" y="-2" width="168" height="5"/>
+                </box>
+                <button identifier="course_overlay_button" horizontalHuggingPriority="249" verticalHuggingPriority="750" horizontalCompressionResistancePriority="749" translatesAutoresizingMaskIntoConstraints="NO" id="QKn-9E-hZu">
+                    <rect key="frame" x="0.0" y="0.0" width="168" height="30"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="30" id="T0c-SF-aaE"/>
+                    </constraints>
+                    <buttonCell key="cell" type="bevel" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" imageScaling="proportionallyDown" inset="2" id="dzM-Qo-AUZ">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="goToNotes:" target="Q4Q-Df-lLR" id="uSl-Ma-bn8"/>
+                    </connections>
+                </button>
+            </subviews>
+            <constraints>
+                <constraint firstItem="DHm-LB-cDL" firstAttribute="trailing" secondItem="tfp-0r-xPB" secondAttribute="leading" id="9qh-I9-e53"/>
+                <constraint firstItem="tfp-0r-xPB" firstAttribute="centerY" secondItem="Q4Q-Df-lLR" secondAttribute="centerY" id="CeN-kj-oQd"/>
+                <constraint firstItem="QKn-9E-hZu" firstAttribute="top" secondItem="Q4Q-Df-lLR" secondAttribute="top" id="D7X-sf-qjq"/>
+                <constraint firstItem="vqi-f4-g4E" firstAttribute="leading" secondItem="Q4Q-Df-lLR" secondAttribute="leading" id="FEk-yh-GJp"/>
+                <constraint firstItem="DHm-LB-cDL" firstAttribute="leading" secondItem="Q4Q-Df-lLR" secondAttribute="leading" constant="4" id="IUq-6c-DmG"/>
+                <constraint firstAttribute="trailing" secondItem="QKn-9E-hZu" secondAttribute="trailing" id="RnT-kG-W2F"/>
+                <constraint firstItem="QKn-9E-hZu" firstAttribute="leading" secondItem="Q4Q-Df-lLR" secondAttribute="leading" id="XWO-iK-mGH"/>
+                <constraint firstItem="DHm-LB-cDL" firstAttribute="centerY" secondItem="Q4Q-Df-lLR" secondAttribute="centerY" id="chI-mK-nOp"/>
+                <constraint firstAttribute="bottom" secondItem="QKn-9E-hZu" secondAttribute="bottom" id="clb-CA-1U8"/>
+                <constraint firstAttribute="bottom" secondItem="vqi-f4-g4E" secondAttribute="bottom" id="eOk-5U-mbK"/>
+                <constraint firstItem="SZQ-MM-l95" firstAttribute="leading" secondItem="Q4Q-Df-lLR" secondAttribute="leading" id="g07-IX-5UM"/>
+                <constraint firstItem="SZQ-MM-l95" firstAttribute="top" secondItem="Q4Q-Df-lLR" secondAttribute="top" id="hZk-VE-Sob"/>
+                <constraint firstAttribute="trailing" secondItem="SZQ-MM-l95" secondAttribute="trailing" id="jgs-6d-GKk"/>
+                <constraint firstAttribute="bottom" secondItem="SZQ-MM-l95" secondAttribute="bottom" id="lMd-qU-g2P"/>
+                <constraint firstAttribute="trailing" secondItem="tfp-0r-xPB" secondAttribute="trailing" constant="8" id="mPt-oI-Q1W"/>
+                <constraint firstAttribute="trailing" secondItem="vqi-f4-g4E" secondAttribute="trailing" id="rJo-NU-ZuG"/>
+            </constraints>
+            <connections>
+                <outlet property="buttonOverlay" destination="QKn-9E-hZu" id="loX-Sx-JLy"/>
+                <outlet property="labelDays" destination="tfp-0r-xPB" id="Sd5-Gl-QSq"/>
+                <outlet property="labelTitle" destination="DHm-LB-cDL" id="hLI-2W-fqp"/>
+            </connections>
+            <point key="canvasLocation" x="-4" y="58"/>
+        </customView>
+    </objects>
+</document>

@@ -1,29 +1,30 @@
 //
-//  CourseBox.swift
+//  SchedulerCourseBox.swift
 //  HXNotes
 //
-//  Created by Harrison Balogh on 4/17/17.
+//  Created by Harrison Balogh on 8/25/17.
 //  Copyright © 2017 Harxer. All rights reserved.
 //
 
 import Cocoa
 
-class HXCourseEditBox: NSView {
+class SchedulerCourseBox: NSView {
     
-    /// Return a new instance of a HXCourseEditBox based on the nib template.
-    static func instance(with course: Course, withCourseIndex index: Int, withParent parent: SemesterPageViewController) -> HXCourseEditBox! {
+    /// Return a new instance of a HXLectureLedger based on the nib template.
+    static func instance(with course: Course, owner: SchedulerPageViewController) -> SchedulerCourseBox! {
         var theObjects: NSArray = []
-        Bundle.main.loadNibNamed("HXCourseEditBox", owner: nil, topLevelObjects: &theObjects)
+        Bundle.main.loadNibNamed("SchedulerCourseBox", owner: nil, topLevelObjects: &theObjects)
         // Get NSView from top level objects returned from nib load
-        if let newBox = theObjects.filter({$0 is HXCourseEditBox}).first as? HXCourseEditBox {
-            newBox.initialize(with: course, withCourseIndex: index, withParent: parent)
+        if let newBox = theObjects.filter({$0 is SchedulerCourseBox}).first as? SchedulerCourseBox {
+            newBox.initialize(with: course, owner: owner)
             return newBox
         }
         return nil
     }
     
-    weak var parentController: SemesterPageViewController!
     weak var course: Course!
+    weak var owner: SchedulerPageViewController!
+    
     // Retain name of course before editing to update data model
     var oldName = ""
     
@@ -35,11 +36,12 @@ class HXCourseEditBox: NSView {
     @IBOutlet weak var buttonTrash: NSButton!
     
     @IBOutlet weak var timeSlotAddViewHeightConstraint: NSLayoutConstraint!
-    
-    /// Initialize the color, index, and tracking area of the CourseBox view
-    private func initialize(with course: Course, withCourseIndex index: Int, withParent parent: SemesterPageViewController) {
+
+    private func initialize(with course: Course, owner: SchedulerPageViewController) {
+        self.course = course
+        self.owner = owner
         
-        if course.lectures!.count > 0 {
+        if course.lectures!.count > 0 || owner.isPastSemester {
             timeSlotAddButton.isEnabled = false
             timeSlotAddViewHeightConstraint.constant = 0
         }
@@ -47,14 +49,11 @@ class HXCourseEditBox: NSView {
         let theColor = NSColor(red: CGFloat(course.color!.red), green: CGFloat(course.color!.green), blue: CGFloat(course.color!.blue), alpha: 1)
         self.boxDrag.fillColor = theColor
         
-        self.parentController = parent
-        
-        self.course = course
         self.labelCourse.stringValue = course.title!
         self.oldName = course.title!
         
         for case let timeSlot as TimeSlot in course.timeSlots! {
-            let newBox = HXTimeSlotBox.instance(with: timeSlot, for: self)
+            let newBox = SchedulerTimeSlotBox.instance(with: timeSlot, for: self)
             let index = course.timeSlots!.index(of: newBox!.timeSlot)
             timeSlotStackView.insertArrangedSubview(newBox!, at: index + 1)
         }
@@ -91,21 +90,21 @@ class HXCourseEditBox: NSView {
         }
         
         let _ = Alert(course: self.course, content: "is to be removed." + lectureInfo + " Confirm removal?", question: "Remove Course", deny: "Cancel", action: #selector(self.confirmRemoveCourse), target: self, type: .deletion)
-
+        
     }
-
+    
     /// Adds a timeSlot for this course
     @IBAction func addTimeSlot(_ sender: Any) {
-        let newBox = HXTimeSlotBox.instance(with: course.nextTimeSlotSpace(), for: self)
+        let newBox = SchedulerTimeSlotBox.instance(with: course.nextTimeSlotSpace(), for: self)
         let index = course.timeSlots!.index(of: newBox!.timeSlot)
         timeSlotStackView.insertArrangedSubview(newBox!, at: index + 1)
         
-        parentController.notifyTimeSlotUpdated()
+        owner.notifyTimeSlotUpdated()
     }
     
     func confirmRemoveCourse() {
         Alert.flushAlerts(for: course)
-        parentController.removeCourse(self)
+        owner.removeCourse(self)
     }
     
     /// Clear selection of course's title field
@@ -121,7 +120,7 @@ class HXCourseEditBox: NSView {
             // Rename course if the name isn't already taken
             if course.semester!.retrieveCourse(named: labelCourse.stringValue) == nil {
                 course.title = labelCourse.stringValue
-                parentController.notifyTimeSlotUpdated()
+                owner.notifyTimeSlotRenamed()
                 oldName = labelCourse.stringValue
             } else {
                 // Revoke name change
@@ -129,14 +128,15 @@ class HXCourseEditBox: NSView {
             }
         }
     }
-
+    
     
     // MARK: - Notifiers
     func notifyTimeSlotRemoved(_ timeSlot: TimeSlot) {
-        parentController.notifyTimeSlotRemoved(timeSlot)
+        owner.notifyTimeSlotRemoved(timeSlot)
     }
     func notifyTimeSlotChange() {
-        parentController.notifyTimeSlotUpdated()
+        owner.notifyTimeSlotUpdated()
         course.needsSort = true
     }
+    
 }

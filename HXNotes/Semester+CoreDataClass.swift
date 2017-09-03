@@ -142,6 +142,7 @@ public class Semester: NSManagedObject {
             for case let time as TimeSlot in course.timeSlots! {
                 
                 if weekday == time.weekday && minuteOfDay >= time.startMinute - alertTimespan && minuteOfDay < time.startMinute {
+                    print("futureTimeSlot: \(time.startMinute)")
                     // Course approaching within timespan. Check if its earlier than previous find
                     if soonest == nil || time.startMinute < soonest.startMinute {
                         soonest = time
@@ -150,6 +151,23 @@ public class Semester: NSManagedObject {
             }
         }
         return soonest
+    }
+    
+    /// Will return true if the target semester is before the passed semester.
+    public func isEarlier(than semester: Semester) -> Bool {
+        print("Is \(self.title) \(self.year) earlier than \(semester.title) \(semester.year)")
+        if self.year < semester.year {
+            print("    Yup.")
+            return true
+        }
+        if self.year == semester.year {
+            if self.title!.lowercased() == "spring" && semester.title!.lowercased() == "fall" {
+                print("    Yup.")
+                return true
+            }
+        }
+        print("    Nop.")
+        return false
     }
     
     // MARK: - Validation

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11762" systemVersion="16G29" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11762"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner"/>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView id="ynS-G8-DTn" customClass="CourseTestBox" customModule="HXNotes" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="179" height="25"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <textField horizontalHuggingPriority="5" verticalHuggingPriority="750" horizontalCompressionResistancePriority="100" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NV0-5D-trf">
+                    <rect key="frame" x="0.0" y="4" width="112" height="17"/>
+                    <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Untitled Exam 1" id="LNa-WP-fjQ">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hys-gR-W3Q">
+                    <rect key="frame" x="110" y="6" width="50" height="14"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="12/13/93" id="6kr-ns-qAp">
+                        <font key="font" metaFont="smallSystem"/>
+                        <color key="textColor" name="keyboardFocusIndicatorColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <button translatesAutoresizingMaskIntoConstraints="NO" id="o9r-1p-HZz">
+                    <rect key="frame" x="160" y="8" width="9" height="9"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="9" id="Ku6-Na-8H1"/>
+                        <constraint firstAttribute="height" constant="9" id="dhx-Uh-vlR"/>
+                    </constraints>
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="icon_smallPencil" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="cHL-LS-YRm">
+                        <behavior key="behavior" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="action_showDetails:" target="ynS-G8-DTn" id="4Ti-7O-ZhD"/>
+                    </connections>
+                </button>
+            </subviews>
+            <constraints>
+                <constraint firstItem="NV0-5D-trf" firstAttribute="centerY" secondItem="ynS-G8-DTn" secondAttribute="centerY" id="2RJ-03-bpR"/>
+                <constraint firstItem="hys-gR-W3Q" firstAttribute="leading" secondItem="NV0-5D-trf" secondAttribute="trailing" constant="2" id="9ej-3A-HwD"/>
+                <constraint firstItem="o9r-1p-HZz" firstAttribute="centerY" secondItem="ynS-G8-DTn" secondAttribute="centerY" id="JBN-Uz-fds"/>
+                <constraint firstItem="NV0-5D-trf" firstAttribute="leading" secondItem="ynS-G8-DTn" secondAttribute="leading" constant="2" id="Jcc-Mh-zHj"/>
+                <constraint firstItem="NV0-5D-trf" firstAttribute="top" secondItem="ynS-G8-DTn" secondAttribute="top" constant="4" id="MEQ-o6-any"/>
+                <constraint firstAttribute="bottom" secondItem="NV0-5D-trf" secondAttribute="bottom" constant="4" id="Y2E-Lw-wLI"/>
+                <constraint firstItem="hys-gR-W3Q" firstAttribute="centerY" secondItem="ynS-G8-DTn" secondAttribute="centerY" id="d1V-gJ-Ggw"/>
+                <constraint firstAttribute="trailing" secondItem="o9r-1p-HZz" secondAttribute="trailing" constant="10" id="oYC-ly-bHm"/>
+                <constraint firstItem="o9r-1p-HZz" firstAttribute="leading" secondItem="hys-gR-W3Q" secondAttribute="trailing" constant="2" id="q8z-Dj-6Sf"/>
+            </constraints>
+            <connections>
+                <outlet property="buttonDetails" destination="o9r-1p-HZz" id="J1t-Wf-R4B"/>
+                <outlet property="labelDate" destination="hys-gR-W3Q" id="LcT-Bm-Sp5"/>
+                <outlet property="labelTest" destination="NV0-5D-trf" id="aDw-vO-45k"/>
+            </connections>
+            <point key="canvasLocation" x="-11.5" y="46"/>
+        </customView>
+    </objects>
+    <resources>
+        <image name="icon_smallPencil" width="9" height="9"/>
+    </resources>
+</document>

@@ -1,39 +1,37 @@
 //
-//  HXCourseBox.swift
+//  SemesterCourseBox.swift
 //  HXNotes
 //
-//  Created by Harrison Balogh on 5/9/17.
+//  Created by Harrison Balogh on 8/25/17.
 //  Copyright © 2017 Harxer. All rights reserved.
 //
 
 import Cocoa
 
-class HXCourseBox: NSBox {
-    
-    /// Return a new instance of a HXCourseBox based on the nib template.
-    static func instance(with course: Course, owner parent: SemesterPageViewController) -> HXCourseBox! {
+class SemesterCourseBox: NSView {
+
+    /// Return a new instance of a HXLectureLedger based on the nib template.
+    static func instance(with course: Course, owner: SemesterPageViewController) -> SemesterCourseBox! {
         var theObjects: NSArray = []
-        Bundle.main.loadNibNamed("HXCourseBox", owner: nil, topLevelObjects: &theObjects)
+        Bundle.main.loadNibNamed("SemesterCourseBox", owner: nil, topLevelObjects: &theObjects)
         // Get NSView from top level objects returned from nib load
-        if let newBox = theObjects.filter({$0 is HXCourseBox}).first as? HXCourseBox {
-            newBox.initialize(with: course, owner: parent)
+        if let newBox = theObjects.filter({$0 is SemesterCourseBox}).first as? SemesterCourseBox {
+            newBox.initialize(with: course, owner: owner)
             return newBox
         }
         return nil
     }
     
-    weak var parent: SemesterPageViewController!
     weak var course: Course!
+    weak var owner: SemesterPageViewController!
     
     @IBOutlet weak var labelTitle: NSTextField!
     @IBOutlet weak var labelDays: NSTextField!
     @IBOutlet weak var buttonOverlay: NSButton!
     
-    /// Initialize the color, index, and tracking area of the CourseBox view
-    private func initialize(with course: Course, owner parent: SemesterPageViewController) {
-        
-        self.parent = parent
+    private func initialize(with course: Course, owner: SemesterPageViewController) {
         self.course = course
+        self.owner = owner
         
         labelTitle.stringValue = course.title!
         labelDays.stringValue = course.daysPerWeekPrintable()
@@ -47,7 +45,7 @@ class HXCourseBox: NSBox {
     }
     
     @IBAction func goToNotes(_ sender: Any) {
-        parent.notifyCourseSelected(course)
+        owner.notifySelected(course: course)
     }
     
     override func mouseEntered(with event: NSEvent) {
@@ -57,4 +55,5 @@ class HXCourseBox: NSBox {
     override func mouseExited(with event: NSEvent) {
         NSCursor.pointingHand().pop()
     }
+    
 }

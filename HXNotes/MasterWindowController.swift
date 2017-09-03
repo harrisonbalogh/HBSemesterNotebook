@@ -25,14 +25,4 @@ class MasterWindowController: NSWindowController {
             masterViewController = mVC
         }
     }
-    
-
-    @IBAction func actionTemp_sidebar(_ sender: NSButton) {
-        if sender.state == NSOnState {
-            masterViewController.sideBarShown(true)
-        } else {
-            masterViewController.sideBarShown(false)
-        }
-    }
-    
 }

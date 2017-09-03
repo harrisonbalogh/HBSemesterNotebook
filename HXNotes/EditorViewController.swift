@@ -36,7 +36,6 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
             }
             // Setting selectedCourse, immediately updates visuals
             if selectedCourse != nil {
-                print("RE-FUCKING-LOAD- DATA (-1)")
                 collectionView.reloadData()
                 if selectedCourse.lectures!.count != 0 {
                     // Animate showing the lectures
@@ -103,7 +102,6 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
                 NSAnimationContext.beginGrouping()
                 NSAnimationContext.current().completionHandler = {
                     if self.selectedCourse == nil {
-                        print("RE-FUCKING-LOAD- DATA (-2)")
                         self.collectionView.reloadData()
                     }
                 }
@@ -119,7 +117,7 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
     
     weak var lectureFocused: LectureCollectionViewItem! {
         didSet {
-            masterViewController.notifyLectureFocus(is: lectureFocused)
+//            masterViewController.notifyLectureFocus(is: lectureFocused)
         }
     }
     
@@ -357,7 +355,7 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
             item.textView_lecture.textStorage?.setAttributedString(lecture.content!)
         }
         item.owner = self
-        item.textView_lecture.parentController = item
+//        item.textView_lecture.parentController = item
         
         NotificationCenter.default.removeObserver(item, name: .NSTextDidChange, object: item.textView_lecture)
         NotificationCenter.default.addObserver(item, selector: #selector(LectureCollectionViewItem.notifyTextChange),

@@ -16,7 +16,7 @@ class WorkAdderLectureController: NSViewController {
     }
     
     weak var owner: CoursePageViewController!
-    weak var workBox: HXWorkBox!
+    weak var workBox: CourseWorkBox!
     
     override func viewDidAppear() {
         super.viewDidAppear()

@@ -10,7 +10,7 @@ import Cocoa
 
 class CoursePageViewController: NSViewController {
 
-    var sidebarVC: SidebarPageController!
+    weak var sidebarVC: SidebarPageController!
     
     let appDelegate = NSApplication.shared().delegate as! AppDelegate
     
@@ -25,6 +25,8 @@ class CoursePageViewController: NSViewController {
     
     override func viewDidAppear() {
         super.viewDidAppear()
+        
+        print("CourseVC - viewDidAppear")
         
         if sidebarVC.selectedCourse == nil {
             return
@@ -45,11 +47,17 @@ class CoursePageViewController: NSViewController {
         if AppDelegate.scheduleAssistant.checkHappening() {
             addButton.isEnabled = true
             addButton.isHidden = false
-            addButton.title = "Lecture \(max(sidebarVC.selectedCourse.theoreticalLectureCount(), 1))"
+            addButton.title = "Add Lecture \(max(sidebarVC.selectedCourse.theoreticalLectureCount(), 1))"
         } else {
             addButton.isEnabled = false
             addButton.isHidden = true
         }
+    }
+    
+    override func viewWillDisappear() {
+        super.viewWillDisappear()
+        
+        print("CourseVC - viewWillDisappear")
     }
     
     @IBAction func action_back(_ sender: NSButton) {
@@ -86,7 +94,7 @@ class CoursePageViewController: NSViewController {
         
         // Add the first week box
         if sidebarVC.selectedCourse.lectures!.count > 0 {
-            lectureStackView.addArrangedSubview(HXWeekBox.instance(withNumber: (1)))
+            lectureStackView.addArrangedSubview(CourseWeekBox.instance(with: 1))
             weekCount = 1
         }
         
@@ -108,20 +116,13 @@ class CoursePageViewController: NSViewController {
         }
         // If the lecture requested to be pushed is the first time slot in the week, it must be a new week
         if lecture.course!.timeSlots?.index(of: lecture.timeSlot!) == 0 && lectureStackView.arrangedSubviews.count != 1 {
-            lectureStackView.addArrangedSubview(HXWeekBox.instance(withNumber: (weekCount+1)))
+            lectureStackView.addArrangedSubview(CourseWeekBox.instance(with: (weekCount+1) ))
             weekCount += 1
         }
-        // If absent, create an absent box, instead of a normal box
-        if lecture.absent {
-            let newBox = HXAbsentLectureBox.instance()
-            lectureStackView.addArrangedSubview(newBox!)
-            newBox!.widthAnchor.constraint(equalTo: lectureStackView.widthAnchor).isActive = true
-        } else {
-            let year = lecture.course!.semester!.year
-            let newBox = HXLectureBox.instance(numbered: lecture.number, dated: "\(lecture.month)/\(lecture.day)/\(year % 100)", owner: self)
-            lectureStackView.addArrangedSubview(newBox!)
-            newBox?.widthAnchor.constraint(equalTo: lectureStackView.widthAnchor).isActive = true
-        }
+        // Create lecture box
+        let newBox = CourseLectureBox.instance(with: lecture, owner: self)!
+        lectureStackView.addArrangedSubview(newBox)
+        newBox.widthAnchor.constraint(equalTo: lectureStackView.widthAnchor).isActive = true
     }
     /// Handles purely the visual aspect of lectures. Internal use only. Removes all HXLectureBox's and HXWeekBox's from the ledgerStackView.
     private func flushLectures() {
@@ -173,7 +174,7 @@ class CoursePageViewController: NSViewController {
     }
     
     func push(work: Work) {
-        workStackView.addArrangedSubview(HXWorkBox.instance(with: work, for: self)!)
+        workStackView.addArrangedSubview(CourseWorkBox.instance(with: work, owner: self)!)
     }
     
     func flushWork() {
@@ -184,7 +185,7 @@ class CoursePageViewController: NSViewController {
         noWorkCheck()
     }
     
-    func pop(workBox: HXWorkBox) {
+    func pop(workBox: CourseWorkBox) {
         workBox.removeFromSuperview()
         
         noWorkCheck()
@@ -227,7 +228,7 @@ class CoursePageViewController: NSViewController {
     }
     
     func push(test: Test) {
-        testStackView.addArrangedSubview(HXTestBox.instance(with: test, for: self)!)
+        testStackView.addArrangedSubview(CourseTestBox.instance(with: test, owner: self)!)
     }
     
     func flushTests() {
@@ -238,7 +239,7 @@ class CoursePageViewController: NSViewController {
         noTestsCheck()
     }
     
-    func pop(testBox: HXTestBox) {
+    func pop(testBox: CourseTestBox) {
         testBox.removeFromSuperview()
         
         noTestsCheck()
@@ -290,6 +291,19 @@ class CoursePageViewController: NSViewController {
     
     // MARK: - Notifiers
     
+    func notifySelected(lecture: Lecture) {
+        sidebarVC.notifySelected(lecture: lecture)
+        
+        // Update visuals for all HXLectureBox's
+        for case let lectureBox as CourseLectureBox in lectureStackView.arrangedSubviews {
+            if lectureBox.lecture == lecture {
+                lectureBox.updateVisual(selected: true)
+            } else {
+                lectureBox.updateVisual(selected: false)
+            }
+        }
+    }
+    
     func notifyCloseTestDetails() {
         if testDetailsPopover != nil {
             if testDetailsPopover.isShown {
@@ -306,7 +320,7 @@ class CoursePageViewController: NSViewController {
         }
     }
     
-    func notifyReveal(testBox: HXTestBox) {
+    func notifyReveal(testBox: CourseTestBox) {
         if testDetailsPopover != nil {
             if testDetailsPopover.isShown {
                 if let testAVC = testDetailsPopover.contentViewController as? TestAdderViewController {
@@ -326,7 +340,7 @@ class CoursePageViewController: NSViewController {
         testDetailsPopover.show(relativeTo: testBox.buttonDetails.bounds, of: testBox.buttonDetails, preferredEdge: NSRectEdge.maxX)
         
     }
-    func notifyReveal(workBox: HXWorkBox) {
+    func notifyReveal(workBox: CourseWorkBox) {
         if workDetailsPopover != nil {
             if workDetailsPopover.isShown {
                 if let workAVC = workDetailsPopover.contentViewController as? WorkAdderLectureController {
@@ -347,7 +361,7 @@ class CoursePageViewController: NSViewController {
     }
     
     func notifyDelete(test: Test) {
-        for case let testBox as HXTestBox in testStackView.arrangedSubviews {
+        for case let testBox as CourseTestBox in testStackView.arrangedSubviews {
             if testBox.test! == test {
                 // Update model
                 appDelegate.managedObjectContext.delete( test )
@@ -359,7 +373,7 @@ class CoursePageViewController: NSViewController {
         }
     }
     func notifyDelete(work: Work) {
-        for case let workBox as HXWorkBox in workStackView.arrangedSubviews {
+        for case let workBox as CourseWorkBox in workStackView.arrangedSubviews {
             if workBox.work! == work {
                 // Update model
                 appDelegate.managedObjectContext.delete( work )
@@ -370,8 +384,16 @@ class CoursePageViewController: NSViewController {
             }
         }
     }
+    func notifyRenamed(lecture: Lecture) {
+        for case let lectureBox as CourseLectureBox in lectureStackView.arrangedSubviews {
+            if lectureBox.lecture! == lecture {
+                lectureBox.labelCustomTitle.stringValue = lecture.title!
+                break
+            }
+        }
+    }
     func notifyRenamed(test: Test) {
-        for case let testBox as HXTestBox in testStackView.arrangedSubviews {
+        for case let testBox as CourseTestBox in testStackView.arrangedSubviews {
             if testBox.test! == test {
                 testBox.labelTest.stringValue = test.title!
                 break
@@ -379,7 +401,7 @@ class CoursePageViewController: NSViewController {
         }
     }
     func notifyRenamed(work: Work) {
-        for case let workBox as HXWorkBox in workStackView.arrangedSubviews {
+        for case let workBox as CourseWorkBox in workStackView.arrangedSubviews {
             if workBox.work! == work {
                 workBox.labelWork.stringValue = work.title!
                 break
@@ -387,7 +409,7 @@ class CoursePageViewController: NSViewController {
         }
     }
     func notifyDated(test: Test) {
-        for case let testBox as HXTestBox in testStackView.arrangedSubviews {
+        for case let testBox as CourseTestBox in testStackView.arrangedSubviews {
             if testBox.test! == test {
                 let day = Calendar.current.component(.day, from: test.date!)
                 let month = Calendar.current.component(.month, from: test.date!)
@@ -406,7 +428,7 @@ class CoursePageViewController: NSViewController {
         }
     }
     func notifyDated(work: Work) {
-        for case let workBox as HXWorkBox in workStackView.arrangedSubviews {
+        for case let workBox as CourseWorkBox in workStackView.arrangedSubviews {
             if workBox.work! == work {
                 let day = Calendar.current.component(.day, from: work.date!)
                 let month = Calendar.current.component(.month, from: work.date!)

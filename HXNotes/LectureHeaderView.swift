@@ -228,7 +228,7 @@ import Cocoa
             button_style_italicize.state = NSOffState
             button_style_italicize.tag = Int(NSFontTraitMask.italicFontMask.rawValue)
         }
-            }
+    }
     func traitChange() {
         selectionChange()
     }

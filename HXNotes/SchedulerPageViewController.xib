@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11762" systemVersion="16G29" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11762"/>
+        <capability name="box content view" minToolsVersion="7.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+        <capability name="stacking Non-gravity area distributions on NSStackView" minToolsVersion="7.0" minSystemVersion="10.11"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="SchedulerPageViewController" customModule="HXNotes" customModuleProvider="target">
+            <connections>
+                <outlet property="addCourseButton" destination="Tfs-Uc-Ear" id="c6A-zu-gFN"/>
+                <outlet property="courseStackView" destination="UTj-QV-3rW" id="mvt-fs-9pi"/>
+                <outlet property="noCourseLabel" destination="3OD-SO-Lns" id="nSt-Zu-Vhp"/>
+                <outlet property="view" destination="Hz6-mo-xeY" id="0bl-1N-x8E"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView identifier="schedulerPage" id="Hz6-mo-xeY">
+            <rect key="frame" x="0.0" y="0.0" width="135" height="110"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="5fb-XU-Ipd">
+                    <rect key="frame" x="0.0" y="0.0" width="135" height="110"/>
+                    <view key="contentView" id="YLY-By-oN6">
+                        <rect key="frame" x="0.0" y="0.0" width="135" height="110"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    </view>
+                    <color key="fillColor" red="0.97467082739999999" green="0.97467082739999999" blue="0.97467082739999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                </box>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3OD-SO-Lns">
+                    <rect key="frame" x="32" y="36" width="70" height="16"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="No Courses" id="s8Z-li-Aer">
+                        <font key="font" metaFont="cellTitle"/>
+                        <color key="textColor" red="0.50759640959999996" green="0.50759640959999996" blue="0.50759640959999996" alpha="0.84999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <scrollView borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NtX-f2-Ozh">
+                    <rect key="frame" x="0.0" y="0.0" width="135" height="88"/>
+                    <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="HV9-iG-hXb" customClass="HXFlippedClipView" customModule="HXNotes" customModuleProvider="target">
+                        <rect key="frame" x="0.0" y="0.0" width="135" height="88"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView distribution="fill" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UTj-QV-3rW">
+                                <rect key="frame" x="0.0" y="0.0" width="135" height="88"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="88" placeholder="YES" id="Yey-nT-aUq"/>
+                                </constraints>
+                            </stackView>
+                        </subviews>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="UTj-QV-3rW" secondAttribute="trailing" id="W4t-VB-sw6"/>
+                            <constraint firstItem="UTj-QV-3rW" firstAttribute="top" secondItem="HV9-iG-hXb" secondAttribute="top" id="clc-hW-mdZ"/>
+                            <constraint firstItem="UTj-QV-3rW" firstAttribute="leading" secondItem="HV9-iG-hXb" secondAttribute="leading" id="xaJ-hC-nqP"/>
+                        </constraints>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </clipView>
+                    <scroller key="horizontalScroller" verticalHuggingPriority="750" horizontal="YES" id="5af-Ct-AGS">
+                        <rect key="frame" x="0.0" y="72" width="135" height="16"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </scroller>
+                    <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="f97-bH-ZMV">
+                        <rect key="frame" x="119" y="0.0" width="16" height="88"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </scroller>
+                </scrollView>
+                <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Tfs-Uc-Ear">
+                    <rect key="frame" x="29" y="90" width="77" height="17"/>
+                    <buttonCell key="cell" type="inline" title="Add Course" bezelStyle="inline" imagePosition="left" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="YQK-9h-rOm">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="smallSystemBold"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="action_addCourse:" target="-2" id="PCk-A7-SDd"/>
+                    </connections>
+                </button>
+                <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="2Nb-Dh-LGi">
+                    <rect key="frame" x="0.0" y="85" width="135" height="5"/>
+                </box>
+            </subviews>
+            <constraints>
+                <constraint firstItem="5fb-XU-Ipd" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" id="1El-dI-yXz"/>
+                <constraint firstItem="Tfs-Uc-Ear" firstAttribute="centerX" secondItem="Hz6-mo-xeY" secondAttribute="centerX" id="4IK-GQ-Weh"/>
+                <constraint firstItem="NtX-f2-Ozh" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" id="5vu-By-SKd"/>
+                <constraint firstItem="2Nb-Dh-LGi" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" id="9zG-cy-ga8"/>
+                <constraint firstAttribute="bottom" secondItem="5fb-XU-Ipd" secondAttribute="bottom" id="L8n-7M-cJI"/>
+                <constraint firstItem="2Nb-Dh-LGi" firstAttribute="top" secondItem="NtX-f2-Ozh" secondAttribute="top" id="PfJ-AG-uul"/>
+                <constraint firstItem="3OD-SO-Lns" firstAttribute="centerX" secondItem="NtX-f2-Ozh" secondAttribute="centerX" id="UTU-pg-Nv2"/>
+                <constraint firstAttribute="trailing" secondItem="2Nb-Dh-LGi" secondAttribute="trailing" id="WWz-s5-tu9"/>
+                <constraint firstAttribute="bottom" secondItem="NtX-f2-Ozh" secondAttribute="bottom" id="XVP-gu-Y4m"/>
+                <constraint firstItem="Tfs-Uc-Ear" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" constant="3" id="XsF-Wi-j9d"/>
+                <constraint firstItem="NtX-f2-Ozh" firstAttribute="top" secondItem="Tfs-Uc-Ear" secondAttribute="bottom" constant="3" id="Z4n-xS-6zX"/>
+                <constraint firstItem="3OD-SO-Lns" firstAttribute="centerY" secondItem="NtX-f2-Ozh" secondAttribute="centerY" id="bPj-UM-3pq"/>
+                <constraint firstItem="5fb-XU-Ipd" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" id="rzU-LK-F7W"/>
+                <constraint firstAttribute="trailing" secondItem="NtX-f2-Ozh" secondAttribute="trailing" id="xaw-P7-FL5"/>
+                <constraint firstAttribute="trailing" secondItem="5fb-XU-Ipd" secondAttribute="trailing" id="yvu-Kp-9kk"/>
+            </constraints>
+            <point key="canvasLocation" x="37.5" y="232"/>
+        </customView>
+    </objects>
+</document>

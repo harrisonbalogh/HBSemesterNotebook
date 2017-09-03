@@ -176,7 +176,7 @@ class ScheduleAssistant: NSObject {
         self.perform(#selector(self.notifyMinute), with: nil, afterDelay: TimeInterval(remainingMinute))
         // Place below anything to happen on the minute marker...
         
-        checkFuture()
+//        checkFuture()
         checkHappening()
         checkMissed()
         

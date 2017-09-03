@@ -46,8 +46,7 @@ public class Course: NSManagedObject {
     /// the current date. If this is not an absent lecture, then provide nil in the day and month field so
     /// it can be retrieved based on the current date. Otherwise, for the case of an absent lecture, provide
     /// the day and month that this lecture occurred on.
-    func createLecture(during timeSlot: TimeSlot, on day: Int?, in month: Int?) -> Lecture {
-        print("CREATING LECTURE")
+    @discardableResult func createLecture(during timeSlot: TimeSlot, on day: Int?, in month: Int?) -> Lecture {
         
         let appDelegate = NSApplication.shared().delegate as! AppDelegate
         
@@ -59,6 +58,7 @@ public class Course: NSManagedObject {
         newLecture.course = self
         newLecture.timeSlot = timeSlot
         newLecture.number = lecNumber
+        newLecture.title = ""
         newLecture.content = NSAttributedString(string: "")
         
         if day == nil || month == nil {
@@ -301,7 +301,6 @@ public class Course: NSManagedObject {
     func theoreticalLectureCount() -> Int {
         // Zero is only returned for a course that hasn't started yet.
         if lectures!.count == 0 {
-            print("theoreticalLectureCount: RETURNING ZERORORORORORO")
             return 0
         }
         
@@ -383,7 +382,6 @@ public class Course: NSManagedObject {
             count += indexToday - indexFirst + 1
         }
         
-        print("theoreticalLectureCount: \(count) AKDJFKASDKLFHALKJSDHFLKJHASLDKFHKLASHDFLKJHAS")
         return count
     }
     

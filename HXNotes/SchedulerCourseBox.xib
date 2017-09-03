@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11762" systemVersion="16G29" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11762"/>
+        <capability name="box content view" minToolsVersion="7.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+        <capability name="stacking Non-gravity area distributions on NSStackView" minToolsVersion="7.0" minSystemVersion="10.11"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner"/>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView id="nuu-sF-rr8" customClass="SchedulerCourseBox" customModule="HXNotes" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="163" height="55"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <box identifier="course_box_drag" boxType="custom" cornerRadius="5" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="kva-mM-31N" userLabel="Drag Box">
+                    <rect key="frame" x="5" y="36" width="10" height="10"/>
+                    <view key="contentView" id="hFw-M9-zIf">
+                        <rect key="frame" x="1" y="1" width="8" height="8"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    </view>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="10" id="Kc3-d8-GRz"/>
+                        <constraint firstAttribute="height" constant="10" id="jIe-O1-rfv"/>
+                    </constraints>
+                    <color key="borderColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <color key="fillColor" red="0.47121701980000003" green="0.82496093749999999" blue="0.48645101699999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                </box>
+                <textField identifier="course_label_title" horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YLs-Mt-6bQ" customClass="CourseLabel" customModule="HXNotes" customModuleProvider="target">
+                    <rect key="frame" x="18" y="30" width="120" height="23"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="23" id="wXU-2m-tZ9"/>
+                    </constraints>
+                    <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="left" title="Label" usesSingleLineMode="YES" id="8gH-bj-tpF">
+                        <font key="font" metaFont="systemBold" size="18"/>
+                        <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                    <connections>
+                        <action selector="endEditingCourseLabel:" target="nuu-sF-rr8" id="ndV-tk-5rb"/>
+                    </connections>
+                </textField>
+                <button identifier="course_button_trash" alphaValue="0.80000000000000004" translatesAutoresizingMaskIntoConstraints="NO" id="oN0-bY-8cE" userLabel="Trash Button">
+                    <rect key="frame" x="140" y="32" width="18" height="18"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="18" id="F4I-xE-QgG"/>
+                        <constraint firstAttribute="height" constant="18" id="jhx-Tx-hGQ"/>
+                    </constraints>
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="trash_icon" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="lxg-fQ-fKE">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="removeCourseBox:" target="nuu-sF-rr8" id="Icr-WJ-O0O"/>
+                    </connections>
+                </button>
+                <stackView identifier="timeSlot_stack_view" distribution="fill" orientation="vertical" alignment="leading" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" verticalCompressionResistancePriority="755" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sBO-X8-qgT" userLabel="TimeSlot Stack View">
+                    <rect key="frame" x="0.0" y="10" width="163" height="20"/>
+                    <subviews>
+                        <customView translatesAutoresizingMaskIntoConstraints="NO" id="yWE-ol-ESG">
+                            <rect key="frame" x="0.0" y="0.0" width="163" height="20"/>
+                            <subviews>
+                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GOT-SE-pTt">
+                                    <rect key="frame" x="18" y="2" width="98" height="17"/>
+                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Add Time Slot" id="WMd-Qj-JdK">
+                                        <font key="font" metaFont="systemBold"/>
+                                        <color key="textColor" red="0.44411569150000002" green="0.44411569150000002" blue="0.44411569150000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                    </textFieldCell>
+                                </textField>
+                                <button identifier="timeslot_add_button" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="pQm-Oz-rAq">
+                                    <rect key="frame" x="0.0" y="0.0" width="163" height="20"/>
+                                    <buttonCell key="cell" type="bevel" bezelStyle="rounded" alignment="center" imageScaling="proportionallyDown" inset="2" id="ytP-LR-hpJ">
+                                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                        <font key="font" metaFont="system"/>
+                                    </buttonCell>
+                                    <connections>
+                                        <action selector="addTimeSlot:" target="nuu-sF-rr8" id="FZB-rJ-SBw"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                            <constraints>
+                                <constraint firstItem="pQm-Oz-rAq" firstAttribute="leading" secondItem="yWE-ol-ESG" secondAttribute="leading" id="0Ko-WE-pyi"/>
+                                <constraint firstAttribute="trailing" secondItem="pQm-Oz-rAq" secondAttribute="trailing" id="Bgm-Tl-P1E"/>
+                                <constraint firstItem="GOT-SE-pTt" firstAttribute="centerY" secondItem="yWE-ol-ESG" secondAttribute="centerY" id="ZlE-tH-ZqO"/>
+                                <constraint firstItem="GOT-SE-pTt" firstAttribute="leading" secondItem="yWE-ol-ESG" secondAttribute="leading" constant="20" id="cqL-5K-eLf"/>
+                                <constraint firstItem="pQm-Oz-rAq" firstAttribute="top" secondItem="yWE-ol-ESG" secondAttribute="top" id="gt2-8P-hPj"/>
+                                <constraint firstAttribute="height" constant="20" id="rKg-2o-nHN"/>
+                                <constraint firstAttribute="bottom" secondItem="pQm-Oz-rAq" secondAttribute="bottom" id="sh1-x6-9W2"/>
+                            </constraints>
+                        </customView>
+                    </subviews>
+                    <constraints>
+                        <constraint firstItem="yWE-ol-ESG" firstAttribute="width" secondItem="sBO-X8-qgT" secondAttribute="width" id="Og2-VP-913"/>
+                    </constraints>
+                    <visibilityPriorities>
+                        <integer value="1000"/>
+                    </visibilityPriorities>
+                    <customSpacing>
+                        <real value="3.4028234663852886e+38"/>
+                    </customSpacing>
+                </stackView>
+            </subviews>
+            <constraints>
+                <constraint firstItem="oN0-bY-8cE" firstAttribute="centerY" secondItem="YLs-Mt-6bQ" secondAttribute="centerY" id="5Qu-pf-jcw"/>
+                <constraint firstItem="kva-mM-31N" firstAttribute="centerY" secondItem="YLs-Mt-6bQ" secondAttribute="centerY" id="7YR-Bz-uzZ"/>
+                <constraint firstItem="kva-mM-31N" firstAttribute="leading" secondItem="nuu-sF-rr8" secondAttribute="leading" constant="5" id="EA8-qK-rBu"/>
+                <constraint firstItem="sBO-X8-qgT" firstAttribute="top" secondItem="YLs-Mt-6bQ" secondAttribute="bottom" id="ShV-mm-OXD"/>
+                <constraint firstAttribute="trailing" secondItem="sBO-X8-qgT" secondAttribute="trailing" id="eA9-dy-OHr"/>
+                <constraint firstAttribute="bottom" secondItem="sBO-X8-qgT" secondAttribute="bottom" constant="10" id="hcT-qC-86H"/>
+                <constraint firstAttribute="trailing" secondItem="oN0-bY-8cE" secondAttribute="trailing" constant="5" id="iUh-Zm-ing"/>
+                <constraint firstItem="sBO-X8-qgT" firstAttribute="leading" secondItem="nuu-sF-rr8" secondAttribute="leading" id="mq3-Jq-xyI"/>
+                <constraint firstItem="YLs-Mt-6bQ" firstAttribute="top" secondItem="nuu-sF-rr8" secondAttribute="top" constant="2" id="nQ6-nR-b0J"/>
+                <constraint firstItem="oN0-bY-8cE" firstAttribute="leading" secondItem="YLs-Mt-6bQ" secondAttribute="trailing" constant="4" id="p3b-sG-K7R"/>
+                <constraint firstItem="YLs-Mt-6bQ" firstAttribute="leading" secondItem="kva-mM-31N" secondAttribute="trailing" constant="5" id="zfz-3E-04E"/>
+            </constraints>
+            <connections>
+                <outlet property="boxDrag" destination="kva-mM-31N" id="3hC-Fj-Oep"/>
+                <outlet property="buttonTrash" destination="oN0-bY-8cE" id="p6T-Y5-uRe"/>
+                <outlet property="labelCourse" destination="YLs-Mt-6bQ" id="8Db-Vh-Utf"/>
+                <outlet property="timeSlotAddButton" destination="pQm-Oz-rAq" id="KxN-li-VCa"/>
+                <outlet property="timeSlotAddViewHeightConstraint" destination="rKg-2o-nHN" id="ct2-LG-Axz"/>
+                <outlet property="timeSlotStackView" destination="sBO-X8-qgT" id="679-Td-gcc"/>
+            </connections>
+            <point key="canvasLocation" x="138" y="57"/>
+        </customView>
+    </objects>
+    <resources>
+        <image name="trash_icon" width="25" height="25"/>
+    </resources>
+</document>
