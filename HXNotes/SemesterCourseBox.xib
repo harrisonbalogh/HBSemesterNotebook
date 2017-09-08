@@ -22,15 +22,28 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     </view>
                 </box>
+                <box identifier="course_box_drag" boxType="custom" cornerRadius="5" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="E3c-85-Iym" userLabel="Drag Box">
+                    <rect key="frame" x="5" y="10" width="10" height="10"/>
+                    <view key="contentView" id="Wf3-QR-reB">
+                        <rect key="frame" x="1" y="1" width="8" height="8"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    </view>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="10" id="fNw-de-THu"/>
+                        <constraint firstAttribute="width" constant="10" id="hyi-4R-A2c"/>
+                    </constraints>
+                    <color key="borderColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <color key="fillColor" red="0.47121701980000003" green="0.82496093749999999" blue="0.48645101699999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                </box>
                 <textField identifier="course_title_label" horizontalHuggingPriority="249" verticalHuggingPriority="750" horizontalCompressionResistancePriority="749" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DHm-LB-cDL">
-                    <rect key="frame" x="2" y="5" width="133" height="19"/>
+                    <rect key="frame" x="18" y="5" width="117" height="19"/>
                     <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Title" id="YbH-5C-O2B">
                         <font key="font" metaFont="systemSemibold" size="16"/>
                         <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField identifier="course_days_label" horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tfp-0r-xPB">
+                <textField identifier="course_days_label" horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="100" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tfp-0r-xPB">
                     <rect key="frame" x="131" y="6" width="31" height="17"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="M, T" id="Pb7-sp-CBL">
                         <font key="font" metaFont="system"/>
@@ -56,11 +69,12 @@
                 </button>
             </subviews>
             <constraints>
+                <constraint firstItem="E3c-85-Iym" firstAttribute="centerY" secondItem="Q4Q-Df-lLR" secondAttribute="centerY" id="4dZ-39-2rF"/>
                 <constraint firstItem="DHm-LB-cDL" firstAttribute="trailing" secondItem="tfp-0r-xPB" secondAttribute="leading" id="9qh-I9-e53"/>
                 <constraint firstItem="tfp-0r-xPB" firstAttribute="centerY" secondItem="Q4Q-Df-lLR" secondAttribute="centerY" id="CeN-kj-oQd"/>
                 <constraint firstItem="QKn-9E-hZu" firstAttribute="top" secondItem="Q4Q-Df-lLR" secondAttribute="top" id="D7X-sf-qjq"/>
                 <constraint firstItem="vqi-f4-g4E" firstAttribute="leading" secondItem="Q4Q-Df-lLR" secondAttribute="leading" id="FEk-yh-GJp"/>
-                <constraint firstItem="DHm-LB-cDL" firstAttribute="leading" secondItem="Q4Q-Df-lLR" secondAttribute="leading" constant="4" id="IUq-6c-DmG"/>
+                <constraint firstItem="E3c-85-Iym" firstAttribute="leading" secondItem="Q4Q-Df-lLR" secondAttribute="leading" constant="5" id="GOs-Qt-B7g"/>
                 <constraint firstAttribute="trailing" secondItem="QKn-9E-hZu" secondAttribute="trailing" id="RnT-kG-W2F"/>
                 <constraint firstItem="QKn-9E-hZu" firstAttribute="leading" secondItem="Q4Q-Df-lLR" secondAttribute="leading" id="XWO-iK-mGH"/>
                 <constraint firstItem="DHm-LB-cDL" firstAttribute="centerY" secondItem="Q4Q-Df-lLR" secondAttribute="centerY" id="chI-mK-nOp"/>
@@ -72,8 +86,10 @@
                 <constraint firstAttribute="bottom" secondItem="SZQ-MM-l95" secondAttribute="bottom" id="lMd-qU-g2P"/>
                 <constraint firstAttribute="trailing" secondItem="tfp-0r-xPB" secondAttribute="trailing" constant="8" id="mPt-oI-Q1W"/>
                 <constraint firstAttribute="trailing" secondItem="vqi-f4-g4E" secondAttribute="trailing" id="rJo-NU-ZuG"/>
+                <constraint firstItem="DHm-LB-cDL" firstAttribute="leading" secondItem="E3c-85-Iym" secondAttribute="trailing" constant="5" id="tkU-CQ-MIV"/>
             </constraints>
             <connections>
+                <outlet property="boxDrag" destination="E3c-85-Iym" id="xLf-D5-GIQ"/>
                 <outlet property="buttonOverlay" destination="QKn-9E-hZu" id="loX-Sx-JLy"/>
                 <outlet property="labelDays" destination="tfp-0r-xPB" id="Sd5-Gl-QSq"/>
                 <outlet property="labelTitle" destination="DHm-LB-cDL" id="hLI-2W-fqp"/>

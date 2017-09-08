@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11762"/>
+        <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="box content view" minToolsVersion="7.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
         <capability name="stacking Non-gravity area distributions on NSStackView" minToolsVersion="7.0" minSystemVersion="10.11"/>
@@ -33,6 +34,9 @@
                     <color key="fillColor" red="0.92937167553191491" green="0.92937167553191491" blue="0.92937167553191491" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                 </box>
                 <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="EMb-EB-OoI">
+                    <rect key="frame" x="0.0" y="433" width="269" height="5"/>
+                </box>
+                <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="9nw-8N-y9s">
                     <rect key="frame" x="0.0" y="467" width="269" height="5"/>
                 </box>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dbh-pC-PMY">
@@ -43,14 +47,14 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <scrollView borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2LU-we-Lv1" userLabel="Scroll View">
-                    <rect key="frame" x="5" y="0.0" width="264" height="436"/>
+                <scrollView borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" hasVerticalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2LU-we-Lv1" userLabel="Scroll View">
+                    <rect key="frame" x="5" y="25" width="264" height="411"/>
                     <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="8hz-I8-ZO8" customClass="HXFlippedClipView" customModule="HXNotes" customModuleProvider="target">
-                        <rect key="frame" x="0.0" y="0.0" width="264" height="436"/>
+                        <rect key="frame" x="0.0" y="0.0" width="264" height="411"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="16" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="i0X-fv-Ycw">
-                                <rect key="frame" x="0.0" y="210" width="262" height="224"/>
+                                <rect key="frame" x="0.0" y="185" width="262" height="224"/>
                                 <subviews>
                                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="2k2-lm-cbh">
                                         <rect key="frame" x="0.0" y="192" width="108" height="32"/>
@@ -126,30 +130,73 @@
                         </constraints>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </clipView>
-                    <scroller key="horizontalScroller" verticalHuggingPriority="750" horizontal="YES" id="7hw-2f-QgB">
-                        <rect key="frame" x="0.0" y="420" width="264" height="16"/>
+                    <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="7hw-2f-QgB">
+                        <rect key="frame" x="-100" y="-100" width="249" height="15"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
-                    <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="44p-GI-kFM">
-                        <rect key="frame" x="248" y="0.0" width="16" height="436"/>
+                    <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="44p-GI-kFM">
+                        <rect key="frame" x="-100" y="-100" width="16" height="411"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
                 </scrollView>
+                <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="0gU-ez-pD8">
+                    <rect key="frame" x="0.0" y="23" width="269" height="5"/>
+                </box>
+                <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="pi9-8m-bbT">
+                    <rect key="frame" x="136" y="2" width="128.5" height="19"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="18" id="3lH-Dj-nuG"/>
+                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="50" id="q1T-JX-dD6"/>
+                    </constraints>
+                    <buttonCell key="cell" type="recessed" title="Done" bezelStyle="recessed" alignment="center" state="on" borderStyle="border" inset="2" id="vC4-Lg-aZo">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
+                        <font key="font" metaFont="systemBold" size="12"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="action_done:" target="-2" id="vxz-5m-r7z"/>
+                    </connections>
+                </button>
+                <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="w2t-tl-La7">
+                    <rect key="frame" x="4" y="2" width="128.5" height="19"/>
+                    <constraints>
+                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="50" id="6ol-G3-fPa"/>
+                        <constraint firstAttribute="height" constant="18" id="Oft-dA-bug"/>
+                    </constraints>
+                    <buttonCell key="cell" type="roundRect" title="Cancel" bezelStyle="roundedRect" alignment="center" state="on" borderStyle="border" inset="2" id="Z5f-1w-FEu">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="cellTitle"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="action_cancel:" target="-2" id="SfP-oG-pf2"/>
+                    </connections>
+                </button>
             </subviews>
             <constraints>
-                <constraint firstItem="EMb-EB-OoI" firstAttribute="top" secondItem="EEr-rO-A94" secondAttribute="top" id="4UW-kZ-31k"/>
+                <constraint firstItem="0gU-ez-pD8" firstAttribute="bottom" secondItem="2LU-we-Lv1" secondAttribute="bottom" id="3jz-mT-JJ6"/>
+                <constraint firstItem="9nw-8N-y9s" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" id="74u-R7-53z"/>
+                <constraint firstItem="w2t-tl-La7" firstAttribute="centerY" secondItem="pi9-8m-bbT" secondAttribute="centerY" id="Er2-gy-JlQ"/>
                 <constraint firstItem="EMb-EB-OoI" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" id="G2q-7p-8PY"/>
                 <constraint firstAttribute="trailing" secondItem="2LU-we-Lv1" secondAttribute="trailing" id="IBq-mA-AzQ"/>
-                <constraint firstAttribute="bottom" secondItem="2LU-we-Lv1" secondAttribute="bottom" id="Q9z-af-GXm"/>
+                <constraint firstItem="pi9-8m-bbT" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="centerX" constant="2" id="PFL-Fq-org"/>
                 <constraint firstItem="2LU-we-Lv1" firstAttribute="top" secondItem="Dbh-pC-PMY" secondAttribute="bottom" constant="7" id="Qrz-2d-D7f"/>
+                <constraint firstItem="9nw-8N-y9s" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" id="SM1-SP-PLu"/>
                 <constraint firstItem="EEr-rO-A94" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" id="UKL-UM-rFP"/>
+                <constraint firstAttribute="trailing" secondItem="pi9-8m-bbT" secondAttribute="trailing" constant="4" id="UbD-wY-aIE"/>
+                <constraint firstItem="pi9-8m-bbT" firstAttribute="top" secondItem="2LU-we-Lv1" secondAttribute="bottom" constant="4" id="UtU-b5-Jkr"/>
                 <constraint firstItem="Dbh-pC-PMY" firstAttribute="centerX" secondItem="Hz6-mo-xeY" secondAttribute="centerX" id="V01-bE-JCj"/>
+                <constraint firstAttribute="trailing" secondItem="0gU-ez-pD8" secondAttribute="trailing" id="X4e-cc-ESQ"/>
                 <constraint firstAttribute="bottom" secondItem="EEr-rO-A94" secondAttribute="bottom" id="a5V-p1-Gun"/>
                 <constraint firstItem="Dbh-pC-PMY" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" id="aeD-kn-tRL"/>
                 <constraint firstItem="2LU-we-Lv1" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" constant="5" id="ceH-iJ-yhg"/>
                 <constraint firstItem="EEr-rO-A94" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" id="ey3-em-kAO"/>
                 <constraint firstAttribute="trailing" secondItem="EEr-rO-A94" secondAttribute="trailing" id="kbS-Xv-j2I"/>
+                <constraint firstItem="w2t-tl-La7" firstAttribute="trailing" secondItem="Hz6-mo-xeY" secondAttribute="centerX" constant="-2" id="nPS-EG-brt"/>
+                <constraint firstAttribute="trailing" secondItem="9nw-8N-y9s" secondAttribute="trailing" id="pjh-pE-uug"/>
+                <constraint firstItem="EMb-EB-OoI" firstAttribute="top" secondItem="2LU-we-Lv1" secondAttribute="top" id="qBK-J8-IPN"/>
                 <constraint firstAttribute="trailing" secondItem="EMb-EB-OoI" secondAttribute="trailing" id="qDJ-J7-n99"/>
+                <constraint firstItem="w2t-tl-La7" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" constant="4" id="rsY-FP-aP3"/>
+                <constraint firstAttribute="bottom" secondItem="pi9-8m-bbT" secondAttribute="bottom" constant="3" id="xVK-kU-bSZ"/>
+                <constraint firstItem="0gU-ez-pD8" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" id="ylq-aR-H2N"/>
             </constraints>
             <point key="canvasLocation" x="143.5" y="232"/>
         </customView>

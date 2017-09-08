@@ -188,5 +188,7 @@ class ScheduleAssistant: NSObject {
                 masterVC.sidebarPageController.courseVC.loadTests()
             }
         }
+        
+        masterVC.drawTimeBox.needsDisplay = true
     }
 }

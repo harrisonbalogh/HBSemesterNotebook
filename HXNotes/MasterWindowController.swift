@@ -8,7 +8,7 @@
 
 import Cocoa
 
-class MasterWindowController: NSWindowController {
+class MasterWindowController: NSWindowController, NSWindowDelegate {
     
     weak var masterViewController: MasterViewController!
     
@@ -24,5 +24,17 @@ class MasterWindowController: NSWindowController {
         if let mVC = self.contentViewController as? MasterViewController {
             masterViewController = mVC
         }
+        
+        self.window?.delegate = self
     }
+    
+    func windowWillEnterFullScreen(_ notification: Notification) {
+        masterViewController.collapseTitlebar()
+    }
+    
+    func windowWillExitFullScreen(_ notification: Notification) {
+        masterViewController.revealTitlebar()
+    }
+    
+    
 }

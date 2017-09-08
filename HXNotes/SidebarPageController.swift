@@ -11,6 +11,7 @@ import Cocoa
 class SidebarPageController: NSPageController, NSPageControllerDelegate {
     
     var singleSelectPref = true
+    var assumeRecentLecture = true
     
     var semesterToday: Semester!
 
@@ -73,6 +74,8 @@ class SidebarPageController: NSPageController, NSPageControllerDelegate {
         if noPrev {
             masterVC.setDate(semester: semesterToday)
         }
+        
+        self.notifyTimeSlotChange()
     }
     
     public func loadPreferences() {
@@ -81,6 +84,13 @@ class SidebarPageController: NSPageController, NSPageControllerDelegate {
                 singleSelectPref = true
             } else if singleSelect == "false" {
                 singleSelectPref = false
+            }
+        }
+        if let assumeRecent = CFPreferencesCopyAppValue(NSString(string: "assumeRecentLecture"), kCFPreferencesCurrentApplication) as? String {
+            if assumeRecent == "true" {
+                assumeRecentLecture = true
+            } else {
+                assumeRecentLecture = false
             }
         }
     }
@@ -124,6 +134,8 @@ class SidebarPageController: NSPageController, NSPageControllerDelegate {
         // If just transitioned to semesterVC but there's a course selected, transition again
         if pageController.selectedIndex == SBSemesterIndex {
             
+            masterVC.scheduleBox.isHighlighting = true
+            
             if self.isScheduling {
                 
                 prev()
@@ -140,6 +152,8 @@ class SidebarPageController: NSPageController, NSPageControllerDelegate {
             }
         } else if pageController.selectedIndex == SBSchedulerIndex {
             
+            masterVC.scheduleBox.isHighlighting = false
+            
             if !self.isScheduling {
                 
                 next()
@@ -154,8 +168,8 @@ class SidebarPageController: NSPageController, NSPageControllerDelegate {
             
             if selectedCourse.lectures!.count == 0 {
                 notifySelected(lecture: nil)
-            } else {
-                notifySelected(lecture: (selectedCourse.lectures!.lastObject as! Lecture))
+            } else if assumeRecentLecture {
+                courseVC.notifySelected(lecture: (selectedCourse.lectures!.lastObject as! Lecture))
             }
             
         }
@@ -165,6 +179,8 @@ class SidebarPageController: NSPageController, NSPageControllerDelegate {
     func next(from course: Course) {
         
         selectedCourse = course
+        
+        masterVC.notifySelected(course: course)
         
         self.navigateForward(self)
         
@@ -181,6 +197,7 @@ class SidebarPageController: NSPageController, NSPageControllerDelegate {
         
         masterVC.notifySelected(lecture: nil)
         selectedCourse = nil
+        masterVC.notifySelected(course: nil)
         
         self.navigateBack(self)
     }
@@ -251,56 +268,29 @@ class SidebarPageController: NSPageController, NSPageControllerDelegate {
     /// The current semester displayed in the sidebar. Setting this value will update visuals.
     var selectedSemester: Semester! {
         didSet {
-            print("selectedSemester: \(selectedSemester.title)")
-            self.isScheduling = scheduleCheck()
-            self.notifyTimeSlotChange()
-            
+            self.isScheduling = true
         }
     }
     
     /// The current course displayed in the sidebar. Setting this value will update visuals.
-    var selectedCourse: Course!
+    var selectedCourse: Course! {
+        didSet {
+            if selectedCourse != nil {
+                print("selectedCourse: \(selectedCourse.title!)")
+            } else {
+                print("selectedCourse: nil")
+            }
+        }
+    }
     
     /// This determines whether or not the PageViewController is on the Semester or
     /// Scheduler page.
     private var isScheduling = true {
         didSet {
-            print("isScheduling: \(isScheduling)")
             if selectedCourse != nil {
                 selectedCourse = nil
             }
         }
-    }
-    
-    /// Notifies masterVC that the user shouldnt be able to leave the scheduler if a course doesn't have
-    /// valid timeslots. Will return false if the schedule does not check out. This effectively is just
-    /// checking the 'valid' attribute on a semester. It will run through a validateSchedule() call if the
-    /// semester needs it.
-    @discardableResult func scheduleCheck() -> Bool {
-        // UI control flow update - Note the RETURN calls
-        if self.selectedSemester.courses!.count == 0 {
-//            masterVC.notifyInvalidSemester()
-            print("scheduleCheck no_course")
-            return false
-        }
-        if self.selectedSemester.needsValidate {
-            self.selectedSemester.validateSchedule()
-        }
-        if !self.selectedSemester.valid {
-            print("scheduleCheck invalid")
-//            masterVC.notifyInvalidSemester()
-            return false
-        }
-        for case let course as Course in self.selectedSemester.courses! {
-            if course.timeSlots!.count == 0 {
-//                masterVC.notifyInvalidSemester()
-                print("scheduleCheck no_times")
-                return false
-            }
-        }
-//        masterVC.notifyValidSemester()
-        print("scheduleCheck gucci")
-        return true
     }
     
     // MARK: - Notifiers
@@ -325,24 +315,17 @@ class SidebarPageController: NSPageController, NSPageControllerDelegate {
             } else if self.selectedIndex == SBCourseIndex {
                 prev()
             }
-            
         }
     }
     
     func notifyTimeSlotChange() {
         masterVC.notifyTimeSlotChange()
-        
-        scheduleCheck()
     }
     
     func notifySelected(lecture: Lecture?) {
         masterVC.notifySelected(lecture: lecture)
     }
-    
-//    func notifySelectedSemester() {
-//        print("notifySelectedSemester")
-//        masterVC.notifySelected(semester: self.selectedSemester, is: isScheduling)
-//    }
+
     func notifySelected(semester: Semester) {
         selectedSemester = semester
         if self.selectedIndex == SBSchedulerIndex {
@@ -352,11 +335,6 @@ class SidebarPageController: NSPageController, NSPageControllerDelegate {
             prev()
         }
     }
-    
-//    func notifySelectedScheduler() {
-//        print("notifySelectedScheduler")
-//        masterVC.notifySelected(semester: self.selectedSemester, is: isScheduling)
-//    }
     
     func notifyRenamed(lecture: Lecture) {
         if courseVC != nil {

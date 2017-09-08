@@ -37,17 +37,17 @@
                     <rect key="frame" x="0.0" y="0.0" width="153" height="440"/>
                     <subviews>
                         <customView id="pBa-pc-gAA" userLabel="COURSES">
-                            <rect key="frame" x="0.0" y="0.0" width="153" height="130.5"/>
+                            <rect key="frame" x="0.0" y="0.0" width="153" height="131"/>
                             <autoresizingMask key="autoresizingMask"/>
                             <subviews>
                                 <scrollView borderType="none" horizontalLineScroll="0.0" horizontalPageScroll="0.0" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="AFm-8D-XOL">
-                                    <rect key="frame" x="0.0" y="0.0" width="153" height="106.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="153" height="107"/>
                                     <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="RNp-7w-Yw4" customClass="HXFlippedClipView" customModule="HXNotes" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="153" height="106.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="153" height="107"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
                                             <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mXj-nQ-3Pp">
-                                                <rect key="frame" x="0.0" y="18.5" width="153" height="88"/>
+                                                <rect key="frame" x="0.0" y="19" width="153" height="88"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="88" placeholder="YES" id="yWd-RR-oaq"/>
                                                 </constraints>
@@ -65,48 +65,63 @@
                                         <autoresizingMask key="autoresizingMask"/>
                                     </scroller>
                                     <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="QTh-gU-xeZ">
-                                        <rect key="frame" x="137" y="0.0" width="16" height="106.5"/>
+                                        <rect key="frame" x="137" y="0.0" width="16" height="107"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                     </scroller>
                                 </scrollView>
                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7AT-ti-bwX">
-                                    <rect key="frame" x="2" y="109.5" width="149" height="18"/>
-                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Courses" id="9JT-gU-QxO">
+                                    <rect key="frame" x="2" y="110" width="99" height="18"/>
+                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="Courses" id="9JT-gU-QxO">
                                         <font key="font" metaFont="systemMedium" size="14"/>
                                         <color key="textColor" red="0.40227726060000002" green="0.40227726060000002" blue="0.40227726060000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                     </textFieldCell>
                                 </textField>
                                 <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="H0v-ao-9jn">
-                                    <rect key="frame" x="0.0" y="103.5" width="153" height="5"/>
+                                    <rect key="frame" x="0.0" y="104" width="153" height="5"/>
                                 </box>
+                                <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="368-M8-WZW">
+                                    <rect key="frame" x="115" y="110" width="34" height="17"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" constant="34" id="bQ5-9e-CIt"/>
+                                    </constraints>
+                                    <buttonCell key="cell" type="inline" title="Edit" bezelStyle="inline" alignment="center" borderStyle="border" imageScaling="proportionallyUpOrDown" inset="2" id="w5E-te-a0s">
+                                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                        <font key="font" metaFont="smallSystemBold"/>
+                                    </buttonCell>
+                                    <connections>
+                                        <action selector="action_editSchedule:" target="-2" id="LGs-Rf-p7h"/>
+                                    </connections>
+                                </button>
                             </subviews>
                             <constraints>
                                 <constraint firstAttribute="trailing" secondItem="H0v-ao-9jn" secondAttribute="trailing" id="4kS-0f-Y4X"/>
                                 <constraint firstItem="H0v-ao-9jn" firstAttribute="top" secondItem="7AT-ti-bwX" secondAttribute="bottom" constant="3" id="68q-MA-Z6D"/>
                                 <constraint firstAttribute="trailing" secondItem="AFm-8D-XOL" secondAttribute="trailing" id="AFe-3K-9X7"/>
+                                <constraint firstAttribute="trailing" secondItem="368-M8-WZW" secondAttribute="trailing" constant="4" id="LpE-hc-Wbq"/>
+                                <constraint firstItem="368-M8-WZW" firstAttribute="leading" secondItem="7AT-ti-bwX" secondAttribute="trailing" constant="16" id="Q6e-NQ-D35"/>
                                 <constraint firstAttribute="bottom" secondItem="AFm-8D-XOL" secondAttribute="bottom" id="RFa-Ig-B0u"/>
                                 <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="H0v-ao-9jn" secondAttribute="bottom" id="b3c-8b-uSQ"/>
                                 <constraint firstItem="7AT-ti-bwX" firstAttribute="top" secondItem="pBa-pc-gAA" secondAttribute="top" constant="3" id="cFN-lU-AI0"/>
                                 <constraint firstItem="H0v-ao-9jn" firstAttribute="leading" secondItem="pBa-pc-gAA" secondAttribute="leading" id="dOq-bD-T7c"/>
-                                <constraint firstAttribute="trailing" secondItem="7AT-ti-bwX" secondAttribute="trailing" constant="4" id="efi-VY-Del"/>
                                 <constraint firstItem="7AT-ti-bwX" firstAttribute="leading" secondItem="pBa-pc-gAA" secondAttribute="leading" constant="4" id="gTT-bz-mHV"/>
+                                <constraint firstItem="368-M8-WZW" firstAttribute="centerY" secondItem="7AT-ti-bwX" secondAttribute="centerY" id="hXW-Qu-l6U"/>
                                 <constraint firstItem="AFm-8D-XOL" firstAttribute="top" secondItem="7AT-ti-bwX" secondAttribute="bottom" constant="3" id="j2G-wj-Gid"/>
                                 <constraint firstItem="AFm-8D-XOL" firstAttribute="leading" secondItem="pBa-pc-gAA" secondAttribute="leading" id="vx5-Vq-RUS"/>
                             </constraints>
                         </customView>
                         <customView id="4RO-lt-47C" userLabel="DUE">
-                            <rect key="frame" x="0.0" y="131.5" width="153" height="154.5"/>
+                            <rect key="frame" x="0.0" y="132" width="153" height="154"/>
                             <autoresizingMask key="autoresizingMask"/>
                             <subviews>
                                 <scrollView borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="j8O-k1-Wpd">
-                                    <rect key="frame" x="0.0" y="0.0" width="153" height="130.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="153" height="130"/>
                                     <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="MB5-06-A7P" customClass="HXFlippedClipView" customModule="HXNotes" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="153" height="130.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="153" height="130"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
                                             <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="R63-yx-hJh">
-                                                <rect key="frame" x="0.0" y="42.5" width="153" height="88"/>
+                                                <rect key="frame" x="0.0" y="42" width="153" height="88"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="88" placeholder="YES" id="UpG-0e-WET"/>
                                                 </constraints>
@@ -120,11 +135,11 @@
                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                     </clipView>
                                     <scroller key="horizontalScroller" verticalHuggingPriority="750" horizontal="YES" id="64g-qE-pZc">
-                                        <rect key="frame" x="0.0" y="114.5" width="153" height="16"/>
+                                        <rect key="frame" x="0.0" y="114" width="153" height="16"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                     </scroller>
                                     <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="j4i-fi-sfz">
-                                        <rect key="frame" x="137" y="0.0" width="16" height="130.5"/>
+                                        <rect key="frame" x="137" y="0.0" width="16" height="130"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                     </scroller>
                                 </scrollView>
@@ -137,15 +152,15 @@
                                     </textFieldCell>
                                 </textField>
                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DEI-WE-LIW">
-                                    <rect key="frame" x="2" y="133.5" width="149" height="18"/>
-                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Due" id="U1D-gS-PKc">
+                                    <rect key="frame" x="2" y="133" width="149" height="18"/>
+                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="All Due" id="U1D-gS-PKc">
                                         <font key="font" metaFont="systemMedium" size="14"/>
                                         <color key="textColor" red="0.40227726060000002" green="0.40227726060000002" blue="0.40227726060000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                     </textFieldCell>
                                 </textField>
                                 <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="HwS-zQ-zxc">
-                                    <rect key="frame" x="0.0" y="127.5" width="153" height="5"/>
+                                    <rect key="frame" x="0.0" y="127" width="153" height="5"/>
                                 </box>
                             </subviews>
                             <constraints>
@@ -208,7 +223,7 @@
                                 </textField>
                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZUe-R8-48J">
                                     <rect key="frame" x="2" y="132" width="149" height="18"/>
-                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Exams" id="zKG-8s-ME9">
+                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="All Exams" id="zKG-8s-ME9">
                                         <font key="font" metaFont="systemMedium" size="14"/>
                                         <color key="textColor" red="0.40227726060000002" green="0.40227726060000002" blue="0.40227726060000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>

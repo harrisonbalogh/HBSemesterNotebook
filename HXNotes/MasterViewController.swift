@@ -13,7 +13,7 @@ class MasterViewController: NSViewController {
     
     // MARK: View references
     @IBOutlet weak var splitView_sidebar: NSView!
-    @IBOutlet weak var splitView_content: NSView!
+    @IBOutlet weak var splitView_content: SplitViewContent!
     
     // Children controllers
     var sidebarPageController: SidebarPageController!
@@ -40,6 +40,9 @@ class MasterViewController: NSViewController {
             self.sidebarPageController = sidebarPC
             sidebarPC.masterVC = self
         }
+        
+        scheduleBox.masterVC = self
+        
 //        for case let lectureEditorVC as LectureEditorViewController in self.childViewControllers {
 //            self.lectureEditorVC = lectureEditorVC
 //            lectureEditorVC.masterVC = self
@@ -70,7 +73,6 @@ class MasterViewController: NSViewController {
     }
     
     // MARK: - ––– Preferences –––
-    @IBOutlet weak var prefToggle: NSButton!
     var prefNav: PreferencesNavViewController!
     var prefNavLeadingAnchor: NSLayoutConstraint!
     var pref: PreferencesViewController!
@@ -85,6 +87,7 @@ class MasterViewController: NSViewController {
             pref = PreferencesViewController(nibName: "PreferencesView", bundle: nil)!
             self.addChildViewController(pref)
             self.view.addSubview(pref.view)
+            pref.masterVC = self
             pref.view.frame = splitView_content.frame
             pref.view.widthAnchor.constraint(equalTo: splitView_content.widthAnchor).isActive = true
             pref.view.topAnchor.constraint(equalTo: splitView_content.topAnchor).isActive = true
@@ -96,8 +99,8 @@ class MasterViewController: NSViewController {
             self.addChildViewController(prefNav)
             splitView_sidebar.addSubview(prefNav.view)
             prefNav.view.frame = splitView_sidebar.frame
-            prefNav.view.widthAnchor.constraint(equalToConstant: prefNav.view.frame.width).isActive = true
-            prefNav.view.topAnchor.constraint(equalTo: splitView_sidebar.topAnchor, constant: 29).isActive = true
+            prefNav.view.widthAnchor.constraint(equalTo: splitView_sidebar.widthAnchor).isActive = true
+            prefNav.view.topAnchor.constraint(equalTo: editBox.topAnchor).isActive = true
             prefNav.view.bottomAnchor.constraint(equalTo: splitView_sidebar.bottomAnchor).isActive = true
             prefNavLeadingAnchor = prefNav.view.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: -splitView_sidebar.frame.width)
             prefNavLeadingAnchor.isActive = true
@@ -106,28 +109,20 @@ class MasterViewController: NSViewController {
             // Animate the box to reveal it since its initially off-screen (and fade stuff behind it)
             NSAnimationContext.beginGrouping()
             NSAnimationContext.current().duration = 0.25
-            NSAnimationContext.current().completionHandler = {
-                self.editSemesterButton.isEnabled = false
-                self.prefToggle.isEnabled = true
-            }
             prefNavLeadingAnchor.animator().constant = 0
             prefTrailingAnchor.animator().constant = 0
-            editSemesterButton.animator().alphaValue = 0
             NSAnimationContext.endGrouping()
         }
     }
     
     @IBAction func action_preferencesToggle(_ sender: NSButton) {
-        prefToggle.isEnabled = false
         // Toggle between hiding and showing preference views
         if prefNav == nil {
             displayPreferences()
         } else {
-            self.editSemesterButton.isEnabled = true
             NSAnimationContext.beginGrouping()
             NSAnimationContext.current().duration = 0.25
             NSAnimationContext.current().completionHandler = {
-                self.prefToggle.isEnabled = true
                 if self.prefNav != nil {
                     self.prefNav.view.removeFromSuperview()
                     self.prefNav.removeFromParentViewController()
@@ -151,7 +146,6 @@ class MasterViewController: NSViewController {
             }
             prefNavLeadingAnchor.animator().constant = -splitView_sidebar.frame.width
             prefTrailingAnchor.animator().constant = splitView_content.frame.width
-            editSemesterButton.animator().alphaValue = 1
             NSAnimationContext.endGrouping()
         }
     }
@@ -160,6 +154,16 @@ class MasterViewController: NSViewController {
     
     @IBOutlet weak var semesterLabel: NSTextField!
     @IBOutlet weak var scheduleBox: HXScheduleBox!
+    @IBOutlet weak var schedulerBackgroundBox: NSBox!
+    @IBOutlet weak var drawTimeBox: HXTimeDrawingBox!
+    
+    @IBAction func action_showCurrentTime(_ sender: NSButton) {
+        if sender.state == NSOnState {
+            drawTimeBox.notifyDrawsTimeOfDay(true)
+        } else {
+            drawTimeBox.notifyDrawsTimeOfDay(false)
+        }
+    }
     
     // The following references are all used to adjust the scheduler
     // beyond its default bounds. Allowing it to only show Saturday or
@@ -177,6 +181,10 @@ class MasterViewController: NSViewController {
     
     private var displaySunday = false {
         didSet {
+            
+            scheduleBox.showSunday = displaySunday
+            drawTimeBox.showSunday = displaySunday
+            
             if oldValue == displaySunday || !displaySunday {
                 return
             }
@@ -192,6 +200,10 @@ class MasterViewController: NSViewController {
     }
     private var displaySaturday = false {
         didSet {
+            
+            scheduleBox.showSaturday = displaySaturday
+            drawTimeBox.showSaturday = displaySaturday
+            
             if oldValue == displaySaturday || !displaySaturday {
                 return
             }
@@ -209,6 +221,10 @@ class MasterViewController: NSViewController {
     private let DEFAULT_LATEST = 1319 // 9:59P
     private var earliestTime = 480 {
         didSet {
+            
+            scheduleBox.earliestTime = earliestTime
+            drawTimeBox.earliestTime = earliestTime
+            
             if earliestTime == DEFAULT_EARLIEST {
                 for v in prefixedTimeLabels {
                     v.removeFromSuperview()
@@ -235,7 +251,10 @@ class MasterViewController: NSViewController {
     }
     private var latestTime = 1319 {
         didSet {
-            print("latestTime: \(latestTime)")
+            
+            scheduleBox.latestTime = latestTime
+            drawTimeBox.latestTime = latestTime
+            
             if latestTime == DEFAULT_LATEST {
                 for v in suffixedTimeLabels {
                     v.removeFromSuperview()
@@ -263,7 +282,7 @@ class MasterViewController: NSViewController {
     
     /// This flushes the HXScheduleBox's timeSlotVisuals array and reloads
     /// all timeSlots in the currently selected semester.
-    private func reloadScheduler() {
+    private func reloadScheduler(with selection: Course?) {
         
         displaySunday = false
         displaySaturday = false
@@ -301,7 +320,17 @@ class MasterViewController: NSViewController {
                     displaySaturday = true
                 }
                 
-                scheduleBox.addTimeSlotVisual(timeSlot)
+                if selection == nil {
+                    scheduleBox.addTimeSlotVisual(timeSlot, selected: true)
+                    continue
+                }
+                if selection == course {
+                    scheduleBox.addTimeSlotVisual(timeSlot, selected: true)
+                } else {
+                    scheduleBox.addTimeSlotVisual(timeSlot, selected: false)
+                }
+                
+                
             }
         }
         scheduleBox.needsDisplay = true
@@ -327,6 +356,7 @@ class MasterViewController: NSViewController {
         lectureEditorVC.view.frame = splitView_content.bounds
         lectureEditorVC.view.autoresizingMask = [.viewWidthSizable, .viewHeightSizable]
         lectureEditorVC.masterVC = self
+        lectureEditorVC.notifySelected(lecture: lecture)
         
     }
     
@@ -363,18 +393,17 @@ class MasterViewController: NSViewController {
 //        schedulerViewController.initialize(with: semester)
 //    }
     
-    // MARK: ––– Sidebar Visuals ––– 
+    // MARK: ––– Sidebar Visuals –––
     
-    @IBOutlet weak var editSemesterButton: NSButton!
+    @IBOutlet weak var editBox: NSBox!
+    let DEFAULT_TOP_CONSTRAINT: CGFloat = 22
+    @IBOutlet weak var editBoxTopConstraint: NSLayoutConstraint!
     
-    @IBAction func action_sidebarMode(_ sender: NSButton) {
-        if sender.state == NSOnState {
-            sidebarPageController.notifyScheduling(is: false)
-            editSemesterButton.state = NSOnState
-        } else {
-            sidebarPageController.notifyScheduling(is: true)
-            editSemesterButton.state = NSOffState
-        }
+    func collapseTitlebar() {
+        editBoxTopConstraint.constant = 0
+    }
+    func revealTitlebar() {
+        editBoxTopConstraint.constant = DEFAULT_TOP_CONSTRAINT
     }
     
     // MARK: ––– Semester Selection –––
@@ -441,7 +470,6 @@ class MasterViewController: NSViewController {
                 self.yrButtonBotConstraint.constant = 0
             }
             self.semButtonBotConstraint.constant = 0
-            self.updateDate()
             sender.isEnabled = true
         }
         self.semButtonBotConstraint.animator().constant = -semesterButton.frame.height
@@ -478,7 +506,6 @@ class MasterViewController: NSViewController {
                 self.yrButtonBotConstraint.constant = 0
             }
             self.semButtonBotConstraint.constant = 0
-            self.updateDate()
             sender.isEnabled = true
         }
         self.semButtonBotConstraint.animator().constant = semesterButton.frame.height
@@ -504,6 +531,8 @@ class MasterViewController: NSViewController {
     
     /// Performed as Window is being resized.
     func checkMagnetRegion() {
+        
+        // THIS SHOULDN'T HAPPEN IF PREFERENCES IS SHOWING
         
         if lectureEditorVC == nil || !self.view.window!.inLiveResize {
             return
@@ -533,11 +562,28 @@ class MasterViewController: NSViewController {
         NSAnimationContext.beginGrouping()
         NSAnimationContext.current().duration = 0.2
         NSAnimationContext.current().completionHandler = {
+            self.updateDate()
             self.semesterLabel.stringValue = semester
+            self.reloadScheduler(with: nil)
             self.semesterLabel.animator().alphaValue = 1
+            self.scheduleBox.animator().alphaValue = 1
         }
+        scheduleBox.animator().alphaValue = 0
         semesterLabel.animator().alphaValue = 0
         NSAnimationContext.endGrouping()
+    }
+
+    ///
+    func notifySelected(course: Course?) {
+        reloadScheduler(with: course)
+        if sidebarPageController.selectedCourse == nil && course != nil {
+            sidebarPageController.next(from: course!)
+        } else if sidebarPageController.selectedIndex == sidebarPageController.SBCourseIndex {
+            if course != nil {
+                sidebarPageController.selectedCourse = course
+                sidebarPageController.navigateBack(self)
+            }
+        }
     }
     
     /// Request the MasterVC tell the LectureEditorVC that a new
@@ -545,8 +591,10 @@ class MasterViewController: NSViewController {
     func notifySelected(lecture: Lecture?) {
         
         if lecture == nil {
+            scheduleBox.isHighlighting = true
             hideLectureEditor()
         } else {
+            scheduleBox.isHighlighting = false
             displayLectureEditor(for: lecture!)
         }
         
@@ -583,25 +631,12 @@ class MasterViewController: NSViewController {
         sidebarPageController.notifyRenamed(lecture: lecture)
     }
     
-//    /// Notify the MasterVC that the semester being scheduled is invalid
-//    /// and to update UI to prevent user from leaving the scheduler until rectified.
-//    func notifyInvalidSemester() {
-//        editSemesterButton.isEnabled = false
-//    }
-//    
-//    /// Notify the MasterVC that the semester being scheduled is valid
-//    /// and it should update UI to allow user to leave the scheduler.
-//    func notifyValidSemester() {
-//        editSemesterButton.isEnabled = true
-//    }
-    
     /// Inform the MasterVC to tell scheduler that there have been time slot changes.
     /// This could include changing, creating, or delete time slots - sometimes from
     /// a course being deleted.
     func notifyTimeSlotChange() {
 //        schedulerViewController.notifyTimeSlotChange()
-        reloadScheduler()
-        
+        reloadScheduler(with: nil)
     }
     
     /// Notify MasterViewController that a course has been selected or deselected.
@@ -639,23 +674,35 @@ class MasterViewController: NSViewController {
 //        if editorViewController != nil {
 //            editorViewController.notifyExport()
 //        }
+        if lectureEditorVC != nil {
+            lectureEditorVC.isExporting = !lectureEditorVC.isExporting
+        }
     }
     ///
     func notifyPrint() {
 //        if editorViewController != nil {
 //            editorViewController.notifyPrint()
 //        }
+        if lectureEditorVC == nil {
+            splitView_content.print(self)            
+        }
     }
     ///
     func notifyFind() {
 //        if editorViewController != nil {
 //            editorViewController.notifyFind()
 //        }
+        if lectureEditorVC != nil {
+            lectureEditorVC.isFinding = !lectureEditorVC.isFinding
+        }
     }
     ///
     func notifyFindAndReplace() {
 //        if editorViewController != nil {
 //            editorViewController.notifyFindAndReplace()
 //        }
+        if lectureEditorVC != nil {
+            lectureEditorVC.isReplacing = !lectureEditorVC.isReplacing
+        }
     }
 }

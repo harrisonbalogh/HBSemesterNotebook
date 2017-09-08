@@ -546,6 +546,7 @@ public class Course: NSManagedObject {
     func fillAbsentLectures() {
         
         print("filAbsentLectures")
+        return
         
         // This function doesn't do anything if course hasn't started yet.
         if self.lectures!.count == 0 {

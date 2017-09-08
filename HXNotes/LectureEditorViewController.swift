@@ -11,6 +11,7 @@ import Cocoa
 class LectureEditorViewController: NSViewController {
     
     let sharedFontManager = NSFontManager.shared()
+    let appDelegate = NSApplication.shared().delegate as! AppDelegate
     
     @IBOutlet weak var labelTitle: NSTextField!
     @IBOutlet weak var labelTitleDivider: NSTextField!
@@ -46,6 +47,13 @@ class LectureEditorViewController: NSViewController {
         guard let parent = self.parent as? MasterViewController else { return }
         
         textViewContent.parentController = self
+        
+        findViewController = HXFindViewController(nibName: "HXFindView", bundle: nil)
+        self.addChildViewController(findViewController)
+        replaceViewController = HXFindReplaceViewController(nibName: "HXFindReplaceView", bundle: nil)
+        self.addChildViewController(replaceViewController)
+        exportViewController = HXExportViewController(nibName: "HXExportView", bundle: nil)
+        self.addChildViewController(exportViewController)
         
         styleLabelFont.alphaValue = 0
         styleButtonFont.alphaValue = 0
@@ -116,6 +124,10 @@ class LectureEditorViewController: NSViewController {
     private weak var selectedLecture: Lecture! {
         didSet {
             
+            if selectedLecture == nil {
+                return
+            }
+            
             // Save previous selectedLecture
             if oldValue != nil {
                 
@@ -168,6 +180,9 @@ class LectureEditorViewController: NSViewController {
             }
         }
     }
+    @IBAction func action_closeLecture(_ sender: NSButton) {
+        masterVC.notifySelected(lecture: nil)
+    }
     
     // MARK: - Page Marking
     
@@ -178,6 +193,8 @@ class LectureEditorViewController: NSViewController {
     // MARK: - Update Model
     
     func action_customTitleUpdate() {
+        
+        tempConfirmDeleteLecture = false
         
         // Check if it has content
         if labelCustomTitle.stringValue == "" {
@@ -199,6 +216,8 @@ class LectureEditorViewController: NSViewController {
     
     func action_insertionUpdate() {
         
+        tempConfirmDeleteLecture = false
+        
         if sharedFontManager.selectedFont == nil || textViewContent.attributedString().length == 0 {
             return
         }
@@ -207,18 +226,6 @@ class LectureEditorViewController: NSViewController {
         var positionOfSelection = textViewContent.selectedRanges.first!.rangeValue.location
         if positionOfSelection == textViewContent.attributedString().length {
             positionOfSelection = textViewContent.attributedString().length - 1
-        }
-        
-        if !sharedFontManager.fontNamed(sharedFontManager.selectedFont!.fontName, hasTraits: .boldFontMask) {
-            styleButtonBold.isEnabled = false
-        } else {
-            styleButtonBold.isEnabled = true
-        }
-        
-        if !sharedFontManager.fontNamed(sharedFontManager.selectedFont!.fontName, hasTraits: .italicFontMask) {
-            styleButtonItalic.isEnabled = false
-        } else {
-            styleButtonItalic.isEnabled = true
         }
         
         if textViewContent.attributedString().attribute(NSUnderlineStyleAttributeName, at: positionOfSelection, effectiveRange: nil) != nil {
@@ -324,6 +331,186 @@ class LectureEditorViewController: NSViewController {
         NSApp.orderFrontColorPanel(self)
     }
     
+    // MARK: - Printing / Exporting / Finding
+    
+    @IBOutlet weak var dropdownTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var dropdownView: NSView!
+    
+    var findViewController: HXFindViewController!
+    var exportViewController: HXExportViewController!
+    var replaceViewController: HXFindReplaceViewController!
+    
+    /// Reveal or hide the top bar container.
+    func topBarShown(_ visible: Bool) {
+        NSAnimationContext.beginGrouping()
+        NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
+        NSAnimationContext.current().duration = 0.25
+        if visible {
+            NSAnimationContext.current().completionHandler = {
+                // If showing top bar and isFind or isReplace, then set firstResponders
+                if self.isReplacing {
+                    NSApp.keyWindow?.makeFirstResponder(self.replaceViewController.textField_find)
+                } else if self.isFinding {
+                    NSApp.keyWindow?.makeFirstResponder(self.findViewController.textField_find)
+                }
+            }
+            dropdownTopConstraint.animator().constant = 0
+        } else {
+            NSAnimationContext.current().completionHandler = {
+                // Make sure all the VC's views are removed from their supers.
+                if self.exportViewController.view.superview != nil && !self.isExporting {
+                    self.exportViewController.view.removeFromSuperview()
+                } else if self.replaceViewController.view.superview != nil && !self.isReplacing {
+                    self.replaceViewController.view.removeFromSuperview()
+                } else if self.findViewController.view.superview != nil && !self.isFinding {
+                    self.findViewController.view.removeFromSuperview()
+                } // add for printVC
+                
+                if self.isFinding {
+                    self.isFinding = true
+                } else if self.isPrinting {
+                    self.isPrinting = true
+                } else if self.isReplacing {
+                    self.isReplacing = true
+                } else if self.isExporting {
+                    self.isExporting = true
+                }
+            }
+            dropdownTopConstraint.animator().constant = -dropdownView.frame.height
+        }
+        NSAnimationContext.endGrouping()
+    }
+    
+    /// Toggles reveal or hide of top bar container.
+    func topBarShown() {
+        if dropdownTopConstraint.constant == 0 {
+            topBarShown(false)
+        } else {
+            topBarShown(true)
+        }
+    }
+    
+    /// Produces a formatted RTFD file and places it at the provided URL.
+    func export(to url: URL){
+        let attribString = NSMutableAttributedString()
+        // Combine all data from every lecture
+//        for case let lecture as Lecture in selectedCourse.lectures! {
+            //            attribString
+//        }
+        
+        //        for case let lectureController as LectureViewController in self.childViewControllers {
+        //            attribString.append(lectureController.label_lectureTitle.attributedStringValue)
+        //            if lectureController.label_customTitle.stringValue != "" {
+        //                attribString.append(NSAttributedString(string: "  -  " + lectureController.label_customTitle.stringValue + "\n"))
+        //            } else {
+        //                attribString.append(NSAttributedString(string: "\n"))
+        //            }
+        //            attribString.append(NSAttributedString(string: lectureController.label_lectureDate.stringValue + "\n\n"))
+        //            attribString.append(lectureController.textView_lecture.attributedString())
+        //            attribString.append(NSAttributedString(string: "\n\n\n"))
+        //        }
+        
+        let fullRange = NSRange(location: 0, length: attribString.length)
+        do {
+            let data = try attribString.fileWrapper(from: fullRange, documentAttributes: [NSDocumentTypeDocumentAttribute: NSRTFDTextDocumentType])
+            try data.write(to: url, options: .atomic, originalContentsURL: nil) // this for rtfd
+        } catch {
+            print("Something went wrong.")
+        }
+    }
+    
+    var isPrinting = false {
+        didSet {
+            
+        }
+    }
+    
+    var isFinding = false {
+        didSet {
+            if isFinding && (isExporting || isPrinting || isReplacing) {
+                if isExporting {
+                    isExporting = false
+                } else if isPrinting {
+                    isPrinting = false
+                } else {
+                    isReplacing = false
+                }
+            } else if isFinding {
+                dropdownView.addSubview(findViewController.view)
+                findViewController.view.leadingAnchor.constraint(equalTo: dropdownView.leadingAnchor).isActive = true
+                findViewController.view.trailingAnchor.constraint(equalTo: dropdownView.trailingAnchor).isActive = true
+                findViewController.view.topAnchor.constraint(equalTo: dropdownView.topAnchor).isActive = true
+                findViewController.view.bottomAnchor.constraint(equalTo: dropdownView.bottomAnchor).isActive = true
+                
+                topBarShown(true)
+            } else {
+                if NSApp.keyWindow?.firstResponder == findViewController.textField_find {
+                    NSApp.keyWindow?.makeFirstResponder(self)
+                }
+                topBarShown(false)
+            }
+        }
+    }
+    
+    var isReplacing = false {
+        didSet {
+            if isReplacing && (isExporting || isPrinting || isFinding) {
+                if isExporting {
+                    isExporting = false
+                } else if isPrinting {
+                    isPrinting = false
+                } else {
+                    isFinding = false
+                }
+            } else if isReplacing {
+                dropdownView.addSubview(replaceViewController.view)
+                replaceViewController.view.leadingAnchor.constraint(equalTo: dropdownView.leadingAnchor).isActive = true
+                replaceViewController.view.trailingAnchor.constraint(equalTo: dropdownView.trailingAnchor).isActive = true
+                replaceViewController.view.topAnchor.constraint(equalTo: dropdownView.topAnchor).isActive = true
+                replaceViewController.view.bottomAnchor.constraint(equalTo: dropdownView.bottomAnchor).isActive = true
+                
+                topBarShown(true)
+            } else {
+                if NSApp.keyWindow?.firstResponder == replaceViewController.textField_find || NSApp.keyWindow?.firstResponder == replaceViewController.textField_replace {
+                    NSApp.keyWindow?.makeFirstResponder(self)
+                }
+                topBarShown(false)
+            }
+        }
+    }
+    
+    var isExporting = false {
+        didSet {
+            if isExporting && (isFinding || isPrinting || isReplacing) {
+                if isFinding {
+                    isFinding = false
+                } else if isPrinting {
+                    isPrinting = false
+                } else {
+                    isReplacing = false
+                }
+            } else if isExporting {
+                dropdownView.addSubview(exportViewController.view)
+                exportViewController.view.leadingAnchor.constraint(equalTo: dropdownView.leadingAnchor).isActive = true
+                exportViewController.view.trailingAnchor.constraint(equalTo: dropdownView.trailingAnchor).isActive = true
+                exportViewController.view.topAnchor.constraint(equalTo: dropdownView.topAnchor).isActive = true
+                exportViewController.view.bottomAnchor.constraint(equalTo: dropdownView.bottomAnchor).isActive = true
+                
+                // Scroll to top
+                NSAnimationContext.beginGrouping()
+                NSAnimationContext.current().duration = 0.5
+                //                lectureClipper.animator().setBoundsOrigin(NSPoint(x: 0, y: 0))
+                NSAnimationContext.endGrouping()
+                
+                topBarShown(true)
+            } else {
+                if NSApp.keyWindow?.firstResponder == exportViewController.textField_name {
+                    NSApp.keyWindow?.makeFirstResponder(self)
+                }
+                topBarShown(false)
+            }
+        }
+    }
     
     // MARK: - Notifiers
     
@@ -398,6 +585,26 @@ class LectureEditorViewController: NSViewController {
             styleRadioRight.animator().alphaValue = 0
             styleRadioJustify.animator().alphaValue = 0
             NSAnimationContext.endGrouping()
+        }
+    }
+    
+    // MARK: - TEMP TESTING -
+    
+    var tempConfirmDeleteLecture = false
+    
+    @IBAction func temp_action_removeLecture(_ sender: NSButton) {
+        if selectedLecture != nil {
+            if tempConfirmDeleteLecture {
+                tempConfirmDeleteLecture = false
+                let lecToRemove = selectedLecture
+                selectedLecture = nil
+                appDelegate.managedObjectContext.delete( lecToRemove! )
+                appDelegate.saveAction(self)
+                masterVC.notifySelected(lecture: nil)
+                masterVC.sidebarPageController.prev()
+            } else {
+                tempConfirmDeleteLecture = true
+            }
         }
     }
     

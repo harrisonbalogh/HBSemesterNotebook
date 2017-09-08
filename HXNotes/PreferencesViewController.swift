@@ -10,6 +10,11 @@ import Cocoa
 
 class PreferencesViewController: NSViewController {
     
+    var masterVC: MasterViewController!
+    
+    /// This is set by the cancel button if the preferences should be saved or not.
+    var cancel = false
+    
     @IBOutlet weak var nilResponderButton: NSButton!
     @IBOutlet weak var clipView: HXFlippedClipView!
     var lastSettingLabelYPos: CGFloat = 0
@@ -40,6 +45,7 @@ class PreferencesViewController: NSViewController {
     
     // MARK: Editor Settings
     @IBOutlet weak var labelEditor: NSTextField!
+    @IBOutlet weak var checkBoxRecentLecture: NSButton!
     @IBOutlet weak var checkBoxAutoScroll: NSButton!
     @IBOutlet weak var sliderAutoScrollPercent: NSSlider!
     @IBOutlet weak var labelAutoScrollPercent: NSTextField!
@@ -165,6 +171,10 @@ class PreferencesViewController: NSViewController {
     override func viewWillDisappear() {
         super.viewWillDisappear()
         
+        if cancel {
+            return
+        }
+        
         // Save preferences
         CFPreferencesSetAppValue(NSString(string: "autoScroll"), NSString(string: "\(checkBoxAutoScroll.state == NSOnState)"), kCFPreferencesCurrentApplication)
         CFPreferencesSetAppValue(NSString(string: "autoScrollPositionPercent"), NSString(string: "\(Int(sliderAutoScrollPercent.doubleValue))"), kCFPreferencesCurrentApplication)
@@ -214,6 +224,7 @@ class PreferencesViewController: NSViewController {
         } else {
             CFPreferencesSetAppValue(NSString(string: "assumePassedTaken"),NSString(string: "nil"), kCFPreferencesCurrentApplication)
         }
+        CFPreferencesSetAppValue(NSString(string: "assumeRecentLecture"),NSString(string: "\(checkBoxRecentLecture.state == NSOnState)"), kCFPreferencesCurrentApplication)
         
         CFPreferencesAppSynchronize(kCFPreferencesCurrentApplication)
     }
@@ -336,6 +347,14 @@ class PreferencesViewController: NSViewController {
                 textFieldAssumeTakenDays.stringValue = parseDays
                 textFieldAssumeTakenHours.stringValue = parseHrs
                 textFieldAssumeTakenMinutes.stringValue = parseMins
+            }
+        }
+        
+        if let assumeRecent = CFPreferencesCopyAppValue(NSString(string: "assumeRecentLecture"), kCFPreferencesCurrentApplication) as? String {
+            if assumeRecent == "true" {
+                checkBoxRecentLecture.state = NSOnState
+            } else {
+                checkBoxRecentLecture.state = NSOffState
             }
         }
     }

@@ -9,7 +9,7 @@
 import Cocoa
 
 class EditorViewController: NSViewController, NSCollectionViewDataSource, NSCollectionViewDelegateFlowLayout {
-    
+
     weak var masterViewController: MasterViewController!
 
     // MARK: - View References
@@ -22,7 +22,7 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
     // MARK: Object models
     let appDelegate = NSApplication.shared().delegate as! AppDelegate
     let sharedFontManager = NSFontManager.shared()
-    
+
     weak var selectedCourse: Course! {
         didSet {
             if isExporting {

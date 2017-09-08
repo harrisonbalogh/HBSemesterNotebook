@@ -15,6 +15,7 @@ class CoursePageViewController: NSViewController {
     let appDelegate = NSApplication.shared().delegate as! AppDelegate
     
     @IBOutlet weak var courseLabel: NSTextField!
+    @IBOutlet weak var colorBox: NSBox!
     
     var weekCount = 0
     
@@ -28,14 +29,15 @@ class CoursePageViewController: NSViewController {
         
         print("CourseVC - viewDidAppear")
         
-        if sidebarVC.selectedCourse == nil {
-            return
-        }
+        guard let course = sidebarVC.selectedCourse else { return }
+
+        let theColor = NSColor(red: CGFloat(course.color!.red), green: CGFloat(course.color!.green), blue: CGFloat(course.color!.blue), alpha: 0.25)
+        self.colorBox.fillColor = theColor
         
-        courseLabel.stringValue = sidebarVC.selectedCourse.title!
+        courseLabel.stringValue = course.title!
         
-        sidebarVC.selectedCourse.checkWork()
-        sidebarVC.selectedCourse.checkTests()
+        course.checkWork()
+        course.checkTests()
         
         loadLectures()
         loadTests()
@@ -43,11 +45,11 @@ class CoursePageViewController: NSViewController {
         
         // Fill in absent lectures since last course open
         sidebarVC.selectedCourse.fillAbsentLectures()
-
-        if AppDelegate.scheduleAssistant.checkHappening() {
+        
+        if course.duringTimeSlot() != nil {
             addButton.isEnabled = true
             addButton.isHidden = false
-            addButton.title = "Add Lecture \(max(sidebarVC.selectedCourse.theoreticalLectureCount(), 1))"
+            addButton.title = "Add Lecture \(max(course.theoreticalLectureCount(), 1))"
         } else {
             addButton.isEnabled = false
             addButton.isHidden = true

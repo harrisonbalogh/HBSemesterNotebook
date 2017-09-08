@@ -25,6 +25,7 @@ class SemesterCourseBox: NSView {
     weak var course: Course!
     weak var owner: SemesterPageViewController!
     
+    @IBOutlet weak var boxDrag: NSBox!
     @IBOutlet weak var labelTitle: NSTextField!
     @IBOutlet weak var labelDays: NSTextField!
     @IBOutlet weak var buttonOverlay: NSButton!
@@ -36,12 +37,15 @@ class SemesterCourseBox: NSView {
         labelTitle.stringValue = course.title!
         labelDays.stringValue = course.daysPerWeekPrintable()
         
-        let trackArea = NSTrackingArea(
-            rect: self.bounds,
-            options: [NSTrackingAreaOptions.activeInKeyWindow, NSTrackingAreaOptions.mouseEnteredAndExited],
-            owner: self,
-            userInfo: nil)
-        addTrackingArea(trackArea)
+        let theColor = NSColor(red: CGFloat(course.color!.red), green: CGFloat(course.color!.green), blue: CGFloat(course.color!.blue), alpha: 1)
+        self.boxDrag.fillColor = theColor
+        
+//        let trackArea = NSTrackingArea(
+//            rect: self.bounds,
+//            options: [NSTrackingAreaOptions.activeInKeyWindow, NSTrackingAreaOptions.mouseEnteredAndExited],
+//            owner: self,
+//            userInfo: nil)
+//        addTrackingArea(trackArea)
     }
     
     @IBAction func goToNotes(_ sender: Any) {

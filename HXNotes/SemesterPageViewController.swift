@@ -44,6 +44,8 @@ class SemesterPageViewController: NSViewController {
 //        sidebarVC.notifySelectedScheduler()
     }
     
+    
+    
     // MARK: - Populating Courses
     
     @IBOutlet weak var courseStackView: NSStackView!
@@ -94,6 +96,11 @@ class SemesterPageViewController: NSViewController {
             subview.removeFromSuperview()
         }
     }
+    
+    @IBAction func action_editSchedule(_ sender: NSButton) {
+        sidebarVC.notifyScheduling(is: true)
+    }
+    
     
     // MARK: - Populating Work
     

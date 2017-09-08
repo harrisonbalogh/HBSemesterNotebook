@@ -17,14 +17,18 @@ class SchedulerPageViewController: NSViewController {
             if isPastSemester {
                 addCourseButton.isEnabled = false
                 addCourseButton.isHidden = true
+                doneSchedulingButton.isEnabled = false
+                doneSchedulingButton.isHidden = true
             } else {
                 addCourseButton.isEnabled = true
                 addCourseButton.isHidden = false
+                doneSchedulingButton.isHidden = false
             }
         }
     }
     
     @IBOutlet weak var addCourseButton: NSButton!
+    @IBOutlet weak var doneSchedulingButton: NSButton!
     
     let appDelegate = NSApplication.shared().delegate as! AppDelegate
 
@@ -42,7 +46,13 @@ class SchedulerPageViewController: NSViewController {
         
         loadCourses()
         
-//        sidebarVC.notifySelectedScheduler()
+        if sidebarVC.selectedSemester.needsValidate {
+            if sidebarVC.selectedSemester.validateSchedule() {
+               doneSchedulingButton.isEnabled = true
+            } else {
+                doneSchedulingButton.isEnabled = false
+            }
+        }
     }
     
     override func viewWillDisappear() {
@@ -66,8 +76,7 @@ class SchedulerPageViewController: NSViewController {
             push(course: course )
         }
         
-        noCoursecheck()
-        
+        scheduleCheck()
     }
     
     func push(course: Course) {
@@ -79,8 +88,6 @@ class SchedulerPageViewController: NSViewController {
     /// Handles purely the visual aspect of editable courses. Internal use only. Removes the given HXCourseEditBox from the ledgerStackView
     func pop(courseBox: SchedulerCourseBox) {
         courseBox.removeFromSuperview()
-        
-        noCoursecheck()
     }
     
     func flushCourses() {
@@ -89,21 +96,35 @@ class SchedulerPageViewController: NSViewController {
                 v.removeFromSuperview()
             }
         }
-        
-        noCoursecheck()
     }
     
-    /// Displays or hides the noCourseLabel based on courseStackView arranged subviews having boxes or not.
-    func noCoursecheck() {
+    /// Displays or hides the noCourseLabel based on courseStackView arranged subviews having boxes or not
+    /// as well as updates the doneSchedulingButton.
+    func scheduleCheck() {
+        if sidebarVC.selectedSemester.needsValidate {
+            sidebarVC.selectedSemester.validateSchedule()
+        }
+        
+        doneSchedulingButton.isEnabled = true
         
         if courseStackView.arrangedSubviews.count == 0 {
             noCourseLabel.alphaValue = 1
             noCourseLabel.isHidden = false
+            
+            doneSchedulingButton.isEnabled = false
         } else {
             noCourseLabel.alphaValue = 0
             noCourseLabel.isHidden = true
         }
         
+        if !sidebarVC.selectedSemester.valid {
+            doneSchedulingButton.isEnabled = false
+        }
+        for case let course as Course in sidebarVC.selectedSemester.courses! {
+            if course.timeSlots!.count == 0 {
+                doneSchedulingButton.isEnabled = false
+            }
+        }
     }
     
     // MARK: - Course & TimeSlot Model
@@ -116,28 +137,18 @@ class SchedulerPageViewController: NSViewController {
         appDelegate.managedObjectContext.delete( courseBox.course )
         appDelegate.saveAction(self)
         sidebarVC.notifyTimeSlotChange()
-        // Prevent user from accessing lecture view if there are no courses
-        if sidebarVC.selectedSemester.courses!.count == 0 {
-//            sidebarVC.masterVC.notifyInvalidSemester()
-        } else {
-            // Check if the remaining courses have any TimeSlots
-            for case let course as Course in sidebarVC.selectedSemester.courses! {
-                if course.timeSlots!.count == 0 {
-//                    sidebarVC.masterVC.notifyInvalidSemester()
-                    return
-                }
-            }
-//            sidebarVC.masterVC.notifyValidSemester()
-        }
+        scheduleCheck()
+    }
+    
+    @IBAction func action_finishScheduling(_ sender: NSButton) {
+        sidebarVC.notifyScheduling(is: false)
     }
     
     @IBAction func action_addCourse(_ sender: NSButton) {
         // Creates new course data model and puts new view in ledgerStackView
         push(course: sidebarVC.selectedSemester.createCourse() )
-        
-        noCoursecheck()
-        
-        notifyTimeSlotUpdated()
+
+        scheduleCheck()
     }
     
     // MARK: - Notifiers
@@ -148,15 +159,13 @@ class SchedulerPageViewController: NSViewController {
         appDelegate.saveAction(self)
         sidebarVC.notifyTimeSlotChange()
         
-        print("notifyTimeSlotRemoved")
+        scheduleCheck()
         
         sidebarVC.selectedSemester.needsValidate = true
     }
     
     /// Inform the semesterVC that timeSlot has been changed from a course.
     func notifyTimeSlotUpdated() {
-        
-        print("notifyTimeSlotUpdated")
         
         sidebarVC.selectedSemester.needsValidate = true
         
@@ -169,5 +178,4 @@ class SchedulerPageViewController: NSViewController {
         sidebarVC.notifyTimeSlotChange()
     
     }
-    
 }

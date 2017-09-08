@@ -201,6 +201,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             // DAYS:HOURS:MINUTES or nil if never auto completed work/exams
             CFPreferencesSetAppValue(NSString(string: "assumePassedCompletion"),NSString(string: "0:0:55"), kCFPreferencesCurrentApplication)
             CFPreferencesSetAppValue(NSString(string: "assumePassedTaken"),NSString(string: "0:0:30"), kCFPreferencesCurrentApplication)
+            CFPreferencesSetAppValue(NSString(string: "assumeRecentLecture"),NSString(string: "\(false)"), kCFPreferencesCurrentApplication)
             
             CFPreferencesAppSynchronize(kCFPreferencesCurrentApplication)
         }
