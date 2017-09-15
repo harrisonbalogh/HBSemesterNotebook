@@ -8,7 +8,7 @@
 
 import Cocoa
 
-class SemesterPageViewController: NSViewController {
+class SemesterPageViewController: NSViewController, NSSplitViewDelegate {
     
     var selectionDelegate: SelectionDelegate?
     var schedulingDelegate: SchedulingDelegate?
@@ -70,9 +70,6 @@ class SemesterPageViewController: NSViewController {
         splitView.setPosition(splitHeight - testHeight, ofDividerAt: 1)
         
     }
-    func observeResize() {
-        print("Test View Resize: \(testView.frame.origin.x), \(testView.frame.origin.y)")
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -85,8 +82,6 @@ class SemesterPageViewController: NSViewController {
         print("SemesterVC - viewDidAppear")
         
         sidebarDelegate?.sidebarSemesterNeedsPopulating(self)
-
-        NotificationCenter.default.addObserver(self, selector: #selector(observeResize), name: .NSSplitViewDidResizeSubviews, object: splitView)
     }
     
     override func viewWillDisappear() {
@@ -241,6 +236,19 @@ class SemesterPageViewController: NSViewController {
         } else {
             noTestLabel.alphaValue = 0
             noTestLabel.isHidden = true
+        }
+    }
+    
+    // MARK: - Split View Delegation
+    
+    func splitView(_ splitView: NSSplitView, additionalEffectiveRectOfDividerAt dividerIndex: Int) -> NSRect {
+        switch dividerIndex {
+            case 0:
+                return splitDividerWork.convert(splitDividerWork.bounds, to: splitView)
+            case 1:
+                return splitDividerTest.convert(splitDividerTest.bounds, to: splitView)
+            default:
+                return NSZeroRect
         }
     }
 }
