@@ -9,30 +9,35 @@
 import Cocoa
 
 class CourseLectureBox: NSBox {
+    
+    var selectionDelegate: SelectionDelegate?
 
     /// Return a new instance of a HXLectureLedger based on the nib template.
-    static func instance(with lecture: Lecture, owner: CoursePageViewController) -> CourseLectureBox! {
+    static func instance(with lecture: Lecture) -> CourseLectureBox! {
         var theObjects: NSArray = []
         Bundle.main.loadNibNamed("CourseLectureBox", owner: nil, topLevelObjects: &theObjects)
         // Get NSView from top level objects returned from nib load
         if let newBox = theObjects.filter({$0 is CourseLectureBox}).first as? CourseLectureBox {
-            newBox.initialize(with: lecture, owner: owner)
+            newBox.initialize(with: lecture)
             return newBox
         }
         return nil
     }
     
+    var isSelected = false
+    
     weak var lecture: Lecture!
-    weak var owner: CoursePageViewController!
+    
+    var savedCustomTitle = ""
     
     @IBOutlet weak var labelTitle: NSTextField!
     @IBOutlet weak var labelCustomTitle: NSTextField!
     @IBOutlet weak var labelDate: NSTextField!
-    @IBOutlet weak var imageLecture: NSImageView!
+
+    @IBOutlet weak var selectImage: NSImageView!
     
-    private func initialize(with lecture: Lecture, owner: CoursePageViewController) {
+    private func initialize(with lecture: Lecture) {
         self.lecture = lecture
-        self.owner = owner
         
         // APPLY DIFFERENCE VISUALS IF lecture.absent is T
         
@@ -48,20 +53,53 @@ class CourseLectureBox: NSBox {
     }
     
     @IBAction func action_clickLecture(_ sender: Any) {
+        selectionDelegate?.isEditing(lecture: lecture)
+    }
+    
+    override func updateTrackingAreas() {
+        super.updateTrackingAreas()
         
-        owner.notifySelected(lecture: lecture)
+        self.trackingAreas.forEach({self.removeTrackingArea($0)})
         
+        let trackingArea = NSTrackingArea(rect: self.bounds, options: [.activeInKeyWindow, .cursorUpdate, .mouseEnteredAndExited], owner: self, userInfo: nil)
+        addTrackingArea(trackingArea)
+    }
+    
+    override func cursorUpdate(with event: NSEvent) {
+        NSCursor.pointingHand().set()
+    }
+    
+    override func mouseEntered(with event: NSEvent) {
+        if !isSelected {
+            selectImage.alphaValue = 1
+            labelDate.alphaValue = 0
+            savedCustomTitle = labelCustomTitle.stringValue
+            labelCustomTitle.stringValue = "Edit Notes"
+        }
+    }
+    
+    override func mouseExited(with event: NSEvent) {
+        if !isSelected {
+            selectImage.alphaValue = 0
+            labelDate.alphaValue = 1
+            labelCustomTitle.stringValue = savedCustomTitle
+        }
     }
     
     // MARK: - Update visuals
     
     func updateVisual(selected: Bool) {
+        isSelected = selected
         if selected {
-            imageLecture.image = #imageLiteral(resourceName: "icon_pencil_alt")
+            let theColor = NSColor(red: CGFloat(lecture.course!.color!.red), green: CGFloat(lecture.course!.color!.green), blue: CGFloat(lecture.course!.color!.blue), alpha: 0.5)
+            self.fillColor = theColor
+            labelCustomTitle.stringValue = "Notes Open"
         } else {
-            imageLecture.image = #imageLiteral(resourceName: "icon_pencil")
+            self.fillColor = NSColor.clear
+            selectImage.alphaValue = 0
+            labelDate.alphaValue = 1
+            labelCustomTitle.stringValue = savedCustomTitle
         }
-        
     }
     
 }

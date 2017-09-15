@@ -10,7 +10,7 @@ import Cocoa
 
 class HXScheduleBox: NSBox {
     
-    var masterVC: MasterViewController!
+    var selectionDelegate: SelectionDelegate?
     
     private var timeSlotVisuals = [TimeSlot]()
     /// This is for greying class times that are not in the selected course
@@ -77,26 +77,36 @@ class HXScheduleBox: NSBox {
             }
             bezPath.fill()
             
-            var highlightAttribs = [NSForegroundColorAttributeName: NSColor.darkGray]
+            var startString = NSAttributedString(string: HXTimeFormatter.formatTime(Int16(start)), attributes: [NSForegroundColorAttributeName: textColor])
+            
+            var stopString = NSAttributedString(string: HXTimeFormatter.formatTime(Int16(stop)), attributes: [NSForegroundColorAttributeName: textColor])
+            
+            
+            var highlightAttribs = [String: Any]()
+            highlightAttribs = [NSForegroundColorAttributeName: NSColor.black]
+            var stringInTitle = timeSlot.course!.title!
             if highlightedArray[ind] {
-                NSColor.black.setStroke()
-                bezPath.stroke()
-                highlightAttribs = [NSForegroundColorAttributeName: NSColor.black]
+                stringInTitle = "Select " + stringInTitle
+                startString = NSAttributedString(string: "", attributes: nil)
+                stopString = NSAttributedString(string: "", attributes: nil)
             }
             
-            let startString = NSAttributedString(string: HXTimeFormatter.formatTime(Int16(start)), attributes: [NSForegroundColorAttributeName: textColor])
-            
-            let stopString = NSAttributedString(string: HXTimeFormatter.formatTime(Int16(stop)), attributes: [NSForegroundColorAttributeName: textColor])
-            
-            let titleString = NSAttributedString(string: timeSlot.course!.title!, attributes: highlightAttribs)
+            let titleString = NSAttributedString(string: stringInTitle, attributes: highlightAttribs)
             
             // Layout adjustments if the timeSlotVisual height is too small to fit 3 lines of text
             if h < startString.size().height * 2 {
                 startString.draw(at: NSPoint(x: x + 1, y: y - h/2 - titleString.size().height/2))
                 stopString.draw(at: NSPoint(x: x + w - stopString.size().width, y: y - h/2 - titleString.size().height/2))
-            } else if h < startString.size().height * 3 {
+                if w >= startString.size().width + stopString.size().width + titleString.size().width {
+                    titleString.draw(at: NSPoint(x: x + w/2 - titleString.size().width/2, y: y - h/2 - titleString.size().height/2))
+                }
+            } else if h < startString.size().height * 3 && w < startString.size().width + stopString.size().width + titleString.size().width {
                 startString.draw(at: NSPoint(x: x + w/2 - startString.size().width/2, y: y - startString.size().height))
                 stopString.draw(at: NSPoint(x: x + w/2 - stopString.size().width/2, y: y - h))
+            } else if h < startString.size().height * 3 {
+                startString.draw(at: NSPoint(x: x + 1, y: y - h/2 - titleString.size().height/2))
+                stopString.draw(at: NSPoint(x: x + w - stopString.size().width, y: y - h/2 - titleString.size().height/2))
+                titleString.draw(at: NSPoint(x: x + w/2 - titleString.size().width/2, y: y - h/2 - titleString.size().height/2))
             } else {
                 startString.draw(at: NSPoint(x: x + w/2 - startString.size().width/2, y: y - startString.size().height))
                 stopString.draw(at: NSPoint(x: x + w/2 - stopString.size().width/2, y: y - h))
@@ -120,7 +130,7 @@ class HXScheduleBox: NSBox {
     var lastEnteredTimeSlot: TimeSlot!
     override func mouseUp(with event: NSEvent) {
         guard let timeSlot = lastEnteredTimeSlot else { return }
-        masterVC.notifySelected(course: timeSlot.course!)
+        selectionDelegate?.courseWasSelected(timeSlot.course!)
     }
     
     override func mouseMoved(with event: NSEvent) {
@@ -128,7 +138,7 @@ class HXScheduleBox: NSBox {
         
         // Drawing code here.
         var ind = 0
-        var noIntersections = true
+        var intersectedSlot: TimeSlot!
         for timeSlot in timeSlotVisuals {
             
             let start = Int(timeSlot.startMinute)
@@ -144,8 +154,7 @@ class HXScheduleBox: NSBox {
             let rect = NSRect(x: x, y: y, width: w, height: h)
             
             if rect.contains(loc) {
-                highlightedArray[ind] = true
-                noIntersections = false
+                intersectedSlot = timeSlot
                 NSCursor.pointingHand().set()
                 lastEnteredTimeSlot = timeSlot
             } else {
@@ -153,11 +162,20 @@ class HXScheduleBox: NSBox {
             }
             ind += 1
         }
-        if noIntersections {
+        if intersectedSlot == nil {
             lastEnteredTimeSlot = nil
             NSCursor.arrow().set()
             for x in 0..<highlightedArray.count {
                 highlightedArray[x] = false
+            }
+        } else {
+            // Apply highlight to all timeslots of same course
+            var x = 0
+            for timeSlot in timeSlotVisuals {
+                if timeSlot.course! == intersectedSlot!.course! {
+                    highlightedArray[x] = true
+                }
+                x += 1
             }
         }
         self.needsDisplay = true

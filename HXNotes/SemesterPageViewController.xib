@@ -12,11 +12,18 @@
         <customObject id="-2" userLabel="File's Owner" customClass="SemesterPageViewController" customModule="HXNotes" customModuleProvider="target">
             <connections>
                 <outlet property="courseStackView" destination="mXj-nQ-3Pp" id="ljY-Mc-7Yg"/>
+                <outlet property="courseView" destination="pBa-pc-gAA" id="ciL-I2-UOO"/>
                 <outlet property="noTestLabel" destination="p8b-an-7jr" id="McI-hR-75f"/>
                 <outlet property="noWorkLabel" destination="wxk-h0-bw6" id="dOL-R1-GiU"/>
+                <outlet property="splitDividerCourse" destination="KoS-hm-9vv" id="wCv-Pw-zJf"/>
+                <outlet property="splitDividerTest" destination="Fkm-ON-UOv" id="sXB-iy-hfD"/>
+                <outlet property="splitDividerWork" destination="Qr3-Jw-nM8" id="Bb6-2b-0uf"/>
+                <outlet property="splitView" destination="1fa-7f-NHP" id="Njs-4x-hvp"/>
                 <outlet property="testStackView" destination="PLV-fc-TCc" id="Ldj-gZ-T6v"/>
+                <outlet property="testView" destination="FOB-FS-JOl" id="VWB-fr-4J3"/>
                 <outlet property="view" destination="Hz6-mo-xeY" id="0bl-1N-x8E"/>
                 <outlet property="workStackView" destination="R63-yx-hJh" id="zcw-hg-zIC"/>
+                <outlet property="workView" destination="4RO-lt-47C" id="rP2-Y6-03k"/>
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
@@ -69,6 +76,14 @@
                                         <autoresizingMask key="autoresizingMask"/>
                                     </scroller>
                                 </scrollView>
+                                <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="KoS-hm-9vv">
+                                    <rect key="frame" x="0.0" y="107" width="153" height="24"/>
+                                    <view key="contentView" id="V0h-BH-tYx">
+                                        <rect key="frame" x="0.0" y="0.0" width="153" height="24"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    </view>
+                                    <color key="fillColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </box>
                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7AT-ti-bwX">
                                     <rect key="frame" x="2" y="110" width="99" height="18"/>
                                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="Courses" id="9JT-gU-QxO">
@@ -99,14 +114,18 @@
                                 <constraint firstItem="H0v-ao-9jn" firstAttribute="top" secondItem="7AT-ti-bwX" secondAttribute="bottom" constant="3" id="68q-MA-Z6D"/>
                                 <constraint firstAttribute="trailing" secondItem="AFm-8D-XOL" secondAttribute="trailing" id="AFe-3K-9X7"/>
                                 <constraint firstAttribute="trailing" secondItem="368-M8-WZW" secondAttribute="trailing" constant="4" id="LpE-hc-Wbq"/>
+                                <constraint firstItem="AFm-8D-XOL" firstAttribute="top" secondItem="KoS-hm-9vv" secondAttribute="bottom" id="PsG-f3-aOK"/>
                                 <constraint firstItem="368-M8-WZW" firstAttribute="leading" secondItem="7AT-ti-bwX" secondAttribute="trailing" constant="16" id="Q6e-NQ-D35"/>
                                 <constraint firstAttribute="bottom" secondItem="AFm-8D-XOL" secondAttribute="bottom" id="RFa-Ig-B0u"/>
+                                <constraint firstAttribute="trailing" secondItem="KoS-hm-9vv" secondAttribute="trailing" id="Y3h-fa-lJT"/>
                                 <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="H0v-ao-9jn" secondAttribute="bottom" id="b3c-8b-uSQ"/>
+                                <constraint firstItem="KoS-hm-9vv" firstAttribute="top" secondItem="pBa-pc-gAA" secondAttribute="top" id="bcu-iD-Cug"/>
                                 <constraint firstItem="7AT-ti-bwX" firstAttribute="top" secondItem="pBa-pc-gAA" secondAttribute="top" constant="3" id="cFN-lU-AI0"/>
                                 <constraint firstItem="H0v-ao-9jn" firstAttribute="leading" secondItem="pBa-pc-gAA" secondAttribute="leading" id="dOq-bD-T7c"/>
                                 <constraint firstItem="7AT-ti-bwX" firstAttribute="leading" secondItem="pBa-pc-gAA" secondAttribute="leading" constant="4" id="gTT-bz-mHV"/>
                                 <constraint firstItem="368-M8-WZW" firstAttribute="centerY" secondItem="7AT-ti-bwX" secondAttribute="centerY" id="hXW-Qu-l6U"/>
                                 <constraint firstItem="AFm-8D-XOL" firstAttribute="top" secondItem="7AT-ti-bwX" secondAttribute="bottom" constant="3" id="j2G-wj-Gid"/>
+                                <constraint firstItem="KoS-hm-9vv" firstAttribute="leading" secondItem="pBa-pc-gAA" secondAttribute="leading" id="qXf-12-0JE"/>
                                 <constraint firstItem="AFm-8D-XOL" firstAttribute="leading" secondItem="pBa-pc-gAA" secondAttribute="leading" id="vx5-Vq-RUS"/>
                             </constraints>
                         </customView>
@@ -151,6 +170,14 @@
                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                     </textFieldCell>
                                 </textField>
+                                <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="Qr3-Jw-nM8">
+                                    <rect key="frame" x="0.0" y="130" width="153" height="24"/>
+                                    <view key="contentView" id="7Er-qe-SjD">
+                                        <rect key="frame" x="0.0" y="0.0" width="153" height="24"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    </view>
+                                    <color key="fillColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </box>
                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DEI-WE-LIW">
                                     <rect key="frame" x="2" y="133" width="149" height="18"/>
                                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="All Due" id="U1D-gS-PKc">
@@ -168,15 +195,19 @@
                                 <constraint firstItem="HwS-zQ-zxc" firstAttribute="leading" secondItem="4RO-lt-47C" secondAttribute="leading" id="3sb-UV-WG5"/>
                                 <constraint firstItem="j8O-k1-Wpd" firstAttribute="top" secondItem="DEI-WE-LIW" secondAttribute="bottom" constant="3" id="5eP-nV-Nw7"/>
                                 <constraint firstItem="wxk-h0-bw6" firstAttribute="centerX" secondItem="j8O-k1-Wpd" secondAttribute="centerX" id="7Zu-d3-LCm"/>
+                                <constraint firstItem="Qr3-Jw-nM8" firstAttribute="top" secondItem="4RO-lt-47C" secondAttribute="top" id="BIF-8B-OAw"/>
                                 <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="HwS-zQ-zxc" secondAttribute="bottom" id="JWc-9z-qGs"/>
                                 <constraint firstAttribute="trailing" secondItem="DEI-WE-LIW" secondAttribute="trailing" constant="4" id="M99-af-6ds"/>
                                 <constraint firstItem="DEI-WE-LIW" firstAttribute="leading" secondItem="4RO-lt-47C" secondAttribute="leading" constant="4" id="Qzd-al-m88"/>
                                 <constraint firstAttribute="trailing" secondItem="HwS-zQ-zxc" secondAttribute="trailing" id="RjZ-uT-zMm"/>
                                 <constraint firstAttribute="bottom" secondItem="j8O-k1-Wpd" secondAttribute="bottom" id="TZn-5u-h06"/>
                                 <constraint firstItem="wxk-h0-bw6" firstAttribute="centerY" secondItem="j8O-k1-Wpd" secondAttribute="centerY" priority="750" id="UHT-JN-MyM"/>
+                                <constraint firstItem="j8O-k1-Wpd" firstAttribute="top" secondItem="Qr3-Jw-nM8" secondAttribute="bottom" id="YLa-Ic-m5I"/>
                                 <constraint firstItem="DEI-WE-LIW" firstAttribute="top" secondItem="4RO-lt-47C" secondAttribute="top" constant="3" id="dap-Jv-XeQ"/>
                                 <constraint firstAttribute="trailing" secondItem="j8O-k1-Wpd" secondAttribute="trailing" id="jp0-Bx-kih"/>
                                 <constraint firstItem="j8O-k1-Wpd" firstAttribute="leading" secondItem="4RO-lt-47C" secondAttribute="leading" id="kb6-Kw-Cn8"/>
+                                <constraint firstItem="Qr3-Jw-nM8" firstAttribute="leading" secondItem="4RO-lt-47C" secondAttribute="leading" id="sIE-ss-4cZ"/>
+                                <constraint firstAttribute="trailing" secondItem="Qr3-Jw-nM8" secondAttribute="trailing" id="tcg-7y-pgR"/>
                                 <constraint firstItem="wxk-h0-bw6" firstAttribute="top" relation="greaterThanOrEqual" secondItem="HwS-zQ-zxc" secondAttribute="bottom" id="yyn-Pu-3Kh"/>
                             </constraints>
                         </customView>
@@ -221,6 +252,14 @@
                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                     </textFieldCell>
                                 </textField>
+                                <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="Fkm-ON-UOv">
+                                    <rect key="frame" x="0.0" y="129" width="153" height="24"/>
+                                    <view key="contentView" id="pcV-ik-uE7">
+                                        <rect key="frame" x="0.0" y="0.0" width="153" height="24"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    </view>
+                                    <color key="fillColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </box>
                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZUe-R8-48J">
                                     <rect key="frame" x="2" y="132" width="149" height="18"/>
                                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="All Exams" id="zKG-8s-ME9">
@@ -237,10 +276,13 @@
                                 <constraint firstItem="bQv-bQ-mfp" firstAttribute="leading" secondItem="FOB-FS-JOl" secondAttribute="leading" id="1gC-PE-fRy"/>
                                 <constraint firstAttribute="trailing" secondItem="ZUe-R8-48J" secondAttribute="trailing" constant="4" id="51V-Zb-mnU"/>
                                 <constraint firstItem="p8b-an-7jr" firstAttribute="top" relation="greaterThanOrEqual" secondItem="bQv-bQ-mfp" secondAttribute="bottom" id="AhQ-dr-S6C"/>
+                                <constraint firstItem="Fkm-ON-UOv" firstAttribute="top" secondItem="FOB-FS-JOl" secondAttribute="top" id="Ajd-26-Jab"/>
                                 <constraint firstItem="ZUe-R8-48J" firstAttribute="leading" secondItem="FOB-FS-JOl" secondAttribute="leading" constant="4" id="E5l-LG-rU4"/>
                                 <constraint firstItem="p8b-an-7jr" firstAttribute="centerX" secondItem="Xgk-0l-Kbn" secondAttribute="centerX" id="Ie9-2m-ed5"/>
                                 <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="bQv-bQ-mfp" secondAttribute="bottom" id="KDZ-ld-FgJ"/>
+                                <constraint firstItem="Xgk-0l-Kbn" firstAttribute="top" secondItem="Fkm-ON-UOv" secondAttribute="bottom" id="KKi-HI-nnd"/>
                                 <constraint firstItem="ZUe-R8-48J" firstAttribute="top" secondItem="FOB-FS-JOl" secondAttribute="top" constant="3" id="OKa-60-cOX"/>
+                                <constraint firstItem="Fkm-ON-UOv" firstAttribute="leading" secondItem="FOB-FS-JOl" secondAttribute="leading" id="VCJ-Gn-Yy0"/>
                                 <constraint firstAttribute="trailing" secondItem="Xgk-0l-Kbn" secondAttribute="trailing" id="fSl-bt-ggn"/>
                                 <constraint firstAttribute="trailing" secondItem="bQv-bQ-mfp" secondAttribute="trailing" id="gx1-bJ-aMz"/>
                                 <constraint firstAttribute="bottom" secondItem="Xgk-0l-Kbn" secondAttribute="bottom" id="hHN-ag-Bkb"/>
@@ -248,6 +290,7 @@
                                 <constraint firstItem="p8b-an-7jr" firstAttribute="centerY" secondItem="Xgk-0l-Kbn" secondAttribute="centerY" priority="750" id="mVA-Wg-cFT"/>
                                 <constraint firstItem="Xgk-0l-Kbn" firstAttribute="leading" secondItem="FOB-FS-JOl" secondAttribute="leading" id="pGP-w1-Qeq"/>
                                 <constraint firstItem="bQv-bQ-mfp" firstAttribute="top" secondItem="ZUe-R8-48J" secondAttribute="bottom" constant="3" id="vf0-2J-BId"/>
+                                <constraint firstAttribute="trailing" secondItem="Fkm-ON-UOv" secondAttribute="trailing" id="vpp-zA-Bgg"/>
                             </constraints>
                         </customView>
                     </subviews>

@@ -10,10 +10,11 @@ import Cocoa
 
 class SchedulerTimeSlotBox: NSView {
     
+    var schedulingDelegate: SchedulingDelegate?
+    
     let DAY_NAMES = ["", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
     
     weak var timeSlot: TimeSlot!
-    weak var courseBox: SchedulerCourseBox!
     
     @IBOutlet weak var buttonTrash: NSButton!
     @IBOutlet weak var pickerStart: NSDatePicker!
@@ -27,20 +28,19 @@ class SchedulerTimeSlotBox: NSView {
     // MARK: - Instance & Initialize
     
     /// Return a new instance of a HXLectureLedger based on the nib template.
-    static func instance(with timeSlot: TimeSlot, for courseBox: SchedulerCourseBox) -> SchedulerTimeSlotBox! {
+    static func instance(with timeSlot: TimeSlot) -> SchedulerTimeSlotBox! {
         var theObjects: NSArray = []
         Bundle.main.loadNibNamed("SchedulerTimeSlotBox", owner: nil, topLevelObjects: &theObjects)
         // Get NSView from top level objects returned from nib load
         if let newBox = theObjects.filter({$0 is SchedulerTimeSlotBox}).first as? SchedulerTimeSlotBox {
-            newBox.initialize(with: timeSlot, for: courseBox)
+            newBox.initialize(with: timeSlot)
             return newBox
         }
         return nil
     }
     
-    private func initialize(with timeSlot: TimeSlot, for courseBox: SchedulerCourseBox) {
+    private func initialize(with timeSlot: TimeSlot) {
         self.timeSlot = timeSlot
-        self.courseBox = courseBox
         
         if timeSlot.course!.lectures!.count > 0 {
             buttonTrash.isEnabled = false
@@ -83,7 +83,8 @@ class SchedulerTimeSlotBox: NSView {
         }
         
         timeSlot.startMinute = Int16(newStart)
-        courseBox.notifyTimeSlotChange()
+        Swift.print("schedulingDelegate: \(schedulingDelegate)")
+        schedulingDelegate?.schedulingUpdatedTimeSlot()
     }
     
     @IBAction func action_pickerStop(_ sender: Any) {
@@ -101,18 +102,18 @@ class SchedulerTimeSlotBox: NSView {
         }
         
         timeSlot.stopMinute = Int16(newStop)
-        courseBox.notifyTimeSlotChange()
+        schedulingDelegate?.schedulingUpdatedTimeSlot()
     }
     
     @IBAction func action_stepper(_ sender: Any) {
         // Available timeslot
         labelWeekday.stringValue = DAY_NAMES[Int(stepperDay.intValue)]
         timeSlot.weekday = Int16(stepperDay.intValue)
-        courseBox.notifyTimeSlotChange()
+        schedulingDelegate?.schedulingUpdatedTimeSlot()
     }
     
     @IBAction func removeTimeSlotBox(_ sender: Any) {
         self.removeFromSuperview()
-        courseBox.notifyTimeSlotRemoved(timeSlot)
+        schedulingDelegate?.schedulingRemove(timeSlot: timeSlot)
     }
 }

@@ -9,13 +9,15 @@
 import Cocoa
 
 class WorkAdderLectureController: NSViewController {
+    
+    var schedulingDelegate: SchedulingDelegate?
+    var selectionDelegate: SelectionDelegate?
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do view setup here.
     }
     
-    weak var owner: CoursePageViewController!
     weak var workBox: CourseWorkBox!
     
     override func viewDidAppear() {
@@ -23,15 +25,28 @@ class WorkAdderLectureController: NSViewController {
         
         if workBox.work!.customTitle {
             textField_title.stringValue = workBox.work!.title!
-        } else {
+        } else if !workBox.work.completed {
             textField_title.placeholderString = workBox.work!.title!
         }
         
-        let nextTimeSlotIndex = owner.sidebarVC.selectedCourse.nextTimeSlotIndex()
-        let lecCount = owner.sidebarVC.selectedCourse.timeSlots!.count
+        if workBox.work.completed {
+            completeButton.isEnabled = false
+            textField_title.isEditable = false
+            descriptionTextView.isEditable = false
+            buttonCustomDue.isEnabled = false
+            buttonLectureDue.isEnabled = false
+            datePicker.isEnabled = false
+            timePicker.isEnabled = false
+            textField_title.placeholderString = "Untitled Work"
+        }
+        
+        let selectedCourse = workBox.work!.course!
+
+        let nextTimeSlotIndex = selectedCourse.nextTimeSlotIndex()
+        let lecCount = selectedCourse.timeSlots!.count
         
         for t in 0..<lecCount {
-            let timeSlot = owner.sidebarVC.selectedCourse.timeSlots!.array[(t + nextTimeSlotIndex) % lecCount] as! TimeSlot
+            let timeSlot = selectedCourse.timeSlots!.array[(t + nextTimeSlotIndex) % lecCount] as! TimeSlot
             let newBox = HXLectureTimeBox.instance(from: timeSlot, with: self)!
             lectureTimeStackView.addArrangedSubview(newBox)
             newBox.widthAnchor.constraint(equalTo: lectureTimeStackView.widthAnchor).isActive = true
@@ -64,11 +79,14 @@ class WorkAdderLectureController: NSViewController {
     @IBOutlet weak var completeButton: NSButton!
     @IBAction func action_complete(_ sender: NSButton) {
         workBox.work!.completed = true
-        owner.loadWork()
+        schedulingDelegate?.schedulingUpdatedWork()
     }
     
     @IBOutlet weak var textField_title: NSTextField!
     @IBAction func action_titleField(_ sender: NSTextField) {
+        if workBox == nil {
+            return
+        }
         let text = sender.stringValue.trimmingCharacters(in: .whitespaces)
         // If user leaves the title box empty, a name will be generated...
         if text == "" {
@@ -104,17 +122,20 @@ class WorkAdderLectureController: NSViewController {
             workBox.work!.title! = text
         }
         
-        owner.notifyRenamed(work: workBox.work!)
+        workBox.labelWork.stringValue = workBox.work.title!
     }
     
     @IBOutlet weak var trailingStackConstraint: NSLayoutConstraint!
     @IBOutlet weak var lectureTimeStackView: NSStackView!
+    
+    @IBOutlet weak var buttonCustomDue: NSButton!
     @IBAction func customDueButton(_ sender: NSButton) {
         NSAnimationContext.beginGrouping()
         NSAnimationContext.current().duration = 0.2
         trailingStackConstraint.animator().constant = self.view.bounds.width
         NSAnimationContext.endGrouping()
     }
+    @IBOutlet weak var buttonLectureDue: NSButton!
     @IBAction func lectureDueButton(_ sender: NSButton) {
         NSAnimationContext.beginGrouping()
         NSAnimationContext.current().duration = 0.2
@@ -127,11 +148,11 @@ class WorkAdderLectureController: NSViewController {
     @IBOutlet weak var toggleReoccurring: NSButton!
 
     @IBAction func action_close(_ sender: NSButton) {
-        owner.notifyCloseWorkDetails()
+        selectionDelegate?.isEditing(workBox: nil)
     }
     
     @IBAction func action_delete(_ sender: NSButton) {
-        owner.notifyDelete(work: workBox.work!)
+        schedulingDelegate?.schedulingRemove(workBox: workBox)
     }
     
     @IBAction func action_datePicker(_ sender: NSDatePicker) {
@@ -142,14 +163,33 @@ class WorkAdderLectureController: NSViewController {
         workBox.work!.turnIn = nil
         
         if sender == datePicker {
-            timePicker.dateValue = datePicker.dateValue
+            
+            var dateComponents = Calendar.current.dateComponents(in: .current, from: datePicker.dateValue)
+            dateComponents.hour = Calendar.current.component(.hour, from: timePicker.dateValue)
+            dateComponents.minute = Calendar.current.component(.minute, from: timePicker.dateValue)
+            let calDate = Calendar.current.date(from: dateComponents)!
+            
+            timePicker.dateValue = calDate
         }
         
         workBox.work!.date = timePicker.dateValue
         
         generateWorkTitle()
         
-        owner.notifyDated(work: workBox.work!)
+        let date = Date()
+        
+        let day = Calendar.current.component(.day, from: workBox.work.date!)
+        let month = Calendar.current.component(.month, from: workBox.work.date!)
+        let dayToday = Calendar.current.component(.day, from: date)
+        let monthToday = Calendar.current.component(.month, from: date)
+        let year = Calendar.current.component(.year, from: workBox.work.date!)
+        let minuteOfDay = Calendar.current.component(.hour, from: workBox.work.date!) * 60 + Calendar.current.component(.minute, from: workBox.work.date!)
+        let minuteOfDayToday = Calendar.current.component(.hour, from: date) * 60 + Calendar.current.component(.minute, from: date)
+        if monthToday == month && dayToday == day && minuteOfDayToday < minuteOfDay {
+            workBox.labelDate.stringValue = HXTimeFormatter.formatTime(Int16(minuteOfDay))
+        } else {
+            workBox.labelDate.stringValue = "\(month)/\(day)/\(year % 100)"
+        }
     }
     
     @IBOutlet var descriptionTextView: NSTextView!
@@ -177,19 +217,21 @@ class WorkAdderLectureController: NSViewController {
             
             workBox.work!.title! = workBox.work!.course!.nextWorkTitleAvailable(with: "\(day) Work ")
             textField_title.placeholderString = workBox.work!.title!
-            
-            owner.notifyRenamed(work: workBox.work!)
         }
     }
     
     // MARK: - Notifiers
     
     ///
-    func notifyLectureTimeSelected(_ timeSlot: TimeSlot) {
+    func notifyLectureTimeSelected(_ timeSlotBox: HXLectureTimeBox) {
+        if workBox.work.completed {
+            return
+        }
+        
         for case let view as HXLectureTimeBox in lectureTimeStackView.arrangedSubviews {
             view.deselect()
         }
-        workBox.work!.turnIn = timeSlot
+        workBox.work!.turnIn = timeSlotBox.timeSlot
         
         // Calculating date from today's date to next lecture time slot selected...
         
@@ -201,9 +243,9 @@ class WorkAdderLectureController: NSViewController {
         let minute = cal.component(.minute, from: date)
         let minuteOfDay = hour * 60 + minute
         
-        let toWeekday = Int(timeSlot.weekday)
-        let toHour = Int(timeSlot.startMinute / 60)
-        let toMinute = Int(timeSlot.startMinute % 60)
+        let toWeekday = Int(timeSlotBox.timeSlot.weekday)
+        let toHour = Int(timeSlotBox.timeSlot.startMinute / 60)
+        let toMinute = Int(timeSlotBox.timeSlot.startMinute % 60)
         let toMinuteOfDay = toHour * 60 + toMinute
 
         var dueDate = date
@@ -214,7 +256,7 @@ class WorkAdderLectureController: NSViewController {
             // Add hours and minutes difference for rest of today time to target day time
             dueDate = dueDate.addingTimeInterval(TimeInterval(toMinuteOfDay - minuteOfDay) * 60)
             
-        } else if weekday == toWeekday && minuteOfDay < toMinuteOfDay {
+        } else if weekday == toWeekday && minuteOfDay < toMinuteOfDay && timeSlotBox != (lectureTimeStackView.arrangedSubviews.last as! HXLectureTimeBox) {
             
             // Add difference in hours and minutes
             dueDate = dueDate.addingTimeInterval(TimeInterval(toMinuteOfDay - minuteOfDay) * 60)
@@ -232,7 +274,18 @@ class WorkAdderLectureController: NSViewController {
         
         generateWorkTitle()
         
-        owner.notifyDated(work: workBox.work!)
+        workBox.labelWork.stringValue = workBox.work!.title!
+        
+        print("due date is: \(Calendar.current.component(.day, from: dueDate))")
+        
+        let day = Calendar.current.component(.day, from: workBox.work.date!)
+        let month = Calendar.current.component(.month, from: workBox.work.date!)
+        let year = Calendar.current.component(.year, from: workBox.work.date!)
+        if toWeekday == weekday && minuteOfDay < toMinuteOfDay  && minuteOfDay < toMinuteOfDay && timeSlotBox != (lectureTimeStackView.arrangedSubviews.last as! HXLectureTimeBox)  {
+            workBox.labelDate.stringValue = HXTimeFormatter.formatTime(Int16(toMinuteOfDay))
+        } else {
+            workBox.labelDate.stringValue = "\(month)/\(day)/\(year % 100)"
+        }
     }
     
 }

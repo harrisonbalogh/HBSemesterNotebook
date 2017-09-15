@@ -10,19 +10,19 @@
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customView id="6aJ-z9-fvW" customClass="CourseWorkBox" customModule="HXNotes" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="220" height="25"/>
+            <rect key="frame" x="0.0" y="0.0" width="220" height="43"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <textField horizontalHuggingPriority="5" verticalHuggingPriority="750" horizontalCompressionResistancePriority="100" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zAG-qD-cM2">
-                    <rect key="frame" x="28" y="4" width="122" height="17"/>
+                    <rect key="frame" x="24" y="22" width="168" height="17"/>
                     <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Untitled Work 1" id="8Ea-yu-UeD">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vDZ-be-vdf">
-                    <rect key="frame" x="148" y="6" width="50" height="14"/>
+                <textField horizontalHuggingPriority="100" verticalHuggingPriority="750" horizontalCompressionResistancePriority="751" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vDZ-be-vdf">
+                    <rect key="frame" x="24" y="4" width="194" height="14"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="12/13/93" id="ZIR-tg-YnG">
                         <font key="font" metaFont="smallSystem"/>
                         <color key="textColor" name="keyboardFocusIndicatorColor" catalog="System" colorSpace="catalog"/>
@@ -30,10 +30,10 @@
                     </textFieldCell>
                 </textField>
                 <button translatesAutoresizingMaskIntoConstraints="NO" id="Lts-Ol-OfX">
-                    <rect key="frame" x="198" y="7" width="12" height="12"/>
+                    <rect key="frame" x="194" y="12" width="20" height="20"/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="12" id="Bva-03-gEi"/>
-                        <constraint firstAttribute="height" constant="12" id="zuH-AJ-hWn"/>
+                        <constraint firstAttribute="width" constant="20" id="Bva-03-gEi"/>
+                        <constraint firstAttribute="height" constant="20" id="zuH-AJ-hWn"/>
                     </constraints>
                     <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSQuickLookTemplate" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="P1x-rT-yG3">
                         <behavior key="behavior" lightByContents="YES"/>
@@ -44,41 +44,45 @@
                     </connections>
                 </button>
                 <button translatesAutoresizingMaskIntoConstraints="NO" id="mk9-bq-IeK">
-                    <rect key="frame" x="6" y="3" width="19" height="19"/>
+                    <rect key="frame" x="4" y="12" width="19" height="19"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="19" id="RmM-fx-3Ob"/>
                         <constraint firstAttribute="height" constant="19" id="d9Z-jU-6Od"/>
                     </constraints>
-                    <buttonCell key="cell" type="bevel" bezelStyle="regularSquare" image="icon_text_empty" imagePosition="left" alternateImage="icon_text_left" inset="2" id="fXV-t7-Xa4">
+                    <buttonCell key="cell" type="bevel" bezelStyle="regularSquare" image="icon_text_empty" imagePosition="left" alternateImage="NSMenuOnStateTemplate" inset="2" id="fXV-t7-Xa4">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
+                    <connections>
+                        <action selector="action_complete:" target="6aJ-z9-fvW" id="M8E-n5-Yxx"/>
+                    </connections>
                 </button>
             </subviews>
             <constraints>
-                <constraint firstAttribute="trailing" secondItem="Lts-Ol-OfX" secondAttribute="trailing" constant="10" id="0gN-7o-am6"/>
-                <constraint firstItem="mk9-bq-IeK" firstAttribute="leading" secondItem="6aJ-z9-fvW" secondAttribute="leading" constant="6" id="7ht-ur-PLy"/>
-                <constraint firstAttribute="bottom" secondItem="zAG-qD-cM2" secondAttribute="bottom" constant="4" id="EOx-tD-6T6"/>
-                <constraint firstItem="Lts-Ol-OfX" firstAttribute="centerY" secondItem="6aJ-z9-fvW" secondAttribute="centerY" id="KIc-P0-776"/>
-                <constraint firstItem="zAG-qD-cM2" firstAttribute="leading" secondItem="6aJ-z9-fvW" secondAttribute="leading" constant="30" id="aZc-uV-ntP"/>
+                <constraint firstAttribute="trailing" secondItem="Lts-Ol-OfX" secondAttribute="trailing" constant="6" id="0gN-7o-am6"/>
+                <constraint firstItem="Lts-Ol-OfX" firstAttribute="leading" secondItem="zAG-qD-cM2" secondAttribute="trailing" constant="4" id="2pQ-Nl-Vef"/>
+                <constraint firstItem="mk9-bq-IeK" firstAttribute="leading" secondItem="6aJ-z9-fvW" secondAttribute="leading" constant="4" id="7ht-ur-PLy"/>
+                <constraint firstAttribute="trailing" secondItem="vDZ-be-vdf" secondAttribute="trailing" constant="4" id="BJN-vN-NCb"/>
+                <constraint firstItem="vDZ-be-vdf" firstAttribute="top" secondItem="zAG-qD-cM2" secondAttribute="bottom" constant="4" id="Gcy-GP-gzs"/>
+                <constraint firstItem="mk9-bq-IeK" firstAttribute="centerY" secondItem="6aJ-z9-fvW" secondAttribute="centerY" id="RIw-MY-eeH"/>
+                <constraint firstItem="Lts-Ol-OfX" firstAttribute="centerY" secondItem="6aJ-z9-fvW" secondAttribute="centerY" id="RLU-u5-4Zq"/>
+                <constraint firstItem="zAG-qD-cM2" firstAttribute="leading" secondItem="6aJ-z9-fvW" secondAttribute="leading" constant="26" id="aZc-uV-ntP"/>
+                <constraint firstAttribute="bottom" secondItem="vDZ-be-vdf" secondAttribute="bottom" constant="4" id="cSH-kl-QMf"/>
+                <constraint firstItem="vDZ-be-vdf" firstAttribute="leading" secondItem="6aJ-z9-fvW" secondAttribute="leading" constant="26" id="dpM-ad-DDa"/>
                 <constraint firstItem="zAG-qD-cM2" firstAttribute="top" secondItem="6aJ-z9-fvW" secondAttribute="top" constant="4" id="eaH-xr-hPh"/>
-                <constraint firstItem="vDZ-be-vdf" firstAttribute="centerY" secondItem="6aJ-z9-fvW" secondAttribute="centerY" id="hW6-Kz-dsw"/>
-                <constraint firstItem="mk9-bq-IeK" firstAttribute="centerY" secondItem="6aJ-z9-fvW" secondAttribute="centerY" id="iY0-Zf-fAM"/>
-                <constraint firstItem="zAG-qD-cM2" firstAttribute="centerY" secondItem="6aJ-z9-fvW" secondAttribute="centerY" id="ndr-a1-rT6"/>
-                <constraint firstItem="Lts-Ol-OfX" firstAttribute="leading" secondItem="vDZ-be-vdf" secondAttribute="trailing" constant="2" id="ojj-CB-tIM"/>
-                <constraint firstItem="vDZ-be-vdf" firstAttribute="leading" secondItem="zAG-qD-cM2" secondAttribute="trailing" constant="2" id="sW8-5T-Ivi"/>
             </constraints>
             <connections>
                 <outlet property="buttonDetails" destination="Lts-Ol-OfX" id="xlf-La-NRn"/>
                 <outlet property="labelDate" destination="vDZ-be-vdf" id="hTY-Jt-FUU"/>
                 <outlet property="labelWork" destination="zAG-qD-cM2" id="wIe-vL-VHg"/>
+                <outlet property="toggleCompleted" destination="mk9-bq-IeK" id="hmG-Q9-Pdg"/>
             </connections>
-            <point key="canvasLocation" x="64" y="201.5"/>
+            <point key="canvasLocation" x="64" y="219.5"/>
         </customView>
     </objects>
     <resources>
+        <image name="NSMenuOnStateTemplate" width="12" height="12"/>
         <image name="NSQuickLookTemplate" width="19" height="12"/>
         <image name="icon_text_empty" width="19" height="19"/>
-        <image name="icon_text_left" width="19" height="19"/>
     </resources>
 </document>

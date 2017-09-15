@@ -8,9 +8,11 @@
 
 import Cocoa
 
-class CoursePageViewController: NSViewController {
+class CoursePageViewController: NSViewController, NSSplitViewDelegate {
 
-    weak var sidebarVC: SidebarPageController!
+    var sidebarDelegate: SidebarDelegate?
+    var selectionDelegate: SelectionDelegate?
+    var schedulingDelegate: SchedulingDelegate?
     
     let appDelegate = NSApplication.shared().delegate as! AppDelegate
     
@@ -18,6 +20,68 @@ class CoursePageViewController: NSViewController {
     @IBOutlet weak var colorBox: NSBox!
     
     var weekCount = 0
+    
+    @IBOutlet weak var splitView: NSSplitView!
+    func optimizeSplitViewSpace() {
+        
+        let MAX_DOCS_SHOWN = 2
+        let MAX_TESTS_SHOWN = 2
+        let MAX_WORK_SHOWN = 2
+        
+        let LECTUREBOX_HEIGHT: CGFloat = 44
+        let DOCSBOX_HEIGHT: CGFloat = 43
+        let WORKBOX_HEIGHT: CGFloat = 43
+        let TESTBOX_HEIGHT: CGFloat = 43
+        
+        let NO_ITEMS_HEIGHT: CGFloat = 18
+        
+        let splitHeight = splitView.frame.height
+        
+        // Initial height of the docs, work, and test views. If there aren't arranged subviews, they are limited
+        // to the height of their divider plus the 'no items' label. Else the height is the divider height plus
+        // up to MAX_items_SHOWN arranged subview heights. So having moring than MAX_items_SHOWN has no affect 
+        // in this step.
+        let docsHeight = splitDividerDocs.frame.height + max(CGFloat(min(docsStackView.arrangedSubviews.count, MAX_DOCS_SHOWN)) * DOCSBOX_HEIGHT, NO_ITEMS_HEIGHT)
+        var workHeight = splitDividerWork.frame.height + max(CGFloat(min(workStackView.arrangedSubviews.count, MAX_WORK_SHOWN)) * WORKBOX_HEIGHT, NO_ITEMS_HEIGHT)
+        var testHeight = splitDividerTest.frame.height + max(CGFloat(min(testStackView.arrangedSubviews.count, MAX_TESTS_SHOWN)) * TESTBOX_HEIGHT, NO_ITEMS_HEIGHT)
+        
+        // The height of the course has no bound on its number of arranged subviews but its overall height must
+        // leave room for the minimum heights of the work and test views defined above.
+        let lectureHeight = min(splitDividerLecture.frame.height + CGFloat(lectureStackView.arrangedSubviews.count) * LECTUREBOX_HEIGHT, splitHeight - workHeight - testHeight - docsHeight)
+        
+        // We don't want the work view to go up to the bottom of the course view if it doesn't have to. So start
+        // increasing the height of the work view for each arranged sbuview as long as there is room between the
+        // minimum test view & docs view and the course view heights.
+        if workStackView.arrangedSubviews.count > MAX_WORK_SHOWN {
+            for _ in MAX_WORK_SHOWN..<workStackView.arrangedSubviews.count {
+                // First check if there is room to increase the work height by another arranged subview's height
+                if workHeight + WORKBOX_HEIGHT > splitHeight - lectureHeight - testHeight - docsHeight {
+                    break
+                }
+                workHeight += WORKBOX_HEIGHT
+            }
+        }
+        
+        // Perform same height expansion for the test view. Increase it if necessary but we're trying to keep the
+        // test and work views using up only the exact amount of space to display all their arranged subviews.
+        if testStackView.arrangedSubviews.count > MAX_TESTS_SHOWN {
+            for _ in MAX_TESTS_SHOWN..<testStackView.arrangedSubviews.count {
+                // First check if there is room to increase the test height by another arranged subview's height
+                if testHeight + TESTBOX_HEIGHT > splitHeight - lectureHeight - workHeight - docsHeight {
+                    break
+                }
+                testHeight += TESTBOX_HEIGHT
+            }
+        }
+        
+        // Note the docs height is not adjusted for having more than the max amount of items preferred. It will cap
+        // at the max specified.
+        
+        splitView.setPosition(splitHeight - workHeight - testHeight - docsHeight, ofDividerAt: 0)
+        splitView.setPosition(splitHeight - workHeight - testHeight, ofDividerAt: 1)
+        splitView.setPosition(splitHeight - testHeight, ofDividerAt: 2)
+        
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,33 +91,12 @@ class CoursePageViewController: NSViewController {
     override func viewDidAppear() {
         super.viewDidAppear()
         
+        toggleCompletedWork.state = NSOffState
+        toggleCompletedTests.state = NSOffState
+        
         print("CourseVC - viewDidAppear")
         
-        guard let course = sidebarVC.selectedCourse else { return }
-
-        let theColor = NSColor(red: CGFloat(course.color!.red), green: CGFloat(course.color!.green), blue: CGFloat(course.color!.blue), alpha: 0.25)
-        self.colorBox.fillColor = theColor
-        
-        courseLabel.stringValue = course.title!
-        
-        course.checkWork()
-        course.checkTests()
-        
-        loadLectures()
-        loadTests()
-        loadWork()
-        
-        // Fill in absent lectures since last course open
-        sidebarVC.selectedCourse.fillAbsentLectures()
-        
-        if course.duringTimeSlot() != nil {
-            addButton.isEnabled = true
-            addButton.isHidden = false
-            addButton.title = "Add Lecture \(max(course.theoreticalLectureCount(), 1))"
-        } else {
-            addButton.isEnabled = false
-            addButton.isHidden = true
-        }
+        sidebarDelegate?.sidebarCourseNeedsPopulating(self)
     }
     
     override func viewWillDisappear() {
@@ -63,16 +106,17 @@ class CoursePageViewController: NSViewController {
     }
     
     @IBAction func action_back(_ sender: NSButton) {
-        sidebarVC.prev()
+        selectionDelegate?.courseWasSelected(nil)
     }
     
     // MARK: - Populating Lectures
     @IBOutlet weak var lectureStackView: NSStackView!
     @IBOutlet weak var addButton: NSButton!
     @IBOutlet weak var noLecturesLabel: NSTextField!
+    @IBOutlet weak var splitDividerLecture: NSBox!
     
-    func noLectureCheck() {
-        if sidebarVC.selectedCourse.lectures!.count == 0 {
+    func noLectureCheck(for course: Course) {
+        if course.lectures!.count == 0 {
             noLecturesLabel.alphaValue = 1
             noLecturesLabel.isHidden = false
         } else {
@@ -83,29 +127,26 @@ class CoursePageViewController: NSViewController {
     
     // This button only appears when a course has been checked as happening now.
     @IBAction func action_addLecture(_ sender: NSButton) {
-        sidebarVC.addLecture()
-        
-        noLectureCheck()
+        schedulingDelegate?.schedulingAddLecture()
     }
     
     /// Populate lectureStackView with the loaded lectures from the selected course.
-    func loadLectures() {
-        
+    func loadLectures(from course: Course) {
         // Flush old lectures
         flushLectures()
         
         // Add the first week box
-        if sidebarVC.selectedCourse.lectures!.count > 0 {
+        if course.lectures!.count > 0 {
             lectureStackView.addArrangedSubview(CourseWeekBox.instance(with: 1))
             weekCount = 1
         }
         
         // Add all lectures and weekboxes
-        for case let lecture as Lecture in sidebarVC.selectedCourse.lectures! {
+        for case let lecture as Lecture in course.lectures! {
             push(lecture: lecture )
         }
         
-        noLectureCheck()
+        noLectureCheck(for: course)
     }
     
     /// Handles purely the visual aspect of lectures. Internal use only. Adds a new HXLectureBox and possibly HXWeekBox to the ledgerStackView.
@@ -122,7 +163,8 @@ class CoursePageViewController: NSViewController {
             weekCount += 1
         }
         // Create lecture box
-        let newBox = CourseLectureBox.instance(with: lecture, owner: self)!
+        let newBox = CourseLectureBox.instance(with: lecture)!
+        newBox.selectionDelegate = self.selectionDelegate
         lectureStackView.addArrangedSubview(newBox)
         newBox.widthAnchor.constraint(equalTo: lectureStackView.widthAnchor).isActive = true
     }
@@ -134,18 +176,23 @@ class CoursePageViewController: NSViewController {
             }
         }
         weekCount = 0
-        
-        noLectureCheck()
     }
+    
+    // MARK: - Populating Docs
+    
+    @IBOutlet weak var splitDividerDocs: NSBox!
+    @IBOutlet weak var docsStackView: NSStackView!
     
     // MARK: - Populating Due
     @IBOutlet weak var workStackView: NSStackView!
     @IBOutlet weak var buttonAddWork: NSButton!
     @IBOutlet weak var noWorkLabel: NSTextField!
+    @IBOutlet weak var splitDividerWork: NSBox!
+    @IBOutlet weak var toggleCompletedWork: NSButton!
     var workDetailsPopover: NSPopover!
     
     func noWorkCheck() {
-        if sidebarVC.selectedCourse.work!.filter({!($0 as! Work).completed}).count == 0 {
+        if workStackView.arrangedSubviews.count == 0 {
             noWorkLabel.alphaValue = 1
             noWorkLabel.isHidden = false
         } else {
@@ -155,36 +202,40 @@ class CoursePageViewController: NSViewController {
     }
 
     @IBAction func action_addDue(_ sender: NSButton) {
-        push(work: sidebarVC.selectedCourse.createWork() )
-        
-        noWorkCheck()
+        schedulingDelegate?.schedulingAddWork()
     }
     
-    func loadWork() {
+    func loadWork(from course: Course, showingCompleted: Bool) {
+        course.checkWork()
+        
         flushWork()
         
         // Add all work
-        for case let work as Work in sidebarVC.selectedCourse.work! {
-            
-            if !work.completed {
+        for case let work as Work in course.work! {
+            if work.completed && showingCompleted {
+                push(work: work )
+            } else if !work.completed {
                 generateTitle(for: work)
                 push(work: work )
             }
         }
-        
+
         noWorkCheck()
     }
     
-    func push(work: Work) {
-        workStackView.addArrangedSubview(CourseWorkBox.instance(with: work, owner: self)!)
+    /// Pushes a new CourseWorkBox to the workStackView. The new CourseWorkBox is returned
+    /// if callee of push(:Work) wants to do custom setup of the view.
+    @discardableResult func push(work: Work) -> CourseWorkBox {
+        let newBox = CourseWorkBox.instance(with: work)!
+        newBox.selectionDelegate = self.selectionDelegate
+        workStackView.addArrangedSubview(newBox)
+        return newBox
     }
     
     func flushWork() {
         for subview in workStackView.arrangedSubviews {
             subview.removeFromSuperview()
         }
-        
-        noWorkCheck()
     }
     
     func pop(workBox: CourseWorkBox) {
@@ -193,14 +244,20 @@ class CoursePageViewController: NSViewController {
         noWorkCheck()
     }
     
+    @IBAction func action_completedWork(_ sender: NSButton) {
+        sidebarDelegate?.sidebarCoursePopulateCompletedWork(self)
+    }
+    
     // MARK: - Populating Tests
     @IBOutlet weak var testStackView: NSStackView!
     @IBOutlet weak var buttonAddTest: NSButton!
     @IBOutlet weak var noTestsLabel: NSTextField!
+    @IBOutlet weak var splitDividerTest: NSBox!
+    @IBOutlet weak var toggleCompletedTests: NSButton!
     var testDetailsPopover: NSPopover!
     
     func noTestsCheck() {
-        if sidebarVC.selectedCourse.tests!.filter({!($0 as! Test).completed}).count == 0 {
+        if testStackView.arrangedSubviews.count == 0 {
             noTestsLabel.alphaValue = 1
             noTestsLabel.isHidden = false
         } else {
@@ -210,17 +267,17 @@ class CoursePageViewController: NSViewController {
     }
     
     @IBAction func action_addTests(_ sender: NSButton) {
-        push(test: sidebarVC.selectedCourse.createTest() )
-        
-        noTestsCheck()
+        schedulingDelegate?.schedulingAddTest()
     }
     
-    func loadTests() {
+    func loadTests(from course: Course, showingCompleted: Bool) {
         flushTests()
         
         // Add all tests
-        for case let test as Test in sidebarVC.selectedCourse.tests! {
-            if !test.completed {
+        for case let test as Test in course.tests! {            
+            if test.completed && showingCompleted {
+                push(test: test )
+            } else if !test.completed {
                 generateTitle(for: test)
                 push(test: test )
             }
@@ -229,22 +286,46 @@ class CoursePageViewController: NSViewController {
         noTestsCheck()
     }
     
-    func push(test: Test) {
-        testStackView.addArrangedSubview(CourseTestBox.instance(with: test, owner: self)!)
+    /// Pushes a new CourseTestBox to the testStackView. The new CourseTestBox is returned
+    /// if callee of push(:Test) wants to do custom setup of the view.
+    @discardableResult func push(test: Test) -> CourseTestBox {
+        let newBox = CourseTestBox.instance(with: test)!
+        newBox.selectionDelegate = self.selectionDelegate
+        testStackView.addArrangedSubview(newBox)
+        return newBox
     }
     
     func flushTests() {
         for subview in testStackView.arrangedSubviews {
             subview.removeFromSuperview()
         }
-        
-        noTestsCheck()
     }
     
     func pop(testBox: CourseTestBox) {
         testBox.removeFromSuperview()
         
         noTestsCheck()
+    }
+    
+    @IBAction func action_completedTests(_ sender: NSButton) {
+        sidebarDelegate?.sidebarCoursePopulateCompletedTests(self)
+    }
+    
+    // MARK: - Split View Delegation
+    
+    func splitView(_ splitView: NSSplitView, additionalEffectiveRectOfDividerAt dividerIndex: Int) -> NSRect {
+        
+        var newRect: NSRect!
+        
+        switch dividerIndex {
+            case 0: newRect = splitDividerDocs.convert(splitDividerDocs.bounds, to: splitView)
+            case 1: newRect = splitDividerWork.convert(splitDividerWork.bounds, to: splitView)
+            case 2: newRect = splitDividerTest.convert(splitDividerTest.bounds, to: splitView)
+            default: return NSZeroRect
+        }
+        
+        newRect.size = CGSize(width: toggleCompletedWork.frame.origin.x, height: newRect.height)
+        return newRect
     }
     
     // MARK: - Convenience Methods
@@ -291,30 +372,9 @@ class CoursePageViewController: NSViewController {
         }
     }
     
-    // MARK: - Notifiers
+    // MARK: - Work & Test Editor Popovers
     
-    func notifySelected(lecture: Lecture) {
-        sidebarVC.notifySelected(lecture: lecture)
-        
-        // Update visuals for all HXLectureBox's
-        for case let lectureBox as CourseLectureBox in lectureStackView.arrangedSubviews {
-            if lectureBox.lecture == lecture {
-                lectureBox.updateVisual(selected: true)
-            } else {
-                lectureBox.updateVisual(selected: false)
-            }
-        }
-    }
-    
-    func notifyCloseTestDetails() {
-        if testDetailsPopover != nil {
-            if testDetailsPopover.isShown {
-                testDetailsPopover.performClose(self)
-            }
-        }
-    }
-    
-    func notifyCloseWorkDetails() {
+    func closeWorkPopover() {
         if workDetailsPopover != nil {
             if workDetailsPopover.isShown {
                 workDetailsPopover.performClose(self)
@@ -322,27 +382,7 @@ class CoursePageViewController: NSViewController {
         }
     }
     
-    func notifyReveal(testBox: CourseTestBox) {
-        if testDetailsPopover != nil {
-            if testDetailsPopover.isShown {
-                if let testAVC = testDetailsPopover.contentViewController as? TestAdderViewController {
-                    if testAVC.testBox == testBox {
-                        testDetailsPopover.performClose(self)
-                        return
-                    }
-                }
-                testDetailsPopover.performClose(self)
-            }
-        }
-        testDetailsPopover = NSPopover()
-        let testAVC = TestAdderViewController(nibName: "TestAdderViewController", bundle: nil)
-        testAVC?.owner = self
-        testAVC?.testBox = testBox
-        testDetailsPopover.contentViewController = testAVC
-        testDetailsPopover.show(relativeTo: testBox.buttonDetails.bounds, of: testBox.buttonDetails, preferredEdge: NSRectEdge.maxX)
-        
-    }
-    func notifyReveal(workBox: CourseWorkBox) {
+    func showWorkPopover(for workBox: CourseWorkBox) {
         if workDetailsPopover != nil {
             if workDetailsPopover.isShown {
                 if let workAVC = workDetailsPopover.contentViewController as? WorkAdderLectureController {
@@ -356,96 +396,39 @@ class CoursePageViewController: NSViewController {
         }
         workDetailsPopover = NSPopover()
         let workAVC = WorkAdderLectureController(nibName: "WorkAdderLectureController", bundle: nil)
-        workAVC?.owner = self
+        workAVC?.schedulingDelegate = self.schedulingDelegate
+        workAVC?.selectionDelegate = self.selectionDelegate
         workAVC?.workBox = workBox
         workDetailsPopover.contentViewController = workAVC
         workDetailsPopover.show(relativeTo: workBox.buttonDetails.bounds, of: workBox.buttonDetails, preferredEdge: NSRectEdge.maxX)
     }
     
-    func notifyDelete(test: Test) {
-        for case let testBox as CourseTestBox in testStackView.arrangedSubviews {
-            if testBox.test! == test {
-                // Update model
-                appDelegate.managedObjectContext.delete( test )
-                appDelegate.saveAction(self)
-                // Update visuals
-                pop(testBox: testBox)
-                break
+    func closeTestPopover() {
+        if testDetailsPopover != nil {
+            if testDetailsPopover.isShown {
+                testDetailsPopover.performClose(self)
             }
         }
     }
-    func notifyDelete(work: Work) {
-        for case let workBox as CourseWorkBox in workStackView.arrangedSubviews {
-            if workBox.work! == work {
-                // Update model
-                appDelegate.managedObjectContext.delete( work )
-                appDelegate.saveAction(self)
-                // Update visuals
-                pop(workBox: workBox)
-                break
-            }
-        }
-    }
-    func notifyRenamed(lecture: Lecture) {
-        for case let lectureBox as CourseLectureBox in lectureStackView.arrangedSubviews {
-            if lectureBox.lecture! == lecture {
-                lectureBox.labelCustomTitle.stringValue = lecture.title!
-                break
-            }
-        }
-    }
-    func notifyRenamed(test: Test) {
-        for case let testBox as CourseTestBox in testStackView.arrangedSubviews {
-            if testBox.test! == test {
-                testBox.labelTest.stringValue = test.title!
-                break
-            }
-        }
-    }
-    func notifyRenamed(work: Work) {
-        for case let workBox as CourseWorkBox in workStackView.arrangedSubviews {
-            if workBox.work! == work {
-                workBox.labelWork.stringValue = work.title!
-                break
-            }
-        }
-    }
-    func notifyDated(test: Test) {
-        for case let testBox as CourseTestBox in testStackView.arrangedSubviews {
-            if testBox.test! == test {
-                let day = Calendar.current.component(.day, from: test.date!)
-                let month = Calendar.current.component(.month, from: test.date!)
-                let year = Calendar.current.component(.year, from: test.date!)
-                let weekday = Calendar.current.component(.weekday, from: test.date!)
-                let minuteOfDay = Calendar.current.component(.hour, from: test.date!) * 60 + Calendar.current.component(.minute, from: test.date!)
-                let weekdayToday = Calendar.current.component(.weekday, from: Date())
-                let minuteOfDayToday = Calendar.current.component(.hour, from: Date()) * 60 + Calendar.current.component(.minute, from: Date())
-                if weekdayToday == weekday && minuteOfDayToday < minuteOfDay {
-                    testBox.labelDate.stringValue = HXTimeFormatter.formatTime(Int16(minuteOfDay))
-                } else {
-                    testBox.labelDate.stringValue = "\(month)/\(day)/\(year % 100)"
+    
+    func showTestPopover(for testBox: CourseTestBox) {
+        if testDetailsPopover != nil {
+            if testDetailsPopover.isShown {
+                if let testAVC = testDetailsPopover.contentViewController as? TestAdderViewController {
+                    if testAVC.testBox == testBox {
+                        testDetailsPopover.performClose(self)
+                        return
+                    }
                 }
-                break
+                testDetailsPopover.performClose(self)
             }
         }
-    }
-    func notifyDated(work: Work) {
-        for case let workBox as CourseWorkBox in workStackView.arrangedSubviews {
-            if workBox.work! == work {
-                let day = Calendar.current.component(.day, from: work.date!)
-                let month = Calendar.current.component(.month, from: work.date!)
-                let year = Calendar.current.component(.year, from: work.date!)
-                let weekday = Calendar.current.component(.weekday, from: work.date!)
-                let minuteOfDay = Calendar.current.component(.hour, from: work.date!) * 60 + Calendar.current.component(.minute, from: work.date!)
-                let weekdayToday = Calendar.current.component(.weekday, from: Date())
-                let minuteOfDayToday = Calendar.current.component(.hour, from: Date()) * 60 + Calendar.current.component(.minute, from: Date())
-                if weekdayToday == weekday && minuteOfDayToday < minuteOfDay {
-                    workBox.labelDate.stringValue = HXTimeFormatter.formatTime(Int16(minuteOfDay))
-                } else {
-                    workBox.labelDate.stringValue = "\(month)/\(day)/\(year % 100)"
-                }
-                break
-            }
-        }
+        testDetailsPopover = NSPopover()
+        let testAVC = TestAdderViewController(nibName: "TestAdderViewController", bundle: nil)
+        testAVC?.schedulingDelegate = self.schedulingDelegate
+        testAVC?.selectionDelegate = self.selectionDelegate
+        testAVC?.testBox = testBox
+        testDetailsPopover.contentViewController = testAVC
+        testDetailsPopover.show(relativeTo: testBox.buttonDetails.bounds, of: testBox.buttonDetails, preferredEdge: NSRectEdge.maxX)
     }
 }

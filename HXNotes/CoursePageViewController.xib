@@ -16,11 +16,19 @@
                 <outlet property="buttonAddWork" destination="XWK-Mc-tWl" id="wYA-FW-j3C"/>
                 <outlet property="colorBox" destination="8zr-Q8-Ptv" id="XSU-i8-z1t"/>
                 <outlet property="courseLabel" destination="oZJ-mb-bJa" id="JcN-3j-niD"/>
+                <outlet property="docsStackView" destination="Emi-rt-yA4" id="2m0-bK-vhW"/>
                 <outlet property="lectureStackView" destination="krr-Ht-jYx" id="wVk-6k-4qG"/>
                 <outlet property="noLecturesLabel" destination="O3M-Ge-grQ" id="wSR-kv-gv0"/>
                 <outlet property="noTestsLabel" destination="7Ny-td-hT2" id="Sfb-6S-CtT"/>
                 <outlet property="noWorkLabel" destination="caO-UR-m1z" id="5BV-0Q-oi4"/>
+                <outlet property="splitDividerDocs" destination="QI2-7d-7X9" id="dma-B8-hYA"/>
+                <outlet property="splitDividerLecture" destination="ltv-pq-fNk" id="qv0-DB-CQh"/>
+                <outlet property="splitDividerTest" destination="fXI-hA-BE0" id="tAz-4k-bcB"/>
+                <outlet property="splitDividerWork" destination="HXq-Qk-mFW" id="BSk-C4-o4A"/>
+                <outlet property="splitView" destination="9fe-aM-wTV" id="LBt-XL-clq"/>
                 <outlet property="testStackView" destination="yYa-pA-UJj" id="ky2-wO-fW3"/>
+                <outlet property="toggleCompletedTests" destination="5h7-XS-0oe" id="blh-ks-WIg"/>
+                <outlet property="toggleCompletedWork" destination="MGI-17-6np" id="AdR-B9-X7p"/>
                 <outlet property="view" destination="Hz6-mo-xeY" id="0bl-1N-x8E"/>
                 <outlet property="workStackView" destination="i9W-oJ-ouz" id="7Hw-PZ-dge"/>
             </connections>
@@ -47,7 +55,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     </view>
                     <color key="borderColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                    <color key="fillColor" red="0.97467082739999999" green="0.97467082739999999" blue="0.97467082739999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <color key="fillColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                 </box>
                 <splitView arrangesAllSubviews="NO" dividerStyle="thin" translatesAutoresizingMaskIntoConstraints="NO" id="9fe-aM-wTV">
                     <rect key="frame" x="0.0" y="0.0" width="174" height="395"/>
@@ -56,16 +64,16 @@
                             <rect key="frame" x="0.0" y="0.0" width="174" height="90"/>
                             <autoresizingMask key="autoresizingMask"/>
                             <subviews>
-                                <scrollView borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DBn-qV-v1h">
+                                <scrollView borderType="none" horizontalLineScroll="0.0" horizontalPageScroll="0.0" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DBn-qV-v1h">
                                     <rect key="frame" x="0.0" y="0.0" width="174" height="66"/>
                                     <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="MN8-3k-Jxt" customClass="HXFlippedClipView" customModule="HXNotes" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="174" height="66"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
                                             <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="krr-Ht-jYx">
-                                                <rect key="frame" x="0.0" y="-22" width="174" height="88"/>
+                                                <rect key="frame" x="0.0" y="6" width="174" height="60"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="height" constant="88" placeholder="YES" id="TEj-Ex-ozk"/>
+                                                    <constraint firstAttribute="height" constant="60" placeholder="YES" id="TEj-Ex-ozk"/>
                                                 </constraints>
                                             </stackView>
                                         </subviews>
@@ -76,8 +84,8 @@
                                         </constraints>
                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                     </clipView>
-                                    <scroller key="horizontalScroller" verticalHuggingPriority="750" horizontal="YES" id="muC-0I-I65">
-                                        <rect key="frame" x="0.0" y="50" width="174" height="16"/>
+                                    <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="muC-0I-I65">
+                                        <rect key="frame" x="-100" y="-100" width="174" height="16"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                     </scroller>
                                     <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="ljQ-JU-C6p">
@@ -143,6 +151,7 @@
                                 <constraint firstItem="DBn-qV-v1h" firstAttribute="top" secondItem="gpv-fH-H49" secondAttribute="bottom" constant="3" id="K5J-57-zge"/>
                                 <constraint firstItem="O3M-Ge-grQ" firstAttribute="centerY" secondItem="DBn-qV-v1h" secondAttribute="centerY" id="K8G-e1-hU4"/>
                                 <constraint firstItem="LWz-Ii-kfi" firstAttribute="top" secondItem="gpv-fH-H49" secondAttribute="bottom" constant="3" id="Yb2-fB-pCU"/>
+                                <constraint firstItem="O3M-Ge-grQ" firstAttribute="top" relation="greaterThanOrEqual" secondItem="zhb-YD-iHb" secondAttribute="top" id="a6J-Oh-DzR"/>
                                 <constraint firstItem="DBn-qV-v1h" firstAttribute="top" secondItem="ltv-pq-fNk" secondAttribute="bottom" id="aoV-b6-RRo"/>
                                 <constraint firstItem="gpv-fH-H49" firstAttribute="top" secondItem="zhb-YD-iHb" secondAttribute="top" constant="3" id="iBb-5a-AYk"/>
                                 <constraint firstAttribute="trailing" secondItem="V5L-Am-ibJ" secondAttribute="trailing" id="mAv-Ke-KYw"/>
@@ -153,16 +162,16 @@
                             <rect key="frame" x="0.0" y="91" width="174" height="90"/>
                             <autoresizingMask key="autoresizingMask"/>
                             <subviews>
-                                <scrollView borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ulb-pu-0K6">
+                                <scrollView borderType="none" horizontalLineScroll="0.0" horizontalPageScroll="0.0" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ulb-pu-0K6">
                                     <rect key="frame" x="0.0" y="0.0" width="174" height="66"/>
                                     <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="N1D-Wa-FZf" customClass="HXFlippedClipView" customModule="HXNotes" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="174" height="66"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
                                             <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Emi-rt-yA4">
-                                                <rect key="frame" x="0.0" y="-22" width="174" height="88"/>
+                                                <rect key="frame" x="0.0" y="26" width="174" height="40"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="height" constant="88" placeholder="YES" id="2R1-6c-fe8"/>
+                                                    <constraint firstAttribute="height" constant="40" placeholder="YES" id="2R1-6c-fe8"/>
                                                 </constraints>
                                             </stackView>
                                         </subviews>
@@ -173,18 +182,18 @@
                                         </constraints>
                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                     </clipView>
-                                    <scroller key="horizontalScroller" verticalHuggingPriority="750" horizontal="YES" id="oZ6-4V-Az8">
-                                        <rect key="frame" x="0.0" y="50" width="174" height="16"/>
+                                    <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="oZ6-4V-Az8">
+                                        <rect key="frame" x="-100" y="-100" width="159" height="15"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                     </scroller>
-                                    <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="rcc-nb-xFL">
+                                    <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="rcc-nb-xFL">
                                         <rect key="frame" x="158" y="0.0" width="16" height="66"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                     </scroller>
                                 </scrollView>
-                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lOK-Xw-EMl" userLabel="No Work Due">
-                                    <rect key="frame" x="41" y="25" width="91" height="16"/>
-                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Drag Files Here" id="O0b-b4-Vto">
+                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="100" verticalCompressionResistancePriority="100" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lOK-Xw-EMl" userLabel="No Work Due">
+                                    <rect key="frame" x="36" y="25" width="102" height="16"/>
+                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Not Implemented" id="O0b-b4-Vto">
                                         <font key="font" metaFont="cellTitle"/>
                                         <color key="textColor" red="0.50759640959999996" green="0.50759640959999996" blue="0.50759640959999996" alpha="0.84999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -210,16 +219,17 @@
                                     <rect key="frame" x="0.0" y="63" width="174" height="5"/>
                                 </box>
                                 <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="sde-h6-XBV">
-                                    <rect key="frame" x="104" y="69" width="66" height="17"/>
-                                    <buttonCell key="cell" type="inline" title="Add Docs" bezelStyle="inline" imagePosition="left" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Vpq-qi-9YY">
+                                    <rect key="frame" x="152" y="62" width="18" height="32"/>
+                                    <buttonCell key="cell" type="bevel" bezelStyle="rounded" image="icon_add" imagePosition="only" alignment="center" enabled="NO" inset="2" id="Vpq-qi-9YY">
                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                        <font key="font" metaFont="smallSystemBold"/>
+                                        <font key="font" metaFont="system"/>
                                     </buttonCell>
                                 </button>
                             </subviews>
                             <constraints>
                                 <constraint firstItem="Ulb-pu-0K6" firstAttribute="top" secondItem="Rqw-9W-KHE" secondAttribute="bottom" constant="3" id="6M6-Ug-aC8"/>
                                 <constraint firstItem="QI2-7d-7X9" firstAttribute="leading" secondItem="MX5-Wh-OKa" secondAttribute="leading" id="6XG-gu-WJO"/>
+                                <constraint firstItem="lOK-Xw-EMl" firstAttribute="top" relation="greaterThanOrEqual" secondItem="qO6-3w-9hm" secondAttribute="bottom" id="Dbi-xh-foQ"/>
                                 <constraint firstItem="Rqw-9W-KHE" firstAttribute="top" secondItem="MX5-Wh-OKa" secondAttribute="top" constant="3" id="Kog-OW-bqU"/>
                                 <constraint firstItem="qO6-3w-9hm" firstAttribute="leading" secondItem="MX5-Wh-OKa" secondAttribute="leading" id="MTH-jn-ofz"/>
                                 <constraint firstItem="lOK-Xw-EMl" firstAttribute="centerX" secondItem="Ulb-pu-0K6" secondAttribute="centerX" id="Qs4-AC-IDE"/>
@@ -227,7 +237,7 @@
                                 <constraint firstAttribute="trailing" secondItem="QI2-7d-7X9" secondAttribute="trailing" id="TEk-bg-I7l"/>
                                 <constraint firstItem="sde-h6-XBV" firstAttribute="centerY" secondItem="Rqw-9W-KHE" secondAttribute="centerY" id="Twt-Yl-tmA"/>
                                 <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="qO6-3w-9hm" secondAttribute="bottom" id="WuR-B1-srD"/>
-                                <constraint firstItem="lOK-Xw-EMl" firstAttribute="centerY" secondItem="Ulb-pu-0K6" secondAttribute="centerY" id="Zt8-I6-tHS"/>
+                                <constraint firstItem="lOK-Xw-EMl" firstAttribute="centerY" secondItem="Ulb-pu-0K6" secondAttribute="centerY" priority="750" id="Zt8-I6-tHS"/>
                                 <constraint firstItem="qO6-3w-9hm" firstAttribute="top" secondItem="Rqw-9W-KHE" secondAttribute="bottom" constant="3" id="efW-IN-Pp5"/>
                                 <constraint firstItem="QI2-7d-7X9" firstAttribute="top" secondItem="MX5-Wh-OKa" secondAttribute="top" id="hCQ-Nz-1Jc"/>
                                 <constraint firstItem="Ulb-pu-0K6" firstAttribute="top" secondItem="QI2-7d-7X9" secondAttribute="bottom" id="hMZ-3v-38J"/>
@@ -242,16 +252,16 @@
                             <rect key="frame" x="0.0" y="182" width="174" height="107"/>
                             <autoresizingMask key="autoresizingMask"/>
                             <subviews>
-                                <scrollView borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wZ5-aQ-L55">
+                                <scrollView borderType="none" horizontalLineScroll="0.0" horizontalPageScroll="0.0" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wZ5-aQ-L55">
                                     <rect key="frame" x="0.0" y="0.0" width="174" height="83"/>
                                     <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="H4b-A3-3QW" customClass="HXFlippedClipView" customModule="HXNotes" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="174" height="83"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
                                             <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="i9W-oJ-ouz">
-                                                <rect key="frame" x="0.0" y="-5" width="174" height="88"/>
+                                                <rect key="frame" x="0.0" y="23" width="174" height="60"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="height" constant="88" placeholder="YES" id="Lij-bc-YVV"/>
+                                                    <constraint firstAttribute="height" constant="60" placeholder="YES" id="Lij-bc-YVV"/>
                                                 </constraints>
                                             </stackView>
                                         </subviews>
@@ -262,8 +272,8 @@
                                         </constraints>
                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                     </clipView>
-                                    <scroller key="horizontalScroller" verticalHuggingPriority="750" horizontal="YES" id="5m4-mf-OiH">
-                                        <rect key="frame" x="0.0" y="67" width="174" height="16"/>
+                                    <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="5m4-mf-OiH">
+                                        <rect key="frame" x="-100" y="-100" width="174" height="16"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                     </scroller>
                                     <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="86F-Ds-fuh">
@@ -298,11 +308,21 @@
                                 <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="bdx-nV-hdl">
                                     <rect key="frame" x="0.0" y="80" width="174" height="5"/>
                                 </box>
+                                <button toolTip="Show completed work." verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="MGI-17-6np">
+                                    <rect key="frame" x="130" y="79" width="18" height="32"/>
+                                    <buttonCell key="cell" type="bevel" bezelStyle="rounded" image="icon_check" imagePosition="only" alignment="center" alternateImage="icon_check_alt" imageScaling="proportionallyDown" inset="2" id="VEZ-wY-Kd7">
+                                        <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
+                                        <font key="font" metaFont="system"/>
+                                    </buttonCell>
+                                    <connections>
+                                        <action selector="action_completedWork:" target="-2" id="s5z-Om-lEp"/>
+                                    </connections>
+                                </button>
                                 <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="XWK-Mc-tWl">
-                                    <rect key="frame" x="103" y="86" width="67" height="17"/>
-                                    <buttonCell key="cell" type="inline" title="Add Work" bezelStyle="inline" alignment="center" borderStyle="border" imageScaling="proportionallyUpOrDown" inset="2" id="akz-gv-k1r">
+                                    <rect key="frame" x="152" y="79" width="18" height="32"/>
+                                    <buttonCell key="cell" type="bevel" bezelStyle="rounded" image="icon_add" imagePosition="only" alignment="center" inset="2" id="akz-gv-k1r">
                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                        <font key="font" metaFont="smallSystemBold"/>
+                                        <font key="font" metaFont="system"/>
                                     </buttonCell>
                                     <connections>
                                         <action selector="action_addDue:" target="-2" id="VLX-wA-Nwl"/>
@@ -314,6 +334,7 @@
                                 <constraint firstItem="pmf-qs-YPk" firstAttribute="top" secondItem="zQy-cK-qqi" secondAttribute="top" constant="3" id="6Gy-mD-M6H"/>
                                 <constraint firstItem="wZ5-aQ-L55" firstAttribute="top" secondItem="pmf-qs-YPk" secondAttribute="bottom" constant="3" id="CYg-r8-dSO"/>
                                 <constraint firstAttribute="bottom" secondItem="wZ5-aQ-L55" secondAttribute="bottom" id="Chu-3Y-wz1"/>
+                                <constraint firstItem="MGI-17-6np" firstAttribute="centerY" secondItem="WtY-2f-VU1" secondAttribute="centerY" id="GKK-qT-6t1"/>
                                 <constraint firstItem="pmf-qs-YPk" firstAttribute="leading" secondItem="zQy-cK-qqi" secondAttribute="leading" constant="4" id="PcP-pe-5aG"/>
                                 <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="bdx-nV-hdl" secondAttribute="bottom" id="Wqb-AO-xIB"/>
                                 <constraint firstItem="bdx-nV-hdl" firstAttribute="leading" secondItem="zQy-cK-qqi" secondAttribute="leading" id="cgI-JP-klQ"/>
@@ -328,6 +349,7 @@
                                 <constraint firstAttribute="trailing" secondItem="wZ5-aQ-L55" secondAttribute="trailing" id="qwg-ZV-JHM"/>
                                 <constraint firstItem="caO-UR-m1z" firstAttribute="top" relation="greaterThanOrEqual" secondItem="bdx-nV-hdl" secondAttribute="bottom" id="rGz-xx-DMd"/>
                                 <constraint firstItem="bdx-nV-hdl" firstAttribute="top" secondItem="pmf-qs-YPk" secondAttribute="bottom" constant="3" id="tlB-n2-kr3"/>
+                                <constraint firstItem="XWK-Mc-tWl" firstAttribute="leading" secondItem="MGI-17-6np" secondAttribute="trailing" constant="4" id="yhj-Jz-LIZ"/>
                                 <constraint firstAttribute="trailing" secondItem="XWK-Mc-tWl" secondAttribute="trailing" constant="4" id="zsM-PX-Qcf"/>
                             </constraints>
                         </customView>
@@ -335,16 +357,16 @@
                             <rect key="frame" x="0.0" y="290" width="174" height="105"/>
                             <autoresizingMask key="autoresizingMask"/>
                             <subviews>
-                                <scrollView borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vW1-Uu-W2w">
+                                <scrollView borderType="none" horizontalLineScroll="0.0" horizontalPageScroll="0.0" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vW1-Uu-W2w">
                                     <rect key="frame" x="0.0" y="0.0" width="174" height="81"/>
                                     <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="Ik7-c6-Nyq" customClass="HXFlippedClipView" customModule="HXNotes" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="174" height="81"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
                                             <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yYa-pA-UJj">
-                                                <rect key="frame" x="0.0" y="-7" width="174" height="88"/>
+                                                <rect key="frame" x="0.0" y="21" width="174" height="60"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="height" constant="88" placeholder="YES" id="Qbr-Pa-h8P"/>
+                                                    <constraint firstAttribute="height" constant="60" placeholder="YES" id="Qbr-Pa-h8P"/>
                                                 </constraints>
                                             </stackView>
                                         </subviews>
@@ -355,8 +377,8 @@
                                         </constraints>
                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                     </clipView>
-                                    <scroller key="horizontalScroller" verticalHuggingPriority="750" horizontal="YES" id="7zr-fH-ggD">
-                                        <rect key="frame" x="0.0" y="65" width="174" height="16"/>
+                                    <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="7zr-fH-ggD">
+                                        <rect key="frame" x="-100" y="-100" width="174" height="16"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                     </scroller>
                                     <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="Hx0-yD-9h3">
@@ -391,11 +413,21 @@
                                 <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="yab-8W-kOk">
                                     <rect key="frame" x="0.0" y="78" width="174" height="5"/>
                                 </box>
+                                <button toolTip="Show completed exams." verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="5h7-XS-0oe">
+                                    <rect key="frame" x="130" y="77" width="18" height="32"/>
+                                    <buttonCell key="cell" type="bevel" bezelStyle="rounded" image="icon_check" imagePosition="only" alignment="center" alternateImage="icon_check_alt" imageScaling="proportionallyDown" inset="2" id="DYT-m0-paG">
+                                        <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
+                                        <font key="font" metaFont="system"/>
+                                    </buttonCell>
+                                    <connections>
+                                        <action selector="action_completedTests:" target="-2" id="S0I-fS-ocT"/>
+                                    </connections>
+                                </button>
                                 <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="JcK-aM-0wI">
-                                    <rect key="frame" x="102" y="84" width="68" height="17"/>
-                                    <buttonCell key="cell" type="inline" title="Add Exam" bezelStyle="inline" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyUpOrDown" inset="2" id="f6O-hB-Jr1">
+                                    <rect key="frame" x="152" y="77" width="18" height="32"/>
+                                    <buttonCell key="cell" type="bevel" bezelStyle="rounded" image="icon_add" imagePosition="overlaps" alignment="center" inset="2" id="f6O-hB-Jr1">
                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                        <font key="font" metaFont="smallSystemBold"/>
+                                        <font key="font" metaFont="system"/>
                                     </buttonCell>
                                     <connections>
                                         <action selector="action_addTests:" target="-2" id="EgA-Ke-k4K"/>
@@ -409,12 +441,14 @@
                                 <constraint firstAttribute="trailing" secondItem="fXI-hA-BE0" secondAttribute="trailing" id="2lf-eF-Hz4"/>
                                 <constraint firstItem="yab-8W-kOk" firstAttribute="leading" secondItem="Rq8-6T-cd2" secondAttribute="leading" id="3gA-SO-8j6"/>
                                 <constraint firstItem="FEa-9V-JC2" firstAttribute="top" secondItem="Rq8-6T-cd2" secondAttribute="top" constant="3" id="4jc-UR-ZcJ"/>
+                                <constraint firstItem="JcK-aM-0wI" firstAttribute="leading" secondItem="5h7-XS-0oe" secondAttribute="trailing" constant="4" id="A5b-ic-4uf"/>
                                 <constraint firstItem="fXI-hA-BE0" firstAttribute="top" secondItem="Rq8-6T-cd2" secondAttribute="top" id="O2t-oI-aEi"/>
                                 <constraint firstItem="vW1-Uu-W2w" firstAttribute="top" secondItem="FEa-9V-JC2" secondAttribute="bottom" constant="3" id="Pbg-O8-60K"/>
                                 <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="yab-8W-kOk" secondAttribute="bottom" id="SAV-4Y-Xt2"/>
                                 <constraint firstItem="7Ny-td-hT2" firstAttribute="centerY" secondItem="vW1-Uu-W2w" secondAttribute="centerY" priority="750" id="Sc7-v9-kEl"/>
                                 <constraint firstItem="FEa-9V-JC2" firstAttribute="leading" secondItem="Rq8-6T-cd2" secondAttribute="leading" constant="4" id="UU1-Ua-kqu"/>
                                 <constraint firstAttribute="trailing" secondItem="vW1-Uu-W2w" secondAttribute="trailing" id="WBT-Ej-Fnb"/>
+                                <constraint firstItem="5h7-XS-0oe" firstAttribute="centerY" secondItem="e10-6U-BQJ" secondAttribute="centerY" id="WjZ-i2-Dzz"/>
                                 <constraint firstItem="vW1-Uu-W2w" firstAttribute="top" secondItem="fXI-hA-BE0" secondAttribute="bottom" id="Xne-vJ-MPD"/>
                                 <constraint firstAttribute="trailing" secondItem="JcK-aM-0wI" secondAttribute="trailing" constant="4" id="auu-x0-4et"/>
                                 <constraint firstItem="fXI-hA-BE0" firstAttribute="leading" secondItem="Rq8-6T-cd2" secondAttribute="leading" id="eFO-s2-pxc"/>
@@ -431,6 +465,9 @@
                         <real value="250"/>
                         <real value="250"/>
                     </holdingPriorities>
+                    <connections>
+                        <outlet property="delegate" destination="-2" id="Zco-fz-9Tl"/>
+                    </connections>
                 </splitView>
                 <textField horizontalHuggingPriority="100" verticalHuggingPriority="750" horizontalCompressionResistancePriority="100" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oZJ-mb-bJa">
                     <rect key="frame" x="18" y="397" width="138" height="23"/>
@@ -480,5 +517,8 @@
     </objects>
     <resources>
         <image name="NSGoLeftTemplate" width="9" height="12"/>
+        <image name="icon_add" width="18" height="18"/>
+        <image name="icon_check" width="18" height="18"/>
+        <image name="icon_check_alt" width="18" height="18"/>
     </resources>
 </document>

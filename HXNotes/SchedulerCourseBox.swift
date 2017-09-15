@@ -10,20 +10,21 @@ import Cocoa
 
 class SchedulerCourseBox: NSView {
     
+    var schedulingDelegate: SchedulingDelegate?
+    
     /// Return a new instance of a HXLectureLedger based on the nib template.
-    static func instance(with course: Course, owner: SchedulerPageViewController) -> SchedulerCourseBox! {
+    static func instance(with course: Course, schedulingDelegate: SchedulingDelegate) -> SchedulerCourseBox! {
         var theObjects: NSArray = []
         Bundle.main.loadNibNamed("SchedulerCourseBox", owner: nil, topLevelObjects: &theObjects)
         // Get NSView from top level objects returned from nib load
         if let newBox = theObjects.filter({$0 is SchedulerCourseBox}).first as? SchedulerCourseBox {
-            newBox.initialize(with: course, owner: owner)
+            newBox.initialize(with: course, schedulingDelegate: schedulingDelegate)
             return newBox
         }
         return nil
     }
     
     weak var course: Course!
-    weak var owner: SchedulerPageViewController!
     
     // Retain name of course before editing to update data model
     var oldName = ""
@@ -37,14 +38,9 @@ class SchedulerCourseBox: NSView {
     
     @IBOutlet weak var timeSlotAddViewHeightConstraint: NSLayoutConstraint!
 
-    private func initialize(with course: Course, owner: SchedulerPageViewController) {
+    private func initialize(with course: Course, schedulingDelegate: SchedulingDelegate) {
         self.course = course
-        self.owner = owner
-        
-        if course.lectures!.count > 0 || owner.isPastSemester {
-            timeSlotAddButton.isEnabled = false
-            timeSlotAddViewHeightConstraint.constant = 0
-        }
+        self.schedulingDelegate = schedulingDelegate
         
         let theColor = NSColor(red: CGFloat(course.color!.red), green: CGFloat(course.color!.green), blue: CGFloat(course.color!.blue), alpha: 1)
         self.boxDrag.fillColor = theColor
@@ -53,7 +49,8 @@ class SchedulerCourseBox: NSView {
         self.oldName = course.title!
         
         for case let timeSlot as TimeSlot in course.timeSlots! {
-            let newBox = SchedulerTimeSlotBox.instance(with: timeSlot, for: self)
+            let newBox = SchedulerTimeSlotBox.instance(with: timeSlot)
+            newBox?.schedulingDelegate = schedulingDelegate
             let index = course.timeSlots!.index(of: newBox!.timeSlot)
             timeSlotStackView.insertArrangedSubview(newBox!, at: index + 1)
         }
@@ -95,16 +92,16 @@ class SchedulerCourseBox: NSView {
     
     /// Adds a timeSlot for this course
     @IBAction func addTimeSlot(_ sender: Any) {
-        let newBox = SchedulerTimeSlotBox.instance(with: course.nextTimeSlotSpace(), for: self)
+        let newBox = SchedulerTimeSlotBox.instance(with: course.nextTimeSlotSpace())
+        newBox?.schedulingDelegate = schedulingDelegate
         let index = course.timeSlots!.index(of: newBox!.timeSlot)
         timeSlotStackView.insertArrangedSubview(newBox!, at: index + 1)
         
-        owner.notifyTimeSlotUpdated()
+        schedulingDelegate?.schedulingUpdatedTimeSlot()
     }
     
     func confirmRemoveCourse() {
-        Alert.flushAlerts(for: course)
-        owner.removeCourse(self)
+        schedulingDelegate?.schedulingRemove(course: course)
     }
     
     /// Clear selection of course's title field
@@ -120,7 +117,7 @@ class SchedulerCourseBox: NSView {
             // Rename course if the name isn't already taken
             if course.semester!.retrieveCourse(named: labelCourse.stringValue) == nil {
                 course.title = labelCourse.stringValue
-                owner.notifyTimeSlotRenamed()
+                schedulingDelegate?.schedulingRenameCourse()
                 oldName = labelCourse.stringValue
             } else {
                 // Revoke name change
@@ -128,15 +125,4 @@ class SchedulerCourseBox: NSView {
             }
         }
     }
-    
-    
-    // MARK: - Notifiers
-    func notifyTimeSlotRemoved(_ timeSlot: TimeSlot) {
-        owner.notifyTimeSlotRemoved(timeSlot)
-    }
-    func notifyTimeSlotChange() {
-        owner.notifyTimeSlotUpdated()
-        course.needsSort = true
-    }
-    
 }

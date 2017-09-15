@@ -236,13 +236,13 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
     // MARK: - ––– Notifiers –––
     
     func notifyLectureAddition(lecture: Lecture) {
-        selectedCourse = masterViewController.sidebarPageController.selectedCourse
-        // This reloads data but also checks if need to reveal the collection view
-        
-        scrollToLecture("Lecture \(lecture.number)")
+//        selectedCourse = masterViewController.selectedCourse
+//        // This reloads data but also checks if need to reveal the collection view
+//        
+//        scrollToLecture("Lecture \(lecture.number)")
     }
     func notifyLectureSelection(lecture: String) {
-        scrollToLecture(lecture)
+//        scrollToLecture(lecture)
     }
     
     func notifyFind() {

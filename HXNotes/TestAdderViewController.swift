@@ -10,12 +10,14 @@ import Cocoa
 
 class TestAdderViewController: NSViewController {
     
+    var schedulingDelegate: SchedulingDelegate?
+    var selectionDelegate: SelectionDelegate?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do view setup here.
     }
     
-    weak var owner: CoursePageViewController!
     weak var testBox: CourseTestBox!
     
     override func viewDidAppear() {
@@ -23,15 +25,28 @@ class TestAdderViewController: NSViewController {
         
         if testBox.test!.customTitle {
             textField_title.stringValue = testBox.test!.title!
-        } else {
+        } else if !testBox.test!.completed {
             textField_title.placeholderString = testBox.test!.title!
         }
         
-        let nextTimeSlotIndex = owner.sidebarVC.selectedCourse.nextTimeSlotIndex()
-        let lecCount = owner.sidebarVC.selectedCourse.timeSlots!.count
+        if testBox.test.completed {
+            completeButton.isEnabled = false
+            textField_title.isEditable = false
+            buttonCustomDue.isEnabled = false
+            buttonLectureDue.isEnabled = false
+            descriptionTextView.isEditable = false
+            datePicker.isEnabled = false
+            timePicker.isEnabled = false
+            textField_title.placeholderString = "Untitled Test"
+        }
+        
+        let selectedCourse = testBox.test!.course!
+        
+        let nextTimeSlotIndex = selectedCourse.nextTimeSlotIndex()
+        let lecCount = selectedCourse.timeSlots!.count
         
         for t in 0..<lecCount {
-            let timeSlot = owner.sidebarVC.selectedCourse.timeSlots!.array[(t + nextTimeSlotIndex) % lecCount] as! TimeSlot
+            let timeSlot = selectedCourse.timeSlots!.array[(t + nextTimeSlotIndex) % lecCount] as! TimeSlot
             let newBox = HXLectureTimeBox.instance(from: timeSlot, with: self)!
             lectureTimeStackView.addArrangedSubview(newBox)
             newBox.widthAnchor.constraint(equalTo: lectureTimeStackView.widthAnchor).isActive = true
@@ -64,11 +79,16 @@ class TestAdderViewController: NSViewController {
     @IBOutlet weak var completeButton: NSButton!
     @IBAction func action_complete(_ sender: NSButton) {
         testBox.test!.completed = true
-        owner.loadTests()
+        schedulingDelegate?.schedulingUpdateTest()
     }
     
     @IBOutlet weak var textField_title: NSTextField!
     @IBAction func action_titleField(_ sender: NSTextField) {
+        
+        if testBox == nil {
+            return
+        }
+        
         let text = sender.stringValue.trimmingCharacters(in: .whitespaces)
         // If user leaves the title box empty, a name will be generated...
         if text == "" {
@@ -104,17 +124,19 @@ class TestAdderViewController: NSViewController {
             testBox.test!.title! = text
         }
         
-        owner.notifyRenamed(test: testBox.test!)
+        testBox.labelTest.stringValue = testBox.test.title!
     }
     
     @IBOutlet weak var trailingStackConstraint: NSLayoutConstraint!
     @IBOutlet weak var lectureTimeStackView: NSStackView!
+    @IBOutlet weak var buttonCustomDue: NSButton!
     @IBAction func customDueButton(_ sender: NSButton) {
         NSAnimationContext.beginGrouping()
         NSAnimationContext.current().duration = 0.2
         trailingStackConstraint.animator().constant = self.view.bounds.width
         NSAnimationContext.endGrouping()
     }
+    @IBOutlet weak var buttonLectureDue: NSButton!
     @IBAction func lectureDueButton(_ sender: NSButton) {
         NSAnimationContext.beginGrouping()
         NSAnimationContext.current().duration = 0.2
@@ -127,11 +149,11 @@ class TestAdderViewController: NSViewController {
     @IBOutlet weak var toggleReoccurring: NSButton!
     
     @IBAction func action_close(_ sender: NSButton) {
-        owner.notifyCloseTestDetails()
+        selectionDelegate?.isEditing(testBox: nil)
     }
     
     @IBAction func action_delete(_ sender: NSButton) {
-        owner.notifyDelete(test: testBox.test!)
+        schedulingDelegate?.schedulingRemove(testBox: testBox)
     }
     
     @IBAction func action_datePicker(_ sender: NSDatePicker) {
@@ -149,7 +171,18 @@ class TestAdderViewController: NSViewController {
         
         generateTestTitle()
         
-        owner.notifyDated(test: testBox.test!)
+        let day = Calendar.current.component(.day, from: testBox.test.date!)
+        let month = Calendar.current.component(.month, from: testBox.test.date!)
+        let year = Calendar.current.component(.year, from: testBox.test.date!)
+        let weekday = Calendar.current.component(.weekday, from: testBox.test.date!)
+        let minuteOfDay = Calendar.current.component(.hour, from: testBox.test.date!) * 60 + Calendar.current.component(.minute, from: testBox.test.date!)
+        let weekdayToday = Calendar.current.component(.weekday, from: Date())
+        let minuteOfDayToday = Calendar.current.component(.hour, from: Date()) * 60 + Calendar.current.component(.minute, from: Date())
+        if weekdayToday == weekday && minuteOfDayToday < minuteOfDay {
+            testBox.labelDate.stringValue = HXTimeFormatter.formatTime(Int16(minuteOfDay))
+        } else {
+            testBox.labelDate.stringValue = "\(month)/\(day)/\(year % 100)"
+        }
     }
     
     @IBOutlet var descriptionTextView: NSTextView!
@@ -178,18 +211,23 @@ class TestAdderViewController: NSViewController {
             testBox.test!.title! = testBox.test!.course!.nextTestTitleAvailable(with: "\(day) Test ")
             textField_title.placeholderString = testBox.test!.title!
             
-            owner.notifyRenamed(test: testBox.test!)
+            testBox.labelTest.stringValue = testBox.test!.title!
         }
     }
     
     // MARK: - Notifiers
     
     ///
-    func notifyLectureTimeSelected(_ timeSlot: TimeSlot) {
+    func notifyLectureTimeSelected(_ timeSlotBox: HXLectureTimeBox) {
+        
+        if testBox.test.completed {
+            return
+        }
+        
         for case let view as HXLectureTimeBox in lectureTimeStackView.arrangedSubviews {
             view.deselect()
         }
-        testBox.test!.location = timeSlot
+        testBox.test!.location = timeSlotBox.timeSlot
         
         // Calculating date from today's date to next lecture time slot selected...
         
@@ -201,20 +239,20 @@ class TestAdderViewController: NSViewController {
         let minute = cal.component(.minute, from: date)
         let minuteOfDay = hour * 60 + minute
         
-        let toWeekday = Int(timeSlot.weekday)
-        let toHour = Int(timeSlot.startMinute / 60)
-        let toMinute = Int(timeSlot.startMinute % 60)
+        let toWeekday = Int(timeSlotBox.timeSlot.weekday)
+        let toHour = Int(timeSlotBox.timeSlot.startMinute / 60)
+        let toMinute = Int(timeSlotBox.timeSlot.startMinute % 60)
         let toMinuteOfDay = toHour * 60 + toMinute
         
         var dueDate = date
-        if weekday < toWeekday {
+        if weekday < toWeekday && timeSlotBox != (lectureTimeStackView.arrangedSubviews.last as! HXLectureTimeBox) {
             
             // Add days (to seconds)
             dueDate = dueDate.addingTimeInterval(TimeInterval((toWeekday - weekday) * 24 * 60 * 60))
             // Add hours and minutes difference for rest of today time to target day time
             dueDate = dueDate.addingTimeInterval(TimeInterval(toMinuteOfDay - minuteOfDay) * 60)
             
-        } else if weekday == toWeekday && minuteOfDay < toMinuteOfDay {
+        } else if weekday == toWeekday && minuteOfDay < toMinuteOfDay && timeSlotBox != (lectureTimeStackView.arrangedSubviews.last as! HXLectureTimeBox) {
             
             // Add difference in hours and minutes
             dueDate = dueDate.addingTimeInterval(TimeInterval(toMinuteOfDay - minuteOfDay) * 60)
@@ -232,7 +270,15 @@ class TestAdderViewController: NSViewController {
         
         generateTestTitle()
         
-        owner.notifyDated(test: testBox.test!)
+        let day = Calendar.current.component(.day, from: testBox.test.date!)
+        let month = Calendar.current.component(.month, from: testBox.test.date!)
+        let year = Calendar.current.component(.year, from: testBox.test.date!)
+        if toWeekday == weekday && minuteOfDay < toMinuteOfDay  && minuteOfDay < toMinuteOfDay && timeSlotBox != (lectureTimeStackView.arrangedSubviews.last as! HXLectureTimeBox)  {
+            testBox.labelDate.stringValue = HXTimeFormatter.formatTime(Int16(toMinuteOfDay))
+        } else {
+            testBox.labelDate.stringValue = "\(month)/\(day)/\(year % 100)"
+        }
+        
     }
     
 }

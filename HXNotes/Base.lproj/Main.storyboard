@@ -736,7 +736,7 @@
             <objects>
                 <pagecontroller id="OSy-wx-obc" customClass="SidebarPageController" customModule="HXNotes" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="vTH-kc-F9b">
-                        <rect key="frame" x="0.0" y="0.0" width="167" height="283"/>
+                        <rect key="frame" x="0.0" y="0.0" width="167" height="294"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </view>
                     <connections>
@@ -750,7 +750,7 @@
                 <customObject id="c9Z-Vh-D0U" customClass="CoursePageViewController" customModule="HXNotes" customModuleProvider="target"/>
                 <customObject id="yE2-Ko-5Iv" customClass="SchedulerPageViewController" customModule="HXNotes" customModuleProvider="target"/>
             </objects>
-            <point key="canvasLocation" x="-303.5" y="971.5"/>
+            <point key="canvasLocation" x="-331.5" y="965"/>
         </scene>
         <!--Master View Controller-->
         <scene sceneID="c4q-6V-Ztc">
@@ -764,7 +764,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="706" height="345"/>
                                 <subviews>
                                     <customView id="BBr-tT-C3k">
-                                        <rect key="frame" x="0.0" y="0.0" width="158" height="345"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="189" height="345"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <subviews>
                                             <containerView horizontalCompressionResistancePriority="550" translatesAutoresizingMaskIntoConstraints="NO" id="tfW-KJ-YDg" userLabel="Sidebar Container">
@@ -774,7 +774,7 @@
                                                 </connections>
                                             </containerView>
                                             <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" alphaValue="0.29999999999999999" translatesAutoresizingMaskIntoConstraints="NO" id="3bg-iZ-AWo" userLabel="Gradient">
-                                                <rect key="frame" x="0.0" y="323" width="158" height="22"/>
+                                                <rect key="frame" x="0.0" y="323" width="189" height="22"/>
                                                 <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="axesIndependently" image="image_gradientUp" id="IUu-M5-gTp"/>
                                             </imageView>
                                             <box horizontalCompressionResistancePriority="550" boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="vSY-bc-5JG" userLabel="Edit Box">
@@ -790,7 +790,7 @@
                                                             <rect key="frame" x="0.0" y="27" width="158" height="5"/>
                                                         </box>
                                                         <button focusRingType="none" horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="syF-n2-jAD">
-                                                            <rect key="frame" x="18" y="0.0" width="53" height="32"/>
+                                                            <rect key="frame" x="18.5" y="0.0" width="53" height="32"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="53" id="Opf-Bq-dzd"/>
                                                             </constraints>
@@ -803,14 +803,14 @@
                                                             </connections>
                                                         </button>
                                                         <button focusRingType="none" horizontalHuggingPriority="5" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="1ak-oi-wV3" userLabel="Semester Button Animated">
-                                                            <rect key="frame" x="18" y="30" width="53" height="32"/>
+                                                            <rect key="frame" x="18.5" y="30" width="53" height="32"/>
                                                             <buttonCell key="cell" type="bevel" title="Spring" bezelStyle="rounded" alignment="right" state="on" focusRingType="none" imageScaling="proportionallyDown" inset="2" id="ZD7-dM-nZF">
                                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                                 <font key="font" metaFont="systemMedium" size="16"/>
                                                             </buttonCell>
                                                         </button>
                                                         <textField horizontalHuggingPriority="1000" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" allowsCharacterPickerTouchBarItem="NO" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4AM-VA-tDY" userLabel="Year Label">
-                                                            <rect key="frame" x="73" y="5" width="45" height="19"/>
+                                                            <rect key="frame" x="73.5" y="5" width="45" height="19"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="41" id="EsB-PR-EXn"/>
                                                             </constraints>
@@ -821,7 +821,7 @@
                                                             </textFieldCell>
                                                         </textField>
                                                         <textField horizontalHuggingPriority="5" verticalHuggingPriority="750" horizontalCompressionResistancePriority="5" allowsCharacterPickerTouchBarItem="NO" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Obx-Xd-hkg" userLabel="Year Label Animated">
-                                                            <rect key="frame" x="73" y="35" width="45" height="19"/>
+                                                            <rect key="frame" x="73.5" y="35" width="45" height="19"/>
                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" alignment="left" title="2017" placeholderString="Year" id="m2O-fD-6sE">
                                                                 <font key="font" metaFont="systemMedium" size="16"/>
                                                                 <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
@@ -829,7 +829,7 @@
                                                             </textFieldCell>
                                                         </textField>
                                                         <button translatesAutoresizingMaskIntoConstraints="NO" id="4Fr-Jn-FPo" userLabel="Decrement Button">
-                                                            <rect key="frame" x="112" y="0.0" width="30" height="15"/>
+                                                            <rect key="frame" x="112.5" y="0.0" width="30" height="15"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="15" id="L15-ep-bVX"/>
                                                                 <constraint firstAttribute="width" constant="30" id="wYH-i9-XT8"/>
@@ -843,7 +843,7 @@
                                                             </connections>
                                                         </button>
                                                         <button translatesAutoresizingMaskIntoConstraints="NO" id="Vjh-0q-zeO" userLabel="Increment Button">
-                                                            <rect key="frame" x="112" y="15" width="30" height="15"/>
+                                                            <rect key="frame" x="112.5" y="15" width="30" height="15"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="30" id="3Fo-EH-dLh"/>
                                                                 <constraint firstAttribute="height" constant="15" id="Pir-Pg-zOd"/>
@@ -906,7 +906,7 @@
                                         </constraints>
                                     </customView>
                                     <customView id="Do8-xp-hVb" customClass="SplitViewContent" customModule="HXNotes" customModuleProvider="target">
-                                        <rect key="frame" x="159" y="0.0" width="547" height="345"/>
+                                        <rect key="frame" x="190" y="0.0" width="516" height="345"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <subviews>
                                             <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="ggC-aW-ppQ" userLabel="Content BG" customClass="SchedulerBackgroundBox" customModule="HXNotes" customModuleProvider="target">
@@ -1398,7 +1398,7 @@
                 </viewController>
                 <customObject id="uI9-T2-Ci1" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="144" y="940.5"/>
+            <point key="canvasLocation" x="117" y="939.5"/>
         </scene>
     </scenes>
     <resources>

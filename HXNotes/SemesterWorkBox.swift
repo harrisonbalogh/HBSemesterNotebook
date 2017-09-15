@@ -10,13 +10,15 @@ import Cocoa
 
 class SemesterWorkBox: NSView {
     
+    var selectionDelegate: SelectionDelegate?
+    
     /// Return a new instance of a HXCourseBox based on the nib template.
-    static func instance(with work: Work, owner: SemesterPageViewController) -> SemesterWorkBox! {
+    static func instance(with work: Work) -> SemesterWorkBox! {
         var theObjects: NSArray = []
         Bundle.main.loadNibNamed("SemesterWorkBox", owner: nil, topLevelObjects: &theObjects)
         // Get NSView from top level objects returned from nib load
         if let newBox = theObjects.filter({$0 is SemesterWorkBox}).first as? SemesterWorkBox {
-            newBox.initialize(with: work, owner: owner)
+            newBox.initialize(with: work)
             return newBox
         }
         return nil
@@ -26,10 +28,11 @@ class SemesterWorkBox: NSView {
     @IBOutlet weak var labelDate: NSTextField!
     @IBOutlet weak var boxFill: NSBox!
     
-    weak var work: Work!
-    weak var owner: SemesterPageViewController!
+    var recallDate = ""
     
-    func initialize(with work: Work, owner: SemesterPageViewController) {
+    weak var work: Work!
+    
+    func initialize(with work: Work) {
         labelWork.stringValue = work.title!
         if work.date == nil {
             labelDate.stringValue = ""
@@ -49,13 +52,32 @@ class SemesterWorkBox: NSView {
         }
         
         self.work = work
-        self.owner = owner
+    }
+    
+    override func updateTrackingAreas() {
+        super.updateTrackingAreas()
+        
+        self.trackingAreas.forEach({self.removeTrackingArea($0)})
+        
+        let trackingArea = NSTrackingArea(rect: self.bounds, options: [.activeInKeyWindow, .cursorUpdate, .mouseEnteredAndExited], owner: self, userInfo: nil)
+        addTrackingArea(trackingArea)
+    }
+    
+    override func cursorUpdate(with event: NSEvent) {
+        NSCursor.pointingHand().set()
+    }
+    
+    override func mouseEntered(with event: NSEvent) {
+        recallDate = labelDate.stringValue
+        labelDate.stringValue = "Go to " + work.course!.title!
+    }
+    
+    override func mouseExited(with event: NSEvent) {
+        labelDate.stringValue = recallDate
     }
     
     @IBAction func action_select(_ sender: NSButton) {
-        boxFill.fillColor = NSColor.lightGray
-        self.needsDisplay = true
-        owner.notifySelected(work: work)
+        selectionDelegate?.workWasSelected(work)
     }
     
 }

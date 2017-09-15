@@ -23,10 +23,10 @@
                         <subviews>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ovS-El-Uqr">
                                 <rect key="frame" x="0.0" y="1" width="53" height="17"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Monday" id="m4Q-bG-Gy1">
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="Monday" id="m4Q-bG-Gy1">
                                     <font key="font" metaFont="system"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="textColor" red="0.30041555850000001" green="0.30041555850000001" blue="0.30041555850000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                 </textFieldCell>
                             </textField>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="epv-br-raC">
@@ -34,7 +34,7 @@
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="8:30PM" id="HFQ-qG-79c">
                                     <font key="font" metaFont="systemLight" size="13"/>
                                     <color key="textColor" red="0.30041555851063828" green="0.30041555851063828" blue="0.30041555851063828" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                 </textFieldCell>
                             </textField>
                         </subviews>

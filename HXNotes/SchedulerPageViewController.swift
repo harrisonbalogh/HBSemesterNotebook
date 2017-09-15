@@ -10,8 +10,11 @@ import Cocoa
 
 class SchedulerPageViewController: NSViewController {
     
-    weak var sidebarVC: SidebarPageController!
+    var schedulingDelegate: SchedulingDelegate?
+    var sidebarDelegate: SidebarDelegate?
     
+    /// Set this to update visuals for a semester that is no longer editable
+    /// (happened in the past).
     var isPastSemester = false {
         didSet {
             if isPastSemester {
@@ -31,34 +34,11 @@ class SchedulerPageViewController: NSViewController {
     @IBOutlet weak var doneSchedulingButton: NSButton!
     
     let appDelegate = NSApplication.shared().delegate as! AppDelegate
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do view setup here.
-    }
     
     override func viewDidAppear() {
         super.viewDidAppear()
         
-        print("SchedulerVC - viewDidAppear")
-        
-        isPastSemester = sidebarVC.selectedSemester.isEarlier(than: sidebarVC.semesterToday)
-        
-        loadCourses()
-        
-        if sidebarVC.selectedSemester.needsValidate {
-            if sidebarVC.selectedSemester.validateSchedule() {
-               doneSchedulingButton.isEnabled = true
-            } else {
-                doneSchedulingButton.isEnabled = false
-            }
-        }
-    }
-    
-    override func viewWillDisappear() {
-        super.viewWillDisappear()
-        
-        print("SchedulerVC - viewWillDisappear")
+        sidebarDelegate?.sidebarSchedulingNeedsPopulating(self)
     }
     
     // MARK: - Populating (Editable) Courses
@@ -66,26 +46,33 @@ class SchedulerPageViewController: NSViewController {
     @IBOutlet weak var courseStackView: NSStackView!
     @IBOutlet weak var noCourseLabel: NSTextField!
     
-    func loadCourses() {
+    func loadCourses(from semester: Semester) {
         
         // Flush old views
         flushCourses()
         
         // Push course edit boxes
-        for case let course as Course in sidebarVC.selectedSemester.courses! {
+        for case let course as Course in semester.courses! {
             push(course: course )
         }
         
-        scheduleCheck()
+        checkSchedule(for: semester)
     }
     
     func push(course: Course) {
-        let newBox = SchedulerCourseBox.instance(with: course, owner: self)!
+        let newBox = SchedulerCourseBox.instance(with: course, schedulingDelegate: self.schedulingDelegate!)!
         courseStackView.addArrangedSubview(newBox)
         newBox.widthAnchor.constraint(equalTo: courseStackView.widthAnchor).isActive = true
+        
+        if course.lectures!.count > 0 || isPastSemester {
+            newBox.timeSlotAddButton.isEnabled = false
+            newBox.timeSlotAddViewHeightConstraint.constant = 0
+        }
+        
     }
     
-    /// Handles purely the visual aspect of editable courses. Internal use only. Removes the given HXCourseEditBox from the ledgerStackView
+    /// Handles purely the visual aspect of editable courses. Internal use only. Removes the given 
+    /// HXCourseEditBox from the ledgerStackView
     func pop(courseBox: SchedulerCourseBox) {
         courseBox.removeFromSuperview()
     }
@@ -98,11 +85,11 @@ class SchedulerPageViewController: NSViewController {
         }
     }
     
-    /// Displays or hides the noCourseLabel based on courseStackView arranged subviews having boxes or not
-    /// as well as updates the doneSchedulingButton.
-    func scheduleCheck() {
-        if sidebarVC.selectedSemester.needsValidate {
-            sidebarVC.selectedSemester.validateSchedule()
+    /// Displays or hides the noCourseLabel based on the given semester have more than one course
+    /// and being valid. Also updates 'Done' button based on valid schedule.
+    func checkSchedule(for semester: Semester) {
+        if semester.needsValidate {
+            semester.validateSchedule()
         }
         
         doneSchedulingButton.isEnabled = true
@@ -116,11 +103,11 @@ class SchedulerPageViewController: NSViewController {
             noCourseLabel.alphaValue = 0
             noCourseLabel.isHidden = true
         }
-        
-        if !sidebarVC.selectedSemester.valid {
+
+        if !semester.valid {
             doneSchedulingButton.isEnabled = false
         }
-        for case let course as Course in sidebarVC.selectedSemester.courses! {
+        for case let course as Course in semester.courses! {
             if course.timeSlots!.count == 0 {
                 doneSchedulingButton.isEnabled = false
             }
@@ -129,26 +116,12 @@ class SchedulerPageViewController: NSViewController {
     
     // MARK: - Course & TimeSlot Model
     
-    /// Confirms removal of all information associated with a course object. Model and Views
-    internal func removeCourse(_ courseBox: SchedulerCourseBox) {
-        // Remove course from courseStackView
-        pop(courseBox: courseBox)
-        // Update model
-        appDelegate.managedObjectContext.delete( courseBox.course )
-        appDelegate.saveAction(self)
-        sidebarVC.notifyTimeSlotChange()
-        scheduleCheck()
-    }
-    
     @IBAction func action_finishScheduling(_ sender: NSButton) {
-        sidebarVC.notifyScheduling(is: false)
+        schedulingDelegate?.schedulingDidFinish()
     }
     
     @IBAction func action_addCourse(_ sender: NSButton) {
-        // Creates new course data model and puts new view in ledgerStackView
-        push(course: sidebarVC.selectedSemester.createCourse() )
-
-        scheduleCheck()
+        schedulingDelegate?.schedulingAddCourse(self)
     }
     
     // MARK: - Notifiers
@@ -157,25 +130,7 @@ class SchedulerPageViewController: NSViewController {
     func notifyTimeSlotRemoved(_ timeSlot: TimeSlot) {
         appDelegate.managedObjectContext.delete( timeSlot )
         appDelegate.saveAction(self)
-        sidebarVC.notifyTimeSlotChange()
         
-        scheduleCheck()
-        
-        sidebarVC.selectedSemester.needsValidate = true
-    }
-    
-    /// Inform the semesterVC that timeSlot has been changed from a course.
-    func notifyTimeSlotUpdated() {
-        
-        sidebarVC.selectedSemester.needsValidate = true
-        
-        sidebarVC.notifyTimeSlotChange()
-    }
-    
-    /// Inform the semester VC that timeSlot has been renamed. This does not require revalidation.
-    func notifyTimeSlotRenamed() {
-        
-        sidebarVC.notifyTimeSlotChange()
-    
+        schedulingDelegate?.schedulingNeedsValidation(self)
     }
 }

@@ -13,6 +13,8 @@ class LectureEditorViewController: NSViewController {
     let sharedFontManager = NSFontManager.shared()
     let appDelegate = NSApplication.shared().delegate as! AppDelegate
     
+    var selectionDelegate: SelectionDelegate?
+    
     @IBOutlet weak var labelTitle: NSTextField!
     @IBOutlet weak var labelTitleDivider: NSTextField!
     @IBOutlet weak var labelCustomTitle: NSTextField!
@@ -25,6 +27,8 @@ class LectureEditorViewController: NSViewController {
     @IBOutlet weak var styleButtonUnderline: NSButton!
     @IBOutlet weak var styleButtonItalic: NSButton!
     @IBOutlet weak var styleButtonBold: NSButton!
+    @IBOutlet weak var styleButtonSuper: NSButton!
+    @IBOutlet weak var styleButtonSub: NSButton!
     @IBOutlet weak var styleRadioLeft: NSButton!
     @IBOutlet weak var styleRadioCenter: NSButton!
     @IBOutlet weak var styleRadioRight: NSButton!
@@ -37,8 +41,6 @@ class LectureEditorViewController: NSViewController {
     
     @IBOutlet weak var backdropBox: NSBox!
     @IBOutlet weak var overlayTopConstraint: NSLayoutConstraint!
-    
-    weak var masterVC: MasterViewController!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -61,6 +63,8 @@ class LectureEditorViewController: NSViewController {
         styleButtonColor.alphaValue = 0
         styleButtonUnderline.alphaValue = 0
         styleButtonItalic.alphaValue = 0
+        styleButtonSuper.alphaValue = 0
+        styleButtonSub.alphaValue = 0
         styleButtonBold.alphaValue = 0
         styleRadioLeft.alphaValue = 0
         styleRadioCenter.alphaValue = 0
@@ -73,6 +77,8 @@ class LectureEditorViewController: NSViewController {
         styleButtonUnderline.isHidden = true
         styleButtonItalic.isHidden = true
         styleButtonBold.isHidden = true
+        styleButtonSuper.isHidden = true
+        styleButtonSub.isHidden = true
         styleRadioLeft.isHidden = true
         styleRadioCenter.isHidden = true
         styleRadioRight.isHidden = true
@@ -181,7 +187,7 @@ class LectureEditorViewController: NSViewController {
         }
     }
     @IBAction func action_closeLecture(_ sender: NSButton) {
-        masterVC.notifySelected(lecture: nil)
+        selectionDelegate?.isEditing(lecture: nil)
     }
     
     // MARK: - Page Marking
@@ -208,7 +214,7 @@ class LectureEditorViewController: NSViewController {
             selectedLecture.title = labelCustomTitle.stringValue.trimmingCharacters(in: .whitespaces)
             
             // Notify CourseVC
-            masterVC.notifyRenamed(lecture: selectedLecture)
+//            masterVC.notifyRenamed(lecture: selectedLecture)
         }
     }
     
@@ -232,6 +238,19 @@ class LectureEditorViewController: NSViewController {
             styleButtonUnderline.state = NSOnState
         } else {
             styleButtonUnderline.state = NSOffState
+        }
+        
+        styleButtonSuper.state = NSOffState
+        styleButtonSub.state = NSOffState
+        if let superAttr = textViewContent.attributedString().attribute(NSSuperscriptAttributeName, at: positionOfSelection, effectiveRange: nil) as? Int {
+            print("worked!")
+            if superAttr == 1 {
+                // super
+                styleButtonSuper.state = NSOnState
+            } else if superAttr == -1 {
+                // sub
+                styleButtonSub.state = NSOnState
+            }
         }
         
         if let color = textViewContent.attributedString().attribute(NSForegroundColorAttributeName, at: positionOfSelection, effectiveRange: nil) as? NSColor {
@@ -296,12 +315,21 @@ class LectureEditorViewController: NSViewController {
         textViewContent.underline(self)
         textViewContent.needsDisplay = true
     }
-    
     @IBAction func action_styleItalicize(_ sender: NSButton) {
         sharedFontManager.addFontTrait(sender)
     }
     @IBAction func action_styleBold(_ sender: NSButton) {
         sharedFontManager.addFontTrait(sender)
+    }
+    
+    
+    @IBAction func action_styleSuper(_ sender: NSButton) {
+        textViewContent.superscript(self)
+        textViewContent.needsDisplay = true
+    }
+    @IBAction func action_styleSub(_ sender: NSButton) {
+        textViewContent.subscript(self)
+        textViewContent.needsDisplay = true
     }
     
     ///
@@ -528,6 +556,8 @@ class LectureEditorViewController: NSViewController {
             styleButtonUnderline.isHidden = false
             styleButtonItalic.isHidden = false
             styleButtonBold.isHidden = false
+            styleButtonSuper.isHidden = false
+            styleButtonSub.isHidden = false
             styleRadioLeft.isHidden = false
             styleRadioCenter.isHidden = false
             styleRadioRight.isHidden = false
@@ -546,6 +576,8 @@ class LectureEditorViewController: NSViewController {
             styleButtonUnderline.animator().alphaValue = 1
             styleButtonItalic.animator().alphaValue = 1
             styleButtonBold.animator().alphaValue = 1
+            styleButtonSuper.animator().alphaValue = 1
+            styleButtonSub.animator().alphaValue = 1
             styleRadioLeft.animator().alphaValue = 1
             styleRadioCenter.animator().alphaValue = 1
             styleRadioRight.animator().alphaValue = 1
@@ -568,6 +600,8 @@ class LectureEditorViewController: NSViewController {
                 self.styleButtonUnderline.isHidden = true
                 self.styleButtonItalic.isHidden = true
                 self.styleButtonBold.isHidden = true
+                self.styleButtonSuper.isHidden = true
+                self.styleButtonSub.isHidden = true
                 self.styleRadioLeft.isHidden = true
                 self.styleRadioCenter.isHidden = true
                 self.styleRadioRight.isHidden = true
@@ -580,6 +614,8 @@ class LectureEditorViewController: NSViewController {
             styleButtonUnderline.animator().alphaValue = 0
             styleButtonItalic.animator().alphaValue = 0
             styleButtonBold.animator().alphaValue = 0
+            styleButtonSuper.animator().alphaValue = 0
+            styleButtonSub.animator().alphaValue = 0
             styleRadioLeft.animator().alphaValue = 0
             styleRadioCenter.animator().alphaValue = 0
             styleRadioRight.animator().alphaValue = 0
@@ -600,8 +636,7 @@ class LectureEditorViewController: NSViewController {
                 selectedLecture = nil
                 appDelegate.managedObjectContext.delete( lecToRemove! )
                 appDelegate.saveAction(self)
-                masterVC.notifySelected(lecture: nil)
-                masterVC.sidebarPageController.prev()
+                selectionDelegate?.isEditing(lecture: nil)
             } else {
                 tempConfirmDeleteLecture = true
             }

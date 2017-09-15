@@ -10,6 +10,8 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="TestAdderViewController" customModule="HXNotes" customModuleProvider="target">
             <connections>
+                <outlet property="buttonCustomDue" destination="VVn-tf-RyV" id="0vx-qb-Xu5"/>
+                <outlet property="buttonLectureDue" destination="Xr8-Hv-Z8M" id="R9t-Pg-xcl"/>
                 <outlet property="completeButton" destination="Kfv-Sc-NDA" id="zE8-DV-CLh"/>
                 <outlet property="datePicker" destination="iEq-2z-rzd" id="Cpq-5R-j3M"/>
                 <outlet property="descriptionTextView" destination="WUy-qU-5Ax" id="RFh-dy-8aZ"/>
@@ -26,13 +28,13 @@
             <rect key="frame" x="0.0" y="0.0" width="149" height="339"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
-                <button translatesAutoresizingMaskIntoConstraints="NO" id="GyQ-dE-gac">
+                <button focusRingType="none" translatesAutoresizingMaskIntoConstraints="NO" id="GyQ-dE-gac">
                     <rect key="frame" x="129" y="317" width="18" height="18"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="18" id="oCF-kt-RU2"/>
                         <constraint firstAttribute="height" constant="18" id="qMN-yG-TVV"/>
                     </constraints>
-                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSStatusNone" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="RfE-0m-Csd">
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSStatusNone" imagePosition="only" alignment="center" focusRingType="none" imageScaling="proportionallyUpOrDown" inset="2" id="RfE-0m-Csd">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>

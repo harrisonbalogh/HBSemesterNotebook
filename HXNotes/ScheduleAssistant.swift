@@ -109,16 +109,16 @@ class ScheduleAssistant: NSObject {
             }
             
             // Notify the static button to appear if necessary
-            if masterVC.sidebarPageController.selectedCourse == timeSlotHappening.course {
+            if masterVC.selectedCourse == timeSlotHappening.course {
                 masterVC.sidebarPageController.courseVC.addButton.isEnabled = true
                 masterVC.sidebarPageController.courseVC.addButton.isHidden = false
             }
             
-            let _ = Alert(hour: timeHour, minute: timeMinute, course: timeSlotHappening.course!, content: appendTimeUntilLecture + " Create first lecture?", question: "Yes (Start Course)", deny: "No (Not Yet)", action: #selector(masterVC.sidebarPageController.addLecture), target: masterVC.sidebarPageController, type: .happening)
+            let _ = Alert(hour: timeHour, minute: timeMinute, course: timeSlotHappening.course!, content: appendTimeUntilLecture + " Create first lecture?", question: "Yes (Start Course)", deny: "No (Not Yet)", action: #selector(masterVC.addLecture), target: masterVC, type: .happening)
             return true
             
-        } else {
-            // This is not the first lecture
+        } else if Int((timeSlotHappening.course!.lectures?.lastObject as! Lecture).number) != timeSlotHappening.course!.theoreticalLectureCount() {
+            // This is not the first lecture and the latest lecture has not been created
             let theoLecCount = timeSlotHappening.course!.theoreticalLectureCount()
             
             if theoLecCount != timeSlotHappening.course!.lectures!.count {
@@ -141,14 +141,14 @@ class ScheduleAssistant: NSObject {
                 }
                 
                 // Notify the static button to appear if necessary
-                if masterVC.sidebarPageController.selectedCourse == timeSlotHappening.course {
+                if masterVC.selectedCourse == timeSlotHappening.course {
                     masterVC.sidebarPageController.courseVC.addButton.isEnabled = true
                     masterVC.sidebarPageController.courseVC.addButton.isHidden = false
-                    masterVC.sidebarPageController.courseVC.addButton.title = "Lecture \(masterVC.sidebarPageController.selectedCourse.theoreticalLectureCount())"
+                    masterVC.sidebarPageController.courseVC.addButton.title = "Lecture \(masterVC.selectedCourse.theoreticalLectureCount())"
                 }
                 
                 // No lecture exists for this time so give alert
-                let _ = Alert(hour: timeHour, minute: timeMinute, course: timeSlotHappening.course!, content: appendTimeUntilLecture + " Create lecture \(theoLecCount)?", question: "Create Lecture \(timeSlotHappening.course!.theoreticalLectureCount())", deny: "Ignore", action: #selector(masterVC.sidebarPageController.addLecture), target: masterVC.sidebarPageController, type: .happening)
+                let _ = Alert(hour: timeHour, minute: timeMinute, course: timeSlotHappening.course!, content: appendTimeUntilLecture + " Create lecture \(theoLecCount)?", question: "Create Lecture \(timeSlotHappening.course!.theoreticalLectureCount())", deny: "Ignore", action: #selector(masterVC.addLecture), target: masterVC, type: .happening)
                 return true
             }
         }
@@ -161,8 +161,8 @@ class ScheduleAssistant: NSObject {
         
         Alert.checkExpiredAlerts()
         
-        if masterVC.sidebarPageController.selectedCourse != nil {
-            masterVC.sidebarPageController.selectedCourse.fillAbsentLectures()
+        if masterVC.selectedCourse != nil {
+            masterVC.selectedCourse.fillAbsentLectures()
         }
         
     }
@@ -180,12 +180,12 @@ class ScheduleAssistant: NSObject {
         checkHappening()
         checkMissed()
         
-        if masterVC.sidebarPageController.selectedCourse != nil {
-            if masterVC.sidebarPageController.selectedCourse.checkWork() {
-                masterVC.sidebarPageController.courseVC.loadWork()
+        if masterVC.selectedCourse != nil {
+            if masterVC.selectedCourse.checkWork() {
+                masterVC.schedulingUpdatedWork()
             }
-            if masterVC.sidebarPageController.selectedCourse.checkTests() {
-                masterVC.sidebarPageController.courseVC.loadTests()
+            if masterVC.selectedCourse.checkTests() {
+                masterVC.schedulingUpdateTest()
             }
         }
         

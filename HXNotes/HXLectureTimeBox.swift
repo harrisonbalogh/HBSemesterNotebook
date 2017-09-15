@@ -49,17 +49,25 @@ class HXLectureTimeBox: NSView {
     
     func select() {
         box.fillColor = NSColor(calibratedRed: 1, green: 1, blue: 1, alpha: 1)
+        box.borderWidth = 2
     }
     
     func deselect() {
         box.fillColor = NSColor(calibratedRed: 0.9, green: 0.9, blue: 0.9, alpha: 0)
+        box.borderWidth = 1
     }
     
     @IBAction func action_select(_ sender: NSButton) {
         if let owner = owner as? WorkAdderLectureController {
-            owner.notifyLectureTimeSelected(timeSlot)
+            if owner.workBox.work!.completed {
+                return
+            }
+            owner.notifyLectureTimeSelected(self)
         } else if let owner = owner as? TestAdderViewController {
-            owner.notifyLectureTimeSelected(timeSlot)
+            if owner.testBox.test!.completed {
+                return
+            }
+            owner.notifyLectureTimeSelected(self)
         }
         select()
     }

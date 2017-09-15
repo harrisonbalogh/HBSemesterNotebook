@@ -54,6 +54,14 @@
                 <box hidden="YES" verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="vqi-f4-g4E">
                     <rect key="frame" x="0.0" y="-2" width="168" height="5"/>
                 </box>
+                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" alphaValue="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="93d-PN-u6V">
+                    <rect key="frame" x="138" y="4" width="22" height="22"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="22" id="d8W-0P-O3Z"/>
+                        <constraint firstAttribute="height" constant="22" id="iDv-dG-rzq"/>
+                    </constraints>
+                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="icon_pencil_alt" id="2ag-x7-O5X"/>
+                </imageView>
                 <button identifier="course_overlay_button" horizontalHuggingPriority="249" verticalHuggingPriority="750" horizontalCompressionResistancePriority="749" translatesAutoresizingMaskIntoConstraints="NO" id="QKn-9E-hZu">
                     <rect key="frame" x="0.0" y="0.0" width="168" height="30"/>
                     <constraints>
@@ -81,8 +89,10 @@
                 <constraint firstAttribute="bottom" secondItem="QKn-9E-hZu" secondAttribute="bottom" id="clb-CA-1U8"/>
                 <constraint firstAttribute="bottom" secondItem="vqi-f4-g4E" secondAttribute="bottom" id="eOk-5U-mbK"/>
                 <constraint firstItem="SZQ-MM-l95" firstAttribute="leading" secondItem="Q4Q-Df-lLR" secondAttribute="leading" id="g07-IX-5UM"/>
+                <constraint firstItem="93d-PN-u6V" firstAttribute="centerY" secondItem="Q4Q-Df-lLR" secondAttribute="centerY" id="h0t-qH-5Wi"/>
                 <constraint firstItem="SZQ-MM-l95" firstAttribute="top" secondItem="Q4Q-Df-lLR" secondAttribute="top" id="hZk-VE-Sob"/>
                 <constraint firstAttribute="trailing" secondItem="SZQ-MM-l95" secondAttribute="trailing" id="jgs-6d-GKk"/>
+                <constraint firstItem="93d-PN-u6V" firstAttribute="trailing" secondItem="tfp-0r-xPB" secondAttribute="trailing" id="k8c-PL-e8c"/>
                 <constraint firstAttribute="bottom" secondItem="SZQ-MM-l95" secondAttribute="bottom" id="lMd-qU-g2P"/>
                 <constraint firstAttribute="trailing" secondItem="tfp-0r-xPB" secondAttribute="trailing" constant="8" id="mPt-oI-Q1W"/>
                 <constraint firstAttribute="trailing" secondItem="vqi-f4-g4E" secondAttribute="trailing" id="rJo-NU-ZuG"/>
@@ -93,8 +103,12 @@
                 <outlet property="buttonOverlay" destination="QKn-9E-hZu" id="loX-Sx-JLy"/>
                 <outlet property="labelDays" destination="tfp-0r-xPB" id="Sd5-Gl-QSq"/>
                 <outlet property="labelTitle" destination="DHm-LB-cDL" id="hLI-2W-fqp"/>
+                <outlet property="selectImage" destination="93d-PN-u6V" id="NoC-dp-7LC"/>
             </connections>
             <point key="canvasLocation" x="-4" y="58"/>
         </customView>
     </objects>
+    <resources>
+        <image name="icon_pencil_alt" width="30" height="30"/>
+    </resources>
 </document>

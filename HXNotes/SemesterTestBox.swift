@@ -10,13 +10,15 @@ import Cocoa
 
 class SemesterTestBox: NSView {
     
+    var selectionDelegate: SelectionDelegate?
+    
     /// Return a new instance of a HXCourseBox based on the nib template.
-    static func instance(with test: Test, owner: SemesterPageViewController) -> SemesterTestBox! {
+    static func instance(with test: Test) -> SemesterTestBox! {
         var theObjects: NSArray = []
         Bundle.main.loadNibNamed("SemesterTestBox", owner: nil, topLevelObjects: &theObjects)
         // Get NSView from top level objects returned from nib load
         if let newBox = theObjects.filter({$0 is SemesterTestBox}).first as? SemesterTestBox {
-            newBox.initialize(with: test, owner: owner)
+            newBox.initialize(with: test)
             return newBox
         }
         return nil
@@ -27,12 +29,13 @@ class SemesterTestBox: NSView {
     @IBOutlet weak var boxFill: NSBox!
     
     weak var test: Test!
-    weak var owner: SemesterPageViewController!
     
-    func initialize(with test: Test, owner: SemesterPageViewController) {
+    var recallDate = ""
+    
+    func initialize(with test: Test) {
         labelTest.stringValue = test.title!
         if test.date == nil {
-            labelDate.stringValue = ""
+            labelDate.stringValue = "Undated"
         } else {
             let day = Calendar.current.component(.day, from: test.date!)
             let month = Calendar.current.component(.month, from: test.date!)
@@ -49,10 +52,31 @@ class SemesterTestBox: NSView {
         }
         
         self.test = test
-        self.owner = owner
     }
+    
+    override func updateTrackingAreas() {
+        super.updateTrackingAreas()
+        
+        self.trackingAreas.forEach({self.removeTrackingArea($0)})
+        
+        let trackingArea = NSTrackingArea(rect: self.bounds, options: [.activeInKeyWindow, .cursorUpdate, .mouseEnteredAndExited], owner: self, userInfo: nil)
+        addTrackingArea(trackingArea)
+    }
+    
+    override func cursorUpdate(with event: NSEvent) {
+        NSCursor.pointingHand().set()
+    }
+    
+    override func mouseEntered(with event: NSEvent) {
+        recallDate = labelDate.stringValue
+        labelDate.stringValue = "Go to " + test.course!.title!
+    }
+    
+    override func mouseExited(with event: NSEvent) {
+        labelDate.stringValue = recallDate
+    }
+    
     @IBAction func action_select(_ sender: NSButton) {
-        boxFill.fillColor = NSColor.lightGray
-        owner.notifySelected(test: test)
+        selectionDelegate?.testWasSelected(test)
     }
 }

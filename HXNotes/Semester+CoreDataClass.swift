@@ -32,7 +32,7 @@ public class Semester: NSManagedObject {
     
     /// Creates and returns a new persistent Course object. Can never have the same title as another
     /// course.
-    public func createCourse() -> Course {
+    @discardableResult public func createCourse() -> Course {
         
         let newCourse = NSEntityDescription.insertNewObject(forEntityName: "Course", into: managedObjectContext!) as! Course
         
@@ -82,7 +82,7 @@ public class Semester: NSManagedObject {
         let appDelegate = NSApplication.shared().delegate as! AppDelegate
         do {
             let semesters = try appDelegate.managedObjectContext.fetch(semesterFetch) as [Semester]
-            if let foundSemester = semesters.filter({$0.year == Int16(year) && $0.title == title}).first {
+            if let foundSemester = semesters.filter({$0.year == Int16(year) && $0.title == title.lowercased()}).first {
                 // This semester already present in store so return it
                 return foundSemester
             } else {
@@ -177,8 +177,6 @@ public class Semester: NSManagedObject {
     /// to false on all offending TimeSlots, Course, and Semester - or update valid flags to true.
     @discardableResult func validateSchedule() -> Bool {
         
-        print("Validate bebe")
-        
         var timeQueue = [TimeSlot]()
         
         self.valid = true
@@ -194,6 +192,9 @@ public class Semester: NSManagedObject {
             for s in (t+1)..<timeQueue.count {
                 timeQueue[t].validate(against: timeQueue[s])
             }
+        }
+        if self.courses!.count == 0 {
+            self.valid = false
         }
         
         // All code should check if semester needs validation before calling validateSchedule
