@@ -14,7 +14,7 @@ import Cocoa
 @objc(Course)
 public class Course: NSManagedObject {
     
-    /// Set to false whenever a TimeSlot is added, removed, or updated for
+    /// Set to true whenever a TimeSlot is added, removed, or updated for
     /// the owning Course object. This ensures that sorting will not occur
     /// on a Course that is already sorted.
     var needsSort = true
@@ -46,33 +46,39 @@ public class Course: NSManagedObject {
     /// the current date. If this is not an absent lecture, then provide nil in the day and month field so
     /// it can be retrieved based on the current date. Otherwise, for the case of an absent lecture, provide
     /// the day and month that this lecture occurred on.
-    @discardableResult func createLecture(during timeSlot: TimeSlot, on day: Int?, in month: Int?) -> Lecture {
+    @discardableResult func createLecture(during timeSlot: TimeSlot, on day: Int?, in month: Int?, at index: Int?) -> Lecture {
         
         let appDelegate = NSApplication.shared().delegate as! AppDelegate
-        
-        // The first theo count will return 0 so change this to lecture 1.
-        let lecNumber = max(Int16(self.theoreticalLectureCount()), 1)
         
         let newLecture = NSEntityDescription.insertNewObject(forEntityName: "Lecture", into: appDelegate.managedObjectContext) as! Lecture
         
         newLecture.course = self
         newLecture.timeSlot = timeSlot
-        newLecture.number = lecNumber
         newLecture.title = ""
         newLecture.content = NSAttributedString(string: "")
         
-        if day == nil || month == nil {
+        if day == nil || month == nil || index == nil {
             let cal = Calendar.current
             let date = Date()
             
             newLecture.absent = false
             newLecture.day = Int16(cal.component(.day, from: date))
             newLecture.month = Int16(cal.component(.month, from: date))
+            // The first theo count will return 0 so change this to lecture 1.
+            newLecture.number = max(Int16(self.theoreticalLectureCount()), 1)
         } else {
             // Absent
+            let _ = Alert(course: self, content: "Created absent lecture \(index! + 1) for \(month!)/\(day!).", question: nil, deny: "Okay", action: nil, target: nil, type: .custom)
             newLecture.absent = true
             newLecture.day = Int16(day!)
             newLecture.month = Int16(month!)
+            newLecture.number = Int16(index! + 1)
+            
+            // Insert the lecture into its place since this was an absent lecture.
+            let sortedSet = NSMutableOrderedSet(orderedSet: self.lectures!)
+            sortedSet.remove(sortedSet.lastObject!)
+            sortedSet.insert(newLecture, at: index!)
+            self.lectures = sortedSet
         }
         
         return newLecture
@@ -157,7 +163,8 @@ public class Course: NSManagedObject {
     
     // MARK: - Schedule Assistant Helper Functions
     
-    /// Returns the time slot that is currently happening for this course
+    /// Returns the time slot that is currently happening for this course or nil if
+    /// not during a time slot.
     func duringTimeSlot() -> TimeSlot? {
         
         if self.semester!.needsValidate {
@@ -539,54 +546,125 @@ public class Course: NSManagedObject {
     
     // MARK: - Convenience Functions
     
+    /// Insertion version of fillAbsentLectures. Is much more precise and
+    /// has the ability to insert absent lectures rather than just append absent lectures.
+    /// Will return true if it added any absent lectures.
+    @discardableResult func insertAbsentLectures() -> Bool {
+        // Requires first lecture to have occurred
+        if self.lectures!.count == 0 {
+            return false
+        }
+        let firstLecture = (self.lectures!.firstObject as! Lecture)
+        // Requires a sorted time slot set
+        if needsSort {
+            sortTimeSlots()
+        }
+        
+        var addedLectures = false
+
+        // Get how many lectures there are supposed to be.
+        let theoLecCount = self.theoreticalLectureCount()
+        
+        var date = firstLecture.date()
+        var timeSlotIndex = self.timeSlots!.index(of: firstLecture.timeSlot!)
+        var lectureIndex = 0
+        
+        // Exlude last and first lectures from iteration
+        for _ in 0..<(theoLecCount-1) {
+            
+            if theoLecCount == self.lectures!.count {
+                break
+            }
+            
+            let prevTimeSlot = (timeSlots!.object(at: timeSlotIndex) as! TimeSlot)
+            
+            timeSlotIndex = (timeSlotIndex + 1) % self.timeSlots!.count
+            lectureIndex += 1
+            
+            let nextTimeSlot = (timeSlots!.object(at: timeSlotIndex) as! TimeSlot)
+            
+            let minuteDifference = nextTimeSlot.timeDifference(to: prevTimeSlot)
+            date.addTimeInterval(TimeInterval(minuteDifference * 60))
+            
+            let day = Calendar.current.component(.day, from: date)
+            let month = Calendar.current.component(.month, from: date)
+            
+            // Need to check since last lecture could be missing which would cause index out of bounds
+            if lectureIndex < lectures!.count {
+                // This is not last lecture
+                let nextLecture = (lectures?.object(at: lectureIndex) as! Lecture)
+                if nextLecture.date() != date {
+                    createLecture(during: nextTimeSlot, on: day, in: month, at: lectureIndex)
+                    addedLectures = true
+                }
+            } else if lectureIndex != theoLecCount { // Missing non-serted lectures.
+                // This is not the latest lecture so just add it without checking if in progress
+                createLecture(during: nextTimeSlot, on: day, in: month, at: lectureIndex)
+                addedLectures = true
+            } else if self.duringTimeSlot() == nil { // Missing latest lecture
+                // It is not in progress, so add it.
+                createLecture(during: nextTimeSlot, on: day, in: month, at: lectureIndex)
+                addedLectures = true
+            }
+        }
+        return addedLectures
+    }
+    
     /// Will fill all the absent lectures for a given course. Note this runs
     /// the duringTimeSlot method. May be inefficient if fillAbsentLectures is always called
     /// after duringCourse or duringTimeSlot gets called. The TimeSlots for this course must
-    /// be guaranteed to be sorted else it will produce incorrect results.
-    func fillAbsentLectures() {
-        
-        print("filAbsentLectures")
-        return
+    /// be guaranteed to be sorted else it will produce incorrect results. Returns true if
+    /// it had to add any lectures.
+    @discardableResult func fillAbsentLectures() -> Bool {
+
+        if needsSort {
+            sortTimeSlots()
+        }
         
         // This function doesn't do anything if course hasn't started yet.
         if self.lectures!.count == 0 {
-            return
+            return false
         }
         
-        guard let lastLecture = self.lectures!.lastObject as? Lecture else { return }
+        let theoLecCount = theoreticalLectureCount()
         
-        var lecturesToFill = self.theoreticalLectureCount() - self.lectures!.count
-        
-        // If there is a time slot currently in progress, do not yet add an absent lecture for it, so reduce number
-        // to fill in since theoreticalLectureCount includes courses based on start time - not finish time.
-        if self.duringTimeSlot() != nil {
-            lecturesToFill -= 1
+        // It appears all lectures are present
+        if theoLecCount == lectures!.count {
+            return false
+        }
+
+        // Do a quick check through lectures to see if it needs more detailed absent lecture insertion.
+        for x in 0..<(lectures!.count-1) {
+            // Checking if any lectures skip a lecture number.
+            if (lectures!.object(at: x) as! Lecture).number != (lectures!.object(at: x + 1) as! Lecture).number - 1 {
+                // Missing a number between lectures, insert absent lectures.
+                return insertAbsentLectures()
+            }
         }
         
-        // No lectures to create if the amount of lectures is the same as the expected amount of lectures to this date
-        if lecturesToFill <= 0 {
-            return
-        }
+        var addedLectures = false
         
-        if needsSort {
-            self.sortTimeSlots()
-        }
-        
-        let monthDays = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
-        
-        let lastTimeSlotIndex = self.timeSlots!.index(of: lastLecture.timeSlot!)
-        for x in 0..<(lecturesToFill) {
-            let nextTimeDay = (self.timeSlots![(lastTimeSlotIndex + x + 1) % self.timeSlots!.count] as! TimeSlot).weekday
-            let thisTimeDay = (self.timeSlots![(lastTimeSlotIndex + x) % self.timeSlots!.count] as! TimeSlot).weekday
+        for x in self.lectures!.count..<theoLecCount {
+            if x == theoLecCount && self.duringTimeSlot() != nil {
+                // This is the most recent lecture and it is in progress. Not absent.
+                break
+            }
+            let lastLecture = (self.lectures!.lastObject as! Lecture)
+            let lastTimeSlot = lastLecture.timeSlot!
+            let nextTimeSlotIndex = (timeSlots!.index(of: lastLecture.timeSlot!) + 1) % timeSlots!.count
+            let nextTimeSlot = (timeSlots!.object(at: nextTimeSlotIndex) as! TimeSlot)
             
-            let daysBtwnLec = nextTimeDay - thisTimeDay
+            let minuteDifference = nextTimeSlot.timeDifference(to: lastTimeSlot)
+            let nextDate = lastLecture.date().addingTimeInterval(TimeInterval(minuteDifference * 60))
             
-            let nextLecMonth = Int(lastLecture.month) + Int(Int(lastLecture.day + daysBtwnLec) / monthDays[Int(lastLecture.month)])
-            let nextLecDay = Int(lastLecture.day + daysBtwnLec) % monthDays[Int(lastLecture.month)]
+            let day = Calendar.current.component(.day, from: nextDate)
+            let month = Calendar.current.component(.month, from: nextDate)
             
-            let _ = createLecture(during: self.timeSlots![(lastTimeSlotIndex + 1 + x) % self.timeSlots!.count] as! TimeSlot,
-                                  on: nextLecDay, in: nextLecMonth)
+            createLecture(during: nextTimeSlot, on: day, in: month, at: x)
+            addedLectures = true
         }
+        
+        return addedLectures
     }
     
     /// Will produce the next available time slot with a default length (pref changeable) of 55 minutes. Can still return

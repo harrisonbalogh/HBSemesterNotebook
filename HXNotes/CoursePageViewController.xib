@@ -477,7 +477,7 @@
                     </textFieldCell>
                 </textField>
                 <button translatesAutoresizingMaskIntoConstraints="NO" id="zVk-Uo-YGZ">
-                    <rect key="frame" x="6" y="400.5" width="12" height="15"/>
+                    <rect key="frame" x="6" y="401" width="12" height="15"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="12" id="JK0-YW-QyY"/>
                         <constraint firstAttribute="width" secondItem="zVk-Uo-YGZ" secondAttribute="height" multiplier="3:4" id="xHg-R8-EWu"/>

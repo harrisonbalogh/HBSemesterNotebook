@@ -21,7 +21,7 @@
         <attribute name="line" attributeType="Integer 16" minValueString="0" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <relationship name="lecture" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Lecture" inverseName="highlights" inverseEntity="Lecture" syncable="YES"/>
     </entity>
-    <entity name="Lecture" representedClassName="Lecture" syncable="YES" codeGenerationType="class">
+    <entity name="Lecture" representedClassName="Lecture" syncable="YES" codeGenerationType="category">
         <attribute name="absent" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="content" optional="YES" attributeType="Transformable" valueTransformerName="" customClassName="NSAttributedString" syncable="YES"/>
         <attribute name="day" attributeType="Integer 16" minValueString="1" defaultValueString="1" usesScalarValueType="YES" customClassName="Date" syncable="YES"/>

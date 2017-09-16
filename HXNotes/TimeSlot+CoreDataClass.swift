@@ -62,4 +62,45 @@ public class TimeSlot: NSManagedObject {
         }
     }
     
+    /// Returns the difference in minutes between the target TimeSlot and TimeSlot passed
+    /// as parameter. Target must be later in time than passed TimeSlot.
+    func timeDifference(to timeB: TimeSlot) -> Int {
+
+        let minutesSumA = self.weekday * 24 * 60 + self.startMinute
+        let minutesSumB = timeB.weekday * 24 * 60 + timeB.startMinute
+        var minuteDifference = 0
+        
+        // Check if on seperate weeks
+        if minutesSumA < minutesSumB {
+            minuteDifference = 7 * 24 * 60 + minutesSumA - minutesSumB
+        } else {
+            minuteDifference = minutesSumA - minutesSumB
+        }
+        
+        return minuteDifference
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -31,6 +31,7 @@ class CourseLectureBox: NSBox {
     @IBOutlet weak var labelTitle: NSTextField!
     @IBOutlet weak var labelCustomTitle: NSTextField!
     @IBOutlet weak var labelDate: NSTextField!
+    @IBOutlet weak var labelAbsent: NSTextField!
 
     @IBOutlet weak var selectImage: NSImageView!
     
@@ -43,6 +44,10 @@ class CourseLectureBox: NSBox {
             labelCustomTitle.stringValue = lecture.title!
         } else {
             labelCustomTitle.stringValue = ""
+        }
+        
+        if lecture.absent {
+            labelAbsent.stringValue = "Absent"
         }
         
         labelTitle.stringValue = "Lecture \(lecture.number)"
@@ -71,6 +76,7 @@ class CourseLectureBox: NSBox {
         if !isSelected {
             selectImage.alphaValue = 1
             labelDate.alphaValue = 0
+            labelAbsent.alphaValue = 0
             labelCustomTitle.stringValue = "Edit Notes"
         }
     }
@@ -79,6 +85,7 @@ class CourseLectureBox: NSBox {
         if !isSelected {
             selectImage.alphaValue = 0
             labelDate.alphaValue = 1
+            labelAbsent.alphaValue = 1
             if lecture.title != nil {
                 labelCustomTitle.stringValue = lecture.title!
             } else {
@@ -99,6 +106,7 @@ class CourseLectureBox: NSBox {
             self.fillColor = NSColor.clear
             selectImage.alphaValue = 0
             labelDate.alphaValue = 1
+            labelAbsent.alphaValue = 1
             if lecture.title != nil {
                 labelCustomTitle.stringValue = lecture.title!
             } else {

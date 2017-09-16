@@ -679,6 +679,7 @@ class MasterViewController: NSViewController, SelectionDelegate, SchedulingDeleg
     var selectedCourse: Course! {
         didSet {
             if selectedCourse != nil {
+                selectedCourse.fillAbsentLectures()
                 print("selectedCourse: \(selectedCourse.title!)")
             } else {
                 print("selectedCourse: nil")
@@ -726,7 +727,7 @@ class MasterViewController: NSViewController, SelectionDelegate, SchedulingDeleg
                     Alert.flushAlerts(for: selectedCourse)
                     
                     // Create new lecture
-                    timeSlotHappening.course!.createLecture(during: timeSlotHappening.course!.duringTimeSlot()!, on: nil, in: nil)
+                    timeSlotHappening.course!.createLecture(during: timeSlotHappening.course!.duringTimeSlot()!, on: nil, in: nil, at: nil)
                     
                     // Displays lecture in the lectureStackView
                     sidebarPageController.courseVC.loadLectures(from: selectedCourse)

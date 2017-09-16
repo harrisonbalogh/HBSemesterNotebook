@@ -162,7 +162,9 @@ class ScheduleAssistant: NSObject {
         Alert.checkExpiredAlerts()
         
         if masterVC.selectedCourse != nil {
-            masterVC.selectedCourse.fillAbsentLectures()
+            if masterVC.selectedCourse.fillAbsentLectures() {
+                masterVC.sidebarCourseNeedsPopulating(masterVC.sidebarPageController.courseVC)
+            }
         }
         
     }

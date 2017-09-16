@@ -205,8 +205,6 @@ class LectureEditorViewController: NSViewController {
     
     func action_customTitleUpdate() {
         
-        tempConfirmDeleteLecture = false
-        
         // Check if it has content
         if labelCustomTitle.stringValue == "" {
             labelTitleDivider.alphaValue = 0.3
@@ -226,8 +224,6 @@ class LectureEditorViewController: NSViewController {
     // MARK: - Updating styling bar
     
     func action_insertionUpdate() {
-        
-        tempConfirmDeleteLecture = false
         
         if sharedFontManager.selectedFont == nil || textViewContent.attributedString().length == 0 {
             return
@@ -628,24 +624,4 @@ class LectureEditorViewController: NSViewController {
             NSAnimationContext.endGrouping()
         }
     }
-    
-    // MARK: - TEMP TESTING -
-    
-    var tempConfirmDeleteLecture = false
-    
-    @IBAction func temp_action_removeLecture(_ sender: NSButton) {
-        if selectedLecture != nil {
-            if tempConfirmDeleteLecture {
-                tempConfirmDeleteLecture = false
-                let lecToRemove = selectedLecture
-                selectedLecture = nil
-                appDelegate.managedObjectContext.delete( lecToRemove! )
-                appDelegate.saveAction(self)
-                selectionDelegate?.isEditing(lecture: nil)
-            } else {
-                tempConfirmDeleteLecture = true
-            }
-        }
-    }
-    
 }
