@@ -26,7 +26,7 @@ class SemesterPageViewController: NSViewController, NSSplitViewDelegate {
         let WORKBOX_HEIGHT: CGFloat = 43
         let TESTBOX_HEIGHT: CGFloat = 43
         
-        let NO_ITEMS_HEIGHT: CGFloat = 18
+        let NO_ITEMS_HEIGHT: CGFloat = 2
         
         let splitHeight = splitView.frame.height
         
@@ -71,9 +71,26 @@ class SemesterPageViewController: NSViewController, NSSplitViewDelegate {
         
     }
     
+    @IBOutlet weak var progressIndicator: NSProgressIndicator!
+    func prepDisplay() {
+        splitView.alphaValue = 0
+        splitView.needsDisplay = true
+        progressIndicator.isHidden = false
+        progressIndicator.alphaValue = 1
+        progressIndicator.startAnimation(self)
+    }
+    // Call this after view has been populated and arranged.
+    func display() {
+        splitView.alphaValue = 1
+        progressIndicator.isHidden = true
+        progressIndicator.alphaValue = 0
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do view setup here.
+        splitView.alphaValue = 0
+        self.view.alphaValue = 0
     }
     
     override func viewDidAppear() {

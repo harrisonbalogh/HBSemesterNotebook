@@ -10,6 +10,8 @@ import Cocoa
 
 class HXFindViewController: NSViewController {
     
+    var selectionDelegate: SelectionDelegate?
+    
     static var lastFindUsed: String = ""
     
     // For a single selected lecture...........................
@@ -33,8 +35,8 @@ class HXFindViewController: NSViewController {
                 return
             }
             // If owned by a LectureVC
-            if let parent = self.parent as? LectureCollectionViewItem {
-                var searchThroughText = parent.textView_lecture.string!
+            if let parent = self.parent as? LectureEditorViewController {
+                var searchThroughText = parent.textViewContent.string!
                 foundIndices = [Int]()
                 findIndex = -1
                 var loc = searchThroughText.lowercased().range(of: findString)
@@ -81,7 +83,7 @@ class HXFindViewController: NSViewController {
         super.viewDidAppear()
         
         // If owned by a LectureVC
-        if self.parent is LectureCollectionViewItem {
+        if self.parent is LectureEditorViewController {
             
             label_lectureSelection.stringValue = "selected lecture."
             textField_find.stringValue = HXFindViewController.lastFindUsed
@@ -100,6 +102,8 @@ class HXFindViewController: NSViewController {
         // Listen to textField changing to know when to reset counter
         NotificationCenter.default.addObserver(self, selector: #selector(HXFindViewController.textField_textChange),
                                                name: .NSControlTextDidChange, object: textField_find)
+        
+        selectionDelegate?.isFinding(with: self)
     }
     /// Should reset all variables when changing text
     func textField_textChange() {
@@ -108,17 +112,17 @@ class HXFindViewController: NSViewController {
         findString = ""
     }
     @IBAction func action_close(_ sender: NSButton) {
-        if let parent = self.parent as? LectureCollectionViewItem {
+        if let parent = self.parent as? LectureEditorViewController {
             parent.isFinding = false
         } else if let parent = self.parent as? EditorViewController {
             parent.isFinding = false
         }
     }
     @IBAction func action_right(_ sender: NSButton) {
-        if foundIndices.count != 0 && parent is LectureCollectionViewItem {
+        if foundIndices.count != 0 && parent is LectureEditorViewController {
             
             // If owned by a LectureVC
-            if let parent = self.parent as? LectureCollectionViewItem {
+            if let parent = self.parent as? LectureEditorViewController {
                 if findIndex >= foundIndices.count - 1 {
                     findIndex = 0
                 } else {
@@ -146,7 +150,7 @@ class HXFindViewController: NSViewController {
 //                    lectureIndex[1] = 0
 //                    // Reset occurrence count, so want to move to next lectureCVI, find next one that has occurrences
 //                    // Also reset selection of last lectureVC
-//                    lectureCVI.textView_lecture.setSelectedRange(NSMakeRange(0, 0))
+//                    lectureCVI.textViewContent.setSelectedRange(NSMakeRange(0, 0))
 //                    repeat {
 //                        if lectureIndex[0] >= foundLecturesToFoundIndices.count - 1 {
 //                            lectureIndex[0] = 0
@@ -172,7 +176,7 @@ class HXFindViewController: NSViewController {
         if foundIndices.count != 0 {
             
             // If owned by a LectureVC
-            if let parent = self.parent as? LectureCollectionViewItem{
+            if let parent = self.parent as? LectureEditorViewController{
                 if findIndex <= 0 {
                     findIndex = foundIndices.count - 1
                 } else {
@@ -198,7 +202,7 @@ class HXFindViewController: NSViewController {
 //                if lectureIndex[1] <= 0 {
 //                    // Reset occurrence count, so want to move to previous lectureVC, find previous one that has occurrences
 //                    // Also reset selection of previous lectureVC
-//                    lectureCVI.textView_lecture.setSelectedRange(NSMakeRange(0, 0))
+//                    lectureCVI.textViewContent.setSelectedRange(NSMakeRange(0, 0))
 //                    repeat {
 //                        if lectureIndex[0] <= 0 {
 //                            lectureIndex[0] = foundLecturesToFoundIndices.count - 1
@@ -221,10 +225,10 @@ class HXFindViewController: NSViewController {
         }
     }
     @IBAction func action_select(_ sender: NSButton) {
-        if let parent = self.parent as? LectureCollectionViewItem {
+        if let parent = self.parent as? LectureEditorViewController {
             HXFindViewController.lastFindUsed = textField_find.stringValue
             parent.isFinding = false
-            parent.owner.isFinding = true
+//            parent.owner.isFinding = true
         } else if let parent = self.parent as? EditorViewController {
             parent.isFinding = false
             if parent.lectureFocused != nil {
@@ -241,35 +245,28 @@ class HXFindViewController: NSViewController {
         }
     }
     /// Revised version of LectureVC's textSelectionHeight() method
-    private func textSelectionHeight(for sender: LectureCollectionViewItem, at range: NSRange) -> CGFloat {
+    private func textSelectionHeight(for sender: LectureEditorViewController, at range: NSRange) -> CGFloat {
         let rangeToSelection = NSRange(location: 0, length: range.location)
-        let substring = sender.textView_lecture.attributedString().attributedSubstring(from: rangeToSelection)
+        let substring = sender.textViewContent.attributedString().attributedSubstring(from: rangeToSelection)
         let txtStorage = NSTextStorage(attributedString: substring)
-        let txtContainer = NSTextContainer(containerSize: NSSize(width: sender.textView_lecture.frame.width, height: 100000))
+        let txtContainer = NSTextContainer(containerSize: NSSize(width: sender.textViewContent.frame.width, height: 100000))
         let layoutManager = NSLayoutManager()
         layoutManager.addTextContainer(txtContainer)
         txtStorage.addLayoutManager(layoutManager)
-        txtStorage.addAttributes([NSFontAttributeName: sender.textView_lecture.font!], range: NSRange(location: 0, length: txtStorage.length))
+        txtStorage.addAttributes([NSFontAttributeName: sender.textViewContent.font!], range: NSRange(location: 0, length: txtStorage.length))
         txtContainer.lineFragmentPadding = 0
         layoutManager.glyphRange(for: txtContainer)
         return layoutManager.usedRect(for: txtContainer).size.height
     }
     /// Auto scrolling whenever user types. Smoothly scroll clipper until text typing location is centered.
-    private func goToAndHighlight(for sender: LectureCollectionViewItem, at range: NSRange) {
+    private func goToAndHighlight(for sender: LectureEditorViewController, at range: NSRange) {
+        print("Highlight bebe: \(range.location) to length: \(range.length)")
         let selectionY = textSelectionHeight(for: sender, at: range)
         // Don't auto-scroll if selection is already visible and above center line of window
-        if selectionY < (sender.owner.collectionClipView.bounds.origin.y + sender.header.frame.height) || selectionY > (sender.owner.collectionClipView.bounds.origin.y + sender.owner.collectionClipView.enclosingScrollView!.frame.height/2) {
-//            NSAnimationContext.beginGrouping()
-//            NSAnimationContext.current().duration = 0.2
-//            NSAnimationContext.current().completionHandler = {
-//                sender.textView_lecture.showFindIndicator(for: range)
-//            }
-//            // Get clipper to center selection in scroller
-//            
-//            NSAnimationContext.endGrouping()
-            sender.owner.collectionClipView.setBoundsOrigin(NSPoint(x: 0, y: selectionY - sender.owner.collectionClipView.enclosingScrollView!.frame.height/2))
-            sender.textView_lecture.showFindIndicator(for: range)
-            sender.collectionView.enclosingScrollView?.flashScrollers()
+        if selectionY < (sender.clipViewContent.bounds.origin.y) || selectionY > (sender.clipViewContent.bounds.origin.y + sender.scrollViewContent.frame.height/2) {
+            sender.clipViewContent.setBoundsOrigin(NSPoint(x: 0, y: selectionY - sender.scrollViewContent!.frame.height/2))
+            sender.clipViewContent.enclosingScrollView?.flashScrollers()
         }
+        sender.textViewContent.showFindIndicator(for: range)
     }
 }

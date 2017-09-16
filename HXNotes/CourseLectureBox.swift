@@ -28,8 +28,6 @@ class CourseLectureBox: NSBox {
     
     weak var lecture: Lecture!
     
-    var savedCustomTitle = ""
-    
     @IBOutlet weak var labelTitle: NSTextField!
     @IBOutlet weak var labelCustomTitle: NSTextField!
     @IBOutlet weak var labelDate: NSTextField!
@@ -73,7 +71,6 @@ class CourseLectureBox: NSBox {
         if !isSelected {
             selectImage.alphaValue = 1
             labelDate.alphaValue = 0
-            savedCustomTitle = labelCustomTitle.stringValue
             labelCustomTitle.stringValue = "Edit Notes"
         }
     }
@@ -82,7 +79,11 @@ class CourseLectureBox: NSBox {
         if !isSelected {
             selectImage.alphaValue = 0
             labelDate.alphaValue = 1
-            labelCustomTitle.stringValue = savedCustomTitle
+            if lecture.title != nil {
+                labelCustomTitle.stringValue = lecture.title!
+            } else {
+                labelCustomTitle.stringValue = ""
+            }
         }
     }
     
@@ -98,7 +99,11 @@ class CourseLectureBox: NSBox {
             self.fillColor = NSColor.clear
             selectImage.alphaValue = 0
             labelDate.alphaValue = 1
-            labelCustomTitle.stringValue = savedCustomTitle
+            if lecture.title != nil {
+                labelCustomTitle.stringValue = lecture.title!
+            } else {
+                labelCustomTitle.stringValue = ""
+            }
         }
     }
     

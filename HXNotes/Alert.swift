@@ -251,7 +251,7 @@ class Alert {
                     semesterTitle = "fall"
                 }
                 
-                if let currentSemester = Semester.retrieveSemester(titled: semesterTitle, in: yearComponent) {
+                if Semester.retrieveSemester(titled: semesterTitle, in: yearComponent) != nil {
                     if alertQueue[x].course!.duringTimeSlot() == nil {
                         // Course is not happening at the moment... So this alert doesn't apply anymore.
                         Alert.remove(at: x)

@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11762"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="box content view" minToolsVersion="7.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
         <capability name="stacking Non-gravity area distributions on NSStackView" minToolsVersion="7.0" minSystemVersion="10.11"/>
@@ -21,6 +22,7 @@
                 <outlet property="noLecturesLabel" destination="O3M-Ge-grQ" id="wSR-kv-gv0"/>
                 <outlet property="noTestsLabel" destination="7Ny-td-hT2" id="Sfb-6S-CtT"/>
                 <outlet property="noWorkLabel" destination="caO-UR-m1z" id="5BV-0Q-oi4"/>
+                <outlet property="progressIndicator" destination="LqF-fh-HNr" id="5bX-2n-pox"/>
                 <outlet property="splitDividerDocs" destination="QI2-7d-7X9" id="dma-B8-hYA"/>
                 <outlet property="splitDividerLecture" destination="ltv-pq-fNk" id="qv0-DB-CQh"/>
                 <outlet property="splitDividerTest" destination="fXI-hA-BE0" id="tAz-4k-bcB"/>
@@ -120,9 +122,6 @@
                                 <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="LWz-Ii-kfi">
                                     <rect key="frame" x="0.0" y="63" width="174" height="5"/>
                                 </box>
-                                <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="V5L-Am-ibJ">
-                                    <rect key="frame" x="0.0" y="87" width="174" height="5"/>
-                                </box>
                                 <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="JN2-lt-rjk">
                                     <rect key="frame" x="79" y="69" width="91" height="17"/>
                                     <buttonCell key="cell" type="inline" title="Add Lecture #" bezelStyle="inline" imagePosition="left" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="QLf-E9-log">
@@ -137,7 +136,6 @@
                             <constraints>
                                 <constraint firstItem="ltv-pq-fNk" firstAttribute="leading" secondItem="zhb-YD-iHb" secondAttribute="leading" id="1zF-ze-dfc"/>
                                 <constraint firstItem="LWz-Ii-kfi" firstAttribute="leading" secondItem="zhb-YD-iHb" secondAttribute="leading" id="2q1-wX-H6i"/>
-                                <constraint firstItem="V5L-Am-ibJ" firstAttribute="leading" secondItem="zhb-YD-iHb" secondAttribute="leading" id="45s-3i-xEZ"/>
                                 <constraint firstItem="JN2-lt-rjk" firstAttribute="centerY" secondItem="gpv-fH-H49" secondAttribute="centerY" id="5FR-nB-qRC"/>
                                 <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="LWz-Ii-kfi" secondAttribute="bottom" id="7Fs-ZN-84e"/>
                                 <constraint firstAttribute="bottom" secondItem="DBn-qV-v1h" secondAttribute="bottom" id="7Qn-5g-hdT"/>
@@ -145,7 +143,6 @@
                                 <constraint firstItem="DBn-qV-v1h" firstAttribute="leading" secondItem="zhb-YD-iHb" secondAttribute="leading" id="AP3-ad-bPx"/>
                                 <constraint firstItem="gpv-fH-H49" firstAttribute="leading" secondItem="zhb-YD-iHb" secondAttribute="leading" constant="4" id="D7k-zo-aOe"/>
                                 <constraint firstItem="O3M-Ge-grQ" firstAttribute="centerX" secondItem="DBn-qV-v1h" secondAttribute="centerX" id="FlE-rt-fo4"/>
-                                <constraint firstItem="V5L-Am-ibJ" firstAttribute="top" secondItem="zhb-YD-iHb" secondAttribute="top" id="GCl-iY-wWv"/>
                                 <constraint firstAttribute="trailing" secondItem="LWz-Ii-kfi" secondAttribute="trailing" id="GT0-XV-4ac"/>
                                 <constraint firstAttribute="trailing" secondItem="DBn-qV-v1h" secondAttribute="trailing" id="IDw-QA-4eX"/>
                                 <constraint firstItem="DBn-qV-v1h" firstAttribute="top" secondItem="gpv-fH-H49" secondAttribute="bottom" constant="3" id="K5J-57-zge"/>
@@ -154,7 +151,6 @@
                                 <constraint firstItem="O3M-Ge-grQ" firstAttribute="top" relation="greaterThanOrEqual" secondItem="zhb-YD-iHb" secondAttribute="top" id="a6J-Oh-DzR"/>
                                 <constraint firstItem="DBn-qV-v1h" firstAttribute="top" secondItem="ltv-pq-fNk" secondAttribute="bottom" id="aoV-b6-RRo"/>
                                 <constraint firstItem="gpv-fH-H49" firstAttribute="top" secondItem="zhb-YD-iHb" secondAttribute="top" constant="3" id="iBb-5a-AYk"/>
-                                <constraint firstAttribute="trailing" secondItem="V5L-Am-ibJ" secondAttribute="trailing" id="mAv-Ke-KYw"/>
                                 <constraint firstItem="ltv-pq-fNk" firstAttribute="top" secondItem="zhb-YD-iHb" secondAttribute="top" id="ysh-qz-XLn"/>
                             </constraints>
                         </customView>
@@ -469,6 +465,9 @@
                         <outlet property="delegate" destination="-2" id="Zco-fz-9Tl"/>
                     </connections>
                 </splitView>
+                <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" maxValue="100" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="LqF-fh-HNr">
+                    <rect key="frame" x="79" y="189" width="16" height="16"/>
+                </progressIndicator>
                 <textField horizontalHuggingPriority="100" verticalHuggingPriority="750" horizontalCompressionResistancePriority="100" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oZJ-mb-bJa">
                     <rect key="frame" x="18" y="397" width="138" height="23"/>
                     <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="center" title="Course" id="LM4-Nn-RX9">
@@ -478,12 +477,12 @@
                     </textFieldCell>
                 </textField>
                 <button translatesAutoresizingMaskIntoConstraints="NO" id="zVk-Uo-YGZ">
-                    <rect key="frame" x="6" y="400" width="16" height="16"/>
+                    <rect key="frame" x="6" y="400.5" width="12" height="15"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="16" id="bo6-r2-mAh"/>
-                        <constraint firstAttribute="width" constant="16" id="vag-gL-fai"/>
+                        <constraint firstAttribute="width" constant="12" id="JK0-YW-QyY"/>
+                        <constraint firstAttribute="width" secondItem="zVk-Uo-YGZ" secondAttribute="height" multiplier="3:4" id="xHg-R8-EWu"/>
                     </constraints>
-                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSGoLeftTemplate" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="TJS-j8-8fL">
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSGoLeftTemplate" imagePosition="only" alignment="center" imageScaling="axesIndependently" inset="2" id="TJS-j8-8fL">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -491,11 +490,15 @@
                         <action selector="action_back:" target="-2" id="Wqk-nk-qax"/>
                     </connections>
                 </button>
+                <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="XfR-Pj-hFQ">
+                    <rect key="frame" x="0.0" y="393" width="174" height="5"/>
+                </box>
             </subviews>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="oZJ-mb-bJa" secondAttribute="trailing" constant="20" id="43c-jD-rCz"/>
                 <constraint firstAttribute="trailing" secondItem="9fe-aM-wTV" secondAttribute="trailing" id="4fJ-sY-MX9"/>
                 <constraint firstItem="DSD-hT-hJj" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" id="5at-Qe-4z1"/>
+                <constraint firstItem="XfR-Pj-hFQ" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" id="6aq-dT-XGW"/>
                 <constraint firstItem="9fe-aM-wTV" firstAttribute="top" secondItem="8zr-Q8-Ptv" secondAttribute="bottom" id="BC5-sV-LeX"/>
                 <constraint firstAttribute="bottom" secondItem="9fe-aM-wTV" secondAttribute="bottom" id="DQN-V8-cRU"/>
                 <constraint firstItem="8zr-Q8-Ptv" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" id="E2A-pj-Qgc"/>
@@ -503,13 +506,17 @@
                 <constraint firstItem="oZJ-mb-bJa" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" constant="20" id="HwJ-uH-ikM"/>
                 <constraint firstItem="oZJ-mb-bJa" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" constant="2" id="IyN-qv-Sor"/>
                 <constraint firstItem="DSD-hT-hJj" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" id="Nhz-mc-R2T"/>
+                <constraint firstItem="LqF-fh-HNr" firstAttribute="centerY" secondItem="9fe-aM-wTV" secondAttribute="centerY" id="OKv-7y-XuP"/>
                 <constraint firstItem="zVk-Uo-YGZ" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" constant="6" id="PAc-ZX-GVg"/>
+                <constraint firstAttribute="trailing" secondItem="XfR-Pj-hFQ" secondAttribute="trailing" id="WqF-4b-B2w"/>
                 <constraint firstAttribute="trailing" secondItem="DSD-hT-hJj" secondAttribute="trailing" id="bFT-xe-njU"/>
                 <constraint firstItem="8zr-Q8-Ptv" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" id="fY4-fn-Kh9"/>
+                <constraint firstItem="XfR-Pj-hFQ" firstAttribute="bottom" secondItem="8zr-Q8-Ptv" secondAttribute="bottom" id="h0a-Fl-Xay"/>
                 <constraint firstItem="9fe-aM-wTV" firstAttribute="top" secondItem="oZJ-mb-bJa" secondAttribute="bottom" constant="2" id="paZ-TS-rDb"/>
                 <constraint firstAttribute="trailing" secondItem="JN2-lt-rjk" secondAttribute="trailing" constant="4" id="qGg-oU-F2y"/>
                 <constraint firstAttribute="trailing" secondItem="8zr-Q8-Ptv" secondAttribute="trailing" id="rMX-Yf-nEA"/>
                 <constraint firstItem="9fe-aM-wTV" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" id="ufz-fL-ITT"/>
+                <constraint firstItem="LqF-fh-HNr" firstAttribute="centerX" secondItem="9fe-aM-wTV" secondAttribute="centerX" id="x4G-wA-uMv"/>
                 <constraint firstAttribute="bottom" secondItem="DSD-hT-hJj" secondAttribute="bottom" id="z0Q-jW-2tf"/>
             </constraints>
             <point key="canvasLocation" x="165" y="243"/>

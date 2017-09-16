@@ -15,6 +15,7 @@
                 <outlet property="courseView" destination="pBa-pc-gAA" id="ciL-I2-UOO"/>
                 <outlet property="noTestLabel" destination="p8b-an-7jr" id="McI-hR-75f"/>
                 <outlet property="noWorkLabel" destination="wxk-h0-bw6" id="dOL-R1-GiU"/>
+                <outlet property="progressIndicator" destination="Awc-5q-4gv" id="ku2-T8-3N0"/>
                 <outlet property="splitDividerCourse" destination="KoS-hm-9vv" id="wCv-Pw-zJf"/>
                 <outlet property="splitDividerTest" destination="Fkm-ON-UOv" id="sXB-iy-hfD"/>
                 <outlet property="splitDividerWork" destination="Qr3-Jw-nM8" id="Bb6-2b-0uf"/>
@@ -303,6 +304,9 @@
                         <outlet property="delegate" destination="-2" id="NAn-Pf-nt4"/>
                     </connections>
                 </splitView>
+                <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" maxValue="100" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="Awc-5q-4gv">
+                    <rect key="frame" x="68" y="212" width="16" height="16"/>
+                </progressIndicator>
             </subviews>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="1fa-7f-NHP" secondAttribute="trailing" id="34G-Ih-gbz"/>
@@ -310,9 +314,11 @@
                 <constraint firstAttribute="bottom" secondItem="1fa-7f-NHP" secondAttribute="bottom" id="BPr-ex-O2y"/>
                 <constraint firstAttribute="bottom" secondItem="e4L-mV-kHb" secondAttribute="bottom" id="F8u-jy-MSa"/>
                 <constraint firstItem="e4L-mV-kHb" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" id="KfJ-Pe-DWI"/>
+                <constraint firstItem="Awc-5q-4gv" firstAttribute="centerY" secondItem="1fa-7f-NHP" secondAttribute="centerY" id="SIL-Up-2VH"/>
                 <constraint firstAttribute="trailing" secondItem="e4L-mV-kHb" secondAttribute="trailing" id="kV6-dy-Xpw"/>
                 <constraint firstItem="e4L-mV-kHb" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" id="nuw-eP-pQx"/>
                 <constraint firstItem="1fa-7f-NHP" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" id="oEb-lC-24A"/>
+                <constraint firstItem="Awc-5q-4gv" firstAttribute="centerX" secondItem="1fa-7f-NHP" secondAttribute="centerX" id="s87-x9-lgx"/>
             </constraints>
             <point key="canvasLocation" x="-26.5" y="205"/>
         </customView>

@@ -185,8 +185,8 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
     /// Comes from the LectureLedger stack, scrolls to supplied lecture number. Lecture guaranteed to exist.
     private func scrollToLecture(_ lecture: String) {
         
-        var scrollY: CGFloat = 0
-        var responder: NSResponder!
+//        var scrollY: CGFloat = 0
+//        var responder: NSResponder!
         
 //        for collectionViewItem in collectionViewItems {
 //            if "Lecture \(collectionViewItem.lecture.number)" == lecture {
@@ -212,21 +212,21 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
     /// Auto scrolling whenever user types.
     /// Smoothly scroll clipper until text typing location is centered.
     internal func checkScrollLevel(from sender: LectureCollectionViewItem) {
-        // Only do smooth auto scrolling if the preference value is set to true
-        if !autoScroll {
-            return
-        }
-        return
-        let scrollY = sender.lastSelectionHeightCheck
-        
-        if scrollY < collectionClipView.bounds.origin.y + sender.header.frame.height || scrollY > collectionClipView.bounds.origin.y + collectionView.enclosingScrollView!.frame.height * CGFloat(autoScrollPosition)/100 {
-            NSAnimationContext.beginGrouping()
-            NSAnimationContext.current().duration = 0.25
-            collectionClipView.animator().setBoundsOrigin(NSPoint(x: 0, y: scrollY - collectionView.enclosingScrollView!.frame.height * CGFloat(autoScrollPosition)/100))
-            NSAnimationContext.endGrouping()
-            
-            collectionView.enclosingScrollView?.flashScrollers()
-        }
+//        // Only do smooth auto scrolling if the preference value is set to true
+//        if !autoScroll {
+//            return
+//        }
+//        return
+//        let scrollY = sender.lastSelectionHeightCheck
+//        
+//        if scrollY < collectionClipView.bounds.origin.y + sender.header.frame.height || scrollY > collectionClipView.bounds.origin.y + collectionView.enclosingScrollView!.frame.height * CGFloat(autoScrollPosition)/100 {
+//            NSAnimationContext.beginGrouping()
+//            NSAnimationContext.current().duration = 0.25
+//            collectionClipView.animator().setBoundsOrigin(NSPoint(x: 0, y: scrollY - collectionView.enclosingScrollView!.frame.height * CGFloat(autoScrollPosition)/100))
+//            NSAnimationContext.endGrouping()
+//            
+//            collectionView.enclosingScrollView?.flashScrollers()
+//        }
     }
     
     override func mouseDown(with event: NSEvent) {
@@ -539,9 +539,9 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
     func export(to url: URL){
         let attribString = NSMutableAttributedString()
         // Combine all data from every lecture
-        for case let lecture as Lecture in selectedCourse.lectures! {
+//        for case let lecture as Lecture in selectedCourse.lectures! {
 //            attribString
-        }
+//        }
         
 //        for case let lectureController as LectureViewController in self.childViewControllers {
 //            attribString.append(lectureController.label_lectureTitle.attributedStringValue)

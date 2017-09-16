@@ -19,6 +19,10 @@ protocol SelectionDelegate {
     func isEditing(lecture: Lecture?)
     func isEditing(workBox: CourseWorkBox?)
     func isEditing(testBox: CourseTestBox?)
+    
+    func isExporting(with exportVC: HXExportViewController)
+    func isFinding(with findVC: HXFindViewController)
+    func isReplacing(with replacingVC: HXFindReplaceViewController)
 }
 
 protocol SchedulingDelegate {

@@ -33,7 +33,7 @@ class CoursePageViewController: NSViewController, NSSplitViewDelegate {
         let WORKBOX_HEIGHT: CGFloat = 43
         let TESTBOX_HEIGHT: CGFloat = 43
         
-        let NO_ITEMS_HEIGHT: CGFloat = 18
+        let NO_ITEMS_HEIGHT: CGFloat = 2
         
         let splitHeight = splitView.frame.height
         
@@ -81,11 +81,32 @@ class CoursePageViewController: NSViewController, NSSplitViewDelegate {
         splitView.setPosition(splitHeight - workHeight - testHeight, ofDividerAt: 1)
         splitView.setPosition(splitHeight - testHeight, ofDividerAt: 2)
         
+        DispatchQueue.main.async {
+            self.lectureStackView.scroll(NSPoint(x: 0, y: 0))
+        }
+    }
+    
+    @IBOutlet weak var progressIndicator: NSProgressIndicator!
+    func prepDisplay() {
+        splitView.alphaValue = 0
+        splitView.needsDisplay = true
+        progressIndicator.isHidden = false
+        progressIndicator.alphaValue = 1
+        progressIndicator.startAnimation(self)
+    }
+    // Call this after view has been populated and arranged.
+    func display() {
+        progressIndicator.stopAnimation(self)
+        splitView.alphaValue = 1
+        progressIndicator.isHidden = true
+        progressIndicator.alphaValue = 0
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do view setup here.
+        splitView.alphaValue = 0
+        self.view.alphaValue = 0
     }
     
     override func viewDidAppear() {
@@ -203,6 +224,19 @@ class CoursePageViewController: NSViewController, NSSplitViewDelegate {
 
     @IBAction func action_addDue(_ sender: NSButton) {
         schedulingDelegate?.schedulingAddWork()
+
+        let WORKBOX_HEIGHT: CGFloat = 43
+        
+        let y = splitDividerWork.convert(splitDividerWork.bounds, to: splitView).origin.y
+        let yNext = splitDividerTest.convert(splitDividerTest.bounds, to: splitView).origin.y
+        
+        if yNext - y - splitDividerWork.bounds.height < WORKBOX_HEIGHT {
+            splitView.setPosition(y - WORKBOX_HEIGHT, ofDividerAt: 1)
+        }
+        
+        DispatchQueue.main.async {
+            self.workStackView.scroll(NSPoint(x: 0, y: 0))
+        }
     }
     
     func loadWork(from course: Course, showingCompleted: Bool) {
@@ -268,6 +302,18 @@ class CoursePageViewController: NSViewController, NSSplitViewDelegate {
     
     @IBAction func action_addTests(_ sender: NSButton) {
         schedulingDelegate?.schedulingAddTest()
+        
+        let TESTBOX_HEIGHT: CGFloat = 43
+        
+        let y = splitDividerTest.convert(splitDividerTest.bounds, to: splitView).origin.y
+        
+        if splitView.frame.height - y < TESTBOX_HEIGHT {
+            splitView.setPosition(y - TESTBOX_HEIGHT, ofDividerAt: 2)
+        }
+        
+        DispatchQueue.main.async {
+            self.testStackView.scroll(NSPoint(x: 0, y: 0))
+        }
     }
     
     func loadTests(from course: Course, showingCompleted: Bool) {

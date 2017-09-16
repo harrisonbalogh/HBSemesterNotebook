@@ -29,6 +29,8 @@ class MasterViewController: NSViewController, SelectionDelegate, SchedulingDeleg
         
         Alert.masterViewController = self
         
+        loadPreferences()
+        
         view.wantsLayer = true
         
         AppDelegate.scheduleAssistant = ScheduleAssistant(masterController: self)
@@ -59,9 +61,9 @@ class MasterViewController: NSViewController, SelectionDelegate, SchedulingDeleg
                 
                 // Check if there was a course selected when last quit
                 if parseCourse != "nil" {
-//                    if let course = semester.retrieveCourse(named: parseCourse) {
-//                        
-//                    }
+                    if let course = semester.retrieveCourse(named: parseCourse) {
+                        selectedCourse = course
+                    }
                 }
             } else {
                 // Use today's date if there was not a previously selected course
@@ -86,8 +88,18 @@ class MasterViewController: NSViewController, SelectionDelegate, SchedulingDeleg
                 sidebarPageController.schedulerVC.isPastSemester = selectedSemester.isEarlier(than: self.semesterToday)
                 sidebarPageController.schedulerVC.loadCourses(from: selectedSemester)
                 scheduleBox.isHighlighting = true
-                reloadScheduler(with: nil)
+                
                 sidebarPageController.selectedIndex = sidebarPageController.SBSemesterIndex
+
+                if selectedCourse != nil {
+                    sidebarPageController.selectedIndex = sidebarPageController.SBCourseIndex
+                    if assumeRecentLecture {
+                        isEditing(lecture: (selectedCourse.lectures!.lastObject as! Lecture))
+                    }
+                    reloadScheduler(with: selectedCourse)
+                } else {
+                    reloadScheduler(with: nil)
+                }
             }
         }
         
@@ -95,8 +107,6 @@ class MasterViewController: NSViewController, SelectionDelegate, SchedulingDeleg
         
         // Listen for window resizes
         NotificationCenter.default.addObserver(self, selector: #selector(checkMagnetRegion), name: .NSWindowDidResize, object: self.view.window!)
-        
-        loadPreferences()
     }
     
     override func viewWillDisappear() {
@@ -631,7 +641,7 @@ class MasterViewController: NSViewController, SelectionDelegate, SchedulingDeleg
 //        if editorViewController != nil {
 //            editorViewController.notifyExport()
 //        }
-        if lectureEditorVC != nil {
+        if lectureEditorVC != nil && lectureEditorVC.selectedLecture != nil {
             lectureEditorVC.isExporting = !lectureEditorVC.isExporting
         }
     }
@@ -640,7 +650,7 @@ class MasterViewController: NSViewController, SelectionDelegate, SchedulingDeleg
 //        if editorViewController != nil {
 //            editorViewController.notifyPrint()
 //        }
-        if lectureEditorVC == nil {
+        if lectureEditorVC == nil && lectureEditorVC.selectedLecture != nil {
             splitView_content.print(self)            
         }
     }
@@ -649,7 +659,7 @@ class MasterViewController: NSViewController, SelectionDelegate, SchedulingDeleg
 //        if editorViewController != nil {
 //            editorViewController.notifyFind()
 //        }
-        if lectureEditorVC != nil {
+        if lectureEditorVC != nil && lectureEditorVC.selectedLecture != nil {
             lectureEditorVC.isFinding = !lectureEditorVC.isFinding
         }
     }
@@ -658,7 +668,7 @@ class MasterViewController: NSViewController, SelectionDelegate, SchedulingDeleg
 //        if editorViewController != nil {
 //            editorViewController.notifyFindAndReplace()
 //        }
-        if lectureEditorVC != nil {
+        if lectureEditorVC != nil && lectureEditorVC.selectedLecture != nil {
             lectureEditorVC.isReplacing = !lectureEditorVC.isReplacing
         }
     }
@@ -735,20 +745,24 @@ class MasterViewController: NSViewController, SelectionDelegate, SchedulingDeleg
     // MARK: - Control Flow Delegation
     
     func courseWasSelected(_ course: Course?) {
-        if selectedCourse != nil {
-            sidebarPageController.selectedIndex = sidebarPageController.SBSemesterIndex
-        }
-        selectedCourse = course
         if course != nil {
-            sidebarPageController.navigateForward(self)
+            selectedCourse = course
+            if sidebarPageController.selectedIndex == sidebarPageController.SBCourseIndex {
+                sidebarCourseNeedsPopulating(sidebarPageController.courseVC)
+            } else {
+                sidebarPageController.selectedIndex = sidebarPageController.SBCourseIndex
+            }
             if assumeRecentLecture {
                 isEditing(lecture: (selectedCourse.lectures!.lastObject as! Lecture))
             }
+            reloadScheduler(with: selectedCourse)
         } else {
+            sidebarPageController.selectedIndex = sidebarPageController.SBSemesterIndex
+            scheduleBox.isHighlighting = true
+            hideLectureEditor()
             reloadScheduler(with: nil)
-            isEditing(lecture: nil)
         }
-        reloadScheduler(with: selectedCourse)
+        
     }
     
     func workWasSelected(_ work: Work) {
@@ -795,6 +809,20 @@ class MasterViewController: NSViewController, SelectionDelegate, SchedulingDeleg
         }
     }
     
+    func isExporting(with exportVC: HXExportViewController) {
+        guard let lecture = lectureEditorVC.selectedLecture else { return }
+        
+        exportVC.textField_name.stringValue = lecture.course!.title! + " Lecture \(lecture.number) - \(lecture.course!.semester!.year) \(lecture.course!.semester!.title!.capitalized)"
+    }
+    
+    func isFinding(with findVC: HXFindViewController) {
+        
+    }
+    
+    func isReplacing(with replacingVC: HXFindReplaceViewController) {
+        
+    }
+    
     // MARK: - Scheduler Delegation
     
     func schedulingDidFinish() {
@@ -834,11 +862,13 @@ class MasterViewController: NSViewController, SelectionDelegate, SchedulingDeleg
     func schedulingAddWork() {
         let newBox = sidebarPageController.courseVC.push(work: selectedCourse.createWork())
         sidebarPageController.courseVC.showWorkPopover(for: newBox)
+        sidebarPageController.courseVC.noWorkCheck()
     }
     
     func schedulingAddTest() {
         let newBox = sidebarPageController.courseVC.push(test: selectedCourse.createTest())
         sidebarPageController.courseVC.showTestPopover(for: newBox)
+        sidebarPageController.courseVC.noTestsCheck()
     }
     
     
@@ -916,36 +946,62 @@ class MasterViewController: NSViewController, SelectionDelegate, SchedulingDeleg
     }
     
     func sidebarSemesterNeedsPopulating(_ semesterPVC: SemesterPageViewController) {
+        
+        semesterPVC.view.alphaValue = 1
+        semesterPVC.prepDisplay()
+
+        perform(#selector(populateSemesterAfterClearingOldInformation), with: nil, afterDelay: 0)
+    }
+    func populateSemesterAfterClearingOldInformation() {
+        let semesterPVC = sidebarPageController.semesterVC!
+        
         semesterPVC.loadCourses(from: selectedSemester)
         semesterPVC.loadWork(from: selectedSemester)
         semesterPVC.loadTests(from: selectedSemester)
+        
+        
         semesterPVC.optimizeSplitViewSpace()
+        
+        DispatchQueue.main.async {
+            semesterPVC.display()
+        }
     }
     
     func sidebarCourseNeedsPopulating(_ coursePVC: CoursePageViewController) {
         if selectedCourse == nil {
             return
         }
-        
         coursePVC.courseLabel.stringValue = selectedCourse.title!
+        coursePVC.view.alphaValue = 1
+        coursePVC.prepDisplay()
         
-        coursePVC.loadLectures(from: selectedCourse)
-        coursePVC.loadTests(from: selectedCourse, showingCompleted: false)
-        coursePVC.loadWork(from: selectedCourse, showingCompleted: false)
-        coursePVC.optimizeSplitViewSpace()
+        perform(#selector(populateCourseAfterClearingOldInformation), with: nil, afterDelay: 0)
+    }
+    func populateCourseAfterClearingOldInformation() {
+        let coursePVC = sidebarPageController.courseVC!
+        
+        coursePVC.loadLectures(from: self.selectedCourse)
+        coursePVC.loadTests(from: self.selectedCourse, showingCompleted: false)
+        coursePVC.loadWork(from: self.selectedCourse, showingCompleted: false)
         
         // Display the add button if a lecture is happening and it wasn't already created.
-        if selectedCourse.duringTimeSlot() != nil && (selectedCourse.lectures?.count == 0 ||
-            Int((selectedCourse.lectures?.lastObject as! Lecture).number) != selectedCourse.theoreticalLectureCount()) {
+        if self.selectedCourse.duringTimeSlot() != nil && (self.selectedCourse.lectures?.count == 0 ||
+            Int((self.selectedCourse.lectures?.lastObject as! Lecture).number) != self.selectedCourse.theoreticalLectureCount()) {
             coursePVC.addButton.isEnabled = true
             coursePVC.addButton.isHidden = false
-            coursePVC.addButton.title = "Add Lecture \(max(selectedCourse.theoreticalLectureCount(), 1))"
+            coursePVC.addButton.title = "Add Lecture \(max(self.selectedCourse.theoreticalLectureCount(), 1))"
         } else {
             coursePVC.addButton.isEnabled = false
             coursePVC.addButton.isHidden = true
         }
         //        // Fill in absent lectures since last course open
         //        sidebarVC.selectedCourse.fillAbsentLectures()
+        
+        coursePVC.optimizeSplitViewSpace()
+        
+        DispatchQueue.main.async {
+            coursePVC.display()
+        }
     }
     
     func sidebarCoursePopulateCompletedWork(_ coursePVC: CoursePageViewController) {

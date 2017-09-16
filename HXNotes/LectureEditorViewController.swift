@@ -36,6 +36,7 @@ class LectureEditorViewController: NSViewController {
     
     @IBOutlet weak var customTitleTrailingConstraint: NSLayoutConstraint!
     
+    @IBOutlet weak var scrollViewContent: NSScrollView!
     @IBOutlet weak var clipViewContent: NSClipView!
     @IBOutlet var textViewContent: HXTextView!
     
@@ -115,6 +116,10 @@ class LectureEditorViewController: NSViewController {
 //        let width = screenSize.width / physicalSize.width * 25.4
 //        let height = screenSize.height / physicalSize.height * 25.4
 //        print("DPI: \(width), \(height)")
+        
+        findViewController.selectionDelegate = self.selectionDelegate
+        replaceViewController.selectionDelegate = self.selectionDelegate
+        exportViewController.selectionDelegate = self.selectionDelegate
     }
     
     override func viewWillDisappear() {
@@ -127,7 +132,7 @@ class LectureEditorViewController: NSViewController {
         }
     }
     
-    private weak var selectedLecture: Lecture! {
+    private(set) weak var selectedLecture: Lecture! {
         didSet {
             
             if selectedLecture == nil {
@@ -420,7 +425,7 @@ class LectureEditorViewController: NSViewController {
     
     /// Produces a formatted RTFD file and places it at the provided URL.
     func export(to url: URL){
-        let attribString = NSMutableAttributedString()
+        let attribString = NSMutableAttributedString(attributedString: textViewContent.attributedString())
         // Combine all data from every lecture
 //        for case let lecture as Lecture in selectedCourse.lectures! {
             //            attribString

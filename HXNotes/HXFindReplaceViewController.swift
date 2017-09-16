@@ -10,6 +10,8 @@ import Cocoa
 
 class HXFindReplaceViewController: NSViewController {
     
+    var selectionDelegate: SelectionDelegate?
+    
     static var lastFindUsed: String = ""
     
     @IBOutlet weak var label_lectureSelection: NSTextField!
@@ -42,13 +44,15 @@ class HXFindReplaceViewController: NSViewController {
                                                name: .NSControlTextDidChange, object: textField_find)
         NotificationCenter.default.addObserver(self, selector: #selector(HXFindViewController.textField_textChange),
                                                name: .NSControlTextDidChange, object: textField_replace)
+        
+        selectionDelegate?.isReplacing(with: self)
     }
     /// Should reset all variables when changing text
     func textField_textChange() {
         label_result.stringValue = ""
     }
     @IBAction func action_close(_ sender: NSButton) {
-        if let parent = self.parent as? LectureCollectionViewItem {
+        if let parent = self.parent as? LectureEditorViewController {
             parent.isReplacing = false
         } else if let parent = self.parent as? EditorViewController {
             parent.isReplacing = false
@@ -57,55 +61,55 @@ class HXFindReplaceViewController: NSViewController {
     @IBAction func action_confirm(_ sender: Any) {
         
         label_result.stringValue = "Not yet implemented."
-        return
-        if textField_find.stringValue == "" || textField_replace.stringValue == ""  || textField_find.stringValue == textField_replace.stringValue {
-            return
-        }
-        // If owned by a LectureVC
-        if let parent = self.parent as? LectureCollectionViewItem {
-            var searchThroughText = parent.textView_lecture.string!
-            var replaced = 0
-            var index = 0
-            var loc = searchThroughText.lowercased().range(of: textField_find.stringValue)
-            while loc != nil {
-                print("Remove")
-                print("  Location is \(loc)")
-                index += searchThroughText.distance(from: searchThroughText.startIndex, to: loc!.lowerBound)
-                print("  Delete at \(index) with length \(textField_find.stringValue.characters.count)")
-                parent.textView_lecture.textStorage?.deleteCharacters(in: NSRange(location: index, length: textField_find.stringValue.characters.count))
-                print("  Insert at \(index)")
-                parent.textView_lecture.textStorage?.insert(NSAttributedString(string: textField_replace.stringValue), at: index)
-                replaced += 1
-                let removeToHere = parent.textView_lecture.string?.lowercased().range(of: textField_replace.stringValue)
-                print("  Remove to \(removeToHere)")
-                searchThroughText = searchThroughText.substring(from: (removeToHere?.upperBound)!)
-                index += textField_replace.stringValue.characters.count - 1
-                loc = searchThroughText.lowercased().range(of: textField_find.stringValue)
-            }
-            if replaced == 0 {
-                label_result.stringValue = "None Found"
-            } else {
-                label_result.stringValue = "\(replaced) Replaced"
-            }
-            // If owned by a TopbarVC
-        } else if let parent = self.parent as? EditorViewController {
-            var replaced = 0
-//            for case let lectureVC as LectureViewController in parent.childViewControllers {
-//                var loc = lectureVC.textView_lecture.string!.lowercased().range(of: textField_find.stringValue)
-//                while loc != nil {
-//                    let index = lectureVC.textView_lecture.string!.lowercased().distance(from: (lectureVC.textView_lecture.string?.startIndex)!, to: loc!.lowerBound)
-//                    lectureVC.textView_lecture.string?.removeSubrange(loc!)
-//                    lectureVC.textView_lecture.textStorage?.insert(NSAttributedString(string: textField_replace.stringValue), at: index)
-//                    replaced += 1
-//                    loc = lectureVC.textView_lecture.string!.lowercased().range(of: textField_find.stringValue)
-//                }
+//        return
+//        if textField_find.stringValue == "" || textField_replace.stringValue == ""  || textField_find.stringValue == textField_replace.stringValue {
+//            return
+//        }
+//        // If owned by a LectureVC
+//        if let parent = self.parent as? LectureCollectionViewItem {
+//            var searchThroughText = parent.textView_lecture.string!
+//            var replaced = 0
+//            var index = 0
+//            var loc = searchThroughText.lowercased().range(of: textField_find.stringValue)
+//            while loc != nil {
+//                print("Remove")
+//                print("  Location is \(loc)")
+//                index += searchThroughText.distance(from: searchThroughText.startIndex, to: loc!.lowerBound)
+//                print("  Delete at \(index) with length \(textField_find.stringValue.characters.count)")
+//                parent.textView_lecture.textStorage?.deleteCharacters(in: NSRange(location: index, length: textField_find.stringValue.characters.count))
+//                print("  Insert at \(index)")
+//                parent.textView_lecture.textStorage?.insert(NSAttributedString(string: textField_replace.stringValue), at: index)
+//                replaced += 1
+//                let removeToHere = parent.textView_lecture.string?.lowercased().range(of: textField_replace.stringValue)
+//                print("  Remove to \(removeToHere)")
+//                searchThroughText = searchThroughText.substring(from: (removeToHere?.upperBound)!)
+//                index += textField_replace.stringValue.characters.count - 1
+//                loc = searchThroughText.lowercased().range(of: textField_find.stringValue)
 //            }
-            if replaced == 0 {
-                label_result.stringValue = "None Found"
-            } else {
-                label_result.stringValue = "\(replaced) Replaced"
-            }
-        }
+//            if replaced == 0 {
+//                label_result.stringValue = "None Found"
+//            } else {
+//                label_result.stringValue = "\(replaced) Replaced"
+//            }
+//            // If owned by a TopbarVC
+//        } else if self.parent is EditorViewController {
+////            var replaced = 0
+////            for case let lectureVC as LectureViewController in parent.childViewControllers {
+////                var loc = lectureVC.textView_lecture.string!.lowercased().range(of: textField_find.stringValue)
+////                while loc != nil {
+////                    let index = lectureVC.textView_lecture.string!.lowercased().distance(from: (lectureVC.textView_lecture.string?.startIndex)!, to: loc!.lowerBound)
+////                    lectureVC.textView_lecture.string?.removeSubrange(loc!)
+////                    lectureVC.textView_lecture.textStorage?.insert(NSAttributedString(string: textField_replace.stringValue), at: index)
+////                    replaced += 1
+////                    loc = lectureVC.textView_lecture.string!.lowercased().range(of: textField_find.stringValue)
+////                }
+////            }
+//            if replaced == 0 {
+//                label_result.stringValue = "None Found"
+//            } else {
+//                label_result.stringValue = "\(replaced) Replaced"
+//            }
+//        }
     }
     @IBAction func action_select(_ sender: NSButton) {
         if let parent = self.parent as? LectureCollectionViewItem {
