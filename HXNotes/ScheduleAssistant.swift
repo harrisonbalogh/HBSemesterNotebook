@@ -179,8 +179,8 @@ class ScheduleAssistant: NSObject {
         // Place below anything to happen on the minute marker...
         
 //        checkFuture()
-        checkHappening()
-        checkMissed()
+//        checkHappening()
+//        checkMissed()
         
         if masterVC.selectedCourse != nil {
             if masterVC.selectedCourse.checkWork() {

@@ -15,10 +15,12 @@
                 <outlet property="addButton" destination="JN2-lt-rjk" id="Ooi-QA-Nzj"/>
                 <outlet property="buttonAddTest" destination="JcK-aM-0wI" id="P5S-IP-yko"/>
                 <outlet property="buttonAddWork" destination="XWK-Mc-tWl" id="wYA-FW-j3C"/>
-                <outlet property="colorBox" destination="8zr-Q8-Ptv" id="XSU-i8-z1t"/>
+                <outlet property="colorBox" destination="D4s-7y-0Qo" id="J4b-fv-0Ld"/>
                 <outlet property="courseLabel" destination="oZJ-mb-bJa" id="JcN-3j-niD"/>
+                <outlet property="docsScrollView" destination="Ulb-pu-0K6" id="EmH-so-vgh"/>
                 <outlet property="docsStackView" destination="Emi-rt-yA4" id="2m0-bK-vhW"/>
                 <outlet property="lectureStackView" destination="krr-Ht-jYx" id="wVk-6k-4qG"/>
+                <outlet property="noDocsLabel" destination="lOK-Xw-EMl" id="wh6-g1-A62"/>
                 <outlet property="noLecturesLabel" destination="O3M-Ge-grQ" id="wSR-kv-gv0"/>
                 <outlet property="noTestsLabel" destination="7Ny-td-hT2" id="Sfb-6S-CtT"/>
                 <outlet property="noWorkLabel" destination="caO-UR-m1z" id="5BV-0Q-oi4"/>
@@ -122,8 +124,8 @@
                                 <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="LWz-Ii-kfi">
                                     <rect key="frame" x="0.0" y="63" width="174" height="5"/>
                                 </box>
-                                <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="JN2-lt-rjk">
-                                    <rect key="frame" x="79" y="69" width="91" height="17"/>
+                                <button hidden="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="JN2-lt-rjk">
+                                    <rect key="frame" x="61" y="69" width="91" height="17"/>
                                     <buttonCell key="cell" type="inline" title="Add Lecture #" bezelStyle="inline" imagePosition="left" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="QLf-E9-log">
                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                         <font key="font" metaFont="smallSystemBold"/>
@@ -132,11 +134,20 @@
                                         <action selector="action_addLecture:" target="-2" id="4lu-wU-bE8"/>
                                     </connections>
                                 </button>
+                                <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="GvJ-Zq-gSA" userLabel="Search Button">
+                                    <rect key="frame" x="152" y="62" width="18" height="32"/>
+                                    <buttonCell key="cell" type="bevel" bezelStyle="rounded" image="icon_search" imagePosition="overlaps" alignment="center" alternateImage="icon_search_alt" imageScaling="proportionallyDown" inset="2" id="Nyl-jj-Uuu">
+                                        <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
+                                        <font key="font" metaFont="system"/>
+                                    </buttonCell>
+                                </button>
                             </subviews>
                             <constraints>
                                 <constraint firstItem="ltv-pq-fNk" firstAttribute="leading" secondItem="zhb-YD-iHb" secondAttribute="leading" id="1zF-ze-dfc"/>
                                 <constraint firstItem="LWz-Ii-kfi" firstAttribute="leading" secondItem="zhb-YD-iHb" secondAttribute="leading" id="2q1-wX-H6i"/>
+                                <constraint firstItem="GvJ-Zq-gSA" firstAttribute="centerY" secondItem="gpv-fH-H49" secondAttribute="centerY" id="34a-HJ-mbg"/>
                                 <constraint firstItem="JN2-lt-rjk" firstAttribute="centerY" secondItem="gpv-fH-H49" secondAttribute="centerY" id="5FR-nB-qRC"/>
+                                <constraint firstItem="GvJ-Zq-gSA" firstAttribute="leading" secondItem="JN2-lt-rjk" secondAttribute="trailing" id="63D-9x-zfr"/>
                                 <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="LWz-Ii-kfi" secondAttribute="bottom" id="7Fs-ZN-84e"/>
                                 <constraint firstAttribute="bottom" secondItem="DBn-qV-v1h" secondAttribute="bottom" id="7Qn-5g-hdT"/>
                                 <constraint firstAttribute="trailing" secondItem="ltv-pq-fNk" secondAttribute="trailing" id="81S-31-AkE"/>
@@ -148,6 +159,7 @@
                                 <constraint firstItem="DBn-qV-v1h" firstAttribute="top" secondItem="gpv-fH-H49" secondAttribute="bottom" constant="3" id="K5J-57-zge"/>
                                 <constraint firstItem="O3M-Ge-grQ" firstAttribute="centerY" secondItem="DBn-qV-v1h" secondAttribute="centerY" id="K8G-e1-hU4"/>
                                 <constraint firstItem="LWz-Ii-kfi" firstAttribute="top" secondItem="gpv-fH-H49" secondAttribute="bottom" constant="3" id="Yb2-fB-pCU"/>
+                                <constraint firstAttribute="trailing" secondItem="GvJ-Zq-gSA" secondAttribute="trailing" constant="4" id="Ye5-Xt-H6f"/>
                                 <constraint firstItem="O3M-Ge-grQ" firstAttribute="top" relation="greaterThanOrEqual" secondItem="zhb-YD-iHb" secondAttribute="top" id="a6J-Oh-DzR"/>
                                 <constraint firstItem="DBn-qV-v1h" firstAttribute="top" secondItem="ltv-pq-fNk" secondAttribute="bottom" id="aoV-b6-RRo"/>
                                 <constraint firstItem="gpv-fH-H49" firstAttribute="top" secondItem="zhb-YD-iHb" secondAttribute="top" constant="3" id="iBb-5a-AYk"/>
@@ -158,7 +170,15 @@
                             <rect key="frame" x="0.0" y="91" width="174" height="90"/>
                             <autoresizingMask key="autoresizingMask"/>
                             <subviews>
-                                <scrollView borderType="none" horizontalLineScroll="0.0" horizontalPageScroll="0.0" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ulb-pu-0K6">
+                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="100" verticalCompressionResistancePriority="100" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lOK-Xw-EMl" userLabel="No Work Due">
+                                    <rect key="frame" x="39" y="25" width="95" height="16"/>
+                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Drag Work Here" id="O0b-b4-Vto">
+                                        <font key="font" metaFont="cellTitle"/>
+                                        <color key="textColor" red="0.50759640959999996" green="0.50759640959999996" blue="0.50759640959999996" alpha="0.84999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                    </textFieldCell>
+                                </textField>
+                                <scrollView borderType="none" horizontalLineScroll="0.0" horizontalPageScroll="0.0" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ulb-pu-0K6" customClass="DocumentsScrollView" customModule="HXNotes" customModuleProvider="target">
                                     <rect key="frame" x="0.0" y="0.0" width="174" height="66"/>
                                     <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="N1D-Wa-FZf" customClass="HXFlippedClipView" customModule="HXNotes" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="174" height="66"/>
@@ -187,14 +207,6 @@
                                         <autoresizingMask key="autoresizingMask"/>
                                     </scroller>
                                 </scrollView>
-                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="100" verticalCompressionResistancePriority="100" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lOK-Xw-EMl" userLabel="No Work Due">
-                                    <rect key="frame" x="36" y="25" width="102" height="16"/>
-                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Not Implemented" id="O0b-b4-Vto">
-                                        <font key="font" metaFont="cellTitle"/>
-                                        <color key="textColor" red="0.50759640959999996" green="0.50759640959999996" blue="0.50759640959999996" alpha="0.84999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                    </textFieldCell>
-                                </textField>
                                 <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="QI2-7d-7X9">
                                     <rect key="frame" x="0.0" y="66" width="174" height="24"/>
                                     <view key="contentView" id="cbd-tu-pq6">
@@ -476,6 +488,19 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
+                <box identifier="course_box_drag" boxType="custom" borderWidth="0.0" cornerRadius="8" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="D4s-7y-0Qo" userLabel="Drag Box">
+                    <rect key="frame" x="152" y="400" width="16" height="16"/>
+                    <view key="contentView" id="Ire-0m-rnu">
+                        <rect key="frame" x="0.0" y="0.0" width="16" height="16"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    </view>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="16" id="1Xz-b4-34q"/>
+                        <constraint firstAttribute="height" constant="16" id="aGc-Pa-Fiy"/>
+                    </constraints>
+                    <color key="borderColor" red="0.36770279259999999" green="0.36770279259999999" blue="0.36770279259999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <color key="fillColor" red="0.47121701980000003" green="0.82496093749999999" blue="0.48645101699999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                </box>
                 <button translatesAutoresizingMaskIntoConstraints="NO" id="zVk-Uo-YGZ">
                     <rect key="frame" x="6" y="401" width="12" height="15"/>
                     <constraints>
@@ -499,6 +524,7 @@
                 <constraint firstAttribute="trailing" secondItem="9fe-aM-wTV" secondAttribute="trailing" id="4fJ-sY-MX9"/>
                 <constraint firstItem="DSD-hT-hJj" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" id="5at-Qe-4z1"/>
                 <constraint firstItem="XfR-Pj-hFQ" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" id="6aq-dT-XGW"/>
+                <constraint firstItem="D4s-7y-0Qo" firstAttribute="centerY" secondItem="oZJ-mb-bJa" secondAttribute="centerY" id="7fr-Y0-nxk"/>
                 <constraint firstItem="9fe-aM-wTV" firstAttribute="top" secondItem="8zr-Q8-Ptv" secondAttribute="bottom" id="BC5-sV-LeX"/>
                 <constraint firstAttribute="bottom" secondItem="9fe-aM-wTV" secondAttribute="bottom" id="DQN-V8-cRU"/>
                 <constraint firstItem="8zr-Q8-Ptv" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" id="E2A-pj-Qgc"/>
@@ -510,10 +536,10 @@
                 <constraint firstItem="zVk-Uo-YGZ" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" constant="6" id="PAc-ZX-GVg"/>
                 <constraint firstAttribute="trailing" secondItem="XfR-Pj-hFQ" secondAttribute="trailing" id="WqF-4b-B2w"/>
                 <constraint firstAttribute="trailing" secondItem="DSD-hT-hJj" secondAttribute="trailing" id="bFT-xe-njU"/>
+                <constraint firstAttribute="trailing" secondItem="D4s-7y-0Qo" secondAttribute="trailing" constant="6" id="fF6-cQ-gvj"/>
                 <constraint firstItem="8zr-Q8-Ptv" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" id="fY4-fn-Kh9"/>
                 <constraint firstItem="XfR-Pj-hFQ" firstAttribute="bottom" secondItem="8zr-Q8-Ptv" secondAttribute="bottom" id="h0a-Fl-Xay"/>
                 <constraint firstItem="9fe-aM-wTV" firstAttribute="top" secondItem="oZJ-mb-bJa" secondAttribute="bottom" constant="2" id="paZ-TS-rDb"/>
-                <constraint firstAttribute="trailing" secondItem="JN2-lt-rjk" secondAttribute="trailing" constant="4" id="qGg-oU-F2y"/>
                 <constraint firstAttribute="trailing" secondItem="8zr-Q8-Ptv" secondAttribute="trailing" id="rMX-Yf-nEA"/>
                 <constraint firstItem="9fe-aM-wTV" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" id="ufz-fL-ITT"/>
                 <constraint firstItem="LqF-fh-HNr" firstAttribute="centerX" secondItem="9fe-aM-wTV" secondAttribute="centerX" id="x4G-wA-uMv"/>
@@ -527,5 +553,7 @@
         <image name="icon_add" width="18" height="18"/>
         <image name="icon_check" width="18" height="18"/>
         <image name="icon_check_alt" width="18" height="18"/>
+        <image name="icon_search" width="18" height="18"/>
+        <image name="icon_search_alt" width="18" height="18"/>
     </resources>
 </document>

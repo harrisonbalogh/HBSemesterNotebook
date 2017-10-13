@@ -76,7 +76,7 @@ public class Course: NSManagedObject {
             
             // Insert the lecture into its place since this was an absent lecture.
             let sortedSet = NSMutableOrderedSet(orderedSet: self.lectures!)
-            sortedSet.remove(sortedSet.lastObject!)
+            sortedSet.remove(newLecture)
             sortedSet.insert(newLecture, at: index!)
             self.lectures = sortedSet
         }
@@ -356,12 +356,11 @@ public class Course: NSManagedObject {
 
         // ... first adjustment: if first lecture was offset from the start of the week.
         if self.needsSort {
-            // Timeslots msut be sorted for this to proceed properly
+            // Timeslots must be sorted for this to proceed properly
             self.sortTimeSlots()
         }
         let indexFirst = self.timeSlots!.index(of: firstLecture.timeSlot!)
         
-        var indexToday = 0
         let minuteOfDay = Int16(cal.component(.hour, from: date) * 60 + cal.component(.minute, from: date))
         let weekdayToday = Int16(cal.component(.weekday, from: date))
         for case let time as TimeSlot in self.timeSlots! {
@@ -369,25 +368,29 @@ public class Course: NSManagedObject {
             let timeStart = time.startMinute
             // count increases with number of timeslots that passed for a week
             if timeDay < weekdayToday {
-                indexToday += 1
+//                indexToday += 1
+                count += 1
             } else if timeDay == weekdayToday && timeStart - 5 < minuteOfDay {
-                indexToday += 1
+//                indexToday += 1
+                count += 1
             } else {
                 break
             }
         }
-        if indexToday == 0 {
-            indexToday = self.timeSlots!.count - 1
-        } else {
-            indexToday -= 1
-        }
+//        if indexToday == 0 {
+//            indexToday = self.timeSlots!.count - 1
+//        } else {
+//            indexToday -= 1
+//        }
         
-        if indexToday - indexFirst < 0 {
-            // Rolled over to next week
-            count += self.timeSlots!.count - indexFirst + indexToday + 1
-        } else {
-            count += indexToday - indexFirst + 1
-        }
+//        if indexToday - indexFirst < 0 {
+//            // Rolled over to next week
+//            count += self.timeSlots!.count - indexFirst + indexToday + 1
+//        } else {
+//            count += indexToday - indexFirst + 1
+//        }
+        
+        count -= indexFirst;
         
         return count
     }
@@ -564,22 +567,28 @@ public class Course: NSManagedObject {
 
         // Get how many lectures there are supposed to be.
         let theoLecCount = self.theoreticalLectureCount()
+        print("Theo count: \(theoLecCount) for \(self.title!)")
+        if theoLecCount == 1 {
+            // First lecture was the last time slot so nothing to insert.
+            return false
+        }
         
         var date = firstLecture.date()
         var timeSlotIndex = self.timeSlots!.index(of: firstLecture.timeSlot!)
-        var lectureIndex = 0
         
         // Exlude last and first lectures from iteration
-        for _ in 0..<(theoLecCount-1) {
+        for lectureIndex in 0..<(theoLecCount-1) {
+            
+            print("    iteration: \(lectureIndex)")
             
             if theoLecCount == self.lectures!.count {
+                print("        break cus we're good: \(lectureIndex)")
                 break
             }
             
             let prevTimeSlot = (timeSlots!.object(at: timeSlotIndex) as! TimeSlot)
             
             timeSlotIndex = (timeSlotIndex + 1) % self.timeSlots!.count
-            lectureIndex += 1
             
             let nextTimeSlot = (timeSlots!.object(at: timeSlotIndex) as! TimeSlot)
             
@@ -597,14 +606,17 @@ public class Course: NSManagedObject {
                     createLecture(during: nextTimeSlot, on: day, in: month, at: lectureIndex)
                     addedLectures = true
                 }
+                print("      iteration: \(lectureIndex) from case 1")
             } else if lectureIndex != theoLecCount { // Missing non-serted lectures.
                 // This is not the latest lecture so just add it without checking if in progress
                 createLecture(during: nextTimeSlot, on: day, in: month, at: lectureIndex)
                 addedLectures = true
+                print("      iteration: \(lectureIndex) from case 2")
             } else if self.duringTimeSlot() == nil { // Missing latest lecture
                 // It is not in progress, so add it.
                 createLecture(during: nextTimeSlot, on: day, in: month, at: lectureIndex)
                 addedLectures = true
+                print("      iteration: \(lectureIndex) from case 3")
             }
         }
         return addedLectures
@@ -616,6 +628,12 @@ public class Course: NSManagedObject {
     /// be guaranteed to be sorted else it will produce incorrect results. Returns true if
     /// it had to add any lectures.
     @discardableResult func fillAbsentLectures() -> Bool {
+        
+//        print("Theo count: \(theoreticalLectureCount())")
+//        
+//        return false
+        
+//        return insertAbsentLectures()
 
         if needsSort {
             sortTimeSlots()
@@ -629,7 +647,7 @@ public class Course: NSManagedObject {
         let theoLecCount = theoreticalLectureCount()
         
         // It appears all lectures are present
-        if theoLecCount == lectures!.count {
+        if theoLecCount <= lectures!.count {
             return false
         }
 
@@ -645,7 +663,7 @@ public class Course: NSManagedObject {
         var addedLectures = false
         
         for x in self.lectures!.count..<theoLecCount {
-            if x == theoLecCount && self.duringTimeSlot() != nil {
+            if (x+1) == theoLecCount && self.duringTimeSlot() != nil {
                 // This is the most recent lecture and it is in progress. Not absent.
                 break
             }

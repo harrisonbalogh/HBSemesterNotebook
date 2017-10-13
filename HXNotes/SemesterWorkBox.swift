@@ -68,12 +68,24 @@ class SemesterWorkBox: NSView {
     }
     
     override func mouseEntered(with event: NSEvent) {
-        recallDate = labelDate.stringValue
-        labelDate.stringValue = "Go to " + work.course!.title!
+        selectionDelegate?.workWasHovered(work)
+        hoverVisuals(true)
     }
     
     override func mouseExited(with event: NSEvent) {
-        labelDate.stringValue = recallDate
+        hoverVisuals(false)
+    }
+    
+    func hoverVisuals(_ visible: Bool) {
+        if visible {
+            if recallDate == "" {
+                recallDate = labelDate.stringValue
+            }
+            labelDate.stringValue = "Go to " + work.course!.title!
+        } else {
+            labelDate.stringValue = recallDate
+            recallDate = ""
+        }
     }
     
     @IBAction func action_select(_ sender: NSButton) {

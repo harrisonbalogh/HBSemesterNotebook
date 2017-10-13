@@ -763,31 +763,31 @@
                             <splitView dividerStyle="thin" vertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Rno-LO-yQP">
                                 <rect key="frame" x="0.0" y="0.0" width="706" height="345"/>
                                 <subviews>
-                                    <customView id="BBr-tT-C3k">
+                                    <customView identifier="sidebarSplit" id="BBr-tT-C3k">
                                         <rect key="frame" x="0.0" y="0.0" width="189" height="345"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <subviews>
                                             <containerView horizontalCompressionResistancePriority="550" translatesAutoresizingMaskIntoConstraints="NO" id="tfW-KJ-YDg" userLabel="Sidebar Container">
-                                                <rect key="frame" x="0.0" y="0.0" width="189" height="293"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="188.5" height="293"/>
                                                 <connections>
                                                     <segue destination="OSy-wx-obc" kind="embed" id="YzP-oS-foJ"/>
                                                 </connections>
                                             </containerView>
                                             <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" alphaValue="0.29999999999999999" translatesAutoresizingMaskIntoConstraints="NO" id="3bg-iZ-AWo" userLabel="Gradient">
-                                                <rect key="frame" x="0.0" y="323" width="189" height="22"/>
+                                                <rect key="frame" x="0.0" y="323" width="188.5" height="22"/>
                                                 <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="axesIndependently" image="image_gradientUp" id="IUu-M5-gTp"/>
                                             </imageView>
                                             <box horizontalCompressionResistancePriority="550" boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="vSY-bc-5JG" userLabel="Edit Box">
-                                                <rect key="frame" x="0.0" y="293" width="189" height="30"/>
+                                                <rect key="frame" x="0.0" y="293" width="188.5" height="30"/>
                                                 <view key="contentView" id="6li-0p-SSt">
-                                                    <rect key="frame" x="0.0" y="0.0" width="189" height="30"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="188.5" height="30"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="zUo-aj-j6F">
-                                                            <rect key="frame" x="0.0" y="-2" width="189" height="5"/>
+                                                            <rect key="frame" x="0.0" y="-2" width="188.5" height="5"/>
                                                         </box>
                                                         <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="BWN-Ho-dsg">
-                                                            <rect key="frame" x="0.0" y="27" width="189" height="5"/>
+                                                            <rect key="frame" x="0.0" y="27" width="188.5" height="5"/>
                                                         </box>
                                                         <button focusRingType="none" horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="syF-n2-jAD">
                                                             <rect key="frame" x="34" y="0.0" width="53" height="32"/>
@@ -889,15 +889,30 @@
                                                 </constraints>
                                                 <color key="fillColor" red="0.97467082739999999" green="0.97467082739999999" blue="0.97467082739999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             </box>
+                                            <button focusRingType="none" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Cch-XT-8O6">
+                                                <rect key="frame" x="167" y="326" width="16" height="16"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="16" id="3MR-xh-yel"/>
+                                                    <constraint firstAttribute="height" constant="16" id="Ovg-UE-5v1"/>
+                                                </constraints>
+                                                <buttonCell key="cell" type="bevel" bezelStyle="rounded" image="icon_resize" imagePosition="overlaps" alignment="center" focusRingType="none" imageScaling="proportionallyDown" inset="2" id="Rz0-P2-cNT">
+                                                    <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
+                                                    <font key="font" metaFont="system"/>
+                                                </buttonCell>
+                                                <connections>
+                                                    <action selector="action_sidebarOnly:" target="yZA-sL-yMj" id="De1-nH-X2O"/>
+                                                </connections>
+                                            </button>
                                         </subviews>
                                         <constraints>
                                             <constraint firstAttribute="trailing" secondItem="tfW-KJ-YDg" secondAttribute="trailing" id="7QQ-JF-sB4"/>
+                                            <constraint firstItem="Cch-XT-8O6" firstAttribute="centerY" secondItem="3bg-iZ-AWo" secondAttribute="centerY" id="9eQ-dt-0se"/>
                                             <constraint firstItem="3bg-iZ-AWo" firstAttribute="leading" secondItem="BBr-tT-C3k" secondAttribute="leading" id="BO1-Uv-KeE"/>
                                             <constraint firstItem="tfW-KJ-YDg" firstAttribute="top" secondItem="vSY-bc-5JG" secondAttribute="bottom" id="Dpa-mx-U96"/>
                                             <constraint firstItem="3bg-iZ-AWo" firstAttribute="top" secondItem="BBr-tT-C3k" secondAttribute="top" id="Hvi-Uy-1Ha"/>
-                                            <constraint firstAttribute="width" relation="lessThanOrEqual" constant="500" id="MZN-54-iOq"/>
                                             <constraint firstAttribute="trailing" secondItem="3bg-iZ-AWo" secondAttribute="trailing" id="OAo-nU-YkR"/>
                                             <constraint firstItem="vSY-bc-5JG" firstAttribute="top" secondItem="BBr-tT-C3k" secondAttribute="top" constant="22" id="PlI-y0-qTH"/>
+                                            <constraint firstAttribute="trailing" secondItem="Cch-XT-8O6" secondAttribute="trailing" constant="6" id="YaV-W6-3Nf"/>
                                             <constraint firstAttribute="trailing" secondItem="vSY-bc-5JG" secondAttribute="trailing" id="Z7F-N8-LSY"/>
                                             <constraint firstItem="vSY-bc-5JG" firstAttribute="top" secondItem="3bg-iZ-AWo" secondAttribute="bottom" id="azb-64-Ozg"/>
                                             <constraint firstAttribute="bottom" secondItem="tfW-KJ-YDg" secondAttribute="bottom" id="ckq-27-yX7"/>
@@ -905,97 +920,100 @@
                                             <constraint firstItem="vSY-bc-5JG" firstAttribute="leading" secondItem="BBr-tT-C3k" secondAttribute="leading" id="sAi-PJ-J50"/>
                                         </constraints>
                                     </customView>
-                                    <customView id="Do8-xp-hVb" customClass="SplitViewContent" customModule="HXNotes" customModuleProvider="target">
+                                    <customView identifier="contentSplit" id="Do8-xp-hVb" customClass="SplitViewContent" customModule="HXNotes" customModuleProvider="target">
                                         <rect key="frame" x="190" y="0.0" width="516" height="345"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <subviews>
                                             <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="ggC-aW-ppQ" userLabel="Content BG" customClass="SchedulerBackgroundBox" customModule="HXNotes" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.0" width="516" height="345"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="516.5" height="345"/>
                                                 <view key="contentView" id="IaD-fY-HLg">
-                                                    <rect key="frame" x="0.0" y="0.0" width="516" height="345"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="516.5" height="345"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                    <subviews>
+                                                        <button hidden="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QJT-gY-jc9">
+                                                            <rect key="frame" x="32" y="304" width="18" height="18"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="height" constant="18" id="DGf-06-So0"/>
+                                                                <constraint firstAttribute="width" constant="18" id="nsP-xD-6ls"/>
+                                                            </constraints>
+                                                            <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="icon_drawer" imagePosition="only" alignment="center" enabled="NO" imageScaling="proportionallyUpOrDown" inset="2" id="YPh-Ge-WvV">
+                                                                <behavior key="behavior" lightByContents="YES"/>
+                                                                <font key="font" metaFont="system"/>
+                                                            </buttonCell>
+                                                            <connections>
+                                                                <action selector="action_revealSidebar:" target="yZA-sL-yMj" id="fOt-qs-JQD"/>
+                                                            </connections>
+                                                        </button>
+                                                    </subviews>
                                                 </view>
                                                 <color key="fillColor" red="0.98376324760152944" green="0.98376324760152944" blue="0.98376324760152944" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             </box>
-                                            <button toolTip="Show current time of day on the scheduler." translatesAutoresizingMaskIntoConstraints="NO" id="QK0-My-Bc5" customClass="SchedulerDrawTimeButton" customModule="HXNotes" customModuleProvider="target">
-                                                <rect key="frame" x="34" y="297" width="16" height="14"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="14" id="jUw-wU-vCl"/>
-                                                </constraints>
-                                                <buttonCell key="cell" type="bevel" bezelStyle="rounded" image="icon_smallClock_alt" imagePosition="left" alignment="center" alternateImage="icon_smallClock" state="on" inset="2" id="rHw-tf-hXI">
-                                                    <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
-                                                    <font key="font" metaFont="system"/>
-                                                </buttonCell>
-                                                <connections>
-                                                    <action selector="action_showCurrentTime:" target="yZA-sL-yMj" id="YNj-9b-I2d"/>
-                                                </connections>
-                                            </button>
                                             <customView translatesAutoresizingMaskIntoConstraints="NO" id="cjo-qy-R5X" userLabel="Scheduler">
-                                                <rect key="frame" x="32" y="26" width="452" height="269"/>
+                                                <rect key="frame" x="32" y="26" width="452.5" height="269"/>
                                                 <subviews>
                                                     <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="zAO-xw-Zg9" userLabel="Days Color Box">
-                                                        <rect key="frame" x="0.0" y="239" width="452" height="30"/>
+                                                        <rect key="frame" x="0.0" y="239" width="452.5" height="30"/>
                                                         <view key="contentView" id="b9f-YU-Q4F">
-                                                            <rect key="frame" x="0.0" y="0.0" width="452" height="30"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="452.5" height="30"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                         </view>
                                                         <color key="fillColor" red="0.93231382978723409" green="0.93231382978723409" blue="0.93231382978723409" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     </box>
                                                     <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="b9x-vn-r2w" userLabel="Scheduler Color Box">
-                                                        <rect key="frame" x="0.0" y="0.0" width="452" height="239"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="452.5" height="239"/>
                                                         <view key="contentView" id="Wd3-rn-RzE">
-                                                            <rect key="frame" x="0.0" y="0.0" width="452" height="239"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="452.5" height="239"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                         </view>
                                                         <color key="fillColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     </box>
                                                     <stackView distribution="equalSpacing" orientation="vertical" alignment="leading" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FmE-DF-xJh" userLabel="Horizontal Line Stack">
-                                                        <rect key="frame" x="0.0" y="0.0" width="452" height="240"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="452.5" height="240"/>
                                                         <subviews>
                                                             <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="c9s-eE-JSL">
-                                                                <rect key="frame" x="0.0" y="237" width="452" height="5"/>
+                                                                <rect key="frame" x="0.0" y="237" width="452.5" height="5"/>
                                                             </box>
                                                             <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="OCI-N0-cbT">
-                                                                <rect key="frame" x="0.0" y="220" width="452" height="5"/>
+                                                                <rect key="frame" x="0.0" y="220" width="452.5" height="5"/>
                                                             </box>
                                                             <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="R38-2v-w2Z">
-                                                                <rect key="frame" x="0.0" y="203" width="452" height="5"/>
+                                                                <rect key="frame" x="0.0" y="203" width="452.5" height="5"/>
                                                             </box>
                                                             <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="DvF-Ur-Yhc">
-                                                                <rect key="frame" x="0.0" y="186" width="452" height="5"/>
+                                                                <rect key="frame" x="0.0" y="186" width="452.5" height="5"/>
                                                             </box>
                                                             <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="PD6-cT-jMH">
-                                                                <rect key="frame" x="0.0" y="168.5" width="452" height="5"/>
+                                                                <rect key="frame" x="0.0" y="168.5" width="452.5" height="5"/>
                                                             </box>
                                                             <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="5PU-R0-5i1">
-                                                                <rect key="frame" x="0.0" y="151.5" width="452" height="5"/>
+                                                                <rect key="frame" x="0.0" y="151.5" width="452.5" height="5"/>
                                                             </box>
                                                             <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="NbZ-dr-e18">
-                                                                <rect key="frame" x="0.0" y="134.5" width="452" height="5"/>
+                                                                <rect key="frame" x="0.0" y="134.5" width="452.5" height="5"/>
                                                             </box>
                                                             <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="pzf-Qy-hQf">
-                                                                <rect key="frame" x="0.0" y="117.5" width="452" height="5"/>
+                                                                <rect key="frame" x="0.0" y="117.5" width="452.5" height="5"/>
                                                             </box>
                                                             <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="szd-Ft-EFx">
-                                                                <rect key="frame" x="0.0" y="100.5" width="452" height="5"/>
+                                                                <rect key="frame" x="0.0" y="100.5" width="452.5" height="5"/>
                                                             </box>
                                                             <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="w2K-Xs-0KS">
-                                                                <rect key="frame" x="0.0" y="83.5" width="452" height="5"/>
+                                                                <rect key="frame" x="0.0" y="83.5" width="452.5" height="5"/>
                                                             </box>
                                                             <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="ZaX-0r-FbR">
-                                                                <rect key="frame" x="0.0" y="66.5" width="452" height="5"/>
+                                                                <rect key="frame" x="0.0" y="66.5" width="452.5" height="5"/>
                                                             </box>
                                                             <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="Eyi-LV-OGs">
-                                                                <rect key="frame" x="0.0" y="49" width="452" height="5"/>
+                                                                <rect key="frame" x="0.0" y="49" width="452.5" height="5"/>
                                                             </box>
                                                             <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="zFe-H3-uBj">
-                                                                <rect key="frame" x="0.0" y="32" width="452" height="5"/>
+                                                                <rect key="frame" x="0.0" y="32" width="452.5" height="5"/>
                                                             </box>
                                                             <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="iwO-Pq-bws">
-                                                                <rect key="frame" x="0.0" y="15" width="452" height="5"/>
+                                                                <rect key="frame" x="0.0" y="15" width="452.5" height="5"/>
                                                             </box>
                                                             <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="jau-T8-O22">
-                                                                <rect key="frame" x="0.0" y="-2" width="452" height="5"/>
+                                                                <rect key="frame" x="0.0" y="-2" width="452.5" height="5"/>
                                                             </box>
                                                         </subviews>
                                                         <visibilityPriorities>
@@ -1025,52 +1043,6 @@
                                                             <real value="3.4028234663852886e+38"/>
                                                             <real value="3.4028234663852886e+38"/>
                                                             <real value="3.4028234663852886e+38"/>
-                                                            <real value="3.4028234663852886e+38"/>
-                                                            <real value="3.4028234663852886e+38"/>
-                                                            <real value="3.4028234663852886e+38"/>
-                                                            <real value="3.4028234663852886e+38"/>
-                                                            <real value="3.4028234663852886e+38"/>
-                                                            <real value="3.4028234663852886e+38"/>
-                                                        </customSpacing>
-                                                    </stackView>
-                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="H9b-oR-9dD" userLabel="Schedule Box" customClass="HXScheduleBox" customModule="HXNotes" customModuleProvider="target">
-                                                        <rect key="frame" x="0.0" y="0.0" width="452" height="239"/>
-                                                        <view key="contentView" id="eQf-GH-dfG">
-                                                            <rect key="frame" x="0.0" y="0.0" width="452" height="239"/>
-                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                        </view>
-                                                    </box>
-                                                    <stackView distribution="equalSpacing" orientation="horizontal" alignment="top" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="P55-EB-38k" userLabel="Vertical Line Stack">
-                                                        <rect key="frame" x="0.0" y="0.0" width="452" height="269"/>
-                                                        <subviews>
-                                                            <box horizontalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="JIm-id-YDI">
-                                                                <rect key="frame" x="-2" y="0.0" width="5" height="269"/>
-                                                            </box>
-                                                            <box horizontalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="J9p-ZE-7cI">
-                                                                <rect key="frame" x="88" y="0.0" width="5" height="269"/>
-                                                            </box>
-                                                            <box horizontalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="5uo-qU-3Bz">
-                                                                <rect key="frame" x="178.5" y="0.0" width="5" height="269"/>
-                                                            </box>
-                                                            <box horizontalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="gsH-wC-Thc">
-                                                                <rect key="frame" x="268.5" y="0.0" width="5" height="269"/>
-                                                            </box>
-                                                            <box horizontalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="rg9-DV-VzM">
-                                                                <rect key="frame" x="359" y="0.0" width="5" height="269"/>
-                                                            </box>
-                                                            <box horizontalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="7sD-Qq-zH5">
-                                                                <rect key="frame" x="449" y="0.0" width="5" height="269"/>
-                                                            </box>
-                                                        </subviews>
-                                                        <visibilityPriorities>
-                                                            <integer value="1000"/>
-                                                            <integer value="1000"/>
-                                                            <integer value="1000"/>
-                                                            <integer value="1000"/>
-                                                            <integer value="1000"/>
-                                                            <integer value="1000"/>
-                                                        </visibilityPriorities>
-                                                        <customSpacing>
                                                             <real value="3.4028234663852886e+38"/>
                                                             <real value="3.4028234663852886e+38"/>
                                                             <real value="3.4028234663852886e+38"/>
@@ -1231,11 +1203,57 @@
                                                             <real value="3.4028234663852886e+38"/>
                                                         </customSpacing>
                                                     </stackView>
+                                                    <box boxType="custom" borderWidth="0.0" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="H9b-oR-9dD" userLabel="Schedule Box" customClass="HXScheduleBox" customModule="HXNotes" customModuleProvider="target">
+                                                        <rect key="frame" x="0.0" y="0.0" width="452.5" height="239"/>
+                                                        <view key="contentView" id="eQf-GH-dfG">
+                                                            <rect key="frame" x="0.0" y="0.0" width="452.5" height="239"/>
+                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                        </view>
+                                                    </box>
+                                                    <stackView distribution="equalSpacing" orientation="horizontal" alignment="top" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="P55-EB-38k" userLabel="Vertical Line Stack">
+                                                        <rect key="frame" x="0.0" y="0.0" width="452.5" height="269"/>
+                                                        <subviews>
+                                                            <box horizontalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="JIm-id-YDI">
+                                                                <rect key="frame" x="-2" y="0.0" width="5" height="269"/>
+                                                            </box>
+                                                            <box horizontalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="J9p-ZE-7cI">
+                                                                <rect key="frame" x="88.5" y="0.0" width="5" height="269"/>
+                                                            </box>
+                                                            <box horizontalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="5uo-qU-3Bz">
+                                                                <rect key="frame" x="178.5" y="0.0" width="5" height="269"/>
+                                                            </box>
+                                                            <box horizontalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="gsH-wC-Thc">
+                                                                <rect key="frame" x="269" y="0.0" width="5" height="269"/>
+                                                            </box>
+                                                            <box horizontalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="rg9-DV-VzM">
+                                                                <rect key="frame" x="359" y="0.0" width="5" height="269"/>
+                                                            </box>
+                                                            <box horizontalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="7sD-Qq-zH5">
+                                                                <rect key="frame" x="449.5" y="0.0" width="5" height="269"/>
+                                                            </box>
+                                                        </subviews>
+                                                        <visibilityPriorities>
+                                                            <integer value="1000"/>
+                                                            <integer value="1000"/>
+                                                            <integer value="1000"/>
+                                                            <integer value="1000"/>
+                                                            <integer value="1000"/>
+                                                            <integer value="1000"/>
+                                                        </visibilityPriorities>
+                                                        <customSpacing>
+                                                            <real value="3.4028234663852886e+38"/>
+                                                            <real value="3.4028234663852886e+38"/>
+                                                            <real value="3.4028234663852886e+38"/>
+                                                            <real value="3.4028234663852886e+38"/>
+                                                            <real value="3.4028234663852886e+38"/>
+                                                            <real value="3.4028234663852886e+38"/>
+                                                        </customSpacing>
+                                                    </stackView>
                                                     <stackView distribution="fillEqually" orientation="horizontal" alignment="centerY" spacing="4" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yra-Zp-NVn" userLabel="Horizontal Day Stack">
-                                                        <rect key="frame" x="0.0" y="239" width="452" height="30"/>
+                                                        <rect key="frame" x="0.0" y="239" width="452.5" height="30"/>
                                                         <subviews>
                                                             <textField horizontalHuggingPriority="100" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="r93-iM-Zak" userLabel="Monday">
-                                                                <rect key="frame" x="-2" y="6.5" width="91" height="17"/>
+                                                                <rect key="frame" x="-2" y="6.5" width="91.5" height="17"/>
                                                                 <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="center" title="Monday" id="vtE-z5-Ggx">
                                                                     <font key="font" metaFont="system"/>
                                                                     <color key="textColor" name="keyboardFocusIndicatorColor" catalog="System" colorSpace="catalog"/>
@@ -1243,7 +1261,7 @@
                                                                 </textFieldCell>
                                                             </textField>
                                                             <textField horizontalHuggingPriority="100" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UgP-w5-dnV" userLabel="Tuesday">
-                                                                <rect key="frame" x="89" y="6.5" width="91.5" height="17"/>
+                                                                <rect key="frame" x="89.5" y="6.5" width="91" height="17"/>
                                                                 <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="center" title="Tuesday" id="x4A-qn-m5u">
                                                                     <font key="font" metaFont="system"/>
                                                                     <color key="textColor" name="keyboardFocusIndicatorColor" catalog="System" colorSpace="catalog"/>
@@ -1251,7 +1269,7 @@
                                                                 </textFieldCell>
                                                             </textField>
                                                             <textField horizontalHuggingPriority="100" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U6y-GZ-xgn" userLabel="Wednesday">
-                                                                <rect key="frame" x="180.5" y="6.5" width="91" height="17"/>
+                                                                <rect key="frame" x="180.5" y="6.5" width="91.5" height="17"/>
                                                                 <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="center" title="Wednesday" id="k9g-FI-emR">
                                                                     <font key="font" metaFont="system"/>
                                                                     <color key="textColor" name="keyboardFocusIndicatorColor" catalog="System" colorSpace="catalog"/>
@@ -1259,7 +1277,7 @@
                                                                 </textFieldCell>
                                                             </textField>
                                                             <textField horizontalHuggingPriority="100" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ADf-mH-gth" userLabel="Thursday">
-                                                                <rect key="frame" x="271.5" y="6.5" width="91.5" height="17"/>
+                                                                <rect key="frame" x="272" y="6.5" width="91" height="17"/>
                                                                 <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="center" title="Thursday" id="9SJ-l8-8My">
                                                                     <font key="font" metaFont="system"/>
                                                                     <color key="textColor" name="keyboardFocusIndicatorColor" catalog="System" colorSpace="catalog"/>
@@ -1267,7 +1285,7 @@
                                                                 </textFieldCell>
                                                             </textField>
                                                             <textField horizontalHuggingPriority="100" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Zp-g2-abc" userLabel="Friday">
-                                                                <rect key="frame" x="363" y="6.5" width="91" height="17"/>
+                                                                <rect key="frame" x="363" y="6.5" width="91.5" height="17"/>
                                                                 <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="center" title="Friday" id="72X-Q3-u5l">
                                                                     <font key="font" metaFont="system"/>
                                                                     <color key="textColor" name="keyboardFocusIndicatorColor" catalog="System" colorSpace="catalog"/>
@@ -1294,7 +1312,7 @@
                                                         </customSpacing>
                                                     </stackView>
                                                     <customView translatesAutoresizingMaskIntoConstraints="NO" id="r2p-hb-LeH" customClass="HXTimeDrawingBox" customModule="HXNotes" customModuleProvider="target">
-                                                        <rect key="frame" x="0.0" y="0.0" width="452" height="239"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="452.5" height="239"/>
                                                     </customView>
                                                 </subviews>
                                                 <constraints>
@@ -1331,7 +1349,7 @@
                                                 </constraints>
                                             </customView>
                                             <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="WCb-I1-0OW">
-                                                <rect key="frame" x="32" y="292" width="452" height="5"/>
+                                                <rect key="frame" x="32" y="292" width="452.5" height="5"/>
                                             </box>
                                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BWH-B4-ibo">
                                                 <rect key="frame" x="347" y="294" width="139" height="39"/>
@@ -1352,19 +1370,27 @@
                                             <constraint firstItem="cjo-qy-R5X" firstAttribute="leading" secondItem="Do8-xp-hVb" secondAttribute="leading" constant="32" id="8QL-tZ-Vj7"/>
                                             <constraint firstAttribute="trailing" secondItem="cjo-qy-R5X" secondAttribute="trailing" constant="32" id="CIF-hk-cll"/>
                                             <constraint firstItem="BWH-B4-ibo" firstAttribute="top" secondItem="Do8-xp-hVb" secondAttribute="top" constant="12" id="Lh8-8o-Y0r"/>
+                                            <constraint firstItem="QJT-gY-jc9" firstAttribute="leading" secondItem="WCb-I1-0OW" secondAttribute="leading" id="N2g-ng-Dir"/>
                                             <constraint firstItem="BWH-B4-ibo" firstAttribute="trailing" secondItem="cjo-qy-R5X" secondAttribute="trailing" id="S2L-kX-4Sp"/>
-                                            <constraint firstItem="QK0-My-Bc5" firstAttribute="leading" secondItem="cjo-qy-R5X" secondAttribute="leading" constant="2" id="aix-HD-jvV"/>
                                             <constraint firstAttribute="bottom" secondItem="cjo-qy-R5X" secondAttribute="bottom" constant="26" id="hvB-kw-mc0"/>
                                             <constraint firstItem="cjo-qy-R5X" firstAttribute="top" secondItem="Do8-xp-hVb" secondAttribute="top" constant="50" id="iLg-9a-Xmg"/>
-                                            <constraint firstItem="cjo-qy-R5X" firstAttribute="top" secondItem="QK0-My-Bc5" secondAttribute="bottom" constant="2" id="quc-5m-SSc"/>
+                                            <constraint firstItem="QJT-gY-jc9" firstAttribute="centerY" secondItem="BWH-B4-ibo" secondAttribute="centerY" id="nkM-8Q-Tl4"/>
                                             <constraint firstAttribute="trailing" secondItem="ggC-aW-ppQ" secondAttribute="trailing" id="xFk-Xp-2mX"/>
                                         </constraints>
                                     </customView>
                                 </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="lessThanOrEqual" constant="10000" id="aEc-yV-HnF"/>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="320" id="ptz-gf-OxC"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="600" id="yxk-DM-jqd"/>
+                                </constraints>
                                 <holdingPriorities>
-                                    <real value="475"/>
+                                    <real value="315"/>
                                     <real value="250"/>
                                 </holdingPriorities>
+                                <connections>
+                                    <outlet property="delegate" destination="yZA-sL-yMj" id="duc-1S-Gut"/>
+                                </connections>
                             </splitView>
                         </subviews>
                         <constraints>
@@ -1386,6 +1412,12 @@
                         <outlet property="semesterButton" destination="syF-n2-jAD" id="byz-DS-uCt"/>
                         <outlet property="semesterButtonAnimated" destination="1ak-oi-wV3" id="Lhf-Hv-PZ4"/>
                         <outlet property="semesterLabel" destination="BWH-B4-ibo" id="t2i-BX-azb"/>
+                        <outlet property="sidebarOnlyButton" destination="Cch-XT-8O6" id="bw9-dJ-IVb"/>
+                        <outlet property="sidebarRevealButton" destination="QJT-gY-jc9" id="5DC-mD-3Ps"/>
+                        <outlet property="splitView" destination="Rno-LO-yQP" id="rCm-qF-WRH"/>
+                        <outlet property="splitViewMaxWidth" destination="aEc-yV-HnF" id="Jl7-Mz-Fvb"/>
+                        <outlet property="splitViewMinWidth" destination="yxk-DM-jqd" id="AY7-DR-6FR"/>
+                        <outlet property="splitViewTrailing" destination="K94-pt-IKd" id="fQM-Ee-73L"/>
                         <outlet property="splitView_content" destination="Do8-xp-hVb" id="dUb-cw-nwf"/>
                         <outlet property="splitView_sidebar" destination="BBr-tT-C3k" id="2C5-ob-zIx"/>
                         <outlet property="timeLabelStack" destination="1Hf-ij-b7B" id="JXA-U5-vWp"/>
@@ -1404,8 +1436,8 @@
     <resources>
         <image name="button_down" width="34.5" height="14.5"/>
         <image name="button_up" width="34.5" height="14.5"/>
-        <image name="icon_smallClock" width="12" height="12"/>
-        <image name="icon_smallClock_alt" width="12" height="12"/>
+        <image name="icon_drawer" width="50" height="50"/>
+        <image name="icon_resize" width="16" height="16"/>
         <image name="image_gradientUp" width="8" height="8"/>
     </resources>
 </document>

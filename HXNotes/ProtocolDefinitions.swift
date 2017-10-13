@@ -23,6 +23,11 @@ protocol SelectionDelegate {
     func isExporting(with exportVC: HXExportViewController)
     func isFinding(with findVC: HXFindViewController)
     func isReplacing(with replacingVC: HXFindReplaceViewController)
+    
+    func courseWasHovered(_ course: Course)
+    func lectureWasHovered(_ lecture: Lecture)
+    func workWasHovered(_ work: Work)
+    func testWasHovered(_ test: Test)
 }
 
 protocol SchedulingDelegate {
@@ -55,4 +60,8 @@ protocol SidebarDelegate {
     func sidebarCourseNeedsPopulating(_ coursePVC: CoursePageViewController)
     func sidebarCoursePopulateCompletedWork(_ coursePVC: CoursePageViewController)
     func sidebarCoursePopulateCompletedTests(_ coursePVC: CoursePageViewController)
+}
+
+protocol DocumentsDropDelegate {
+    func dropDocument(at path: String)
 }

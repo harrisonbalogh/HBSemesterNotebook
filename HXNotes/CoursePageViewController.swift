@@ -13,6 +13,11 @@ class CoursePageViewController: NSViewController, NSSplitViewDelegate {
     var sidebarDelegate: SidebarDelegate?
     var selectionDelegate: SelectionDelegate?
     var schedulingDelegate: SchedulingDelegate?
+    var documentDropDelegate: DocumentsDropDelegate? {
+        didSet {
+            docsScrollView?.documentDropDelegate = self.documentDropDelegate
+        }
+    }
     
     let appDelegate = NSApplication.shared().delegate as! AppDelegate
     
@@ -118,12 +123,27 @@ class CoursePageViewController: NSViewController, NSSplitViewDelegate {
         print("CourseVC - viewDidAppear")
         
         sidebarDelegate?.sidebarCourseNeedsPopulating(self)
+        
+        docsScrollView.register(forDraggedTypes: [NSFilenamesPboardType, NSFilenamesPboardType])
+        docsScrollView.documentDropDelegate = self.documentDropDelegate
+    }
+    
+    func testListen() {
+        
     }
     
     override func viewWillDisappear() {
         super.viewWillDisappear()
         
-        print("CourseVC - viewWillDisappear")
+        splitView.alphaValue = 0
+        
+        courseLabel.stringValue = ""
+        colorBox.fillColor = NSColor.clear
+        
+        flushDocs()
+        flushWork()
+        flushTests()
+        flushLectures()
     }
     
     @IBAction func action_back(_ sender: NSButton) {
@@ -202,8 +222,53 @@ class CoursePageViewController: NSViewController, NSSplitViewDelegate {
     // MARK: - Populating Docs
     
     @IBOutlet weak var splitDividerDocs: NSBox!
+    @IBOutlet weak var docsScrollView: DocumentsScrollView!
+    @IBOutlet weak var noDocsLabel: NSTextField!
     @IBOutlet weak var docsStackView: NSStackView!
     
+    func loadDocs(from course: Course) {
+        flushDocs()
+        
+        guard let semester = course.semester else { return }
+        
+        let courseLoc = "\(semester.year)/\(semester.title!)/\(course.title!)/Documents/"
+        let docsLoc = appDelegate.applicationDocumentsDirectory.appendingPathComponent(courseLoc)
+        
+        do {
+            let files = try FileManager.default.contentsOfDirectory(at: docsLoc, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
+            for file in files {
+                push(doc: file)
+            }
+        } catch { }
+        
+        noDocsCheck()
+    }
+    
+    func noDocsCheck() {
+        if docsStackView.arrangedSubviews.count == 0 {
+            noDocsLabel.alphaValue = 1
+            noDocsLabel.isHidden = false
+        } else {
+            noDocsLabel.alphaValue = 0
+            noDocsLabel.isHidden = true
+        }
+    }
+    
+    /// Pushes a new CourseDocsBox to the docsStackView. The new CourseDocsBox is returned
+    /// if callee of push(:String) wants to do custom setup of the view.
+    @discardableResult func push(doc: URL) -> CourseDocsBox {
+        let newBox = CourseDocsBox.instance(with: doc)!
+//        newBox.selectionDelegate = self.selectionDelegate
+        docsStackView.addArrangedSubview(newBox)
+        return newBox
+    }
+    
+    func flushDocs() {
+        for subview in docsStackView.arrangedSubviews {
+            subview.removeFromSuperview()
+        }
+    }
+
     // MARK: - Populating Due
     @IBOutlet weak var workStackView: NSStackView!
     @IBOutlet weak var buttonAddWork: NSButton!
@@ -415,6 +480,12 @@ class CoursePageViewController: NSViewController, NSSplitViewDelegate {
             let day = ENGLISH_DAYS[weekdayTest]
             
             test.title! = test.course!.nextWorkTitleAvailable(with: "\(day) Test ")
+        }
+    }
+    
+    public func lectureBoxSize(reduced: Bool) {
+        for case let lecBox as CourseLectureBox in lectureStackView.arrangedSubviews {
+            lecBox.size(reduced: reduced)
         }
     }
     

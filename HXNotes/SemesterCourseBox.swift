@@ -29,7 +29,6 @@ class SemesterCourseBox: NSView {
     @IBOutlet weak var boxDrag: NSBox!
     @IBOutlet weak var labelTitle: NSTextField!
     @IBOutlet weak var labelDays: NSTextField!
-    @IBOutlet weak var buttonOverlay: NSButton!
     @IBOutlet weak var selectImage: NSImageView!
     
     private func initialize(with course: Course) {
@@ -51,21 +50,27 @@ class SemesterCourseBox: NSView {
         addTrackingArea(trackingArea)
     }
     
-    @IBAction func goToNotes(_ sender: Any) {
-        selectionDelegate?.courseWasSelected(course)
-    }
-    
     override func cursorUpdate(with event: NSEvent) {
         NSCursor.pointingHand().set()
     }
 
     override func mouseEntered(with event: NSEvent) {
-        selectImage.alphaValue = 1
-        labelDays.alphaValue = 0
+        selectionDelegate?.courseWasHovered(course)
+        hoverVisuals(true)
+    }
+    
+    override func mouseUp(with event: NSEvent) {
+        selectionDelegate?.courseWasSelected(course)
     }
     
     override func mouseExited(with event: NSEvent) {
-        selectImage.alphaValue = 0
-        labelDays.alphaValue = 1
-    }    
+        hoverVisuals(false)
+    }
+    func hoverVisuals(_ visible: Bool) {
+        if visible {
+            selectImage.alphaValue = 1
+        } else {
+            selectImage.alphaValue = 0
+        }
+    }
 }

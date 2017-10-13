@@ -30,6 +30,11 @@ class SidebarPageController: NSPageController, NSPageControllerDelegate {
             courseVC?.sidebarDelegate = self.sidebarDelegate
         }
     }
+    var documentsDropDelegate: DocumentsDropDelegate? {
+        didSet {
+            courseVC?.documentDropDelegate = self.documentsDropDelegate
+        }
+    }
 
     @IBOutlet var schedulerVC: SchedulerPageViewController!
     @IBOutlet var semesterVC: SemesterPageViewController!
@@ -64,6 +69,11 @@ class SidebarPageController: NSPageController, NSPageControllerDelegate {
         
         if schedulerVC != nil && self.selectedIndex == SBSchedulerIndex {
             schedulerVC.view.frame = self.view.bounds
+        }
+        
+        // 154px gathered from CourseLectureBox nib
+        if selectedIndex == SBCourseIndex && self.view.frame.width <= (154) {
+            courseVC?.lectureBoxSize(reduced: true)
         }
     }
     

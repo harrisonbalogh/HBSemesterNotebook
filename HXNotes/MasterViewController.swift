@@ -9,31 +9,25 @@
 import Cocoa
 import Darwin
 
-class MasterViewController: NSViewController, SelectionDelegate, SchedulingDelegate, SidebarDelegate {
+class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDelegate, SchedulingDelegate, SidebarDelegate, DocumentsDropDelegate {
     
     // MARK: View references
     @IBOutlet weak var splitView_sidebar: NSView!
     @IBOutlet weak var splitView_content: SplitViewContent!
+    @IBOutlet weak var splitView: NSSplitView!
     
     // Children controllers
     var sidebarPageController: SidebarPageController!
-    
     let appDelegate = NSApplication.shared().delegate as! AppDelegate
     
     // Mark: Initialize the viewController ..................................................................
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        NSApp.keyWindow?.makeFirstResponder(self)
-        NSApp.keyWindow?.initialFirstResponder = self.view
-        
-        Alert.masterViewController = self
-        
-        loadPreferences()
-        
         view.wantsLayer = true
         
-        AppDelegate.scheduleAssistant = ScheduleAssistant(masterController: self)
+        var semesterToUse: Semester!
+        var courseToUse: Course?
         
         // Get the current real time semester
         let calendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
@@ -46,33 +40,51 @@ class MasterViewController: NSViewController, SelectionDelegate, SchedulingDeleg
             semesterTitle = "fall"
         }
         // Set the current semester displayed in the SidebarVC - might want to remeber last selected semester
-        semesterToday = Semester.produceSemester(titled: semesterTitle, in: yearComponent)
+        self.semesterToday = Semester.produceSemester(titled: semesterTitle, in: yearComponent)
         
-        // Check if there was a previously opened semester when last quit the app
-        if let prevOpenCourse = CFPreferencesCopyAppValue(NSString(string: "previouslyOpenedCourse"), kCFPreferencesCurrentApplication) as? String {
-            if prevOpenCourse != "nil" {
-                let parseSem = prevOpenCourse.substring(to: (prevOpenCourse.range(of: ":")?.lowerBound)!)
-                let remain = prevOpenCourse.substring(from: (prevOpenCourse.range(of: ":")?.upperBound)!)
-                let parseYr = remain.substring(to: (remain.range(of: ":")?.lowerBound)!)
-                let parseCourse = remain.substring(from: (remain.range(of: ":")?.upperBound)!)
-                
-                let semester = Semester.produceSemester(titled: parseSem.lowercased(), in: Int(parseYr)!)
-                setDate(semester: semester)
-                
-                // Check if there was a course selected when last quit
-                if parseCourse != "nil" {
-                    if let course = semester.retrieveCourse(named: parseCourse) {
-                        selectedCourse = course
+        let queueGroup = DispatchGroup()
+        queueGroup.enter()
+        DispatchQueue.global().async {
+            
+            self.loadPreferences()
+            
+            Alert.masterViewController = self
+            
+            AppDelegate.scheduleAssistant = ScheduleAssistant(masterController: self)
+            
+            // Check if there was a previously opened semester when last quit the app
+            if let prevOpenCourse = CFPreferencesCopyAppValue(NSString(string: "previouslyOpenedCourse"), kCFPreferencesCurrentApplication) as? String {
+                if prevOpenCourse != "nil" {
+                    let parseSem = prevOpenCourse.substring(to: (prevOpenCourse.range(of: ":")?.lowerBound)!)
+                    let remain = prevOpenCourse.substring(from: (prevOpenCourse.range(of: ":")?.upperBound)!)
+                    let parseYr = remain.substring(to: (remain.range(of: ":")?.lowerBound)!)
+                    let parseCourse = remain.substring(from: (remain.range(of: ":")?.upperBound)!)
+                    
+                    let semester = Semester.produceSemester(titled: parseSem.lowercased(), in: Int(parseYr)!)
+                    semesterToUse = semester
+                    
+                    // Check if there was a course selected when last quit
+                    if parseCourse != "nil" {
+                        if let course = semester.retrieveCourse(named: parseCourse) {
+                            courseToUse = course
+                        }
                     }
+                } else {
+                    // Use today's date if there was not a previously selected course
+                    semesterToUse = self.semesterToday
                 }
             } else {
                 // Use today's date if there was not a previously selected course
-                setDate(semester: semesterToday)
+                semesterToUse = self.semesterToday
             }
-        } else {
-            // Use today's date if there was not a previously selected course
-            setDate(semester: semesterToday)
+            queueGroup.leave()
         }
+        
+        queueGroup.notify(queue: .main, execute: {
+            self.setDate(semester: semesterToUse)
+            self.selectedCourse = courseToUse
+            self.scrollToSemesterVCIfValid()
+        })
     }
     override func viewDidAppear() {
         super.viewDidAppear()
@@ -81,26 +93,10 @@ class MasterViewController: NSViewController, SelectionDelegate, SchedulingDeleg
             sidebarPC.schedulingDelegate = self
             sidebarPC.selectionDelegate = self
             sidebarPC.sidebarDelegate = self
+            sidebarPC.documentsDropDelegate = self
             self.sidebarPageController = sidebarPC
             
-            // Jump to semester view if opening app and schedule is valid.
-            if selectedSemester != nil && selectedSemester.valid {
-                sidebarPageController.schedulerVC.isPastSemester = selectedSemester.isEarlier(than: self.semesterToday)
-                sidebarPageController.schedulerVC.loadCourses(from: selectedSemester)
-                scheduleBox.isHighlighting = true
-                
-                sidebarPageController.selectedIndex = sidebarPageController.SBSemesterIndex
-
-                if selectedCourse != nil {
-                    sidebarPageController.selectedIndex = sidebarPageController.SBCourseIndex
-                    if assumeRecentLecture {
-                        isEditing(lecture: (selectedCourse.lectures!.lastObject as! Lecture))
-                    }
-                    reloadScheduler(with: selectedCourse)
-                } else {
-                    reloadScheduler(with: nil)
-                }
-            }
+            scrollToSemesterVCIfValid()
         }
         
         scheduleBox.selectionDelegate = self
@@ -124,6 +120,14 @@ class MasterViewController: NSViewController, SelectionDelegate, SchedulingDeleg
         CFPreferencesSetAppValue(NSString(string: "previouslyOpenedCourse"),NSString(string: key), kCFPreferencesCurrentApplication)
         
         CFPreferencesAppSynchronize(kCFPreferencesCurrentApplication)
+    }
+    
+    override func viewDidLayout() {
+        super.viewDidLayout()
+        
+        if isSidebarOnly {
+            splitView.setPosition(view.frame.width, ofDividerAt: 0)
+        }
     }
     
     // MARK: - ––– Preferences –––
@@ -485,6 +489,12 @@ class MasterViewController: NSViewController, SelectionDelegate, SchedulingDeleg
         editBoxTopConstraint.constant = DEFAULT_TOP_CONSTRAINT
     }
     
+    @IBOutlet weak var sidebarRevealButton: NSButton!
+    @IBAction func action_revealSidebar(_ sender: Any) {
+        
+    }
+    
+    
     // MARK: ––– Semester Selection –––
     
     @IBOutlet weak var semesterButton: NSButton!
@@ -496,10 +506,33 @@ class MasterViewController: NSViewController, SelectionDelegate, SchedulingDeleg
     @IBOutlet weak var yrButtonBotConstraint: NSLayoutConstraint!
     @IBOutlet weak var yrButtonAnimBotConstraint: NSLayoutConstraint!
     
+    var scrollToSemesterVCIfValidAlreadyRan = false
+    func scrollToSemesterVCIfValid() {
+        // Jump to semester view if schedule is valid.
+        if selectedSemester != nil && selectedSemester.valid && !scrollToSemesterVCIfValidAlreadyRan {
+            scrollToSemesterVCIfValidAlreadyRan = true
+            sidebarPageController.schedulerVC.isPastSemester = selectedSemester.isEarlier(than: self.semesterToday)
+            sidebarPageController.schedulerVC.loadCourses(from: selectedSemester)
+            scheduleBox.isHighlighting = true
+            
+            sidebarPageController.selectedIndex = sidebarPageController.SBSemesterIndex
+            
+            if selectedCourse != nil {
+                sidebarPageController.selectedIndex = sidebarPageController.SBCourseIndex
+                if assumeRecentLecture {
+                    isEditing(lecture: (selectedCourse.lectures!.lastObject as! Lecture))
+                }
+                reloadScheduler(with: selectedCourse)
+            } else {
+                reloadScheduler(with: nil)
+            }
+        }
+    }
+    
     /// The current semester displayed in the sidebar. Setting this value will update visuals.
     var selectedSemester: Semester! {
         didSet {
-            print("selectedSemester")
+            print("selectedSemester set")
             self.isScheduling = true
             guard let sidebar = sidebarPageController else { return }
             sidebar.selectedIndex = 0
@@ -650,7 +683,7 @@ class MasterViewController: NSViewController, SelectionDelegate, SchedulingDeleg
 //        if editorViewController != nil {
 //            editorViewController.notifyPrint()
 //        }
-        if lectureEditorVC == nil && lectureEditorVC.selectedLecture != nil {
+        if lectureEditorVC == nil {
             splitView_content.print(self)            
         }
     }
@@ -685,6 +718,71 @@ class MasterViewController: NSViewController, SelectionDelegate, SchedulingDeleg
                 print("selectedCourse: nil")
             }
         }
+    }
+    
+    // MARK: - SplitView Delegate
+    @IBOutlet weak var sidebarOnlyButton: NSButton!
+    @IBOutlet weak var splitViewMinWidth: NSLayoutConstraint!
+    @IBOutlet weak var splitViewMaxWidth: NSLayoutConstraint!
+    @IBOutlet weak var splitViewTrailing: NSLayoutConstraint!
+    var isSidebarOnly = false {
+        didSet {
+            if isSidebarOnly == oldValue {
+                return
+            }
+            if isSidebarOnly {
+                splitViewMinWidth.constant = 150
+                splitViewTrailing.constant = -(splitView_content.frame.width)
+                view.window?.setContentSize(NSSize(width: splitView_sidebar.frame.width, height: view.frame.height))
+                //            splitViewMaxWidth.constant = 350
+            } else {
+                splitViewMinWidth.constant = 600
+                view.window?.setContentSize(NSSize(width: splitView_sidebar.frame.width + splitView_content.frame.width, height: view.frame.height))
+                splitViewTrailing.constant = 0
+                splitViewMaxWidth.constant = 10000
+            }
+        }
+    }
+    
+    @IBAction func action_sidebarOnly(_ sender: NSButton) {
+        if sender.state == NSOnState {
+            isSidebarOnly = true
+        } else {
+            isSidebarOnly = false
+        }
+    }
+    
+    func splitView(_ splitView: NSSplitView, constrainMinCoordinate proposedMinimumPosition: CGFloat, ofSubviewAt dividerIndex: Int) -> CGFloat {
+        return 150
+    }
+    func splitView(_ splitView: NSSplitView, constrainMaxCoordinate proposedMaximumPosition: CGFloat, ofSubviewAt dividerIndex: Int) -> CGFloat {
+        return 350
+    }
+    func splitView(_ splitView: NSSplitView, canCollapseSubview subview: NSView) -> Bool {
+        if subview.identifier == "contentSplit" {
+            return false
+        }
+        return true
+    }
+    func splitViewDidResizeSubviews(_ notification: Notification) {
+        print("That worked?")
+    }
+    
+    func splitView(_ splitView: NSSplitView, shouldAdjustSizeOfSubview view: NSView) -> Bool {
+        if view.identifier == "sidebarSplit" {
+            return false
+        }
+        return true
+    }
+    func splitView(_ splitView: NSSplitView, shouldHideDividerAt dividerIndex: Int) -> Bool {
+        return true
+    }
+    
+    func splitView(_ splitView: NSSplitView, effectiveRect proposedEffectiveRect: NSRect, forDrawnRect drawnRect: NSRect, ofDividerAt dividerIndex: Int) -> NSRect {
+        if isSidebarOnly {
+            return NSZeroRect
+        }
+        return proposedEffectiveRect
     }
     
     // MARK: - Model
@@ -732,13 +830,16 @@ class MasterViewController: NSViewController, SelectionDelegate, SchedulingDeleg
                     // Displays lecture in the lectureStackView
                     sidebarPageController.courseVC.loadLectures(from: selectedCourse)
                 } else {
-                    print("No lectures to add??? Theoretical count: \(timeSlotHappening.course!.theoreticalLectureCount())")
+                    print("No lectures to add? Theoretical count: \(timeSlotHappening.course!.theoreticalLectureCount())")
                 }
             } else {
                 // User probably waited too long to accept lecture, so display error
                 let hour = NSCalendar.current.component(.hour, from: NSDate() as Date)
                 let minute = NSCalendar.current.component(.minute, from: NSDate() as Date)
                 let _ = Alert(hour: hour, minute: minute, course: nil, content: "Can't add a new lecture when a course isn't happening.", question: nil, deny: "Close", action: nil, target: nil, type: .custom)
+                if selectedCourse != nil {
+                    selectedCourse.fillAbsentLectures()
+                }
             }
         }
     }
@@ -746,8 +847,8 @@ class MasterViewController: NSViewController, SelectionDelegate, SchedulingDeleg
     // MARK: - Control Flow Delegation
     
     func courseWasSelected(_ course: Course?) {
+        selectedCourse = course
         if course != nil {
-            selectedCourse = course
             if sidebarPageController.selectedIndex == sidebarPageController.SBCourseIndex {
                 sidebarCourseNeedsPopulating(sidebarPageController.courseVC)
             } else {
@@ -774,6 +875,7 @@ class MasterViewController: NSViewController, SelectionDelegate, SchedulingDeleg
         courseWasSelected(test.course)
     }
     
+    var wasSidebarOnly = false
     func isEditing(lecture: Lecture?) {
         
         // Update visuals for all HXLectureBox's
@@ -786,11 +888,19 @@ class MasterViewController: NSViewController, SelectionDelegate, SchedulingDeleg
         }
         
         if lecture != nil {
+            sidebarOnlyButton.isEnabled = false
             scheduleBox.isHighlighting = false
             displayLectureEditor(for: lecture!)
+            if isSidebarOnly {
+                wasSidebarOnly = true
+                isSidebarOnly = false
+            }
         } else {
+            sidebarOnlyButton.isEnabled = true
             scheduleBox.isHighlighting = true
             hideLectureEditor()
+            isSidebarOnly = wasSidebarOnly
+            wasSidebarOnly = false
         }
     }
     
@@ -822,6 +932,34 @@ class MasterViewController: NSViewController, SelectionDelegate, SchedulingDeleg
     
     func isReplacing(with replacingVC: HXFindReplaceViewController) {
         
+    }
+    
+    func courseWasHovered(_ course: Course) {
+        for case let cBox as SemesterCourseBox in sidebarPageController.semesterVC.courseStackView.arrangedSubviews {
+            cBox.hoverVisuals(false)
+        }
+    }
+    
+    func lectureWasHovered(_ lecture: Lecture) {
+        for case let lBox as CourseLectureBox in sidebarPageController.courseVC.lectureStackView.arrangedSubviews {
+            lBox.hoverVisuals(false)
+        }
+    }
+    
+    func workWasHovered(_ work: Work) {
+        if sidebarPageController.selectedIndex == sidebarPageController.SBSemesterIndex {
+            for case let wBox as SemesterWorkBox in sidebarPageController.semesterVC.workStackView.arrangedSubviews {
+                wBox.hoverVisuals(false)
+            }
+        }
+    }
+    
+    func testWasHovered(_ test: Test) {
+        if sidebarPageController.selectedIndex == sidebarPageController.SBSemesterIndex {
+            for case let tBox as SemesterTestBox in sidebarPageController.semesterVC.testStackView.arrangedSubviews {
+                tBox.hoverVisuals(false)
+            }
+        }
     }
     
     // MARK: - Scheduler Delegation
@@ -871,7 +1009,6 @@ class MasterViewController: NSViewController, SelectionDelegate, SchedulingDeleg
         sidebarPageController.courseVC.showTestPopover(for: newBox)
         sidebarPageController.courseVC.noTestsCheck()
     }
-    
     
     func schedulingRenameCourse() {
         reloadScheduler(with: nil)
@@ -941,6 +1078,9 @@ class MasterViewController: NSViewController, SelectionDelegate, SchedulingDeleg
     // MARK: - Sidebar Delegation
     
     func sidebarSchedulingNeedsPopulating(_ schedulerPVC: SchedulerPageViewController) {
+        if self.semesterToday == nil || self.selectedSemester == nil {
+            return
+        }
         schedulerPVC.isPastSemester = selectedSemester.isEarlier(than: self.semesterToday)
         schedulerPVC.loadCourses(from: selectedSemester)
         reloadScheduler(with: nil)
@@ -973,10 +1113,14 @@ class MasterViewController: NSViewController, SelectionDelegate, SchedulingDeleg
             return
         }
         coursePVC.courseLabel.stringValue = selectedCourse.title!
+        
+        let courseColor = NSColor(red: CGFloat(selectedCourse.color!.red), green: CGFloat(selectedCourse.color!.green), blue: CGFloat(selectedCourse.color!.blue), alpha: 1)
+        coursePVC.colorBox.fillColor = courseColor
+        
         coursePVC.view.alphaValue = 1
         coursePVC.prepDisplay()
         
-        perform(#selector(populateCourseAfterClearingOldInformation), with: nil, afterDelay: 0)
+        perform(#selector(populateCourseAfterClearingOldInformation), with: nil, afterDelay: 0.1)
     }
     func populateCourseAfterClearingOldInformation() {
         let coursePVC = sidebarPageController.courseVC!
@@ -984,6 +1128,7 @@ class MasterViewController: NSViewController, SelectionDelegate, SchedulingDeleg
         coursePVC.loadLectures(from: self.selectedCourse)
         coursePVC.loadTests(from: self.selectedCourse, showingCompleted: false)
         coursePVC.loadWork(from: self.selectedCourse, showingCompleted: false)
+        coursePVC.loadDocs(from: self.selectedCourse)
         
         // Display the add button if a lecture is happening and it wasn't already created.
         if self.selectedCourse.duringTimeSlot() != nil && (self.selectedCourse.lectures?.count == 0 ||
@@ -1019,5 +1164,31 @@ class MasterViewController: NSViewController, SelectionDelegate, SchedulingDeleg
         }
         coursePVC.loadTests(from: selectedCourse, showingCompleted:
             sidebarPageController.courseVC.toggleCompletedTests.state == NSOnState)
+    }
+    
+    // MARK: - Document Drop Delegation
+    
+    /// Save a document to the selected course. Received from a drag and drop operation
+    /// onto the documents scroll view. Also update the documents stack view.
+    func dropDocument(at path: String) {
+        guard
+            let selectedCourse = selectedCourse,
+            let selectedSemester = selectedSemester
+            else { return }
+
+        var loc = appDelegate.applicationDocumentsDirectory
+        loc.appendPathComponent("\(selectedSemester.year)")
+        loc.appendPathComponent("\(selectedSemester.title!)")
+        loc.appendPathComponent("\(selectedCourse.title!)")
+        loc.appendPathComponent("Documents/")
+        
+        let pathLoc = URL(fileURLWithPath: path)
+        
+        do {
+            try FileManager.default.createDirectory(at: loc, withIntermediateDirectories: true, attributes: nil)
+            loc.appendPathComponent(pathLoc.lastPathComponent)
+            try FileManager.default.copyItem(at: pathLoc, to: loc)
+        } catch { }
+        sidebarPageController.courseVC.loadDocs(from: selectedCourse)
     }
 }

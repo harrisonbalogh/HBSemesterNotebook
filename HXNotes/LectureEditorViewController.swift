@@ -624,4 +624,30 @@ class LectureEditorViewController: NSViewController {
             NSAnimationContext.endGrouping()
         }
     }
+    
+    // MARK: - TEMP TESTING DEV CMDS
+    
+    @IBAction func actionTest_delete(_ sender: NSButton) {
+        if sender.tag == 0 {
+            sender.tag = 1
+        } else if sender.tag == 1 {
+//            for case let lecture as Lecture in selectedLecture.course!.lectures! {
+//                appDelegate.managedObjectContext.delete( lecture )
+//            }
+            appDelegate.managedObjectContext.delete( selectedLecture )
+            appDelegate.saveAction(self)
+            sender.tag = 0
+        }
+    }
+    @IBAction func actionTest_absent(_ sender: NSButton) {
+        selectedLecture.absent = !selectedLecture.absent
+    }
+    @IBAction func actionTest_backDate(_ sender: NSButton) {
+        selectedLecture.month = 8
+        selectedLecture.day = 29
+    }
+    @IBAction func actionTest(_ sender: NSButton) {
+        selectedLecture.timeSlot = (selectedLecture.course!.timeSlots![0] as! TimeSlot)
+    }
+    
 }

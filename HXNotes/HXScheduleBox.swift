@@ -15,7 +15,6 @@ class HXScheduleBox: NSBox {
     private var timeSlotVisuals = [TimeSlot]()
     /// This is for greying class times that are not in the selected course
     private var selectedArray = [Bool]()
-    private var highlightedArray = [Bool]()
     
     var isHighlighting = false {
         didSet {
@@ -75,21 +74,25 @@ class HXScheduleBox: NSBox {
             } else {
                 NSColor(calibratedWhite: 0.85, alpha: 1).setFill()
             }
-            bezPath.fill()
             
             var startString = NSAttributedString(string: HXTimeFormatter.formatTime(Int16(start)), attributes: [NSForegroundColorAttributeName: textColor])
             
             var stopString = NSAttributedString(string: HXTimeFormatter.formatTime(Int16(stop)), attributes: [NSForegroundColorAttributeName: textColor])
             
-            
             var highlightAttribs = [String: Any]()
             highlightAttribs = [NSForegroundColorAttributeName: NSColor.black]
             var stringInTitle = timeSlot.course!.title!
-            if highlightedArray[ind] {
-                stringInTitle = "Select " + stringInTitle
-                startString = NSAttributedString(string: "", attributes: nil)
-                stopString = NSAttributedString(string: "", attributes: nil)
+            if lastEnteredTimeSlot != nil {
+                if timeSlot == lastEnteredTimeSlot {
+                    stringInTitle = "Select " + stringInTitle
+                    startString = NSAttributedString(string: "", attributes: nil)
+                    stopString = NSAttributedString(string: "", attributes: nil)
+                } else if timeSlot.course != lastEnteredTimeSlot.course {
+                    NSColor(calibratedRed: CGFloat(timeSlot.course!.color!.red), green: CGFloat(timeSlot.course!.color!.green), blue: CGFloat(timeSlot.course!.color!.blue), alpha: 0.5).setFill()
+                }
             }
+            
+            bezPath.fill()
             
             let titleString = NSAttributedString(string: stringInTitle, attributes: highlightAttribs)
             
@@ -136,9 +139,8 @@ class HXScheduleBox: NSBox {
     override func mouseMoved(with event: NSEvent) {
         let loc = self.convert(event.locationInWindow, from: nil)
         
-        // Drawing code here.
+        lastEnteredTimeSlot = nil
         var ind = 0
-        var intersectedSlot: TimeSlot!
         for timeSlot in timeSlotVisuals {
             
             let start = Int(timeSlot.startMinute)
@@ -154,29 +156,14 @@ class HXScheduleBox: NSBox {
             let rect = NSRect(x: x, y: y, width: w, height: h)
             
             if rect.contains(loc) {
-                intersectedSlot = timeSlot
                 NSCursor.pointingHand().set()
                 lastEnteredTimeSlot = timeSlot
-            } else {
-                highlightedArray[ind] = false
+                break
             }
             ind += 1
         }
-        if intersectedSlot == nil {
-            lastEnteredTimeSlot = nil
+        if lastEnteredTimeSlot == nil {
             NSCursor.arrow().set()
-            for x in 0..<highlightedArray.count {
-                highlightedArray[x] = false
-            }
-        } else {
-            // Apply highlight to all timeslots of same course
-            var x = 0
-            for timeSlot in timeSlotVisuals {
-                if timeSlot.course! == intersectedSlot!.course! {
-                    highlightedArray[x] = true
-                }
-                x += 1
-            }
         }
         self.needsDisplay = true
     }
@@ -184,9 +171,6 @@ class HXScheduleBox: NSBox {
     override func mouseExited(with event: NSEvent) {
         lastEnteredTimeSlot = nil
         NSCursor.arrow().set()
-        for x in 0..<highlightedArray.count {
-            highlightedArray[x] = false
-        }
         self.needsDisplay = true
     }
     
@@ -196,7 +180,6 @@ class HXScheduleBox: NSBox {
         
         timeSlotVisuals.append(timeSlot)
         selectedArray.append(selected)
-        highlightedArray.append(false)
 
     }
     
@@ -210,6 +193,5 @@ class HXScheduleBox: NSBox {
         
         timeSlotVisuals = [TimeSlot]()
         selectedArray = [Bool]()
-        highlightedArray = [Bool]()
     }    
 }

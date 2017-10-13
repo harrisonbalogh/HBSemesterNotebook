@@ -68,12 +68,26 @@ class SemesterTestBox: NSView {
     }
     
     override func mouseEntered(with event: NSEvent) {
-        recallDate = labelDate.stringValue
-        labelDate.stringValue = "Go to " + test.course!.title!
+        selectionDelegate?.testWasHovered(test)
+        hoverVisuals(true)
     }
     
     override func mouseExited(with event: NSEvent) {
-        labelDate.stringValue = recallDate
+        hoverVisuals(false)
+    }
+    
+    func hoverVisuals(_ visible: Bool) {
+        if visible {
+            if recallDate == "" {
+                recallDate = labelDate.stringValue
+            }
+            labelDate.stringValue = "Go to " + test.course!.title!
+        } else {
+            if recallDate != "" {
+                labelDate.stringValue = recallDate
+                recallDate = ""
+            }
+        }
     }
     
     @IBAction func action_select(_ sender: NSButton) {

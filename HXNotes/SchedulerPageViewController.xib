@@ -32,7 +32,7 @@
                     <color key="fillColor" red="0.97467082739999999" green="0.97467082739999999" blue="0.97467082739999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                 </box>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3OD-SO-Lns">
-                    <rect key="frame" x="29.5" y="35" width="70" height="16"/>
+                    <rect key="frame" x="30" y="35" width="70" height="16"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="No Courses" id="s8Z-li-Aer">
                         <font key="font" metaFont="cellTitle"/>
                         <color key="textColor" red="0.50759640959999996" green="0.50759640959999996" blue="0.50759640959999996" alpha="0.84999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
@@ -45,7 +45,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="130" height="86"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView distribution="fill" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UTj-QV-3rW">
+                            <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UTj-QV-3rW">
                                 <rect key="frame" x="0.0" y="-2" width="130" height="88"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="88" placeholder="YES" id="Yey-nT-aUq"/>
@@ -88,6 +88,9 @@
                         <action selector="action_finishScheduling:" target="-2" id="4Sr-Nx-2L9"/>
                     </connections>
                 </button>
+                <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="Sbe-Xo-luI">
+                    <rect key="frame" x="0.0" y="83" width="130" height="5"/>
+                </box>
             </subviews>
             <constraints>
                 <constraint firstItem="5fb-XU-Ipd" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" id="1El-dI-yXz"/>
@@ -97,11 +100,14 @@
                 <constraint firstItem="ebp-Rg-kFu" firstAttribute="leading" secondItem="Tfs-Uc-Ear" secondAttribute="trailing" constant="4" id="KhS-H2-phg"/>
                 <constraint firstAttribute="bottom" secondItem="5fb-XU-Ipd" secondAttribute="bottom" id="L8n-7M-cJI"/>
                 <constraint firstAttribute="trailing" secondItem="ebp-Rg-kFu" secondAttribute="trailing" constant="4" id="OrR-nb-2Fl"/>
+                <constraint firstAttribute="trailing" secondItem="Sbe-Xo-luI" secondAttribute="trailing" id="RjI-Ms-Pk8"/>
                 <constraint firstItem="3OD-SO-Lns" firstAttribute="centerX" secondItem="NtX-f2-Ozh" secondAttribute="centerX" id="UTU-pg-Nv2"/>
                 <constraint firstAttribute="bottom" secondItem="NtX-f2-Ozh" secondAttribute="bottom" id="XVP-gu-Y4m"/>
                 <constraint firstItem="Tfs-Uc-Ear" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" constant="4" id="XsF-Wi-j9d"/>
                 <constraint firstItem="ebp-Rg-kFu" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" constant="4" id="YJG-8C-UZn"/>
                 <constraint firstItem="3OD-SO-Lns" firstAttribute="centerY" secondItem="NtX-f2-Ozh" secondAttribute="centerY" id="bPj-UM-3pq"/>
+                <constraint firstItem="Sbe-Xo-luI" firstAttribute="top" secondItem="NtX-f2-Ozh" secondAttribute="top" id="cW6-Xg-FCF"/>
+                <constraint firstItem="Sbe-Xo-luI" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" id="kDd-2v-pmh"/>
                 <constraint firstItem="5fb-XU-Ipd" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" id="rzU-LK-F7W"/>
                 <constraint firstAttribute="trailing" secondItem="NtX-f2-Ozh" secondAttribute="trailing" id="xaw-P7-FL5"/>
                 <constraint firstAttribute="trailing" secondItem="5fb-XU-Ipd" secondAttribute="trailing" id="yvu-Kp-9kk"/>

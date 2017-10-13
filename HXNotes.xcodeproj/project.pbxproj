@@ -13,7 +13,8 @@
 		C00719D01EF5FA9100161A7D /* Course+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00719CE1EF5FA9100161A7D /* Course+CoreDataClass.swift */; };
 		C00719D41EF5FC9900161A7D /* Semester+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00719D21EF5FC9900161A7D /* Semester+CoreDataClass.swift */; };
 		C00719D71EF5FE0900161A7D /* HXTimeFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00719D61EF5FE0900161A7D /* HXTimeFormatter.swift */; };
-		C0150EE81EA5AD6800BBBFA6 /* CourseLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0150EE71EA5AD6800BBBFA6 /* CourseLabel.swift */; };
+		C00E226D1F8B231C0096AFAE /* CourseDocsBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00E226C1F8B231C0096AFAE /* CourseDocsBox.swift */; };
+		C00E226F1F8B23300096AFAE /* CourseDocsBox.xib in Resources */ = {isa = PBXBuildFile; fileRef = C00E226E1F8B23300096AFAE /* CourseDocsBox.xib */; };
 		C022319B1F114E51009A421B /* HXScheduleBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = C022319A1F114E51009A421B /* HXScheduleBox.swift */; };
 		C02A8AC81F38AADC00B7CD5D /* pref.plist in Resources */ = {isa = PBXBuildFile; fileRef = C02A8AC71F38AADC00B7CD5D /* pref.plist */; };
 		C03AF8161EB856860028BA68 /* MasterWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C03AF8151EB856860028BA68 /* MasterWindowController.swift */; };
@@ -79,6 +80,7 @@
 		C0AAE1401EA2BD12002939B6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C0AAE13E1EA2BD12002939B6 /* Main.storyboard */; };
 		C0AAE14B1EA2BD13002939B6 /* HXNotesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0AAE14A1EA2BD13002939B6 /* HXNotesTests.swift */; };
 		C0AAE1561EA2BD13002939B6 /* HXNotesUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0AAE1551EA2BD13002939B6 /* HXNotesUITests.swift */; };
+		C0AFDCA31F8988C800E48EC0 /* DocumentsScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0AFDCA21F8988C800E48EC0 /* DocumentsScrollView.swift */; };
 		C0AFE7E41F548EFA007ECF7C /* View.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0AFE7E31F548EFA007ECF7C /* View.xib */; };
 		C0B795911EFFA10800A0C527 /* HXAlertDropdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B7958F1EFFA10800A0C527 /* HXAlertDropdown.swift */; };
 		C0B795921EFFA10800A0C527 /* HXAlertDropdown.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0B795901EFFA10800A0C527 /* HXAlertDropdown.xib */; };
@@ -132,7 +134,8 @@
 		C00719CE1EF5FA9100161A7D /* Course+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Course+CoreDataClass.swift"; sourceTree = "<group>"; };
 		C00719D21EF5FC9900161A7D /* Semester+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Semester+CoreDataClass.swift"; sourceTree = "<group>"; };
 		C00719D61EF5FE0900161A7D /* HXTimeFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXTimeFormatter.swift; sourceTree = "<group>"; };
-		C0150EE71EA5AD6800BBBFA6 /* CourseLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CourseLabel.swift; sourceTree = "<group>"; };
+		C00E226C1F8B231C0096AFAE /* CourseDocsBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CourseDocsBox.swift; sourceTree = "<group>"; };
+		C00E226E1F8B23300096AFAE /* CourseDocsBox.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CourseDocsBox.xib; sourceTree = "<group>"; };
 		C022319A1F114E51009A421B /* HXScheduleBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXScheduleBox.swift; sourceTree = "<group>"; };
 		C02A8AC71F38AADC00B7CD5D /* pref.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = pref.plist; sourceTree = "<group>"; };
 		C03AF8151EB856860028BA68 /* MasterWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MasterWindowController.swift; sourceTree = "<group>"; };
@@ -204,6 +207,7 @@
 		C0AAE1511EA2BD13002939B6 /* HXNotesUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HXNotesUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0AAE1551EA2BD13002939B6 /* HXNotesUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HXNotesUITests.swift; sourceTree = "<group>"; };
 		C0AAE1571EA2BD13002939B6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C0AFDCA21F8988C800E48EC0 /* DocumentsScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocumentsScrollView.swift; sourceTree = "<group>"; };
 		C0AFE7E31F548EFA007ECF7C /* View.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = View.xib; sourceTree = "<group>"; };
 		C0B7958F1EFFA10800A0C527 /* HXAlertDropdown.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HXAlertDropdown.swift; sourceTree = "<group>"; };
 		C0B795901EFFA10800A0C527 /* HXAlertDropdown.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HXAlertDropdown.xib; sourceTree = "<group>"; };
@@ -347,6 +351,8 @@
 			children = (
 				C084BDB11F47F91700D624DF /* CoursePageViewController.swift */,
 				C084BDB21F47F91700D624DF /* CoursePageViewController.xib */,
+				C00E226C1F8B231C0096AFAE /* CourseDocsBox.swift */,
+				C00E226E1F8B23300096AFAE /* CourseDocsBox.xib */,
 				C06DE34E1F509B5900E5DCC8 /* CourseLectureBox.swift */,
 				C06DE3381F509AC100E5DCC8 /* CourseLectureBox.xib */,
 				C06DE3541F50C3F800E5DCC8 /* CourseWeekBox.swift */,
@@ -355,6 +361,7 @@
 				C06DE33A1F509ACD00E5DCC8 /* CourseWorkBox.xib */,
 				C06DE3521F509B6A00E5DCC8 /* CourseTestBox.swift */,
 				C06DE33C1F509AD600E5DCC8 /* CourseTestBox.xib */,
+				C0AFDCA21F8988C800E48EC0 /* DocumentsScrollView.swift */,
 			);
 			name = "Sidebar Course";
 			sourceTree = "<group>";
@@ -508,7 +515,6 @@
 				C057FD1C1EE4B0BC00A62D9F /* HXFindViewController.swift */,
 				C087C26E1EEFE8F300E70469 /* HXFindReplaceViewController.swift */,
 				C057FD1E1EE4B0CA00A62D9F /* HXExportViewController.swift */,
-				C0150EE71EA5AD6800BBBFA6 /* CourseLabel.swift */,
 				C0FD6C241EC273C600338F1C /* NIB Templates */,
 			);
 			name = Views;
@@ -655,6 +661,7 @@
 				C06DE33B1F509ACD00E5DCC8 /* CourseWorkBox.xib in Resources */,
 				C057FD191EE4A01800A62D9F /* HXExportView.xib in Resources */,
 				C0AAE13D1EA2BD12002939B6 /* Assets.xcassets in Resources */,
+				C00E226F1F8B23300096AFAE /* CourseDocsBox.xib in Resources */,
 				C081A6AB1F19940000C8E1FB /* MenuBarPopover.xib in Resources */,
 				C0EF973E1F4D747D0062B9A8 /* HXLectureTimeBox.xib in Resources */,
 				C084BDB41F47F91700D624DF /* CoursePageViewController.xib in Resources */,
@@ -720,8 +727,8 @@
 				C06DE34D1F509B4E00E5DCC8 /* SemesterTestBox.swift in Sources */,
 				C0B795911EFFA10800A0C527 /* HXAlertDropdown.swift in Sources */,
 				C06DE3531F509B6A00E5DCC8 /* CourseTestBox.swift in Sources */,
-				C0150EE81EA5AD6800BBBFA6 /* CourseLabel.swift in Sources */,
 				C084BDAF1F47F90A00D624DF /* SemesterPageViewController.swift in Sources */,
+				C00E226D1F8B231C0096AFAE /* CourseDocsBox.swift in Sources */,
 				C049A6481F3433A400685CF9 /* LectureHeaderView.swift in Sources */,
 				C00719D41EF5FC9900161A7D /* Semester+CoreDataClass.swift in Sources */,
 				C022319B1F114E51009A421B /* HXScheduleBox.swift in Sources */,
@@ -734,6 +741,7 @@
 				C081A6AD1F19991400C8E1FB /* EventMonitor.swift in Sources */,
 				C0613E821F4A369A00389D44 /* TestAdderViewController.swift in Sources */,
 				C06DE3491F509B3B00E5DCC8 /* SemesterCourseBox.swift in Sources */,
+				C0AFDCA31F8988C800E48EC0 /* DocumentsScrollView.swift in Sources */,
 				C09EBEBD1EAF20B700A6D72C /* MasterViewController.swift in Sources */,
 				C06DE34F1F509B5900E5DCC8 /* CourseLectureBox.swift in Sources */,
 				C084BDB31F47F91700D624DF /* CoursePageViewController.swift in Sources */,

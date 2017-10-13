@@ -31,12 +31,10 @@ class SchedulerCourseBox: NSView {
     
     @IBOutlet weak var boxBack: NSBox!
     @IBOutlet weak var boxDrag: NSBox!
-    @IBOutlet weak var labelCourse: CourseLabel!
+    @IBOutlet weak var labelCourse: NSTextField!
     @IBOutlet weak var timeSlotStackView: NSStackView!
     @IBOutlet weak var timeSlotAddButton: NSButton!
     @IBOutlet weak var buttonTrash: NSButton!
-    
-    @IBOutlet weak var timeSlotAddViewHeightConstraint: NSLayoutConstraint!
 
     private func initialize(with course: Course, schedulingDelegate: SchedulingDelegate) {
         self.course = course
@@ -52,7 +50,7 @@ class SchedulerCourseBox: NSView {
             let newBox = SchedulerTimeSlotBox.instance(with: timeSlot)
             newBox?.schedulingDelegate = schedulingDelegate
             let index = course.timeSlots!.index(of: newBox!.timeSlot)
-            timeSlotStackView.insertArrangedSubview(newBox!, at: index + 1)
+            timeSlotStackView.insertArrangedSubview(newBox!, at: index)
         }
     }
     
@@ -91,11 +89,11 @@ class SchedulerCourseBox: NSView {
     }
     
     /// Adds a timeSlot for this course
-    @IBAction func addTimeSlot(_ sender: Any) {
+    @IBAction func addTimeSlot(_ sender: NSButton) {
         let newBox = SchedulerTimeSlotBox.instance(with: course.nextTimeSlotSpace())
         newBox?.schedulingDelegate = schedulingDelegate
         let index = course.timeSlots!.index(of: newBox!.timeSlot)
-        timeSlotStackView.insertArrangedSubview(newBox!, at: index + 1)
+        timeSlotStackView.insertArrangedSubview(newBox!, at: index)
         
         schedulingDelegate?.schedulingUpdatedTimeSlot()
     }
@@ -106,8 +104,6 @@ class SchedulerCourseBox: NSView {
     
     /// Clear selection of course's title field
     @IBAction func endEditingCourseLabel(_ sender: Any) {
-        labelCourse.isEditable = false
-        labelCourse.isSelectable = false
         labelCourse.stringValue = labelCourse.stringValue.trimmingCharacters(in: .whitespaces)
         
         // Check if it has content

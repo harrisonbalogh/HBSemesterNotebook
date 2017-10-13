@@ -144,8 +144,7 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
     override func viewDidAppear() {
         super.viewDidAppear()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(notifyContextObjectsUpdate(notification:)),
-                                                name: .NSManagedObjectContextObjectsDidChange, object: appDelegate.managedObjectContext)
+        NotificationCenter.default.addObserver(self, selector: #selector(notifyContextObjectsUpdate(notification:)),name: .NSManagedObjectContextObjectsDidChange, object: appDelegate.managedObjectContext)
     }
     
     /// Received from Notification Center on a managed object context change.

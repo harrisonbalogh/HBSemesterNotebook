@@ -52,7 +52,7 @@ class CourseLectureBox: NSBox {
         
         labelTitle.stringValue = "Lecture \(lecture.number)"
         
-        labelDate.stringValue = "\(lecture.month)/\(lecture.day)/\(lecture.course!.semester!.year % 100)"
+        labelDate.stringValue = "\(lecture.month)/\(lecture.day)"
     }
     
     @IBAction func action_clickLecture(_ sender: Any) {
@@ -73,28 +73,38 @@ class CourseLectureBox: NSBox {
     }
     
     override func mouseEntered(with event: NSEvent) {
-        if !isSelected {
+        selectionDelegate?.lectureWasHovered(lecture)
+        hoverVisuals(true)
+    }
+    
+    override func mouseExited(with event: NSEvent) {
+        hoverVisuals(false)
+    }
+    
+    // MARK: - Update visuals
+    
+    func hoverVisuals(_ visible: Bool) {
+        if isSelected {
+            return
+        }
+        if visible {
             selectImage.alphaValue = 1
             labelDate.alphaValue = 0
             labelAbsent.alphaValue = 0
             labelCustomTitle.stringValue = "Edit Notes"
-        }
-    }
-    
-    override func mouseExited(with event: NSEvent) {
-        if !isSelected {
+        } else {
             selectImage.alphaValue = 0
             labelDate.alphaValue = 1
             labelAbsent.alphaValue = 1
-            if lecture.title != nil {
+            if lecture == nil {
+                labelCustomTitle.stringValue = "Deleted"
+            } else if lecture.title != nil {
                 labelCustomTitle.stringValue = lecture.title!
             } else {
                 labelCustomTitle.stringValue = ""
             }
         }
     }
-    
-    // MARK: - Update visuals
     
     func updateVisual(selected: Bool) {
         isSelected = selected
@@ -107,7 +117,9 @@ class CourseLectureBox: NSBox {
             selectImage.alphaValue = 0
             labelDate.alphaValue = 1
             labelAbsent.alphaValue = 1
-            if lecture.title != nil {
+            if lecture == nil {
+                labelCustomTitle.stringValue = "Deleted"
+            } else if lecture.title != nil {
                 labelCustomTitle.stringValue = lecture.title!
             } else {
                 labelCustomTitle.stringValue = ""
@@ -115,4 +127,7 @@ class CourseLectureBox: NSBox {
         }
     }
     
+    func size(reduced: Bool) {
+        
+    }
 }

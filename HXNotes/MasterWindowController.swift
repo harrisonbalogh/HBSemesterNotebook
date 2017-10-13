@@ -28,13 +28,22 @@ class MasterWindowController: NSWindowController, NSWindowDelegate {
         self.window?.delegate = self
     }
     
+    var retainWasSidebarOnly = false
+    
     func windowWillEnterFullScreen(_ notification: Notification) {
+        retainWasSidebarOnly = masterViewController.isSidebarOnly
+        masterViewController.isSidebarOnly = false
+        masterViewController.sidebarOnlyButton.isHidden = true
+        masterViewController.sidebarOnlyButton.isEnabled = false
         masterViewController.collapseTitlebar()
     }
     
     func windowWillExitFullScreen(_ notification: Notification) {
+        masterViewController.sidebarOnlyButton.isHidden = false
+        masterViewController.sidebarOnlyButton.isEnabled = true
         masterViewController.revealTitlebar()
     }
-    
-    
+    func windowDidExitFullScreen(_ notification: Notification) {
+        masterViewController.isSidebarOnly = retainWasSidebarOnly
+    }
 }

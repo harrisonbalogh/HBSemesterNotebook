@@ -66,7 +66,6 @@ class SchedulerPageViewController: NSViewController {
         
         if course.lectures!.count > 0 || isPastSemester {
             newBox.timeSlotAddButton.isEnabled = false
-            newBox.timeSlotAddViewHeightConstraint.constant = 0
         }
         
     }

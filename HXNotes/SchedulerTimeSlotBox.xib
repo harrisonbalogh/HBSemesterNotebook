@@ -10,19 +10,19 @@
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customView id="iHc-CT-b8q" customClass="SchedulerTimeSlotBox" customModule="HXNotes" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="244" height="23"/>
+            <rect key="frame" x="0.0" y="0.0" width="276" height="30"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
-                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NYh-Uo-PMn">
-                    <rect key="frame" x="150" y="4" width="11" height="17"/>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="801" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NYh-Uo-PMn">
+                    <rect key="frame" x="174" y="7" width="11" height="17"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="–" id="PIa-rF-cEm">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" red="0.4500166223" green="0.4500166223" blue="0.4500166223" alpha="0.84999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <button identifier="timeslot_button_trash" alphaValue="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="1De-od-D4g" userLabel="Trash Button">
-                    <rect key="frame" x="223" y="5" width="14" height="14"/>
+                <button identifier="timeslot_button_trash" translatesAutoresizingMaskIntoConstraints="NO" id="1De-od-D4g" userLabel="Trash Button">
+                    <rect key="frame" x="256" y="8" width="14" height="14"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="14" id="VxN-To-Q7H"/>
                         <constraint firstAttribute="width" constant="14" id="a66-HL-oXG"/>
@@ -35,9 +35,9 @@
                         <action selector="removeTimeSlotBox:" target="iHc-CT-b8q" id="53E-v3-7Xi"/>
                     </connections>
                 </button>
-                <datePicker identifier="timeslot_picker_stop" verticalHuggingPriority="750" horizontalCompressionResistancePriority="800" translatesAutoresizingMaskIntoConstraints="NO" id="sDp-yx-cC9" userLabel="Stop Date Picker">
-                    <rect key="frame" x="159" y="1" width="64" height="22"/>
-                    <datePickerCell key="cell" alignment="left" drawsBackground="NO" datePickerStyle="textField" id="SiT-zS-sjD">
+                <datePicker identifier="timeslot_picker_stop" verticalHuggingPriority="750" horizontalCompressionResistancePriority="795" translatesAutoresizingMaskIntoConstraints="NO" id="sDp-yx-cC9" userLabel="Stop Date Picker">
+                    <rect key="frame" x="187" y="4" width="64" height="22"/>
+                    <datePickerCell key="cell" borderStyle="bezel" alignment="left" datePickerStyle="textField" id="SiT-zS-sjD">
                         <font key="font" metaFont="system"/>
                         <date key="date" timeIntervalSinceReferenceDate="-222508800">
                             <!--1993-12-13 16:00:00 +0000-->
@@ -48,7 +48,7 @@
                         <date key="maxDate" timeIntervalSinceReferenceDate="-222451201">
                             <!--1993-12-14 07:59:59 +0000-->
                         </date>
-                        <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" red="0.92155088830336929" green="0.93021952270069885" blue="0.95622542589268789" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <color key="textColor" red="0.44411569150000002" green="0.44411569150000002" blue="0.44411569150000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <datePickerElements key="datePickerElements" hour="YES" minute="YES"/>
                     </datePickerCell>
@@ -57,8 +57,8 @@
                     </connections>
                 </datePicker>
                 <datePicker identifier="timeslot_picker_start" verticalHuggingPriority="750" horizontalCompressionResistancePriority="800" translatesAutoresizingMaskIntoConstraints="NO" id="VJW-4h-w5z" userLabel="Start Date Picker">
-                    <rect key="frame" x="88" y="0.0" width="64" height="22"/>
-                    <datePickerCell key="cell" alignment="left" drawsBackground="NO" datePickerStyle="textField" id="caU-KG-7P5">
+                    <rect key="frame" x="108" y="4" width="64" height="22"/>
+                    <datePickerCell key="cell" borderStyle="bezel" alignment="left" datePickerStyle="textField" id="caU-KG-7P5">
                         <font key="font" metaFont="system"/>
                         <date key="date" timeIntervalSinceReferenceDate="-222508800">
                             <!--1993-12-13 16:00:00 +0000-->
@@ -69,7 +69,7 @@
                         <date key="maxDate" timeIntervalSinceReferenceDate="-222451201">
                             <!--1993-12-14 07:59:59 +0000-->
                         </date>
-                        <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" red="0.92155088829999998" green="0.93021952269999997" blue="0.95622542590000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <color key="textColor" red="0.44411569150000002" green="0.44411569150000002" blue="0.44411569150000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <datePickerElements key="datePickerElements" hour="YES" minute="YES"/>
                     </datePickerCell>
@@ -78,33 +78,25 @@
                     </connections>
                 </datePicker>
                 <textField identifier="timeslot_weekday_label" horizontalHuggingPriority="100" verticalHuggingPriority="750" horizontalCompressionResistancePriority="100" allowsCharacterPickerTouchBarItem="NO" preferredMaxLayoutWidth="10" translatesAutoresizingMaskIntoConstraints="NO" id="X71-ns-RWD" userLabel="Monday">
-                    <rect key="frame" x="18" y="3" width="53" height="17"/>
+                    <rect key="frame" x="3" y="7" width="92" height="17"/>
                     <constraints>
                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="10" id="Gxw-1t-Etl"/>
                     </constraints>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Monday" id="HEi-9K-QGT">
                         <font key="font" metaFont="system"/>
-                        <color key="textColor" red="0.56073803190000004" green="0.56073803190000004" blue="0.56073803190000004" alpha="0.93685037360000001" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="textColor" red="0.39458111702127663" green="0.39458111702127663" blue="0.39458111702127663" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
                 <button horizontalHuggingPriority="99" verticalHuggingPriority="99" horizontalCompressionResistancePriority="99" verticalCompressionResistancePriority="99" translatesAutoresizingMaskIntoConstraints="NO" id="J5O-Eb-8OW">
-                    <rect key="frame" x="20" y="0.0" width="49" height="23"/>
+                    <rect key="frame" x="5" y="0.0" width="88" height="30"/>
                     <buttonCell key="cell" type="bevel" bezelStyle="rounded" alignment="center" imageScaling="proportionallyDown" inset="2" id="fcr-xX-ASn">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
                 </button>
-                <textField horizontalHuggingPriority="750" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DO8-78-blZ">
-                    <rect key="frame" x="80" y="5" width="8" height="17"/>
-                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title=":" id="kgH-dN-KoY">
-                        <font key="font" metaFont="system"/>
-                        <color key="textColor" red="0.56073803190000004" green="0.56073803190000004" blue="0.56073803190000004" alpha="0.93685037360000001" colorSpace="custom" customColorSpace="sRGB"/>
-                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                    </textFieldCell>
-                </textField>
-                <stepper identifier="timeslot_stepper_weekday" horizontalHuggingPriority="750" verticalHuggingPriority="750" alphaValue="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="D88-x9-s3q">
-                    <rect key="frame" x="69" y="0.0" width="15" height="22"/>
+                <stepper identifier="timeslot_stepper_weekday" horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="D88-x9-s3q">
+                    <rect key="frame" x="93" y="4" width="15" height="22"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="11" id="Zat-Gz-fgN"/>
                     </constraints>
@@ -116,25 +108,22 @@
             </subviews>
             <constraints>
                 <constraint firstItem="J5O-Eb-8OW" firstAttribute="trailing" secondItem="X71-ns-RWD" secondAttribute="trailing" id="3cy-Pn-XH6"/>
-                <constraint firstItem="NYh-Uo-PMn" firstAttribute="centerY" secondItem="iHc-CT-b8q" secondAttribute="centerY" constant="-1" id="7Ei-gA-Elm"/>
-                <constraint firstAttribute="bottom" secondItem="VJW-4h-w5z" secondAttribute="bottom" id="BGO-iT-SCY"/>
-                <constraint firstItem="NYh-Uo-PMn" firstAttribute="leading" secondItem="VJW-4h-w5z" secondAttribute="trailing" id="Bzn-rK-QQ6"/>
-                <constraint firstItem="DO8-78-blZ" firstAttribute="leading" secondItem="D88-x9-s3q" secondAttribute="trailing" id="D6C-ac-Zp6"/>
+                <constraint firstItem="NYh-Uo-PMn" firstAttribute="centerY" secondItem="iHc-CT-b8q" secondAttribute="centerY" id="7Ei-gA-Elm"/>
+                <constraint firstAttribute="bottom" secondItem="VJW-4h-w5z" secondAttribute="bottom" constant="4" id="BGO-iT-SCY"/>
+                <constraint firstItem="NYh-Uo-PMn" firstAttribute="leading" secondItem="VJW-4h-w5z" secondAttribute="trailing" constant="4" id="Bzn-rK-QQ6"/>
                 <constraint firstItem="1De-od-D4g" firstAttribute="centerY" secondItem="iHc-CT-b8q" secondAttribute="centerY" id="Fxv-9I-XtG"/>
-                <constraint firstItem="VJW-4h-w5z" firstAttribute="top" secondItem="iHc-CT-b8q" secondAttribute="top" constant="1" id="HcK-pQ-E7Y"/>
+                <constraint firstItem="VJW-4h-w5z" firstAttribute="top" secondItem="iHc-CT-b8q" secondAttribute="top" constant="4" id="HcK-pQ-E7Y"/>
                 <constraint firstItem="J5O-Eb-8OW" firstAttribute="top" secondItem="iHc-CT-b8q" secondAttribute="top" id="Jd1-jN-llO"/>
                 <constraint firstItem="J5O-Eb-8OW" firstAttribute="leading" secondItem="X71-ns-RWD" secondAttribute="leading" id="L1I-ic-mhC"/>
-                <constraint firstItem="DO8-78-blZ" firstAttribute="centerY" secondItem="iHc-CT-b8q" secondAttribute="centerY" constant="-2" id="L4l-7D-66E"/>
                 <constraint firstItem="D88-x9-s3q" firstAttribute="leading" secondItem="X71-ns-RWD" secondAttribute="trailing" constant="2" id="Lrv-nt-XKU"/>
-                <constraint firstItem="1De-od-D4g" firstAttribute="leading" secondItem="sDp-yx-cC9" secondAttribute="trailing" id="Y5G-Q2-J2d"/>
+                <constraint firstItem="1De-od-D4g" firstAttribute="leading" secondItem="sDp-yx-cC9" secondAttribute="trailing" constant="5" id="Y5G-Q2-J2d"/>
                 <constraint firstItem="sDp-yx-cC9" firstAttribute="centerY" secondItem="iHc-CT-b8q" secondAttribute="centerY" id="awj-yo-g7h"/>
                 <constraint firstItem="X71-ns-RWD" firstAttribute="centerY" secondItem="iHc-CT-b8q" secondAttribute="centerY" id="dBa-ZX-Qix"/>
-                <constraint firstItem="sDp-yx-cC9" firstAttribute="leading" secondItem="VJW-4h-w5z" secondAttribute="trailing" constant="7" id="fAV-RS-bg3"/>
-                <constraint firstAttribute="trailing" secondItem="1De-od-D4g" secondAttribute="trailing" constant="7" id="gED-8D-JQT"/>
+                <constraint firstItem="VJW-4h-w5z" firstAttribute="leading" secondItem="D88-x9-s3q" secondAttribute="trailing" constant="2" id="eHX-bM-dO3"/>
+                <constraint firstAttribute="trailing" secondItem="1De-od-D4g" secondAttribute="trailing" constant="6" id="gED-8D-JQT"/>
                 <constraint firstAttribute="bottom" secondItem="J5O-Eb-8OW" secondAttribute="bottom" id="gkA-4X-rvf"/>
-                <constraint firstItem="sDp-yx-cC9" firstAttribute="leading" secondItem="NYh-Uo-PMn" secondAttribute="trailing" id="iWo-yB-SlQ"/>
-                <constraint firstItem="VJW-4h-w5z" firstAttribute="leading" secondItem="DO8-78-blZ" secondAttribute="trailing" constant="2" id="lF4-M2-RRW"/>
-                <constraint firstItem="X71-ns-RWD" firstAttribute="leading" secondItem="iHc-CT-b8q" secondAttribute="leading" constant="20" id="m6c-Az-eE8"/>
+                <constraint firstItem="sDp-yx-cC9" firstAttribute="leading" secondItem="NYh-Uo-PMn" secondAttribute="trailing" constant="4" id="iWo-yB-SlQ"/>
+                <constraint firstItem="X71-ns-RWD" firstAttribute="leading" secondItem="iHc-CT-b8q" secondAttribute="leading" constant="5" id="m6c-Az-eE8"/>
                 <constraint firstItem="D88-x9-s3q" firstAttribute="centerY" secondItem="iHc-CT-b8q" secondAttribute="centerY" id="tvx-hX-yBC"/>
             </constraints>
             <connections>
@@ -146,7 +135,7 @@
                 <outlet property="stepperDayWidthConstraint" destination="Zat-Gz-fgN" id="ujl-MI-9ZB"/>
                 <outlet property="trashButtonWidthConstraint" destination="a66-HL-oXG" id="2He-GN-xXB"/>
             </connections>
-            <point key="canvasLocation" x="37" y="58.5"/>
+            <point key="canvasLocation" x="53" y="58"/>
         </customView>
     </objects>
     <resources>
