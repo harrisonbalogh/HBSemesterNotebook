@@ -68,8 +68,10 @@ class TestAdderViewController: NSViewController {
             }
         }
         
-        datePicker.minDate = Date().addingTimeInterval(TimeInterval(60))
-        timePicker.minDate = Date().addingTimeInterval(TimeInterval(60))
+        datePicker.minDate = testBox.test.course?.semester?.start
+        datePicker.maxDate = testBox.test.course?.semester?.end
+        timePicker.minDate = datePicker.minDate
+        timePicker.maxDate = datePicker.maxDate
         
         descriptionTextView.string = testBox.test!.content!
         

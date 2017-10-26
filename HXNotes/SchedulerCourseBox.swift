@@ -32,6 +32,8 @@ class SchedulerCourseBox: NSView {
     @IBOutlet weak var boxBack: NSBox!
     @IBOutlet weak var boxDrag: NSBox!
     @IBOutlet weak var labelCourse: NSTextField!
+    @IBOutlet weak var labelLocation: NSTextField!
+    @IBOutlet weak var labelProfessor: NSTextField!
     @IBOutlet weak var timeSlotStackView: NSStackView!
     @IBOutlet weak var timeSlotAddButton: NSButton!
     @IBOutlet weak var buttonTrash: NSButton!
@@ -44,6 +46,16 @@ class SchedulerCourseBox: NSView {
         self.boxDrag.fillColor = theColor
         
         self.labelCourse.stringValue = course.title!
+        if course.professor == nil {
+            self.labelProfessor.stringValue = ""
+        } else {
+            self.labelProfessor.stringValue = course.professor!
+        }
+        if course.location == nil {
+            self.labelLocation.stringValue = ""
+        } else {
+            self.labelLocation.stringValue = course.location!
+        }
         self.oldName = course.title!
         
         for case let timeSlot as TimeSlot in course.timeSlots! {
@@ -59,17 +71,14 @@ class SchedulerCourseBox: NSView {
     /// Removes this course box from the stack view
     @IBAction func removeCourseBox(_ sender: Any) {
         
-        var confirmationFrequency = "NO_LECTURES"
-        if let confirmPref = CFPreferencesCopyAppValue(NSString(string: "courseDeletionConfirmation"), kCFPreferencesCurrentApplication) as? String {
-            confirmationFrequency = confirmPref
-        }
+        let confirmationFrequency = AppPreference.courseDeletionConfirmation
         
-        if confirmationFrequency == "NEVER" {
+        if confirmationFrequency == .NEVER {
             confirmRemoveCourse()
             return
         }
         
-        if self.course.timeSlots!.count == 0 && confirmationFrequency != "ALWAYS" {
+        if self.course.timeSlots!.count == 0 && confirmationFrequency != .ALWAYS {
             confirmRemoveCourse()
             return
         }
@@ -79,7 +88,7 @@ class SchedulerCourseBox: NSView {
             lectureInfo = " A lecture will be lost."
         } else if self.course.lectures!.count != 0 {
             lectureInfo = " \(self.course.lectures!.count) lectures will be lost."
-        } else if confirmationFrequency == "NO_LECTURES" {
+        } else if confirmationFrequency == .NO_LECTURES {
             confirmRemoveCourse()
             return
         }
@@ -111,6 +120,7 @@ class SchedulerCourseBox: NSView {
             labelCourse.stringValue = oldName
         } else {
             // Rename course if the name isn't already taken
+            Swift.print("course.semester!: \(course.semester)")
             if course.semester!.retrieveCourse(named: labelCourse.stringValue) == nil {
                 course.title = labelCourse.stringValue
                 schedulingDelegate?.schedulingRenameCourse()
@@ -119,6 +129,30 @@ class SchedulerCourseBox: NSView {
                 // Revoke name change
                 labelCourse.stringValue = oldName
             }
+        }
+    }
+    @IBAction func endEditingCourseLocation(_ sender: NSTextField) {
+        course.location = sender.stringValue
+    }
+    @IBAction func endEditingCourseProfessor(_ sender: NSTextField) {
+        course.professor = sender.stringValue
+    }
+    
+    // MARK: - Coloring Course
+    @IBAction func action_colorWheel(_ sender: NSButton) {
+        sender.window!.makeFirstResponder(sender)
+        NSApp.orderFrontColorPanel(self)
+        NSColorPanel.shared().setTarget(self)
+        NSColorPanel.shared().showsAlpha = false
+        NSColorPanel.shared().color = self.boxDrag.fillColor
+    }
+    override func changeColor(_ sender: Any?) {
+        if let sender = sender as? NSColorPanel  {
+            self.boxDrag.fillColor = sender.color
+            course.color!.red = Float(sender.color.redComponent)
+            course.color!.green = Float(sender.color.greenComponent)
+            course.color!.blue = Float(sender.color.blueComponent)
+            schedulingDelegate?.schedulingReloadScheduler()
         }
     }
 }

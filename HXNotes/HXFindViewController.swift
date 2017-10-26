@@ -8,7 +8,22 @@
 
 import Cocoa
 
-class HXFindViewController: NSViewController {
+class HXFindViewController: NSViewController, NSTextFinderClient {
+    
+    @IBOutlet var textFinder: NSTextFinder!
+    override func performTextFinderAction(_ sender: Any?) {
+        print("Listening")
+    }
+    
+    var string: String {
+        get {
+            print("Got it")
+            if let parent = self.parent as? LectureEditorViewController {
+                return parent.textViewContent.string!
+            }
+            return ""
+        }
+    }
     
     var selectionDelegate: SelectionDelegate?
     
@@ -27,7 +42,7 @@ class HXFindViewController: NSViewController {
     // The first number is the index of the lectureVC currently looked at the second is the foundIndex currently looking at
     var lectureIndex = [0, -1]
     var totalFound = 0
-    
+
     var findString = "" {
         didSet {
             if findString == "" {
@@ -82,6 +97,8 @@ class HXFindViewController: NSViewController {
     override func viewDidAppear() {
         super.viewDidAppear()
         
+        textFinder.client = self
+        
         // If owned by a LectureVC
         if self.parent is LectureEditorViewController {
             
@@ -112,6 +129,12 @@ class HXFindViewController: NSViewController {
         findString = ""
     }
     @IBAction func action_close(_ sender: NSButton) {
+        
+        if let action = NSTextFinderAction(rawValue: sender.tag) {
+            textFinder.performAction(action)
+        }
+        return
+        
         if let parent = self.parent as? LectureEditorViewController {
             parent.isFinding = false
         } else if let parent = self.parent as? EditorViewController {
@@ -119,6 +142,11 @@ class HXFindViewController: NSViewController {
         }
     }
     @IBAction func action_right(_ sender: NSButton) {
+        if let action = NSTextFinderAction(rawValue: sender.tag) {
+            textFinder.performAction(action)
+        }
+        return
+        
         if foundIndices.count != 0 && parent is LectureEditorViewController {
             
             // If owned by a LectureVC
@@ -173,6 +201,11 @@ class HXFindViewController: NSViewController {
         }
     }
     @IBAction func action_left(_ sender: NSButton) {
+        if let action = NSTextFinderAction(rawValue: sender.tag) {
+            textFinder.performAction(action)
+        }
+        return
+        
         if foundIndices.count != 0 {
             
             // If owned by a LectureVC
@@ -237,6 +270,12 @@ class HXFindViewController: NSViewController {
         }
     }
     @IBAction func action_textField(_ sender: NSTextField) {
+        
+        if let action = NSTextFinderAction(rawValue: sender.tag) {
+            textFinder.performAction(action)
+        }
+        return
+        
         if foundIndices.count != 0 || totalFound != 0 {
             action_right(button_right)
         } else if findString != sender.stringValue && sender.stringValue != "" {
@@ -260,7 +299,6 @@ class HXFindViewController: NSViewController {
     }
     /// Auto scrolling whenever user types. Smoothly scroll clipper until text typing location is centered.
     private func goToAndHighlight(for sender: LectureEditorViewController, at range: NSRange) {
-        print("Highlight bebe: \(range.location) to length: \(range.length)")
         let selectionY = textSelectionHeight(for: sender, at: range)
         // Don't auto-scroll if selection is already visible and above center line of window
         if selectionY < (sender.clipViewContent.bounds.origin.y) || selectionY > (sender.clipViewContent.bounds.origin.y + sender.scrollViewContent.frame.height/2) {

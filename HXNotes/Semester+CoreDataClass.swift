@@ -16,6 +16,89 @@ public class Semester: NSManagedObject {
     
     var cachedDuring: TimeSlot! = nil
     var cachedFuture: TimeSlot! = nil
+    var year: Int {
+        get {
+            let diff = start!.timeIntervalSince(end!)
+            let adjustedDate = start!.addingTimeInterval(-diff/2)
+            return Calendar.current.component(.year, from: adjustedDate)
+        }
+    }
+    var earliestStart: Date {
+        get {
+            let cal = Calendar.current
+            let range = (self.title!.lowercased() == "fall") ?
+                AppPreference.defaultFallDateRange : AppPreference.defaultSpringDateRange
+            let diff = range.lowerBound.timeIntervalSince(range.upperBound)
+            
+            // Have to set the correct year for the particular range cus default is 1993
+            var comps = DateComponents()
+            comps.year = self.year
+            comps.minute = cal.component(.minute, from: range.lowerBound)
+            comps.hour = cal.component(.hour, from: range.lowerBound)
+            comps.second = cal.component(.second, from: range.lowerBound)
+            comps.day = cal.component(.day, from: range.lowerBound)
+            comps.month = cal.component(.month, from: range.lowerBound)
+            comps.calendar = Calendar.current
+            return cal.date(from: comps)!.addingTimeInterval(diff/2)
+        }
+    }
+    var latestStart: Date {
+        get {
+            let cal = Calendar.current
+            let range = (self.title!.lowercased() == "fall") ?
+                AppPreference.defaultFallDateRange : AppPreference.defaultSpringDateRange
+            let diff = range.lowerBound.timeIntervalSince(range.upperBound)
+            
+            // Have to set the correct year for the particular range cus default is 1993
+            var comps = DateComponents()
+            comps.year = self.year
+            comps.minute = cal.component(.minute, from: range.lowerBound)
+            comps.hour = cal.component(.hour, from: range.lowerBound)
+            comps.second = cal.component(.second, from: range.lowerBound)
+            comps.day = cal.component(.day, from: range.lowerBound)
+            comps.month = cal.component(.month, from: range.lowerBound)
+            comps.calendar = Calendar.current
+            return cal.date(from: comps)!.addingTimeInterval(-diff/2)
+        }
+    }
+    var earliestEnd: Date {
+        get {
+            let cal = Calendar.current
+            let range = (self.title!.lowercased() == "fall") ?
+                AppPreference.defaultFallDateRange : AppPreference.defaultSpringDateRange
+            let diff = range.lowerBound.timeIntervalSince(range.upperBound)
+            
+            // Have to set the correct year for the particular range cus default is 1993
+            var comps = DateComponents()
+            comps.year = self.year
+            comps.minute = cal.component(.minute, from: range.upperBound)
+            comps.hour = cal.component(.hour, from: range.upperBound)
+            comps.second = cal.component(.second, from: range.upperBound)
+            comps.day = cal.component(.day, from: range.upperBound)
+            comps.month = cal.component(.month, from: range.upperBound)
+            comps.calendar = Calendar.current
+            return cal.date(from: comps)!.addingTimeInterval(diff/2)
+        }
+    }
+    var latestEnd: Date {
+        get {
+            let cal = Calendar.current
+            let range = (self.title!.lowercased() == "fall") ?
+                AppPreference.defaultFallDateRange : AppPreference.defaultSpringDateRange
+            let diff = range.lowerBound.timeIntervalSince(range.upperBound)
+            
+            // Have to set the correct year for the particular range cus default is 1993
+            var comps = DateComponents()
+            comps.year = self.year
+            comps.minute = cal.component(.minute, from: range.upperBound)
+            comps.hour = cal.component(.hour, from: range.upperBound)
+            comps.second = cal.component(.second, from: range.upperBound)
+            comps.day = cal.component(.day, from: range.upperBound)
+            comps.month = cal.component(.month, from: range.upperBound)
+            comps.calendar = Calendar.current
+            return cal.date(from: comps)!.addingTimeInterval(-diff/2)
+        }
+    }
     
     /// Set to false whenever a TimeSlot is added, removed, or updated under
     /// the root Semester object. This ensures that validation will not be
@@ -25,7 +108,6 @@ public class Semester: NSManagedObject {
     
     // Note: about the object model and function names.
     // create'Object' returns a new object.
-    // retrieve'Object' returns an object that already exists or nil if it doesn't.
     // produce'Object' returns an object that already exists or a new object if it doesn't.
     
     // MARK: - Creating/Retrieving/Producing Objects
@@ -53,6 +135,7 @@ public class Semester: NSManagedObject {
     /// course not found.
     public func retrieveCourse(named: String) -> Course! {
         for case let course as Course in self.courses! {
+            print("course.title: \(course.title!)")
             if course.title!.lowercased() == named.lowercased() {
                 return course
             }
@@ -60,40 +143,58 @@ public class Semester: NSManagedObject {
         return nil
     }
     
-    /// Return the semester present at the given year and semester. Returns nil if none exists.
-    static func retrieveSemester(titled title: String, in year: Int) -> Semester? {
-        // Fetch semesters in persistent store. Return if found else return nil.
+    /// Returns the semester (or quarter) that contains the date parameter provided. If semester is not found, it will
+    /// return nil unless createIfNecessary is true in which case a new Semester object will be created and returned.
+    static func produceSemester(during date: Date, createIfNecessary: Bool) -> Semester? {
+        // Fetch semesters in persistent store. Return if found else create new if specified.
         let semesterFetch = NSFetchRequest<Semester>(entityName: "Semester")
         let appDelegate = NSApplication.shared().delegate as! AppDelegate
         do {
             let semesters = try appDelegate.managedObjectContext.fetch(semesterFetch) as [Semester]
-            if let foundSemester = semesters.filter({$0.year == Int16(year) && $0.title == title}).first {
-                // Found semester, return it.
+            if let foundSemester = semesters.filter({
+                $0.start!.compare(date) == .orderedAscending && $0.end!.compare(date) == .orderedDescending
+            }).first {
+                // This semester already present in store so return it
                 return foundSemester
+            } else if createIfNecessary {
+                // Create semester since it wasn't found
+                let newSemester = NSEntityDescription.insertNewObject(forEntityName: "Semester", into: appDelegate.managedObjectContext) as! Semester
+                
+                let semInfo = Semester.bounds(for: date)
+                newSemester.start = semInfo.range.lowerBound
+                newSemester.end = semInfo.range.upperBound
+                newSemester.title = semInfo.title
+                return newSemester
+            } else {
+                return nil
+            }
+        } catch { fatalError("Failed to fetch semesters: \(error)") }
+    }
+    static func produceSemester(titled: String, in year: Int) -> Semester? {
+        // Fetch semesters in persistent store. Return if found else create new if specified.
+        let semesterFetch = NSFetchRequest<Semester>(entityName: "Semester")
+        let appDelegate = NSApplication.shared().delegate as! AppDelegate
+        do {
+            let semesters = try appDelegate.managedObjectContext.fetch(semesterFetch) as [Semester]
+            if let foundSemester = semesters.filter({ $0.year == year && $0.title! == titled }).first {
+                // This semester already present in store so return it
+                return foundSemester
+            } else {
+                return nil
             }
         } catch { fatalError("Failed to fetch semesters: \(error)") }
         return nil
     }
     
-    /// Will return a semester that either has been newly created, or already exists for the given year and title.
-    static func produceSemester(titled title: String, in year: Int) -> Semester {
-        // Fetch semesters in persistent store. Return if found else create new.
-        let semesterFetch = NSFetchRequest<Semester>(entityName: "Semester")
-        let appDelegate = NSApplication.shared().delegate as! AppDelegate
-        do {
-            let semesters = try appDelegate.managedObjectContext.fetch(semesterFetch) as [Semester]
-            if let foundSemester = semesters.filter({$0.year == Int16(year) && $0.title == title.lowercased()}).first {
-                // This semester already present in store so return it
-                return foundSemester
-            } else {
-                // Create semester since it wasn't found
-                let newSemester = NSEntityDescription.insertNewObject(forEntityName: "Semester", into: appDelegate.managedObjectContext) as! Semester
-                newSemester.year = Int16(year)
-                newSemester.title = title
-                return newSemester
-                
-            }
-        } catch { fatalError("Failed to fetch semesters: \(error)") }
+    /// Returns the next semester (or quarter) of the target - creating a new Semester object if necessary.
+    func proceeding() -> Semester {
+        let semEndDate = self.end!.addingTimeInterval(60*60*24*7)
+        return Semester.produceSemester(during: semEndDate, createIfNecessary: true)!
+    }
+    /// Returns the previous semester (or quarter) of the target - creating a new Semester object if necessary.
+    func preceeding() -> Semester {
+        let semStartDate = self.start!.addingTimeInterval(-60*60*24*7)
+        return Semester.produceSemester(during: semStartDate, createIfNecessary: true)!
     }
     
     // MARK: - Schedule Assistant Helper Functions
@@ -110,16 +211,11 @@ public class Semester: NSManagedObject {
         return nil
     }
     
-    /// Returns the earliest course to occur within the next 60 (default, user adjustable CFPreferences) minutes.
+    /// Returns the earliest course to occur within the next 60 (default, user adjustable app preference) minutes.
     /// Returns nil if no courses are happening for the receiving semester within the futureAlertTimeMinutes time span.
     public func futureTimeSlot() -> TimeSlot? {
-        // Setup preference value
-        var alertTimespan = 60
-        if let alertTimePref = CFPreferencesCopyAppValue(NSString(string: "futureAlertTimeMinutes"), kCFPreferencesCurrentApplication) as? String {
-            if let time = Int(alertTimePref) {
-                alertTimespan = time
-            }
-        }
+        // Get app preference value
+        let alertTimespan = AppPreference.futureAlertTimeMinutes
         // Date Today
         let cal = Calendar.current
         let date = Date()
@@ -142,7 +238,6 @@ public class Semester: NSManagedObject {
             for case let time as TimeSlot in course.timeSlots! {
                 
                 if weekday == time.weekday && minuteOfDay >= time.startMinute - alertTimespan && minuteOfDay < time.startMinute {
-                    print("futureTimeSlot: \(time.startMinute)")
                     // Course approaching within timespan. Check if its earlier than previous find
                     if soonest == nil || time.startMinute < soonest.startMinute {
                         soonest = time
@@ -155,18 +250,14 @@ public class Semester: NSManagedObject {
     
     /// Will return true if the target semester is before the passed semester.
     public func isEarlier(than semester: Semester) -> Bool {
-        print("Is \(self.title) \(self.year) earlier than \(semester.title) \(semester.year)")
         if self.year < semester.year {
-            print("    Yup.")
             return true
         }
         if self.year == semester.year {
             if self.title!.lowercased() == "spring" && semester.title!.lowercased() == "fall" {
-                print("    Yup.")
                 return true
             }
         }
-        print("    Nop.")
         return false
     }
     
@@ -249,5 +340,66 @@ public class Semester: NSManagedObject {
             }
         }
         return NSColor.gray
+    }
+    
+    // MARK: - Semester Creation Helper Functions
+    
+    /// Returns a tuple with a date range that encapsulates the given date object based on
+    /// semester/quarter default start and end dates and the title typically associated with
+    /// the semester range (e.g. "Fall" or "Spring").
+    private static func bounds(for date: Date) -> (range: ClosedRange<Date>, title: String) {
+        
+        let yrParam = Calendar.current.component(.year, from: date)
+        let cal = Calendar.current
+        
+        let defaultFallRange = AppPreference.defaultFallDateRange
+        var defaultFallRangeStartComponents = DateComponents()
+        defaultFallRangeStartComponents.year = yrParam
+        defaultFallRangeStartComponents.minute = cal.component(.minute, from: defaultFallRange.lowerBound)
+        defaultFallRangeStartComponents.hour = cal.component(.hour, from: defaultFallRange.lowerBound)
+        defaultFallRangeStartComponents.second = cal.component(.second, from: defaultFallRange.lowerBound)
+        defaultFallRangeStartComponents.day = cal.component(.day, from: defaultFallRange.lowerBound)
+        defaultFallRangeStartComponents.month = cal.component(.month, from: defaultFallRange.lowerBound)
+        defaultFallRangeStartComponents.calendar = Calendar.current
+        let defaultFallStart = cal.date(from: defaultFallRangeStartComponents)!
+        let defaultFallEnd = defaultFallStart.addingTimeInterval(60*60*24*182)
+        
+        if defaultFallStart.compare(date) == .orderedAscending && defaultFallEnd.compare(date) == .orderedDescending {
+            return (defaultFallStart...defaultFallEnd, "Fall")
+        } else {
+
+            let defaultSpringRange = AppPreference.defaultSpringDateRange
+            var defaultSpringRangeStartComponents = DateComponents()
+            defaultSpringRangeStartComponents.year = yrParam
+            defaultSpringRangeStartComponents.minute = cal.component(.minute, from: defaultSpringRange.lowerBound)
+            defaultSpringRangeStartComponents.hour = cal.component(.hour, from: defaultSpringRange.lowerBound)
+            defaultSpringRangeStartComponents.second = cal.component(.second, from: defaultSpringRange.lowerBound)
+            defaultSpringRangeStartComponents.day = cal.component(.day, from: defaultSpringRange.lowerBound)
+            defaultSpringRangeStartComponents.month = cal.component(.month, from: defaultSpringRange.lowerBound)
+            defaultSpringRangeStartComponents.calendar = Calendar.current
+            let defaultSpringStart = cal.date(from: defaultSpringRangeStartComponents)!
+            let defaultSpringEnd = defaultSpringStart.addingTimeInterval(60*60*24*182)
+            
+            return (defaultSpringStart...defaultSpringEnd, "Spring")
+        }
+    }
+    
+    public static func cleanEmptySemesters() {
+        // Fetch semesters in persistent store. Return if found else create new.
+        let semesterFetch = NSFetchRequest<Semester>(entityName: "Semester")
+        let appDelegate = NSApplication.shared().delegate as! AppDelegate
+        do {
+            let semesters = try appDelegate.managedObjectContext.fetch(semesterFetch) as [Semester]
+            for sem in semesters {
+                if sem.courses!.count == 0 {
+                    appDelegate.managedObjectContext.delete( sem )
+                }
+            }
+            appDelegate.saveAction(self)
+        } catch { fatalError("Failed to fetch semesters: \(error)") }
+        
+        if let bundle = Bundle.main.bundleIdentifier {
+            UserDefaults.standard.removePersistentDomain(forName: bundle)
+        }
     }
 }

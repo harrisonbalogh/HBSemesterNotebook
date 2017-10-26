@@ -19,13 +19,13 @@ class SchedulerPageViewController: NSViewController {
         didSet {
             if isPastSemester {
                 addCourseButton.isEnabled = false
-                addCourseButton.isHidden = true
                 doneSchedulingButton.isEnabled = false
-                doneSchedulingButton.isHidden = true
+                datePicker_start.isEnabled = false
+                datePicker_end.isEnabled = false
             } else {
                 addCourseButton.isEnabled = true
-                addCourseButton.isHidden = false
-                doneSchedulingButton.isHidden = false
+                datePicker_start.isEnabled = true
+                datePicker_end.isEnabled = true
             }
         }
     }
@@ -39,6 +39,18 @@ class SchedulerPageViewController: NSViewController {
         super.viewDidAppear()
         
         sidebarDelegate?.sidebarSchedulingNeedsPopulating(self)
+    }
+    
+    // MARK: - Semester Start and End dates
+    
+    @IBOutlet weak var datePicker_start: NSDatePicker!
+    @IBOutlet weak var datePicker_end: NSDatePicker!
+    
+    @IBAction func action_startPicker(_ sender: NSDatePicker) {
+        schedulingDelegate?.schedulingUpdateStartDate(with: datePicker_start.dateValue)
+    }
+    @IBAction func action_endPicker(_ sender: NSDatePicker) {
+        schedulingDelegate?.schedulingUpdateEndDate(with: datePicker_end.dateValue)
     }
     
     // MARK: - Populating (Editable) Courses
@@ -57,6 +69,26 @@ class SchedulerPageViewController: NSViewController {
         }
         
         checkSchedule(for: semester)
+        
+        // Update start and end dates
+        datePicker_start.minDate = semester.earliestStart
+        datePicker_start.maxDate = semester.latestStart
+        datePicker_end.minDate = semester.earliestEnd
+        datePicker_end.maxDate = semester.latestEnd
+        datePicker_start.dateValue = semester.start!
+        datePicker_end.dateValue = semester.end!
+        
+        datePicker_start.isEnabled = true
+        datePicker_end.isEnabled = true
+        
+        // Disable pickers if already started semester
+        for case let course as Course in semester.courses! {
+            if course.lectures!.count > 0 {
+                datePicker_start.isEnabled = false
+                datePicker_end.isEnabled = false
+                break
+            }
+        }
     }
     
     func push(course: Course) {
@@ -116,6 +148,7 @@ class SchedulerPageViewController: NSViewController {
     // MARK: - Course & TimeSlot Model
     
     @IBAction func action_finishScheduling(_ sender: NSButton) {
+        NSColorPanel.shared().orderOut(self)
         schedulingDelegate?.schedulingDidFinish()
     }
     

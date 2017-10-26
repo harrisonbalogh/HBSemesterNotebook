@@ -74,7 +74,7 @@
                                         </menuItem>
                                         <menuItem title="Save…" keyEquivalent="s" id="pxx-59-PXV">
                                             <connections>
-                                                <action selector="saveAction:" target="Voe-Tx-rLC" id="rRG-K0-ebL"/>
+                                                <action selector="saveFunction:" target="Voe-Tx-rLC" id="H8G-AW-cue"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="Export" keyEquivalent="E" id="hsm-bT-8B0">
@@ -145,13 +145,13 @@
                                                 <items>
                                                     <menuItem title="Find…" tag="1" keyEquivalent="f" id="Xz5-n4-O0W">
                                                         <connections>
-                                                            <action selector="findFunction:" target="Voe-Tx-rLC" id="3RI-Lh-WCC"/>
+                                                            <action selector="performTextFinderAction:" target="Ady-hI-5gd" id="Rqo-Df-fdg"/>
                                                         </connections>
                                                     </menuItem>
                                                     <menuItem title="Find and Replace…" tag="12" keyEquivalent="f" id="YEy-JH-Tfz">
                                                         <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                                         <connections>
-                                                            <action selector="findAndReplaceFunction:" target="Voe-Tx-rLC" id="h9R-SZ-QW5"/>
+                                                            <action selector="performFindPanelAction:" target="Ady-hI-5gd" id="TE4-Vv-hEF"/>
                                                         </connections>
                                                     </menuItem>
                                                     <menuItem title="Find Next" tag="2" keyEquivalent="g" id="q09-fT-Sye">
@@ -887,7 +887,7 @@
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="30" id="0QO-FA-Lmy"/>
                                                 </constraints>
-                                                <color key="fillColor" red="0.97467082739999999" green="0.97467082739999999" blue="0.97467082739999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <color key="fillColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             </box>
                                             <button focusRingType="none" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Cch-XT-8O6">
                                                 <rect key="frame" x="167" y="326" width="16" height="16"/>

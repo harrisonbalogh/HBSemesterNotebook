@@ -15,23 +15,15 @@ class ScheduleAssistant: NSObject {
     
     // MARK: ___ Initialization ___
     init(masterController: MasterViewController) {
-        let calendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
-        // Get calendar date to deduce semester
-        let yearComponent = calendar.component(.year, from: Date())
-        
-        // This should be adjustable in the settings, assumes Jul-Dec is Fall. Jan-Jun is Spring.
-        var semesterTitle = "spring"
-        if calendar.component(.month, from: Date()) >= 7 {
-            semesterTitle = "fall"
-        }
-        self.currentSemester = Semester.produceSemester(titled: semesterTitle, in: yearComponent)
+
+        self.currentSemester = Semester.produceSemester(during: Date(), createIfNecessary: true)!
         
         super.init()
         
         masterVC = masterController
         
         // Start minute checks
-        let minuteComponent = calendar.component(.minute, from: Date())
+        let minuteComponent = Calendar.current.component(.minute, from: Date())
         self.perform(#selector(self.notifyMinute), with: nil, afterDelay: Double(60 - minuteComponent))
     }
     
@@ -40,20 +32,10 @@ class ScheduleAssistant: NSObject {
     /// Check for upcoming courses - should be adjustable in settings. This is used to
     /// provide an alert that a course will be starting in x minutes.
     func checkFuture() {
-        
-        let calendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
-        // Get calendar date to deduce semester
-        let yearComponent = calendar.component(.year, from: Date())
-        
-        // This should be adjustable in the settings, assumes Jul-Dec is Fall. Jan-Jun is Spring.
-        var semesterTitle = "spring"
-        if calendar.component(.month, from: Date()) >= 7 {
-            semesterTitle = "fall"
-        }
-        
+
         // Continue only if we can get the current semester and if a course will happen in future
         guard
-            let currentSemester = Semester.retrieveSemester(titled: semesterTitle, in: yearComponent),
+            let currentSemester = Semester.produceSemester(during: Date(), createIfNecessary: false),
             let futureTimeSlot = currentSemester.futureTimeSlot()
             else { return }
         
@@ -64,7 +46,7 @@ class ScheduleAssistant: NSObject {
             
             let timeTill = Int(futureTimeSlot.startMinute % 60) - minute
             
-            let _ = Alert(hour: hour, minute: minute, course: futureTimeSlot.course!, content: "is starting in \(timeTill) minutes.", question: nil, deny: "Close", action: nil, target: nil, type: .future)
+            let _ = Alert(hour: hour, minute: minute, course: futureTimeSlot.course!, content: "lecture \(futureTimeSlot.course!.theoreticalLectureCount())is starting in \(timeTill) minutes.", question: nil, deny: "Close", action: nil, target: nil, type: .future)
         }
     }
     
@@ -72,25 +54,15 @@ class ScheduleAssistant: NSObject {
     /// Will return if a course is happening but it is discardable.
     @discardableResult func checkHappening() -> Bool {
         
-        let cal = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
-        // Get calendar date to deduce semester
-        let yearComponent = cal.component(.year, from: Date())
-        
-        // This should be adjustable in the settings, assumes Jul-Dec is Fall. Jan-Jun is Spring.
-        var semesterTitle = "spring"
-        if cal.component(.month, from: Date()) >= 7 {
-            semesterTitle = "fall"
-        }
-        
         // Proceed only if found semester and a course lecture is underway
         guard
-            let currentSemester = Semester.retrieveSemester(titled: semesterTitle, in: yearComponent),
+            let currentSemester = Semester.produceSemester(during: Date(), createIfNecessary: false),
             let timeSlotHappening = currentSemester.duringCourse()
             else { return false }
         
         if timeSlotHappening.course!.lectures!.count == 0 {
             // This is the first lecture
-
+            let cal = Calendar.current
             let timeHour = Int(timeSlotHappening.startMinute / 60)
             let timeMinute = Int(timeSlotHappening.startMinute % 60)
             let timeStart = timeHour * 60 + timeMinute
@@ -123,6 +95,7 @@ class ScheduleAssistant: NSObject {
             
             if theoLecCount != timeSlotHappening.course!.lectures!.count {
                 let date = Date()
+                let cal = Calendar.current
                 let minuteOfDay = cal.component(.hour, from: date) * 60 + cal.component(.minute, from: date)
                 let timeHour = Int(timeSlotHappening.startMinute / 60)
                 let timeMinute = Int(timeSlotHappening.startMinute % 60)
@@ -179,7 +152,7 @@ class ScheduleAssistant: NSObject {
         // Place below anything to happen on the minute marker...
         
 //        checkFuture()
-//        checkHappening()
+        checkHappening()
 //        checkMissed()
         
         if masterVC.selectedCourse != nil {
@@ -192,5 +165,6 @@ class ScheduleAssistant: NSObject {
         }
         
         masterVC.drawTimeBox.needsDisplay = true
+        masterVC.drawTimeBox.display()
     }
 }

@@ -68,8 +68,10 @@ class WorkAdderLectureController: NSViewController {
             }
         }
         
-        datePicker.minDate = Date().addingTimeInterval(TimeInterval(60))
-        timePicker.minDate = Date().addingTimeInterval(TimeInterval(60))
+        datePicker.minDate = workBox.work.course?.semester?.start
+        datePicker.maxDate = workBox.work.course?.semester?.end
+        timePicker.minDate = datePicker.minDate
+        timePicker.maxDate = datePicker.maxDate
         
         descriptionTextView.string = workBox.work!.content!
         

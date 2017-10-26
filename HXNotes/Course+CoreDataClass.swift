@@ -68,7 +68,6 @@ public class Course: NSManagedObject {
             newLecture.number = max(Int16(self.theoreticalLectureCount()), 1)
         } else {
             // Absent
-            let _ = Alert(course: self, content: "Created absent lecture \(index! + 1) for \(month!)/\(day!).", question: nil, deny: "Okay", action: nil, target: nil, type: .custom)
             newLecture.absent = true
             newLecture.day = Int16(day!)
             newLecture.month = Int16(month!)
@@ -209,19 +208,18 @@ public class Course: NSManagedObject {
         var autoDays = 0
         var autoHours = 0
         var autoMins = 55
-        if let assumeComplete = CFPreferencesCopyAppValue(NSString(string: "assumePassedCompletion"), kCFPreferencesCurrentApplication) as? String {
-            if assumeComplete == "nil" {
-                // Preference has been set to not automatically complete work. So return false
-                return false
-            } else {
-                let parseDays = assumeComplete.substring(to: (assumeComplete.range(of: ":")?.lowerBound)!)
-                let remain = assumeComplete.substring(from: (assumeComplete.range(of: ":")?.upperBound)!)
-                let parseHrs = remain.substring(to: (remain.range(of: ":")?.lowerBound)!)
-                let parseMins = remain.substring(from: (remain.range(of: ":")?.upperBound)!)
-                autoDays = Int(parseDays)!
-                autoHours = Int(parseHrs)!
-                autoMins  = Int(parseMins)!
-            }
+        if AppPreference.assumePassedCompletion == "nil" {
+            // Preference has been set to not automatically complete work. So return false
+            return false
+        } else {
+            let assumeComplete = AppPreference.assumePassedCompletion
+            let parseDays = assumeComplete.substring(to: (assumeComplete.range(of: ":")?.lowerBound)!)
+            let remain = assumeComplete.substring(from: (assumeComplete.range(of: ":")?.upperBound)!)
+            let parseHrs = remain.substring(to: (remain.range(of: ":")?.lowerBound)!)
+            let parseMins = remain.substring(from: (remain.range(of: ":")?.upperBound)!)
+            autoDays = Int(parseDays)!
+            autoHours = Int(parseHrs)!
+            autoMins  = Int(parseMins)!
         }
         
         let date = Date()
@@ -258,19 +256,18 @@ public class Course: NSManagedObject {
         var autoDays = 0
         var autoHours = 0
         var autoMins = 55
-        if let assumeTaken = CFPreferencesCopyAppValue(NSString(string: "assumePassedTaken"), kCFPreferencesCurrentApplication) as? String {
-            if assumeTaken == "nil" {
-                // Preference has been set to not automatically complete work. So return false
-                return false
-            } else {
-                let parseDays = assumeTaken.substring(to: (assumeTaken.range(of: ":")?.lowerBound)!)
-                let remain = assumeTaken.substring(from: (assumeTaken.range(of: ":")?.upperBound)!)
-                let parseHrs = remain.substring(to: (remain.range(of: ":")?.lowerBound)!)
-                let parseMins = remain.substring(from: (remain.range(of: ":")?.upperBound)!)
-                autoDays = Int(parseDays)!
-                autoHours = Int(parseHrs)!
-                autoMins  = Int(parseMins)!
-            }
+        if AppPreference.assumePassedTaken == "nil" {
+            // Preference has been set to not automatically complete work. So return false
+            return false
+        } else {
+            let assumeTaken = AppPreference.assumePassedTaken
+            let parseDays = assumeTaken.substring(to: (assumeTaken.range(of: ":")?.lowerBound)!)
+            let remain = assumeTaken.substring(from: (assumeTaken.range(of: ":")?.upperBound)!)
+            let parseHrs = remain.substring(to: (remain.range(of: ":")?.lowerBound)!)
+            let parseMins = remain.substring(from: (remain.range(of: ":")?.upperBound)!)
+            autoDays = Int(parseDays)!
+            autoHours = Int(parseHrs)!
+            autoMins  = Int(parseMins)!
         }
         
         let date = Date()
@@ -562,8 +559,6 @@ public class Course: NSManagedObject {
         if needsSort {
             sortTimeSlots()
         }
-        
-        var addedLectures = false
 
         // Get how many lectures there are supposed to be.
         let theoLecCount = self.theoreticalLectureCount()
@@ -576,13 +571,13 @@ public class Course: NSManagedObject {
         var date = firstLecture.date()
         var timeSlotIndex = self.timeSlots!.index(of: firstLecture.timeSlot!)
         
+        // Note for displaying alert.
+        var lecturesAdded = 0
+        
         // Exlude last and first lectures from iteration
         for lectureIndex in 0..<(theoLecCount-1) {
             
-            print("    iteration: \(lectureIndex)")
-            
             if theoLecCount == self.lectures!.count {
-                print("        break cus we're good: \(lectureIndex)")
                 break
             }
             
@@ -604,22 +599,22 @@ public class Course: NSManagedObject {
                 let nextLecture = (lectures?.object(at: lectureIndex) as! Lecture)
                 if nextLecture.date() != date {
                     createLecture(during: nextTimeSlot, on: day, in: month, at: lectureIndex)
-                    addedLectures = true
+                    lecturesAdded += 1
                 }
-                print("      iteration: \(lectureIndex) from case 1")
             } else if lectureIndex != theoLecCount { // Missing non-serted lectures.
                 // This is not the latest lecture so just add it without checking if in progress
                 createLecture(during: nextTimeSlot, on: day, in: month, at: lectureIndex)
-                addedLectures = true
-                print("      iteration: \(lectureIndex) from case 2")
+                lecturesAdded += 1
             } else if self.duringTimeSlot() == nil { // Missing latest lecture
                 // It is not in progress, so add it.
                 createLecture(during: nextTimeSlot, on: day, in: month, at: lectureIndex)
-                addedLectures = true
-                print("      iteration: \(lectureIndex) from case 3")
+                lecturesAdded += 1
             }
         }
-        return addedLectures
+        
+        let _ = Alert(course: self, content: "\(lecturesAdded )absent lecture(s) have been filled.", question: nil, deny: "Close", action: nil, target: nil, type: .custom)
+        
+        return (lecturesAdded != 0)
     }
     
     /// Will fill all the absent lectures for a given course. Note this runs
@@ -690,19 +685,8 @@ public class Course: NSManagedObject {
     /// before 10:00PM.
     func nextTimeSlotSpace() -> TimeSlot {
         
-        var courseLength = 55
-        if let defaultTimeSpan = CFPreferencesCopyAppValue(NSString(string: "defaultCourseTimeSpanMinutes"), kCFPreferencesCurrentApplication) as? String {
-            if let time = Int(defaultTimeSpan) {
-                courseLength = time
-            }
-        }
-        
-        var bufferTime = 5
-        if let bufferTimePref = CFPreferencesCopyAppValue(NSString(string: "bufferTimeBetweenCoursesMinutes"), kCFPreferencesCurrentApplication) as? String {
-            if let time = Int(bufferTimePref) {
-                bufferTime = time
-            }
-        }
+        let courseLength = AppPreference.defaultCourseTimeSpanMinutes
+        let bufferTime = AppPreference.bufferTimeBetweenCoursesMinutes
         
         var startTime = 480
         var stopTime = startTime + courseLength

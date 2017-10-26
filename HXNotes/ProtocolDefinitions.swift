@@ -50,6 +50,9 @@ protocol SchedulingDelegate {
     func schedulingUpdatedTimeSlot()
     func schedulingUpdatedWork()
     func schedulingUpdateTest()
+    func schedulingUpdateStartDate(with start: Date)
+    func schedulingUpdateEndDate(with end: Date)
+    func schedulingReloadScheduler()
     
     func schedulingRenameCourse()
 }

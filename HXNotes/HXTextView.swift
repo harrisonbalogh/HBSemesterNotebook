@@ -24,5 +24,9 @@ class HXTextView: NSTextView {
         parentController.notifyContentFocus(is: false)
         return true
     }
+
+    override func performTextFinderAction(_ sender: Any?) {
+        parentController.performTextFinderAction(sender)
+    }
     
 }

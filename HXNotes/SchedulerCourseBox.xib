@@ -28,12 +28,22 @@
                     <color key="borderColor" red="0.36770279255319149" green="0.36770279255319149" blue="0.36770279255319149" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <color key="fillColor" red="0.47121701980000003" green="0.82496093749999999" blue="0.48645101699999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                 </box>
+                <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="IHO-HY-3P8" userLabel="Color Button">
+                    <rect key="frame" x="143" y="67" width="16" height="16"/>
+                    <buttonCell key="cell" type="bevel" bezelStyle="rounded" alignment="center" imageScaling="proportionallyDown" inset="2" id="l2a-4h-q1U">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="action_colorWheel:" target="nuu-sF-rr8" id="px3-vN-bxv"/>
+                    </connections>
+                </button>
                 <textField identifier="course_label_title" horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YLs-Mt-6bQ">
                     <rect key="frame" x="5" y="88" width="133" height="23"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="23" id="wXU-2m-tZ9"/>
                     </constraints>
-                    <textFieldCell key="cell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" alignment="left" title="Label" usesSingleLineMode="YES" bezelStyle="round" id="8gH-bj-tpF">
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" placeholderString="Title" usesSingleLineMode="YES" bezelStyle="round" id="8gH-bj-tpF">
                         <font key="font" metaFont="systemBold" size="16"/>
                         <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -58,19 +68,25 @@
                 </button>
                 <textField verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jp0-dJ-TQl">
                     <rect key="frame" x="5" y="64" width="133" height="22"/>
-                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" placeholderString="Location" bezelStyle="round" id="FRe-2e-TJU">
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" placeholderString="Location" usesSingleLineMode="YES" bezelStyle="round" id="FRe-2e-TJU">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
+                    <connections>
+                        <action selector="endEditingCourseLocation:" target="nuu-sF-rr8" id="bzX-yM-pPu"/>
+                    </connections>
                 </textField>
                 <textField verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5hD-gu-q6T">
                     <rect key="frame" x="5" y="40" width="133" height="22"/>
-                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" placeholderString="Professor" bezelStyle="round" id="7BO-tD-BYj">
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" placeholderString="Professor" usesSingleLineMode="YES" bezelStyle="round" id="7BO-tD-BYj">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
+                    <connections>
+                        <action selector="endEditingCourseProfessor:" target="nuu-sF-rr8" id="Ark-CH-DH1"/>
+                    </connections>
                 </textField>
                 <stackView identifier="timeSlot_stack_view" distribution="fill" orientation="vertical" alignment="leading" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" verticalCompressionResistancePriority="755" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sBO-X8-qgT" userLabel="TimeSlot Stack View">
                     <rect key="frame" x="0.0" y="10" width="163" height="24"/>
@@ -105,13 +121,17 @@
                 <constraint firstItem="5hD-gu-q6T" firstAttribute="leading" secondItem="Jp0-dJ-TQl" secondAttribute="leading" id="HuD-3D-gwj"/>
                 <constraint firstItem="kva-mM-31N" firstAttribute="centerY" secondItem="Jp0-dJ-TQl" secondAttribute="centerY" id="KC2-FA-FKq"/>
                 <constraint firstItem="QRl-9y-vvw" firstAttribute="leading" secondItem="YLs-Mt-6bQ" secondAttribute="trailing" constant="2" id="Qyv-mV-3Tc"/>
+                <constraint firstItem="IHO-HY-3P8" firstAttribute="centerY" secondItem="kva-mM-31N" secondAttribute="centerY" id="Rab-Tj-b11"/>
                 <constraint firstItem="TRE-LY-BgM" firstAttribute="centerX" secondItem="hFw-M9-zIf" secondAttribute="centerX" id="TmI-2h-5VE"/>
                 <constraint firstItem="Jp0-dJ-TQl" firstAttribute="top" secondItem="YLs-Mt-6bQ" secondAttribute="bottom" constant="2" id="VkL-ld-FtK"/>
                 <constraint firstItem="5hD-gu-q6T" firstAttribute="top" secondItem="Jp0-dJ-TQl" secondAttribute="bottom" constant="2" id="Wjc-qK-gJm"/>
                 <constraint firstItem="Jp0-dJ-TQl" firstAttribute="trailing" secondItem="YLs-Mt-6bQ" secondAttribute="trailing" id="YVR-4c-N2I"/>
+                <constraint firstItem="IHO-HY-3P8" firstAttribute="height" secondItem="kva-mM-31N" secondAttribute="height" id="c17-8N-haS"/>
                 <constraint firstItem="sBO-X8-qgT" firstAttribute="top" secondItem="5hD-gu-q6T" secondAttribute="bottom" constant="6" id="dVl-mi-y6c"/>
                 <constraint firstAttribute="trailing" secondItem="sBO-X8-qgT" secondAttribute="trailing" id="eA9-dy-OHr"/>
+                <constraint firstItem="IHO-HY-3P8" firstAttribute="centerX" secondItem="kva-mM-31N" secondAttribute="centerX" id="fu7-LB-Pbi"/>
                 <constraint firstItem="5hD-gu-q6T" firstAttribute="trailing" secondItem="Jp0-dJ-TQl" secondAttribute="trailing" id="gsW-Lo-rsk"/>
+                <constraint firstItem="IHO-HY-3P8" firstAttribute="width" secondItem="kva-mM-31N" secondAttribute="width" id="hRl-Gp-cDr"/>
                 <constraint firstAttribute="bottom" secondItem="sBO-X8-qgT" secondAttribute="bottom" constant="10" id="hcT-qC-86H"/>
                 <constraint firstAttribute="trailing" secondItem="oN0-bY-8cE" secondAttribute="trailing" constant="3" id="iUh-Zm-ing"/>
                 <constraint firstItem="QRl-9y-vvw" firstAttribute="top" secondItem="YLs-Mt-6bQ" secondAttribute="top" id="jp9-D1-BNT"/>
@@ -127,6 +147,8 @@
                 <outlet property="boxDrag" destination="kva-mM-31N" id="3hC-Fj-Oep"/>
                 <outlet property="buttonTrash" destination="oN0-bY-8cE" id="p6T-Y5-uRe"/>
                 <outlet property="labelCourse" destination="YLs-Mt-6bQ" id="8Db-Vh-Utf"/>
+                <outlet property="labelLocation" destination="Jp0-dJ-TQl" id="mF2-ln-TXy"/>
+                <outlet property="labelProfessor" destination="5hD-gu-q6T" id="MTj-70-HOu"/>
                 <outlet property="timeSlotAddButton" destination="TRE-LY-BgM" id="ZJM-er-cmy"/>
                 <outlet property="timeSlotStackView" destination="sBO-X8-qgT" id="679-Td-gcc"/>
             </connections>

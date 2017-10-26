@@ -8,7 +8,7 @@
 
 import Cocoa
 
-class LectureEditorViewController: NSViewController {
+class LectureEditorViewController: NSViewController, NSTextFinderClient {
     
     let sharedFontManager = NSFontManager.shared()
     let appDelegate = NSApplication.shared().delegate as! AppDelegate
@@ -39,6 +39,7 @@ class LectureEditorViewController: NSViewController {
     @IBOutlet weak var scrollViewContent: NSScrollView!
     @IBOutlet weak var clipViewContent: NSClipView!
     @IBOutlet var textViewContent: HXTextView!
+    @IBOutlet weak var textViewWidthConstraint: NSLayoutConstraint!
     
     @IBOutlet weak var backdropBox: NSBox!
     @IBOutlet weak var overlayTopConstraint: NSLayoutConstraint!
@@ -57,6 +58,20 @@ class LectureEditorViewController: NSViewController {
         self.addChildViewController(replaceViewController)
         exportViewController = HXExportViewController(nibName: "HXExportView", bundle: nil)
         self.addChildViewController(exportViewController)
+        
+        let mainScreen = NSScreen.main()
+        let screenDescrip = mainScreen?.deviceDescription
+        let screenSize = screenDescrip?[NSDeviceSize] as! NSSize
+        let physicalSize = CGDisplayScreenSize(screenDescrip?["NSScreenNumber"] as! CGDirectDisplayID)
+        let scaleFactor = (mainScreen?.backingScaleFactor)!
+        print("Scale factor: \(scaleFactor)")
+        let w = ((screenSize.width / physicalSize.width) * 25.4)// * scaleFactor // not supposed to use this. See docs
+        let h = ((screenSize.height / physicalSize.height) * 25.4)// * scaleFactor // not supposed to use this. See docs
+        print("DPI: \(Int(w)) x \(Int(h)) so an 8.5x11 paper would have \(Int(w*8.5)) x \(Int(h*11)) pixels")
+        
+
+        textViewContent.textContainerInset = NSSize(width: w, height:h)
+        textViewWidthConstraint.constant = w*8.5
         
         styleLabelFont.alphaValue = 0
         styleButtonFont.alphaValue = 0
@@ -107,15 +122,6 @@ class LectureEditorViewController: NSViewController {
                                                name: .NSTextViewDidChangeTypingAttributes, object: textViewContent)
 //        NotificationCenter.default.addObserver(self, selector: #selector(action_textViewBounds),
 //                                               name: .NSViewBoundsDidChange, object: clipViewContent)
-        
-//        let mainScreen = NSScreen.main()
-//        let screenDescrip = mainScreen?.deviceDescription
-//        let screenSize = screenDescrip?[NSDeviceSize] as! NSSize
-//        let physicalSize = CGDisplayScreenSize(screenDescrip?["NSScreenNumber"] as! CGDirectDisplayID)
-//        let scaleFactor = mainScreen?.backingScaleFactor
-//        let width = screenSize.width / physicalSize.width * 25.4
-//        let height = screenSize.height / physicalSize.height * 25.4
-//        print("DPI: \(width), \(height)")
         
         findViewController.selectionDelegate = self.selectionDelegate
         replaceViewController.selectionDelegate = self.selectionDelegate
@@ -189,6 +195,12 @@ class LectureEditorViewController: NSViewController {
                 backdropBox.animator().alphaValue = 1
                 NSAnimationContext.endGrouping()
             }
+            
+            
+            // Reset find bar
+            if isFinding {
+                findViewController.textField_textChange()
+            }
         }
     }
     @IBAction func action_closeLecture(_ sender: NSButton) {
@@ -235,16 +247,20 @@ class LectureEditorViewController: NSViewController {
             positionOfSelection = textViewContent.attributedString().length - 1
         }
         
+        print("TEXTVIEWP - Position of selection: \(positionOfSelection)")
+        print("          - \(textViewContent.attributedString().attributes(at: positionOfSelection, effectiveRange: nil))")
+        
+        // Underlines
         if textViewContent.attributedString().attribute(NSUnderlineStyleAttributeName, at: positionOfSelection, effectiveRange: nil) != nil {
             styleButtonUnderline.state = NSOnState
         } else {
             styleButtonUnderline.state = NSOffState
         }
         
+        // Superscript and subscript
         styleButtonSuper.state = NSOffState
         styleButtonSub.state = NSOffState
         if let superAttr = textViewContent.attributedString().attribute(NSSuperscriptAttributeName, at: positionOfSelection, effectiveRange: nil) as? Int {
-            print("worked!")
             if superAttr == 1 {
                 // super
                 styleButtonSuper.state = NSOnState
@@ -254,6 +270,7 @@ class LectureEditorViewController: NSViewController {
             }
         }
         
+        // Text color
         if let color = textViewContent.attributedString().attribute(NSForegroundColorAttributeName, at: positionOfSelection, effectiveRange: nil) as? NSColor {
                 styleBoxColor.fillColor = color
         } else if positionOfSelection != 0 {
@@ -266,6 +283,7 @@ class LectureEditorViewController: NSViewController {
             styleBoxColor.fillColor = NSColor.black
         }
         
+        // Font family name
         if let font = textViewContent.attributedString().attribute(NSFontAttributeName, at: positionOfSelection, effectiveRange: nil) as? NSFont {
             if let name = font.familyName {
                 styleLabelFont.stringValue = name
@@ -274,6 +292,35 @@ class LectureEditorViewController: NSViewController {
             }
         }
         
+        // Enabling/disabling Bold and Italic style buttons if typeface is/isn't present
+        styleButtonBold.isEnabled = false
+        styleButtonItalic.isEnabled = false
+        let similarFonts = sharedFontManager.availableMembers(ofFontFamily: sharedFontManager.selectedFont!.familyName!)
+        if similarFonts?.count == 1 {
+            styleButtonBold.isEnabled = false
+            styleButtonItalic.isEnabled = false
+        } else {
+            var foundBold = false
+            var foundItalic = false
+            for font in similarFonts! {
+                if foundBold && foundItalic {
+                    break
+                }
+                if let fonted = NSFont(name: font[0] as! String, size: 12) {
+                    print(" - \(fonted)")
+                    if !foundBold && sharedFontManager.traits(of: fonted).contains(.boldFontMask) {
+                        styleButtonBold.isEnabled = true
+                        foundBold = true
+                    }
+                    if !foundItalic && sharedFontManager.traits(of: fonted).contains(.italicFontMask) {
+                        styleButtonItalic.isEnabled = true
+                        foundItalic = true
+                    }
+                }
+            }
+        }
+        
+        // Alignment
         if let parStyle = textViewContent.attributedString().attribute("NSParagraphStyle", at: positionOfSelection, effectiveRange: nil) as? NSParagraphStyle {
             
             styleRadioLeft.state = NSOffState
@@ -292,6 +339,7 @@ class LectureEditorViewController: NSViewController {
             }
         }
         
+        // Bold
         if traits.contains(.boldFontMask) {
             styleButtonBold.state = NSOnState
             styleButtonBold.tag = Int(NSFontTraitMask.unboldFontMask.rawValue)
@@ -300,6 +348,7 @@ class LectureEditorViewController: NSViewController {
             styleButtonBold.tag = Int(NSFontTraitMask.boldFontMask.rawValue)
         }
         
+        // Italic
         if traits.contains(.italicFontMask) {
             styleButtonItalic.state = NSOnState
             styleButtonItalic.tag = Int(NSFontTraitMask.unitalicFontMask.rawValue)
@@ -310,47 +359,14 @@ class LectureEditorViewController: NSViewController {
     }
     
     // MARK: - Styling Actions
-    
-    ///
-    @IBAction func action_styleUnderline(_ sender: NSButton) {
-        textViewContent.underline(self)
-        textViewContent.needsDisplay = true
-    }
+
     @IBAction func action_styleItalicize(_ sender: NSButton) {
         sharedFontManager.addFontTrait(sender)
     }
     @IBAction func action_styleBold(_ sender: NSButton) {
         sharedFontManager.addFontTrait(sender)
     }
-    
-    
-    @IBAction func action_styleSuper(_ sender: NSButton) {
-        textViewContent.superscript(self)
-        textViewContent.needsDisplay = true
-    }
-    @IBAction func action_styleSub(_ sender: NSButton) {
-        textViewContent.subscript(self)
-        textViewContent.needsDisplay = true
-    }
-    
-    ///
-    @IBAction func action_styleAlignment(_ sender: NSButton) {
-        switch (sender.tag) {
-        case 0:
-            textViewContent.alignLeft(self)
-            break
-        case 1:
-            textViewContent.alignCenter(self)
-            break
-        case 2:
-            textViewContent.alignRight(self)
-            break
-        case 3:
-            textViewContent.alignJustified(self)
-            break
-        default: break
-        }
-    }
+
     ///
     @IBAction func action_styleFont(_ sender: NSButton) {
         sharedFontManager.orderFrontFontPanel(self)
@@ -470,6 +486,7 @@ class LectureEditorViewController: NSViewController {
                 findViewController.view.trailingAnchor.constraint(equalTo: dropdownView.trailingAnchor).isActive = true
                 findViewController.view.topAnchor.constraint(equalTo: dropdownView.topAnchor).isActive = true
                 findViewController.view.bottomAnchor.constraint(equalTo: dropdownView.bottomAnchor).isActive = true
+//                findViewController.textFinder.client = textViewContent as! NSTextFinderClient?
                 
                 topBarShown(true)
             } else {
@@ -479,6 +496,10 @@ class LectureEditorViewController: NSViewController {
                 topBarShown(false)
             }
         }
+    }
+    override func performTextFinderAction(_ sender: Any?) {
+        isFinding = !isFinding
+        findViewController.performTextFinderAction(sender)
     }
     
     var isReplacing = false {
@@ -624,30 +645,4 @@ class LectureEditorViewController: NSViewController {
             NSAnimationContext.endGrouping()
         }
     }
-    
-    // MARK: - TEMP TESTING DEV CMDS
-    
-    @IBAction func actionTest_delete(_ sender: NSButton) {
-        if sender.tag == 0 {
-            sender.tag = 1
-        } else if sender.tag == 1 {
-//            for case let lecture as Lecture in selectedLecture.course!.lectures! {
-//                appDelegate.managedObjectContext.delete( lecture )
-//            }
-            appDelegate.managedObjectContext.delete( selectedLecture )
-            appDelegate.saveAction(self)
-            sender.tag = 0
-        }
-    }
-    @IBAction func actionTest_absent(_ sender: NSButton) {
-        selectedLecture.absent = !selectedLecture.absent
-    }
-    @IBAction func actionTest_backDate(_ sender: NSButton) {
-        selectedLecture.month = 8
-        selectedLecture.day = 29
-    }
-    @IBAction func actionTest(_ sender: NSButton) {
-        selectedLecture.timeSlot = (selectedLecture.course!.timeSlots![0] as! TimeSlot)
-    }
-    
 }

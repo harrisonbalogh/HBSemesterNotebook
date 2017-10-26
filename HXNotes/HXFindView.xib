@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11762" systemVersion="16F73" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11762" systemVersion="16G29" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11762"/>
@@ -14,6 +14,7 @@
                 <outlet property="label_lectureSelection" destination="ROQ-7f-3VP" id="0hX-i9-TE3"/>
                 <outlet property="label_result" destination="0ig-UT-9SM" id="Zgj-Ac-SbE"/>
                 <outlet property="textField_find" destination="8cf-Je-tHO" id="aHl-YC-K7p"/>
+                <outlet property="textFinder" destination="ZDw-Ai-yqX" id="P0S-ko-xqd"/>
                 <outlet property="view" destination="c22-O7-iKe" id="qIN-23-L9B"/>
             </connections>
         </customObject>
@@ -40,7 +41,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField focusRingType="none" horizontalHuggingPriority="249" verticalHuggingPriority="750" horizontalCompressionResistancePriority="749" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8cf-Je-tHO">
+                <textField focusRingType="none" horizontalHuggingPriority="249" verticalHuggingPriority="750" horizontalCompressionResistancePriority="749" tag="7" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8cf-Je-tHO">
                     <rect key="frame" x="21" y="6" width="212" height="17"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" state="on" focusRingType="none" alignment="left" placeholderString="Find" id="5TR-kY-sN2">
                         <font key="font" metaFont="system"/>
@@ -48,7 +49,7 @@
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                     <connections>
-                        <action selector="action_textField:" target="-2" id="EvZ-4L-oTy"/>
+                        <action selector="action_textField:" target="-2" id="Rbc-cO-0RM"/>
                     </connections>
                 </textField>
                 <box identifier="line2" verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="TRz-66-pes">
@@ -81,7 +82,7 @@
                 <box identifier="line3" verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="khP-e7-vXt">
                     <rect key="frame" x="258" y="3" width="113" height="5"/>
                 </box>
-                <button translatesAutoresizingMaskIntoConstraints="NO" id="KvC-Ab-bJH">
+                <button tag="3" translatesAutoresizingMaskIntoConstraints="NO" id="KvC-Ab-bJH">
                     <rect key="frame" x="377" y="6" width="27" height="18"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="27" id="7Tg-bD-jTF"/>
@@ -92,10 +93,10 @@
                         <font key="font" metaFont="system"/>
                     </buttonCell>
                     <connections>
-                        <action selector="action_left:" target="-2" id="6KD-0o-u6V"/>
+                        <action selector="action_right:" target="-2" id="QzM-bV-Ecf"/>
                     </connections>
                 </button>
-                <button translatesAutoresizingMaskIntoConstraints="NO" id="hnq-MQ-xGe">
+                <button tag="2" translatesAutoresizingMaskIntoConstraints="NO" id="hnq-MQ-xGe">
                     <rect key="frame" x="406" y="6" width="27" height="18"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="18" id="OOR-pD-5aD"/>
@@ -106,10 +107,10 @@
                         <font key="font" metaFont="system"/>
                     </buttonCell>
                     <connections>
-                        <action selector="action_right:" target="-2" id="AOB-VT-eFO"/>
+                        <action selector="action_right:" target="-2" id="X6O-OS-a0d"/>
                     </connections>
                 </button>
-                <button translatesAutoresizingMaskIntoConstraints="NO" id="QUw-RE-9TQ">
+                <button tag="11" translatesAutoresizingMaskIntoConstraints="NO" id="QUw-RE-9TQ">
                     <rect key="frame" x="439" y="6" width="45" height="18"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="18" id="DSa-4k-VUI"/>
@@ -120,7 +121,7 @@
                         <font key="font" metaFont="system"/>
                     </buttonCell>
                     <connections>
-                        <action selector="action_close:" target="-2" id="MUk-hn-Zq9"/>
+                        <action selector="action_close:" target="-2" id="OD5-hl-XTZ"/>
                     </connections>
                 </button>
                 <button verticalHuggingPriority="749" translatesAutoresizingMaskIntoConstraints="NO" id="wS4-p5-Yb7" userLabel="Select Lecture Button">
@@ -175,6 +176,11 @@
             </constraints>
             <point key="canvasLocation" x="150" y="48"/>
         </customView>
+        <textFinder id="ZDw-Ai-yqX">
+            <connections>
+                <outlet property="client" destination="-2" id="vL7-cU-Zmd"/>
+            </connections>
+        </textFinder>
     </objects>
     <resources>
         <image name="button_close" width="44.5" height="18"/>

@@ -28,6 +28,10 @@ class SemesterCourseBox: NSView {
     
     @IBOutlet weak var boxDrag: NSBox!
     @IBOutlet weak var labelTitle: NSTextField!
+    @IBOutlet weak var labelLocation: NSTextField!
+    @IBOutlet weak var labelLocationHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var labelProfessor: NSTextField!
+    @IBOutlet weak var labelProfessorHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var labelDays: NSTextField!
     @IBOutlet weak var selectImage: NSImageView!
     
@@ -35,6 +39,20 @@ class SemesterCourseBox: NSView {
         self.course = course
         
         labelTitle.stringValue = course.title!
+        if course.location == nil || course.location == "" {
+            labelLocation.stringValue = ""
+            labelLocationHeightConstraint.constant = 0
+        } else {
+            labelLocation.stringValue = course.location!
+            labelLocationHeightConstraint.constant = 17
+        }
+        if course.professor == nil || course.professor == "" {
+            labelProfessor.stringValue = ""
+            labelProfessorHeightConstraint.constant = 0
+        } else {
+            labelProfessor.stringValue = course.professor!
+            labelProfessorHeightConstraint.constant = 17
+        }
         labelDays.stringValue = course.daysPerWeekPrintable()
         
         let theColor = NSColor(red: CGFloat(course.color!.red), green: CGFloat(course.color!.green), blue: CGFloat(course.color!.blue), alpha: 1)

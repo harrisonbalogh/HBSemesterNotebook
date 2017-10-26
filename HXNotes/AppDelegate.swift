@@ -14,15 +14,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     public static var scheduleAssistant: ScheduleAssistant!
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        // Insert code here to initialize your application
-        
-        setupDefaults()
         
         // Only add the menubar icon if set to true in preferences
-        if let menuBarShown = CFPreferencesCopyAppValue(NSString(string: "showInMenuBar"), kCFPreferencesCurrentApplication) as? String {
-            if menuBarShown == "true" {
-                createMenuBarIcon()
-            }
+        if AppPreference.showInMenuBar {
+            createMenuBarIcon()
         }
     }
 
@@ -114,7 +109,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }()
 
     // MARK: - Core Data Saving and Undo support
-    @IBAction func saveAction(_ sender: AnyObject?) {
+    func saveAction(_ sender: AnyObject?) {
         // Performs the save action for the application, which is to send the save: message to the application's managed object context. Any encountered errors are presented to the user.
         if !managedObjectContext.commitEditing() {
             NSLog("\(NSStringFromClass(type(of: self))) unable to commit editing before saving")
@@ -178,55 +173,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     // MARK: - Preferences
     var prefPanel: NSPanel!
     
-    func setupDefaults() {
-        
-        if CFPreferencesCopyAppValue(NSString(string: "autoScroll"), kCFPreferencesCurrentApplication) == nil {
-            
-            CFPreferencesSetAppValue(NSString(string: "autoScroll"),NSString(string: "\(true)"), kCFPreferencesCurrentApplication)
-            CFPreferencesSetAppValue(NSString(string: "autoScrollPositionPercent"),NSString(string: "50"), kCFPreferencesCurrentApplication)
-            CFPreferencesSetAppValue(NSString(string: "bottomBufferSpace"),NSString(string: "30"), kCFPreferencesCurrentApplication)
-            CFPreferencesSetAppValue(NSString(string: "launchWithSystem"),NSString(string: "\(false)"), kCFPreferencesCurrentApplication)
-            CFPreferencesSetAppValue(NSString(string: "showInMenuBar"),NSString(string: "\(true)"), kCFPreferencesCurrentApplication)
-            CFPreferencesSetAppValue(NSString(string: "runAfterClose"),NSString(string: "\(false)"), kCFPreferencesCurrentApplication)
-            CFPreferencesSetAppValue(NSString(string: "futureAlertTimeMinutes"),NSString(string: "5"), kCFPreferencesCurrentApplication)
-            // ALWAYS, NO_LECTURES, NO_TIMESLOTS, NEVER
-            CFPreferencesSetAppValue(NSString(string: "courseDeletionConfirmation"),NSString(string: "NO_LECTURES"), kCFPreferencesCurrentApplication)
-            // TOPBAR, SIDEBAR, OVERLAY
-            CFPreferencesSetAppValue(NSString(string: "alertLocation"),NSString(string: "TOPBAR"), kCFPreferencesCurrentApplication)
-            CFPreferencesSetAppValue(NSString(string: "defaultCourseTimeSpanMinutes"),NSString(string: "55"), kCFPreferencesCurrentApplication)
-            CFPreferencesSetAppValue(NSString(string: "bufferTimeBetweenCoursesMinutes"),NSString(string: "5"), kCFPreferencesCurrentApplication)
-            // SEMESTER_TITLE : SEMESTER_YEAR : COURSE_TITLE or nil if a semester wasn't open on quit
-            CFPreferencesSetAppValue(NSString(string: "previouslyOpenedCourse"),NSString(string: "nil"), kCFPreferencesCurrentApplication)
-            CFPreferencesSetAppValue(NSString(string: "assumeSingleSelection"),NSString(string: "nil"), kCFPreferencesCurrentApplication)
-            // DAYS:HOURS:MINUTES or nil if never auto completed work/exams
-            CFPreferencesSetAppValue(NSString(string: "assumePassedCompletion"),NSString(string: "0:0:55"), kCFPreferencesCurrentApplication)
-            CFPreferencesSetAppValue(NSString(string: "assumePassedTaken"),NSString(string: "0:0:30"), kCFPreferencesCurrentApplication)
-            CFPreferencesSetAppValue(NSString(string: "assumeRecentLecture"),NSString(string: "\(false)"), kCFPreferencesCurrentApplication)
-            
-            CFPreferencesAppSynchronize(kCFPreferencesCurrentApplication)
-        }
-    }
-    
     @IBAction func revealPreferences(_ sender: NSMenuItem) {
-        
-//        if prefPanel == nil {
-//            let prefController = PreferencesViewController(nibName: "PreferencesView", bundle: nil)!
-//            prefPanel = NSPanel(contentViewController: prefController)
-//            NSApp.mainWindow!.beginSheet(prefPanel, completionHandler: {response in })
-//            NSApp.runModal(for: prefPanel)
-//            
-//        }
         
         if let content = NSApp.keyWindow?.contentViewController as? MasterViewController {
             content.displayPreferences()
         }
-        
-    }
-    func closeModal() {
-        
-//        NSApp.mainWindow!.endSheet(prefPanel!)
-//        NSApp.stopModal()
-//        prefPanel = nil
         
     }
     
@@ -284,6 +235,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     // MARK: - Controls
+    
+    ///
+    @IBAction func saveFunction(_ sender: NSMenuItem) {
+        if let content = NSApp.keyWindow?.contentViewController as? MasterViewController {
+            content.notifySave()
+        }
+    }
     
     ///
     @IBAction func findFunction(_ sender: NSMenuItem) {

@@ -13,9 +13,14 @@
             <connections>
                 <outlet property="checkBoxAutoScroll" destination="kpc-yc-SCa" id="0jM-8R-hnK"/>
                 <outlet property="checkBoxBackgroundRun" destination="vXi-Xd-uzE" id="0vr-KV-yEu"/>
+                <outlet property="checkBoxCurrentTimeScheduler" destination="VL2-B2-vmZ" id="pL5-ax-MJ7"/>
+                <outlet property="checkBoxLaunchCurrentlyHappening" destination="Z0B-kZ-R36" id="WTf-0g-9vi"/>
                 <outlet property="checkBoxLaunchWithSystem" destination="zDY-wV-nud" id="dFP-He-b5r"/>
+                <outlet property="checkBoxMagnetizedEffect" destination="GUp-ZV-tFw" id="Pf0-FK-gHu"/>
                 <outlet property="checkBoxMenuBar" destination="BQ1-AD-xRn" id="cCz-12-WYI"/>
                 <outlet property="checkBoxRecentLecture" destination="Umh-PZ-IGL" id="XSf-7d-E2I"/>
+                <outlet property="checkBoxRememberLastCourse" destination="qhn-KT-GzC" id="4dJ-zd-YOw"/>
+                <outlet property="checkBoxRememberLastSemester" destination="h8i-3R-FhT" id="nsP-dE-7uW"/>
                 <outlet property="checkBoxSingleCourseSelect" destination="g8d-Ne-cKp" id="e3r-YI-BhP"/>
                 <outlet property="clipView" destination="oeU-Kg-R0N" id="hJm-GO-JUG"/>
                 <outlet property="labelAlerts" destination="Uvq-9Z-diJ" id="ZRX-Kf-s4Y"/>
@@ -49,29 +54,29 @@
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customView translatesAutoresizingMaskIntoConstraints="NO" id="rnN-s8-aDV">
-            <rect key="frame" x="0.0" y="0.0" width="503" height="2010"/>
+            <rect key="frame" x="0.0" y="0.0" width="503" height="2491"/>
             <subviews>
                 <button focusRingType="none" verticalHuggingPriority="750" alphaValue="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="N8S-zm-NKe" userLabel="nilResponderButton">
-                    <rect key="frame" x="1" y="1977" width="4" height="32"/>
+                    <rect key="frame" x="1" y="2458" width="4" height="32"/>
                     <buttonCell key="cell" type="bevel" bezelStyle="rounded" alignment="center" focusRingType="none" imageScaling="proportionallyDown" inset="2" id="eob-lc-GE2">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
                 </button>
                 <scrollView borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5J9-nf-by8">
-                    <rect key="frame" x="0.0" y="0.0" width="503" height="2010"/>
+                    <rect key="frame" x="0.0" y="0.0" width="503" height="2491"/>
                     <clipView key="contentView" copiesOnScroll="NO" id="oeU-Kg-R0N" customClass="HXFlippedClipView" customModule="HXNotes" customModuleProvider="target">
-                        <rect key="frame" x="0.0" y="0.0" width="503" height="2010"/>
+                        <rect key="frame" x="0.0" y="0.0" width="488" height="2476"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xby-KX-Ife">
-                                <rect key="frame" x="0.0" y="0.0" width="503" height="2010"/>
+                                <rect key="frame" x="0.0" y="0.0" width="488" height="2476"/>
                                 <subviews>
                                     <customView translatesAutoresizingMaskIntoConstraints="NO" id="aoQ-YC-C4b" userLabel="Pref Sub Field">
-                                        <rect key="frame" x="0.0" y="1718" width="503" height="292"/>
+                                        <rect key="frame" x="0.0" y="1925" width="488" height="551"/>
                                         <subviews>
                                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FCB-d3-b2U">
-                                                <rect key="frame" x="8" y="263" width="63" height="19"/>
+                                                <rect key="frame" x="8" y="522" width="63" height="19"/>
                                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="General" id="qzd-hz-wSi">
                                                     <font key="font" metaFont="systemSemibold" size="16"/>
                                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -79,7 +84,7 @@
                                                 </textFieldCell>
                                             </textField>
                                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GEb-A9-Kmi">
-                                                <rect key="frame" x="71" y="263" width="66" height="19"/>
+                                                <rect key="frame" x="71" y="522" width="66" height="19"/>
                                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Settings" id="1Rt-If-cal">
                                                     <font key="font" metaFont="systemMedium" size="16"/>
                                                     <color key="textColor" red="0.46542553190000002" green="0.46542553190000002" blue="0.46542553190000002" alpha="0.84999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
@@ -87,22 +92,22 @@
                                                 </textFieldCell>
                                             </textField>
                                             <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="Kji-HU-ieR">
-                                                <rect key="frame" x="10" y="259" width="150" height="5"/>
+                                                <rect key="frame" x="10" y="518" width="150" height="5"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="150" id="nNE-Mf-aNr"/>
                                                 </constraints>
                                             </box>
                                             <box boxType="custom" cornerRadius="4" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="Jrc-2q-98p">
-                                                <rect key="frame" x="10" y="26" width="483" height="230"/>
+                                                <rect key="frame" x="10" y="26" width="468" height="489"/>
                                                 <view key="contentView" id="y7F-nT-65T">
-                                                    <rect key="frame" x="1" y="1" width="481" height="228"/>
+                                                    <rect key="frame" x="1" y="1" width="466" height="487"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="G58-26-5If">
-                                                            <rect key="frame" x="0.0" y="0.0" width="481" height="228"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="466" height="487"/>
                                                             <subviews>
                                                                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="QJS-Jr-aGh" userLabel="Pref Field">
-                                                                    <rect key="frame" x="0.0" y="178" width="481" height="50"/>
+                                                                    <rect key="frame" x="0.0" y="437" width="466" height="50"/>
                                                                     <subviews>
                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wpt-dv-Bu6">
                                                                             <rect key="frame" x="8" y="28" width="128" height="17"/>
@@ -113,7 +118,7 @@
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <textField verticalHuggingPriority="745" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="KAS-uu-b90">
-                                                                            <rect key="frame" x="8" y="6" width="465" height="17"/>
+                                                                            <rect key="frame" x="8" y="6" width="450" height="17"/>
                                                                             <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="justified" title="Checking this option will launch HXNotes when your Mac starts up." id="1EF-2a-y1p">
                                                                                 <font key="font" metaFont="systemLight" size="12"/>
                                                                                 <color key="textColor" red="0.43595412230000002" green="0.43595412230000002" blue="0.43595412230000002" alpha="0.84999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
@@ -121,7 +126,7 @@
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="Fdw-Hn-igI">
-                                                                            <rect key="frame" x="10" y="-2" width="461" height="5"/>
+                                                                            <rect key="frame" x="10" y="-2" width="446" height="5"/>
                                                                         </box>
                                                                         <button translatesAutoresizingMaskIntoConstraints="NO" id="zDY-wV-nud">
                                                                             <rect key="frame" x="148" y="26.5" width="22" height="18"/>
@@ -149,7 +154,7 @@
                                                                     </constraints>
                                                                 </customView>
                                                                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="RGE-wh-nUb" userLabel="Pref Field">
-                                                                    <rect key="frame" x="0.0" y="81" width="481" height="97"/>
+                                                                    <rect key="frame" x="0.0" y="340" width="466" height="97"/>
                                                                     <subviews>
                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KXU-Zj-IA5">
                                                                             <rect key="frame" x="8" y="75" width="116" height="17"/>
@@ -160,7 +165,7 @@
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <textField verticalHuggingPriority="745" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="ELM-Ia-Xw6">
-                                                                            <rect key="frame" x="8" y="6" width="465" height="64"/>
+                                                                            <rect key="frame" x="8" y="6" width="450" height="64"/>
                                                                             <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="justified" id="CxV-nd-gOq">
                                                                                 <font key="font" metaFont="systemLight" size="12"/>
                                                                                 <string key="title">The menu bar icon will give a quick view of your lectures today and first lecture tomorrow. This setting only effects the menu bar icon when the app is open. The menu bar icon will always be visible if the 'Run in background' setting is toggled on and the app has been quit.</string>
@@ -169,7 +174,7 @@
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="Vhe-ZH-AQI">
-                                                                            <rect key="frame" x="10" y="-2" width="461" height="5"/>
+                                                                            <rect key="frame" x="10" y="-2" width="446" height="5"/>
                                                                         </box>
                                                                         <button translatesAutoresizingMaskIntoConstraints="NO" id="BQ1-AD-xRn">
                                                                             <rect key="frame" x="148" y="73.5" width="22" height="18"/>
@@ -197,7 +202,7 @@
                                                                     </constraints>
                                                                 </customView>
                                                                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="gMv-xX-XmP" userLabel="Pref Field">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="481" height="81"/>
+                                                                    <rect key="frame" x="0.0" y="259" width="466" height="81"/>
                                                                     <subviews>
                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vee-3Q-aG6">
                                                                             <rect key="frame" x="8" y="59" width="121" height="17"/>
@@ -208,7 +213,7 @@
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <textField verticalHuggingPriority="745" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="3Aw-e8-7oL">
-                                                                            <rect key="frame" x="8" y="6" width="465" height="48"/>
+                                                                            <rect key="frame" x="8" y="6" width="450" height="48"/>
                                                                             <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="justified" id="Fce-ae-rtE">
                                                                                 <font key="font" metaFont="systemLight" size="12"/>
                                                                                 <string key="title">With this option toggled, HXNotes will go to your Mac menu bar at the top of your display when quit. It will not show up in the dock nor in your tab list. This will allow HXNotes to notify you of your next upcoming course.</string>
@@ -217,7 +222,7 @@
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="Unv-K8-jhE">
-                                                                            <rect key="frame" x="10" y="-2" width="461" height="5"/>
+                                                                            <rect key="frame" x="10" y="-2" width="446" height="5"/>
                                                                         </box>
                                                                         <button translatesAutoresizingMaskIntoConstraints="NO" id="vXi-Xd-uzE">
                                                                             <rect key="frame" x="148" y="57.5" width="22" height="18"/>
@@ -244,9 +249,143 @@
                                                                         <constraint firstAttribute="bottom" secondItem="3Aw-e8-7oL" secondAttribute="bottom" constant="6" id="xW2-LO-bjb"/>
                                                                     </constraints>
                                                                 </customView>
+                                                                <customView translatesAutoresizingMaskIntoConstraints="NO" id="1nK-J4-fE4" userLabel="Pref Field">
+                                                                    <rect key="frame" x="0.0" y="178" width="466" height="81"/>
+                                                                    <subviews>
+                                                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Kbw-sL-oJ6">
+                                                                            <rect key="frame" x="8" y="59" width="211" height="17"/>
+                                                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Remember last opened semester: " id="Ch2-fx-mFn">
+                                                                                <font key="font" metaFont="system"/>
+                                                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                                            </textFieldCell>
+                                                                        </textField>
+                                                                        <textField verticalHuggingPriority="745" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="Q71-gb-GyO">
+                                                                            <rect key="frame" x="8" y="6" width="450" height="48"/>
+                                                                            <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="justified" id="LaN-yI-Qo7">
+                                                                                <font key="font" metaFont="systemLight" size="12"/>
+                                                                                <string key="title">If this option is toggled on, the application will open the previously selected semester upon launch. If it is off, it will simply select the closest semester to the calendar date at the time of launch.</string>
+                                                                                <color key="textColor" red="0.43595412230000002" green="0.43595412230000002" blue="0.43595412230000002" alpha="0.84999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                                            </textFieldCell>
+                                                                        </textField>
+                                                                        <button translatesAutoresizingMaskIntoConstraints="NO" id="h8i-3R-FhT">
+                                                                            <rect key="frame" x="229" y="59" width="22" height="18"/>
+                                                                            <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" inset="2" id="M5V-wP-UII">
+                                                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                                                <font key="font" metaFont="system"/>
+                                                                            </buttonCell>
+                                                                            <connections>
+                                                                                <action selector="action_rememberLastSemester:" target="-2" id="hi1-Yn-3tL"/>
+                                                                            </connections>
+                                                                        </button>
+                                                                    </subviews>
+                                                                    <constraints>
+                                                                        <constraint firstItem="Q71-gb-GyO" firstAttribute="leading" secondItem="1nK-J4-fE4" secondAttribute="leading" constant="10" id="3uh-ge-RTh"/>
+                                                                        <constraint firstAttribute="bottom" secondItem="Q71-gb-GyO" secondAttribute="bottom" constant="6" id="IJM-7V-FMX"/>
+                                                                        <constraint firstItem="h8i-3R-FhT" firstAttribute="centerY" secondItem="Kbw-sL-oJ6" secondAttribute="centerY" id="OKa-Kp-ANy"/>
+                                                                        <constraint firstItem="Kbw-sL-oJ6" firstAttribute="leading" secondItem="1nK-J4-fE4" secondAttribute="leading" constant="10" id="fDt-QE-fQj"/>
+                                                                        <constraint firstAttribute="trailing" secondItem="Q71-gb-GyO" secondAttribute="trailing" constant="10" id="fHp-7S-3Pq"/>
+                                                                        <constraint firstItem="Q71-gb-GyO" firstAttribute="top" secondItem="Kbw-sL-oJ6" secondAttribute="bottom" constant="5" id="myz-vd-wma"/>
+                                                                        <constraint firstItem="Kbw-sL-oJ6" firstAttribute="top" secondItem="1nK-J4-fE4" secondAttribute="top" constant="5" id="rTh-ya-VaG"/>
+                                                                        <constraint firstItem="h8i-3R-FhT" firstAttribute="leading" secondItem="Kbw-sL-oJ6" secondAttribute="trailing" constant="14" id="wVx-aT-Yth"/>
+                                                                    </constraints>
+                                                                </customView>
+                                                                <customView translatesAutoresizingMaskIntoConstraints="NO" id="AfZ-XL-1vJ" userLabel="Pref Field">
+                                                                    <rect key="frame" x="0.0" y="97" width="466" height="81"/>
+                                                                    <subviews>
+                                                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eDI-0t-ZLE">
+                                                                            <rect key="frame" x="28" y="59" width="113" height="17"/>
+                                                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Last open course:" id="O2b-cb-4AI">
+                                                                                <font key="font" metaFont="system"/>
+                                                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                                            </textFieldCell>
+                                                                        </textField>
+                                                                        <textField verticalHuggingPriority="745" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="e33-Pi-Cgl">
+                                                                            <rect key="frame" x="28" y="6" width="430" height="48"/>
+                                                                            <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="justified" id="eWm-f9-hbi">
+                                                                                <font key="font" metaFont="systemLight" size="12"/>
+                                                                                <string key="title">Determine whether the application will recall the previously selected course when launching. Can only be enabled if 'Remember last opened semester' is on.</string>
+                                                                                <color key="textColor" red="0.43595412230000002" green="0.43595412230000002" blue="0.43595412230000002" alpha="0.84999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                                            </textFieldCell>
+                                                                        </textField>
+                                                                        <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="Wmh-W9-81j">
+                                                                            <rect key="frame" x="10" y="-2" width="446" height="5"/>
+                                                                        </box>
+                                                                        <button translatesAutoresizingMaskIntoConstraints="NO" id="qhn-KT-GzC">
+                                                                            <rect key="frame" x="229" y="59" width="22" height="18"/>
+                                                                            <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" inset="2" id="tg7-VD-Dz6">
+                                                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                                                <font key="font" metaFont="system"/>
+                                                                            </buttonCell>
+                                                                        </button>
+                                                                    </subviews>
+                                                                    <constraints>
+                                                                        <constraint firstItem="eDI-0t-ZLE" firstAttribute="leading" secondItem="AfZ-XL-1vJ" secondAttribute="leading" constant="30" id="2nr-iC-TLD"/>
+                                                                        <constraint firstItem="qhn-KT-GzC" firstAttribute="leading" secondItem="eDI-0t-ZLE" secondAttribute="trailing" constant="92" id="4OJ-Lh-gXh"/>
+                                                                        <constraint firstItem="e33-Pi-Cgl" firstAttribute="top" secondItem="eDI-0t-ZLE" secondAttribute="bottom" constant="5" id="I6W-PZ-3vg"/>
+                                                                        <constraint firstItem="eDI-0t-ZLE" firstAttribute="top" secondItem="AfZ-XL-1vJ" secondAttribute="top" constant="5" id="Ifx-EL-dlN"/>
+                                                                        <constraint firstAttribute="trailing" secondItem="e33-Pi-Cgl" secondAttribute="trailing" constant="10" id="QeY-P5-8Ig"/>
+                                                                        <constraint firstItem="Wmh-W9-81j" firstAttribute="leading" secondItem="AfZ-XL-1vJ" secondAttribute="leading" constant="10" id="UjA-yA-Uaf"/>
+                                                                        <constraint firstAttribute="bottom" secondItem="Wmh-W9-81j" secondAttribute="bottom" id="YnI-fr-Qhh"/>
+                                                                        <constraint firstAttribute="bottom" secondItem="e33-Pi-Cgl" secondAttribute="bottom" constant="6" id="fVW-c3-xy6"/>
+                                                                        <constraint firstItem="qhn-KT-GzC" firstAttribute="centerY" secondItem="eDI-0t-ZLE" secondAttribute="centerY" id="k6T-lI-fdi"/>
+                                                                        <constraint firstAttribute="trailing" secondItem="Wmh-W9-81j" secondAttribute="trailing" constant="10" id="r6b-2F-8o7"/>
+                                                                        <constraint firstItem="e33-Pi-Cgl" firstAttribute="leading" secondItem="AfZ-XL-1vJ" secondAttribute="leading" constant="30" id="tdF-Uy-j6f"/>
+                                                                    </constraints>
+                                                                </customView>
+                                                                <customView translatesAutoresizingMaskIntoConstraints="NO" id="cCb-jH-M2n" userLabel="Pref Field">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="466" height="97"/>
+                                                                    <subviews>
+                                                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9NS-Ht-OLl">
+                                                                            <rect key="frame" x="8" y="75" width="254" height="17"/>
+                                                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Always open currently happening course:" id="HNX-39-tee">
+                                                                                <font key="font" metaFont="system"/>
+                                                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                                            </textFieldCell>
+                                                                        </textField>
+                                                                        <textField verticalHuggingPriority="745" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="g47-Dy-vvN">
+                                                                            <rect key="frame" x="8" y="6" width="450" height="64"/>
+                                                                            <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="justified" id="03Z-RF-xOi">
+                                                                                <font key="font" metaFont="systemLight" size="12"/>
+                                                                                <string key="title">When HXNotes is launched during a lecture period, having this preference toggled on will override the two preferences above ('Remember last opened semester' and 'Last open course') and open the semester and course of the occurring lecture.</string>
+                                                                                <color key="textColor" red="0.43595412230000002" green="0.43595412230000002" blue="0.43595412230000002" alpha="0.84999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                                            </textFieldCell>
+                                                                        </textField>
+                                                                        <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="eS2-Nb-P4S">
+                                                                            <rect key="frame" x="10" y="-2" width="446" height="5"/>
+                                                                        </box>
+                                                                        <button translatesAutoresizingMaskIntoConstraints="NO" id="Z0B-kZ-R36">
+                                                                            <rect key="frame" x="278" y="75" width="22" height="18"/>
+                                                                            <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" inset="2" id="rhq-c5-ecX">
+                                                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                                                <font key="font" metaFont="system"/>
+                                                                            </buttonCell>
+                                                                        </button>
+                                                                    </subviews>
+                                                                    <constraints>
+                                                                        <constraint firstItem="g47-Dy-vvN" firstAttribute="leading" secondItem="cCb-jH-M2n" secondAttribute="leading" constant="10" id="2FX-or-1xO"/>
+                                                                        <constraint firstAttribute="bottom" secondItem="g47-Dy-vvN" secondAttribute="bottom" constant="6" id="3s0-e8-MaX"/>
+                                                                        <constraint firstItem="eS2-Nb-P4S" firstAttribute="leading" secondItem="cCb-jH-M2n" secondAttribute="leading" constant="10" id="8tF-sb-8Cl"/>
+                                                                        <constraint firstItem="9NS-Ht-OLl" firstAttribute="top" secondItem="cCb-jH-M2n" secondAttribute="top" constant="5" id="BDr-If-vLT"/>
+                                                                        <constraint firstItem="Z0B-kZ-R36" firstAttribute="leading" secondItem="9NS-Ht-OLl" secondAttribute="trailing" constant="20" id="LcI-XS-g09"/>
+                                                                        <constraint firstItem="g47-Dy-vvN" firstAttribute="top" secondItem="9NS-Ht-OLl" secondAttribute="bottom" constant="5" id="SiB-96-Ec6"/>
+                                                                        <constraint firstItem="Z0B-kZ-R36" firstAttribute="centerY" secondItem="9NS-Ht-OLl" secondAttribute="centerY" id="SoV-wb-j8J"/>
+                                                                        <constraint firstAttribute="trailing" secondItem="g47-Dy-vvN" secondAttribute="trailing" constant="10" id="d5i-Rg-SNE"/>
+                                                                        <constraint firstItem="9NS-Ht-OLl" firstAttribute="leading" secondItem="cCb-jH-M2n" secondAttribute="leading" constant="10" id="ljA-2F-9uV"/>
+                                                                        <constraint firstAttribute="trailing" secondItem="eS2-Nb-P4S" secondAttribute="trailing" constant="10" id="qmj-05-DPD"/>
+                                                                        <constraint firstAttribute="bottom" secondItem="eS2-Nb-P4S" secondAttribute="bottom" id="yyg-hc-9NI"/>
+                                                                    </constraints>
+                                                                </customView>
                                                             </subviews>
                                                             <constraints>
+                                                                <constraint firstItem="AfZ-XL-1vJ" firstAttribute="width" secondItem="G58-26-5If" secondAttribute="width" id="3Nf-Tb-Obh"/>
                                                                 <constraint firstItem="gMv-xX-XmP" firstAttribute="width" secondItem="G58-26-5If" secondAttribute="width" id="Nw9-qj-c1E"/>
+                                                                <constraint firstItem="1nK-J4-fE4" firstAttribute="width" secondItem="G58-26-5If" secondAttribute="width" id="aRx-Dg-03G"/>
                                                                 <constraint firstItem="RGE-wh-nUb" firstAttribute="width" secondItem="G58-26-5If" secondAttribute="width" id="pkV-Lu-cae"/>
                                                                 <constraint firstItem="QJS-Jr-aGh" firstAttribute="width" secondItem="G58-26-5If" secondAttribute="width" id="u40-ed-zau"/>
                                                             </constraints>
@@ -254,8 +393,14 @@
                                                                 <integer value="1000"/>
                                                                 <integer value="1000"/>
                                                                 <integer value="1000"/>
+                                                                <integer value="1000"/>
+                                                                <integer value="1000"/>
+                                                                <integer value="1000"/>
                                                             </visibilityPriorities>
                                                             <customSpacing>
+                                                                <real value="3.4028234663852886e+38"/>
+                                                                <real value="3.4028234663852886e+38"/>
+                                                                <real value="3.4028234663852886e+38"/>
                                                                 <real value="3.4028234663852886e+38"/>
                                                                 <real value="3.4028234663852886e+38"/>
                                                                 <real value="3.4028234663852886e+38"/>
@@ -287,10 +432,10 @@
                                         </constraints>
                                     </customView>
                                     <customView translatesAutoresizingMaskIntoConstraints="NO" id="X0G-W5-lUz" userLabel="Pref Sub Field">
-                                        <rect key="frame" x="0.0" y="1202" width="503" height="516"/>
+                                        <rect key="frame" x="0.0" y="1328" width="488" height="597"/>
                                         <subviews>
                                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JuR-M1-9Bg">
-                                                <rect key="frame" x="8" y="487" width="50" height="19"/>
+                                                <rect key="frame" x="8" y="568" width="50" height="19"/>
                                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Editor" id="5wx-qA-ZJy">
                                                     <font key="font" metaFont="systemSemibold" size="16"/>
                                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -298,7 +443,7 @@
                                                 </textFieldCell>
                                             </textField>
                                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lbk-uL-VGJ">
-                                                <rect key="frame" x="58" y="487" width="66" height="19"/>
+                                                <rect key="frame" x="58" y="568" width="66" height="19"/>
                                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Settings" id="9TN-ZY-fQI">
                                                     <font key="font" metaFont="systemMedium" size="16"/>
                                                     <color key="textColor" red="0.46542553190000002" green="0.46542553190000002" blue="0.46542553190000002" alpha="0.84999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
@@ -306,22 +451,22 @@
                                                 </textFieldCell>
                                             </textField>
                                             <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="rpS-Rw-SSh">
-                                                <rect key="frame" x="10" y="483" width="150" height="5"/>
+                                                <rect key="frame" x="10" y="564" width="150" height="5"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="150" id="STg-gM-dkI"/>
                                                 </constraints>
                                             </box>
                                             <box boxType="custom" cornerRadius="4" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="UhZ-vz-UM2">
-                                                <rect key="frame" x="10" y="26" width="483" height="454"/>
+                                                <rect key="frame" x="10" y="26" width="468" height="535"/>
                                                 <view key="contentView" id="duv-q7-csd">
-                                                    <rect key="frame" x="1" y="1" width="481" height="452"/>
+                                                    <rect key="frame" x="1" y="1" width="466" height="533"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VVZ-Tw-fpC">
-                                                            <rect key="frame" x="0.0" y="0.0" width="481" height="452"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="466" height="533"/>
                                                             <subviews>
                                                                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="B1D-5n-Gkb" userLabel="Pref Field">
-                                                                    <rect key="frame" x="0.0" y="387" width="481" height="65"/>
+                                                                    <rect key="frame" x="0.0" y="468" width="466" height="65"/>
                                                                     <subviews>
                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TM6-uh-Wcm">
                                                                             <rect key="frame" x="8" y="43" width="261" height="17"/>
@@ -332,7 +477,7 @@
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <textField verticalHuggingPriority="745" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="whI-fP-0hQ">
-                                                                            <rect key="frame" x="8" y="6" width="465" height="32"/>
+                                                                            <rect key="frame" x="8" y="6" width="450" height="32"/>
                                                                             <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="justified" title="When selecting a course, having this option checked will have the most recent lecture automatically open for viewing/editing." id="gvt-y0-p2S">
                                                                                 <font key="font" metaFont="systemLight" size="12"/>
                                                                                 <color key="textColor" red="0.43595412230000002" green="0.43595412230000002" blue="0.43595412230000002" alpha="0.84999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
@@ -340,7 +485,7 @@
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="JqR-AK-Yqb">
-                                                                            <rect key="frame" x="10" y="-2" width="461" height="5"/>
+                                                                            <rect key="frame" x="10" y="-2" width="446" height="5"/>
                                                                         </box>
                                                                         <button translatesAutoresizingMaskIntoConstraints="NO" id="Umh-PZ-IGL">
                                                                             <rect key="frame" x="277" y="41.5" width="22" height="18"/>
@@ -368,10 +513,10 @@
                                                                     </constraints>
                                                                 </customView>
                                                                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="9K0-2S-ZIo" userLabel="Pref Field">
-                                                                    <rect key="frame" x="0.0" y="274" width="481" height="113"/>
+                                                                    <rect key="frame" x="0.0" y="339" width="466" height="129"/>
                                                                     <subviews>
                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Tv-Sx-8dW">
-                                                                            <rect key="frame" x="8" y="91" width="124" height="17"/>
+                                                                            <rect key="frame" x="8" y="107" width="124" height="17"/>
                                                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Automatic scrolling:" id="qRr-Ch-Rgw">
                                                                                 <font key="font" metaFont="system"/>
                                                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -379,7 +524,7 @@
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <textField verticalHuggingPriority="745" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="55g-7X-bXw">
-                                                                            <rect key="frame" x="8" y="6" width="465" height="80"/>
+                                                                            <rect key="frame" x="8" y="6" width="450" height="96"/>
                                                                             <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="justified" id="BSh-bc-SzS">
                                                                                 <font key="font" metaFont="systemLight" size="12"/>
                                                                                 <string key="title">If this option is checked off, the text editor will function as most text editors would - it will wait until the user types below the visible space to scroll itself until the cursor location is visible. With Automatic Scrolling on, the editor will scroll itself when it hits a line (defined below). It will also do so smoothly as to maintain visibility of typing location. This options makes typing in the editor more fluid.</string>
@@ -388,10 +533,10 @@
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="bp6-sw-Gjm">
-                                                                            <rect key="frame" x="10" y="-2" width="461" height="5"/>
+                                                                            <rect key="frame" x="10" y="-2" width="446" height="5"/>
                                                                         </box>
                                                                         <button translatesAutoresizingMaskIntoConstraints="NO" id="kpc-yc-SCa">
-                                                                            <rect key="frame" x="148" y="89.5" width="22" height="18"/>
+                                                                            <rect key="frame" x="148" y="105.5" width="22" height="18"/>
                                                                             <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" inset="2" id="7DY-yj-XK3">
                                                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                                                 <font key="font" metaFont="system"/>
@@ -416,7 +561,7 @@
                                                                     </constraints>
                                                                 </customView>
                                                                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="6N1-g8-lAF" userLabel="Pref Field">
-                                                                    <rect key="frame" x="0.0" y="145" width="481" height="129"/>
+                                                                    <rect key="frame" x="0.0" y="210" width="466" height="129"/>
                                                                     <subviews>
                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MDd-GG-oiQ">
                                                                             <rect key="frame" x="8" y="107" width="176" height="17"/>
@@ -427,7 +572,7 @@
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <textField verticalHuggingPriority="745" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="NOS-il-tds">
-                                                                            <rect key="frame" x="40" y="6" width="433" height="96"/>
+                                                                            <rect key="frame" x="40" y="6" width="418" height="96"/>
                                                                             <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="justified" id="fEB-hU-i1g">
                                                                                 <font key="font" metaFont="systemLight" size="12"/>
                                                                                 <string key="title">Refer to the above text for a description of Automatic Scrolling. Set the position that you would like the editor to maintain. If you type below this point, the editor will smoothly scroll itself until the cursor is back within the set position. The value is a percent of the screen. So if you set the Automatic Scrolling Position to be 50%, it will automatically scroll itself when typing below the halfway point of the screen.</string>
@@ -436,7 +581,7 @@
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="lRu-Sx-yFP">
-                                                                            <rect key="frame" x="10" y="-2" width="461" height="5"/>
+                                                                            <rect key="frame" x="10" y="-2" width="446" height="5"/>
                                                                         </box>
                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8FC-Zw-VZA">
                                                                             <rect key="frame" x="188" y="107" width="33" height="17"/>
@@ -472,7 +617,7 @@
                                                                     </constraints>
                                                                 </customView>
                                                                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="KcE-9Y-0Fm" userLabel="Pref Field">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="481" height="145"/>
+                                                                    <rect key="frame" x="0.0" y="65" width="466" height="145"/>
                                                                     <subviews>
                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TMe-Zn-uud">
                                                                             <rect key="frame" x="8" y="123" width="160" height="17"/>
@@ -483,7 +628,7 @@
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <textField verticalHuggingPriority="745" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="zSa-O3-YvU">
-                                                                            <rect key="frame" x="40" y="6" width="433" height="112"/>
+                                                                            <rect key="frame" x="40" y="6" width="418" height="112"/>
                                                                             <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="justified" id="9BS-AF-6F4">
                                                                                 <font key="font" metaFont="systemLight" size="12"/>
                                                                                 <string key="title">This is the amount of space that the last lecture will maintain when a course's notebook is open. The buffer space allows you to scroll past where the last line of text is, so you aren't adding needless lines at the bottom just to push the text higher on the screen. The point indicated on the left is where the last line of text will appear. Setting the slider to the bottom will have text touch the bottom of the screen. Setting the slider to the top will add a full window height's worth of extra space.</string>
@@ -492,7 +637,7 @@
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="jAf-NN-fwP">
-                                                                            <rect key="frame" x="10" y="-2" width="461" height="5"/>
+                                                                            <rect key="frame" x="10" y="-2" width="446" height="5"/>
                                                                         </box>
                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PQe-oe-VZn">
                                                                             <rect key="frame" x="172" y="123" width="33" height="17"/>
@@ -527,20 +672,68 @@
                                                                         <constraint firstAttribute="bottom" secondItem="zSa-O3-YvU" secondAttribute="bottom" constant="6" id="zqc-CE-578"/>
                                                                     </constraints>
                                                                 </customView>
+                                                                <customView translatesAutoresizingMaskIntoConstraints="NO" id="lbg-ye-UT9" userLabel="Pref Field">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="466" height="65"/>
+                                                                    <subviews>
+                                                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="s28-rE-6km">
+                                                                            <rect key="frame" x="8" y="43" width="161" height="17"/>
+                                                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Magnetized editor effect: " id="Mqn-qF-K7e">
+                                                                                <font key="font" metaFont="system"/>
+                                                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                                            </textFieldCell>
+                                                                        </textField>
+                                                                        <textField verticalHuggingPriority="745" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="Oyl-py-DBD">
+                                                                            <rect key="frame" x="8" y="6" width="450" height="32"/>
+                                                                            <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="justified" id="tnj-Zu-43g">
+                                                                                <font key="font" metaFont="systemLight" size="12"/>
+                                                                                <string key="title">The visual snap of the window when resizing the HXNotes window. This only occurs when a lecture is open. This is a purely cosmetic feature.</string>
+                                                                                <color key="textColor" red="0.43595412230000002" green="0.43595412230000002" blue="0.43595412230000002" alpha="0.84999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                                            </textFieldCell>
+                                                                        </textField>
+                                                                        <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="lAn-ts-LXm">
+                                                                            <rect key="frame" x="10" y="-2" width="446" height="5"/>
+                                                                        </box>
+                                                                        <button translatesAutoresizingMaskIntoConstraints="NO" id="GUp-ZV-tFw">
+                                                                            <rect key="frame" x="180" y="42" width="22" height="18"/>
+                                                                            <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="gnc-Lh-2Qc">
+                                                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                                                <font key="font" metaFont="system"/>
+                                                                            </buttonCell>
+                                                                        </button>
+                                                                    </subviews>
+                                                                    <constraints>
+                                                                        <constraint firstItem="lAn-ts-LXm" firstAttribute="leading" secondItem="lbg-ye-UT9" secondAttribute="leading" constant="10" id="ADi-NF-IA7"/>
+                                                                        <constraint firstItem="GUp-ZV-tFw" firstAttribute="leading" secondItem="s28-rE-6km" secondAttribute="trailing" constant="15" id="M2n-zt-2b1"/>
+                                                                        <constraint firstItem="GUp-ZV-tFw" firstAttribute="centerY" secondItem="s28-rE-6km" secondAttribute="centerY" id="Qbi-WN-hqj"/>
+                                                                        <constraint firstAttribute="bottom" secondItem="lAn-ts-LXm" secondAttribute="bottom" id="SY2-GI-eWP"/>
+                                                                        <constraint firstItem="Oyl-py-DBD" firstAttribute="top" secondItem="s28-rE-6km" secondAttribute="bottom" constant="5" id="hrJ-hB-L6V"/>
+                                                                        <constraint firstAttribute="trailing" secondItem="lAn-ts-LXm" secondAttribute="trailing" constant="10" id="mPV-Re-aJq"/>
+                                                                        <constraint firstItem="Oyl-py-DBD" firstAttribute="leading" secondItem="lbg-ye-UT9" secondAttribute="leading" constant="10" id="or1-AJ-UVG"/>
+                                                                        <constraint firstAttribute="trailing" secondItem="Oyl-py-DBD" secondAttribute="trailing" constant="10" id="qd5-bW-1kB"/>
+                                                                        <constraint firstAttribute="bottom" secondItem="Oyl-py-DBD" secondAttribute="bottom" constant="6" id="wid-LV-Sg2"/>
+                                                                        <constraint firstItem="s28-rE-6km" firstAttribute="top" secondItem="lbg-ye-UT9" secondAttribute="top" constant="5" id="yhp-eO-awz"/>
+                                                                        <constraint firstItem="s28-rE-6km" firstAttribute="leading" secondItem="lbg-ye-UT9" secondAttribute="leading" constant="10" id="yiB-Kn-OYU"/>
+                                                                    </constraints>
+                                                                </customView>
                                                             </subviews>
                                                             <constraints>
                                                                 <constraint firstItem="KcE-9Y-0Fm" firstAttribute="width" secondItem="VVZ-Tw-fpC" secondAttribute="width" id="FUP-Y8-YP9"/>
                                                                 <constraint firstItem="9K0-2S-ZIo" firstAttribute="width" secondItem="VVZ-Tw-fpC" secondAttribute="width" id="M7U-LW-7Zc"/>
                                                                 <constraint firstItem="6N1-g8-lAF" firstAttribute="width" secondItem="VVZ-Tw-fpC" secondAttribute="width" id="NTD-6T-D7r"/>
                                                                 <constraint firstItem="B1D-5n-Gkb" firstAttribute="width" secondItem="VVZ-Tw-fpC" secondAttribute="width" id="vkf-7k-dVg"/>
+                                                                <constraint firstItem="lbg-ye-UT9" firstAttribute="width" secondItem="VVZ-Tw-fpC" secondAttribute="width" id="xak-28-OOn"/>
                                                             </constraints>
                                                             <visibilityPriorities>
                                                                 <integer value="1000"/>
                                                                 <integer value="1000"/>
                                                                 <integer value="1000"/>
                                                                 <integer value="1000"/>
+                                                                <integer value="1000"/>
                                                             </visibilityPriorities>
                                                             <customSpacing>
+                                                                <real value="3.4028234663852886e+38"/>
                                                                 <real value="3.4028234663852886e+38"/>
                                                                 <real value="3.4028234663852886e+38"/>
                                                                 <real value="3.4028234663852886e+38"/>
@@ -573,10 +766,10 @@
                                         </constraints>
                                     </customView>
                                     <customView translatesAutoresizingMaskIntoConstraints="NO" id="ir9-KL-Yyy" userLabel="Pref Sub Field">
-                                        <rect key="frame" x="0.0" y="549" width="503" height="653"/>
+                                        <rect key="frame" x="0.0" y="630" width="488" height="698"/>
                                         <subviews>
                                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Uvq-9Z-diJ">
-                                                <rect key="frame" x="8" y="624" width="42" height="19"/>
+                                                <rect key="frame" x="8" y="669" width="42" height="19"/>
                                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Alert" id="R7I-EC-YgH">
                                                     <font key="font" metaFont="systemSemibold" size="16"/>
                                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -584,7 +777,7 @@
                                                 </textFieldCell>
                                             </textField>
                                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wlt-r1-ogk">
-                                                <rect key="frame" x="50" y="624" width="66" height="19"/>
+                                                <rect key="frame" x="50" y="669" width="66" height="19"/>
                                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Settings" id="Kpg-Nk-Tau">
                                                     <font key="font" metaFont="systemMedium" size="16"/>
                                                     <color key="textColor" red="0.46542553190000002" green="0.46542553190000002" blue="0.46542553190000002" alpha="0.84999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
@@ -592,22 +785,22 @@
                                                 </textFieldCell>
                                             </textField>
                                             <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="6kz-TR-bEP">
-                                                <rect key="frame" x="10" y="620" width="150" height="5"/>
+                                                <rect key="frame" x="10" y="665" width="150" height="5"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="150" id="pWR-yP-PWl"/>
                                                 </constraints>
                                             </box>
                                             <box boxType="custom" cornerRadius="4" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="Zow-MH-t2f">
-                                                <rect key="frame" x="10" y="26" width="483" height="591"/>
+                                                <rect key="frame" x="10" y="26" width="468" height="636"/>
                                                 <view key="contentView" id="Deq-9a-hVS">
-                                                    <rect key="frame" x="1" y="1" width="481" height="589"/>
+                                                    <rect key="frame" x="1" y="1" width="466" height="634"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2Mj-lS-ukD">
-                                                            <rect key="frame" x="0.0" y="0.0" width="481" height="589"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="466" height="634"/>
                                                             <subviews>
                                                                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="AcK-m7-Kha" userLabel="Pref Field">
-                                                                    <rect key="frame" x="0.0" y="539" width="481" height="50"/>
+                                                                    <rect key="frame" x="0.0" y="584" width="466" height="50"/>
                                                                     <subviews>
                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pBG-uB-Ncj">
                                                                             <rect key="frame" x="8" y="28" width="115" height="17"/>
@@ -618,7 +811,7 @@
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <textField verticalHuggingPriority="745" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="3Se-Io-4bm">
-                                                                            <rect key="frame" x="8" y="6" width="465" height="17"/>
+                                                                            <rect key="frame" x="8" y="6" width="450" height="17"/>
                                                                             <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="justified" title="How soon before a lecture should alerts begin appearing?" id="eZ2-f7-6LL">
                                                                                 <font key="font" metaFont="systemLight" size="12"/>
                                                                                 <color key="textColor" red="0.43595412230000002" green="0.43595412230000002" blue="0.43595412230000002" alpha="0.84999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
@@ -626,7 +819,7 @@
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="hhd-Wi-z6r">
-                                                                            <rect key="frame" x="10" y="-2" width="461" height="5"/>
+                                                                            <rect key="frame" x="10" y="-2" width="446" height="5"/>
                                                                         </box>
                                                                         <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="sfi-w5-SWN">
                                                                             <rect key="frame" x="125" y="24.5" width="50" height="22"/>
@@ -671,7 +864,7 @@
                                                                     </constraints>
                                                                 </customView>
                                                                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="zAV-XR-VBc" userLabel="Pref Field">
-                                                                    <rect key="frame" x="0.0" y="394" width="481" height="145"/>
+                                                                    <rect key="frame" x="0.0" y="439" width="466" height="145"/>
                                                                     <subviews>
                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wVc-bp-Vvd">
                                                                             <rect key="frame" x="8" y="123" width="192" height="17"/>
@@ -682,7 +875,7 @@
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <textField verticalHuggingPriority="745" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="752" translatesAutoresizingMaskIntoConstraints="NO" id="bx5-rb-vGz">
-                                                                            <rect key="frame" x="115" y="6" width="358" height="112"/>
+                                                                            <rect key="frame" x="115" y="6" width="343" height="112"/>
                                                                             <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="justified" id="hbb-Ol-b2E">
                                                                                 <font key="font" metaFont="systemLight" size="12"/>
                                                                                 <string key="title">Always: A delete confirmation will always appear if a course delete button is pressed. 
@@ -694,7 +887,7 @@ Never: Delete confirmation will never be requested.</string>
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="EaN-0q-ecn">
-                                                                            <rect key="frame" x="10" y="-2" width="461" height="5"/>
+                                                                            <rect key="frame" x="10" y="-2" width="446" height="5"/>
                                                                         </box>
                                                                         <stackView distribution="equalCentering" orientation="vertical" alignment="leading" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tYM-i8-2dQ">
                                                                             <rect key="frame" x="10" y="6" width="99" height="112"/>
@@ -773,10 +966,10 @@ Never: Delete confirmation will never be requested.</string>
                                                                     </constraints>
                                                                 </customView>
                                                                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="O2N-h9-5fi" userLabel="Pref Field">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="481" height="394"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="466" height="439"/>
                                                                     <subviews>
                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TXh-gO-Mzb">
-                                                                            <rect key="frame" x="8" y="372" width="89" height="17"/>
+                                                                            <rect key="frame" x="8" y="417" width="89" height="17"/>
                                                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Alert location:" id="rh1-Xn-pFY">
                                                                                 <font key="font" metaFont="system"/>
                                                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -784,16 +977,16 @@ Never: Delete confirmation will never be requested.</string>
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <scrollView borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="0.0" verticalPageScroll="0.0" hasVerticalScroller="NO" verticalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="1Lb-vs-rSl">
-                                                                            <rect key="frame" x="10" y="4" width="461" height="364"/>
+                                                                            <rect key="frame" x="10" y="4" width="446" height="409"/>
                                                                             <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="DOc-mh-w9Q">
-                                                                                <rect key="frame" x="0.0" y="0.0" width="461" height="364"/>
+                                                                                <rect key="frame" x="0.0" y="0.0" width="446" height="394"/>
                                                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                                 <subviews>
                                                                                     <stackView distribution="fill" orientation="horizontal" alignment="top" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RFF-3F-jLE">
-                                                                                        <rect key="frame" x="0.0" y="0.0" width="496" height="364"/>
+                                                                                        <rect key="frame" x="0.0" y="0.0" width="496" height="394"/>
                                                                                         <subviews>
                                                                                             <customView translatesAutoresizingMaskIntoConstraints="NO" id="nua-5n-aYW">
-                                                                                                <rect key="frame" x="0.0" y="258" width="160" height="106"/>
+                                                                                                <rect key="frame" x="0.0" y="288" width="160" height="106"/>
                                                                                                 <subviews>
                                                                                                     <box boxType="custom" borderWidth="4" cornerRadius="7" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="64d-rh-lwk">
                                                                                                         <rect key="frame" x="0.0" y="0.0" width="160" height="106"/>
@@ -835,7 +1028,7 @@ Never: Delete confirmation will never be requested.</string>
                                                                                                 </constraints>
                                                                                             </customView>
                                                                                             <customView translatesAutoresizingMaskIntoConstraints="NO" id="kKa-Zu-WlP">
-                                                                                                <rect key="frame" x="168" y="258" width="160" height="106"/>
+                                                                                                <rect key="frame" x="168" y="288" width="160" height="106"/>
                                                                                                 <subviews>
                                                                                                     <box hidden="YES" boxType="custom" cornerRadius="4" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="QmM-SS-jCP">
                                                                                                         <rect key="frame" x="0.0" y="0.0" width="160" height="106"/>
@@ -877,7 +1070,7 @@ Never: Delete confirmation will never be requested.</string>
                                                                                                 </constraints>
                                                                                             </customView>
                                                                                             <customView translatesAutoresizingMaskIntoConstraints="NO" id="AEI-kt-CV6">
-                                                                                                <rect key="frame" x="336" y="258" width="160" height="106"/>
+                                                                                                <rect key="frame" x="336" y="288" width="160" height="106"/>
                                                                                                 <subviews>
                                                                                                     <box hidden="YES" boxType="custom" cornerRadius="4" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="qsg-a4-Cuk">
                                                                                                         <rect key="frame" x="0.0" y="0.0" width="160" height="106"/>
@@ -939,7 +1132,7 @@ Never: Delete confirmation will never be requested.</string>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                             </clipView>
                                                                             <scroller key="horizontalScroller" verticalHuggingPriority="750" horizontal="YES" id="mzJ-hp-o5B">
-                                                                                <rect key="frame" x="0.0" y="348" width="461" height="16"/>
+                                                                                <rect key="frame" x="0.0" y="394" width="446" height="15"/>
                                                                                 <autoresizingMask key="autoresizingMask"/>
                                                                             </scroller>
                                                                             <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="N4B-xe-GBo">
@@ -948,10 +1141,10 @@ Never: Delete confirmation will never be requested.</string>
                                                                             </scroller>
                                                                         </scrollView>
                                                                         <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="mQe-K2-Y5W">
-                                                                            <rect key="frame" x="10" y="-2" width="461" height="5"/>
+                                                                            <rect key="frame" x="10" y="-2" width="446" height="5"/>
                                                                         </box>
                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Cgq-v5-b3s">
-                                                                            <rect key="frame" x="101" y="372" width="274" height="14"/>
+                                                                            <rect key="frame" x="101" y="417" width="274" height="14"/>
                                                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Overlay and Sidebar alerts are currently unavailable." id="EO9-b1-EQj">
                                                                                 <font key="font" metaFont="systemLight" size="11"/>
                                                                                 <color key="textColor" red="0.48262965429999999" green="0.0" blue="0.015750356770000001" alpha="0.84999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1016,10 +1209,10 @@ Never: Delete confirmation will never be requested.</string>
                                         </constraints>
                                     </customView>
                                     <customView translatesAutoresizingMaskIntoConstraints="NO" id="rj9-nX-nOe" userLabel="Pref Sub Field">
-                                        <rect key="frame" x="0.0" y="307" width="503" height="242"/>
+                                        <rect key="frame" x="0.0" y="307" width="488" height="323"/>
                                         <subviews>
                                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="X3N-8X-2NM">
-                                                <rect key="frame" x="8" y="213" width="81" height="19"/>
+                                                <rect key="frame" x="8" y="294" width="81" height="19"/>
                                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Scheduler" id="vTg-Lk-ELI">
                                                     <font key="font" metaFont="systemSemibold" size="16"/>
                                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -1027,7 +1220,7 @@ Never: Delete confirmation will never be requested.</string>
                                                 </textFieldCell>
                                             </textField>
                                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mZu-r9-qbU">
-                                                <rect key="frame" x="89" y="213" width="66" height="19"/>
+                                                <rect key="frame" x="89" y="294" width="66" height="19"/>
                                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Settings" id="QyV-mh-qhc">
                                                     <font key="font" metaFont="systemMedium" size="16"/>
                                                     <color key="textColor" red="0.46542553190000002" green="0.46542553190000002" blue="0.46542553190000002" alpha="0.84999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1035,22 +1228,22 @@ Never: Delete confirmation will never be requested.</string>
                                                 </textFieldCell>
                                             </textField>
                                             <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="sCo-ZF-nmS">
-                                                <rect key="frame" x="10" y="209" width="150" height="5"/>
+                                                <rect key="frame" x="10" y="290" width="150" height="5"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="150" id="luZ-pu-aoN"/>
                                                 </constraints>
                                             </box>
                                             <box boxType="custom" cornerRadius="4" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="JsF-ZX-rAg">
-                                                <rect key="frame" x="10" y="26" width="483" height="180"/>
+                                                <rect key="frame" x="10" y="26" width="468" height="261"/>
                                                 <view key="contentView" id="AUi-LY-eD2">
-                                                    <rect key="frame" x="1" y="1" width="481" height="178"/>
+                                                    <rect key="frame" x="1" y="1" width="466" height="259"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cQI-ZJ-FdT">
-                                                            <rect key="frame" x="0.0" y="0.0" width="481" height="178"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="466" height="259"/>
                                                             <subviews>
                                                                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="3of-Lm-5hu" userLabel="Pref Field">
-                                                                    <rect key="frame" x="0.0" y="113" width="481" height="65"/>
+                                                                    <rect key="frame" x="0.0" y="194" width="466" height="65"/>
                                                                     <subviews>
                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q96-QF-z9l">
                                                                             <rect key="frame" x="8" y="43" width="175" height="17"/>
@@ -1061,7 +1254,7 @@ Never: Delete confirmation will never be requested.</string>
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <textField verticalHuggingPriority="745" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="z2e-mw-KCE">
-                                                                            <rect key="frame" x="8" y="6" width="465" height="32"/>
+                                                                            <rect key="frame" x="8" y="6" width="450" height="32"/>
                                                                             <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="justified" id="uTi-uX-teJ">
                                                                                 <font key="font" metaFont="systemLight" size="12"/>
                                                                                 <string key="title">The length of a newly created timeslot for a given course. This only affects the default length - it can be changed after being created.</string>
@@ -1070,7 +1263,7 @@ Never: Delete confirmation will never be requested.</string>
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="ik5-4f-L5q">
-                                                                            <rect key="frame" x="10" y="-2" width="461" height="5"/>
+                                                                            <rect key="frame" x="10" y="-2" width="446" height="5"/>
                                                                         </box>
                                                                         <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="9aC-DE-wQY">
                                                                             <rect key="frame" x="185" y="39.5" width="50" height="22"/>
@@ -1115,7 +1308,7 @@ Never: Delete confirmation will never be requested.</string>
                                                                     </constraints>
                                                                 </customView>
                                                                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="ekI-Gn-Pcj" userLabel="Pref Field">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="481" height="113"/>
+                                                                    <rect key="frame" x="0.0" y="81" width="466" height="113"/>
                                                                     <subviews>
                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c3C-Wm-XJE">
                                                                             <rect key="frame" x="8" y="91" width="131" height="17"/>
@@ -1126,7 +1319,7 @@ Never: Delete confirmation will never be requested.</string>
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <textField verticalHuggingPriority="745" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="w65-KB-Z5s">
-                                                                            <rect key="frame" x="8" y="6" width="465" height="80"/>
+                                                                            <rect key="frame" x="8" y="6" width="450" height="80"/>
                                                                             <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="justified" id="dvt-iA-dG9">
                                                                                 <font key="font" metaFont="systemLight" size="12"/>
                                                                                 <string key="title">Minimum: 5 minutes. This setting affects when the scheduler determines a timeslot to be invalid due to overlap with another timeslot. The Timeslot Buffer Time is how much time, at minimum, must be between two timeslots otherwise the timeslots will be marked as invalid. Having any invalid timeslots will prevent you from accessing the editor.</string>
@@ -1135,7 +1328,7 @@ Never: Delete confirmation will never be requested.</string>
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="P0a-2n-pHe">
-                                                                            <rect key="frame" x="10" y="-2" width="461" height="5"/>
+                                                                            <rect key="frame" x="10" y="-2" width="446" height="5"/>
                                                                         </box>
                                                                         <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="EGg-eJ-06e">
                                                                             <rect key="frame" x="141" y="87.5" width="50" height="22"/>
@@ -1189,16 +1382,64 @@ Never: Delete confirmation will never be requested.</string>
                                                                         <constraint firstAttribute="trailing" secondItem="w65-KB-Z5s" secondAttribute="trailing" constant="10" id="q3W-gk-K78"/>
                                                                     </constraints>
                                                                 </customView>
+                                                                <customView translatesAutoresizingMaskIntoConstraints="NO" id="Q6m-3U-WI7" userLabel="Pref Field">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="466" height="81"/>
+                                                                    <subviews>
+                                                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZlM-h3-UdH">
+                                                                            <rect key="frame" x="8" y="59" width="215" height="17"/>
+                                                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Display current time on scheduler: " id="02p-nJ-wrz">
+                                                                                <font key="font" metaFont="system"/>
+                                                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                                            </textFieldCell>
+                                                                        </textField>
+                                                                        <textField verticalHuggingPriority="745" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="wsU-7C-7Q8">
+                                                                            <rect key="frame" x="8" y="6" width="450" height="48"/>
+                                                                            <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="justified" id="Ozg-FJ-BSB">
+                                                                                <font key="font" metaFont="systemLight" size="12"/>
+                                                                                <string key="title">The current time can be marked on the scheduler with a line and time. It will use the current system time. The line will not be visible if the current time is outside the current bounds of the scheduler.</string>
+                                                                                <color key="textColor" red="0.43595412230000002" green="0.43595412230000002" blue="0.43595412230000002" alpha="0.84999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                                            </textFieldCell>
+                                                                        </textField>
+                                                                        <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="4Gq-Rg-cFB">
+                                                                            <rect key="frame" x="10" y="-2" width="446" height="5"/>
+                                                                        </box>
+                                                                        <button translatesAutoresizingMaskIntoConstraints="NO" id="VL2-B2-vmZ">
+                                                                            <rect key="frame" x="246" y="58" width="22" height="18"/>
+                                                                            <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="DMV-cu-ttZ">
+                                                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                                                <font key="font" metaFont="system"/>
+                                                                            </buttonCell>
+                                                                        </button>
+                                                                    </subviews>
+                                                                    <constraints>
+                                                                        <constraint firstItem="ZlM-h3-UdH" firstAttribute="top" secondItem="Q6m-3U-WI7" secondAttribute="top" constant="5" id="1v0-u4-rSS"/>
+                                                                        <constraint firstItem="4Gq-Rg-cFB" firstAttribute="leading" secondItem="Q6m-3U-WI7" secondAttribute="leading" constant="10" id="3J3-HW-RjE"/>
+                                                                        <constraint firstAttribute="trailing" secondItem="4Gq-Rg-cFB" secondAttribute="trailing" constant="10" id="9vr-O9-Lcq"/>
+                                                                        <constraint firstAttribute="bottom" secondItem="wsU-7C-7Q8" secondAttribute="bottom" constant="6" id="E4M-O1-Q0Z"/>
+                                                                        <constraint firstAttribute="bottom" secondItem="4Gq-Rg-cFB" secondAttribute="bottom" id="EzL-fs-6O1"/>
+                                                                        <constraint firstItem="wsU-7C-7Q8" firstAttribute="leading" secondItem="Q6m-3U-WI7" secondAttribute="leading" constant="10" id="Fqw-Ri-cOw"/>
+                                                                        <constraint firstItem="VL2-B2-vmZ" firstAttribute="centerY" secondItem="ZlM-h3-UdH" secondAttribute="centerY" id="ILR-oh-uiB"/>
+                                                                        <constraint firstItem="VL2-B2-vmZ" firstAttribute="leading" secondItem="ZlM-h3-UdH" secondAttribute="trailing" constant="27" id="QQ0-a8-zL9"/>
+                                                                        <constraint firstItem="ZlM-h3-UdH" firstAttribute="leading" secondItem="Q6m-3U-WI7" secondAttribute="leading" constant="10" id="XEX-tQ-QgU"/>
+                                                                        <constraint firstItem="wsU-7C-7Q8" firstAttribute="top" secondItem="ZlM-h3-UdH" secondAttribute="bottom" constant="5" id="pBI-7M-xcV"/>
+                                                                        <constraint firstAttribute="trailing" secondItem="wsU-7C-7Q8" secondAttribute="trailing" constant="10" id="tix-Od-OAr"/>
+                                                                    </constraints>
+                                                                </customView>
                                                             </subviews>
                                                             <constraints>
                                                                 <constraint firstItem="3of-Lm-5hu" firstAttribute="width" secondItem="cQI-ZJ-FdT" secondAttribute="width" id="WDa-If-JXM"/>
                                                                 <constraint firstItem="ekI-Gn-Pcj" firstAttribute="width" secondItem="cQI-ZJ-FdT" secondAttribute="width" id="fBP-kp-GRx"/>
+                                                                <constraint firstItem="Q6m-3U-WI7" firstAttribute="width" secondItem="cQI-ZJ-FdT" secondAttribute="width" id="pjO-cA-RYP"/>
                                                             </constraints>
                                                             <visibilityPriorities>
                                                                 <integer value="1000"/>
                                                                 <integer value="1000"/>
+                                                                <integer value="1000"/>
                                                             </visibilityPriorities>
                                                             <customSpacing>
+                                                                <real value="3.4028234663852886e+38"/>
                                                                 <real value="3.4028234663852886e+38"/>
                                                                 <real value="3.4028234663852886e+38"/>
                                                             </customSpacing>
@@ -1229,7 +1470,7 @@ Never: Delete confirmation will never be requested.</string>
                                         </constraints>
                                     </customView>
                                     <customView translatesAutoresizingMaskIntoConstraints="NO" id="o4T-MS-5mP" userLabel="Pref Sub Field">
-                                        <rect key="frame" x="0.0" y="0.0" width="503" height="307"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="488" height="307"/>
                                         <subviews>
                                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YgE-mY-7UF">
                                                 <rect key="frame" x="8" y="278" width="63" height="19"/>
@@ -1254,16 +1495,16 @@ Never: Delete confirmation will never be requested.</string>
                                                 </constraints>
                                             </box>
                                             <box boxType="custom" cornerRadius="4" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="hux-ok-gpe">
-                                                <rect key="frame" x="10" y="26" width="483" height="245"/>
+                                                <rect key="frame" x="10" y="26" width="468" height="245"/>
                                                 <view key="contentView" id="QVi-FC-IbN">
-                                                    <rect key="frame" x="1" y="1" width="481" height="243"/>
+                                                    <rect key="frame" x="1" y="1" width="466" height="243"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9f7-yt-KW1">
-                                                            <rect key="frame" x="0.0" y="0.0" width="481" height="243"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="466" height="243"/>
                                                             <subviews>
                                                                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="rhb-5I-pnc" userLabel="Pref Field">
-                                                                    <rect key="frame" x="0.0" y="178" width="481" height="65"/>
+                                                                    <rect key="frame" x="0.0" y="178" width="466" height="65"/>
                                                                     <subviews>
                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GE0-q9-utt">
                                                                             <rect key="frame" x="8" y="43" width="199" height="17"/>
@@ -1274,7 +1515,7 @@ Never: Delete confirmation will never be requested.</string>
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <textField verticalHuggingPriority="745" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="IBs-yU-PPt">
-                                                                            <rect key="frame" x="8" y="6" width="465" height="32"/>
+                                                                            <rect key="frame" x="8" y="6" width="450" height="32"/>
                                                                             <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="justified" id="jk1-il-o48">
                                                                                 <font key="font" metaFont="systemLight" size="12"/>
                                                                                 <string key="title">In the case that the selected semester only has a single course, it will be automatically selected in the sidebar if this setting is toggled on.</string>
@@ -1283,7 +1524,7 @@ Never: Delete confirmation will never be requested.</string>
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="Ohq-su-15n">
-                                                                            <rect key="frame" x="10" y="-2" width="461" height="5"/>
+                                                                            <rect key="frame" x="10" y="-2" width="446" height="5"/>
                                                                         </box>
                                                                         <button translatesAutoresizingMaskIntoConstraints="NO" id="g8d-Ne-cKp">
                                                                             <rect key="frame" x="248" y="41.5" width="22" height="18"/>
@@ -1308,7 +1549,7 @@ Never: Delete confirmation will never be requested.</string>
                                                                     </constraints>
                                                                 </customView>
                                                                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="k7a-Tb-bAx" userLabel="Pref Field">
-                                                                    <rect key="frame" x="0.0" y="81" width="481" height="97"/>
+                                                                    <rect key="frame" x="0.0" y="81" width="466" height="97"/>
                                                                     <subviews>
                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fDg-Y7-VOI">
                                                                             <rect key="frame" x="8" y="75" width="233" height="17"/>
@@ -1319,7 +1560,7 @@ Never: Delete confirmation will never be requested.</string>
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <textField verticalHuggingPriority="745" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="7Od-Ny-Xdq">
-                                                                            <rect key="frame" x="8" y="6" width="465" height="64"/>
+                                                                            <rect key="frame" x="8" y="6" width="450" height="64"/>
                                                                             <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="justified" id="7sM-Tf-aqX">
                                                                                 <font key="font" metaFont="systemLight" size="12"/>
                                                                                 <string key="title">This will determine for how long, passed its due date, work will show up in the sidebar's Due list after its due date has been passed. After this point, work will automatically be marked as completed. Completed work can be seen by selecting the 'Show Completed' toggle.</string>
@@ -1328,7 +1569,7 @@ Never: Delete confirmation will never be requested.</string>
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="7AP-Lx-bW4">
-                                                                            <rect key="frame" x="10" y="-2" width="461" height="5"/>
+                                                                            <rect key="frame" x="10" y="-2" width="446" height="5"/>
                                                                         </box>
                                                                         <button translatesAutoresizingMaskIntoConstraints="NO" id="3ZC-R6-ad5">
                                                                             <rect key="frame" x="248" y="73.5" width="22" height="18"/>
@@ -1449,7 +1690,7 @@ Never: Delete confirmation will never be requested.</string>
                                                                     </constraints>
                                                                 </customView>
                                                                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="Zvn-H8-IzB" userLabel="Pref Field">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="481" height="81"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="466" height="81"/>
                                                                     <subviews>
                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3ue-tW-OLS">
                                                                             <rect key="frame" x="8" y="59" width="199" height="17"/>
@@ -1460,7 +1701,7 @@ Never: Delete confirmation will never be requested.</string>
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <textField verticalHuggingPriority="745" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="wM8-cA-Dwv">
-                                                                            <rect key="frame" x="8" y="6" width="465" height="48"/>
+                                                                            <rect key="frame" x="8" y="6" width="450" height="48"/>
                                                                             <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="justified" id="4hk-lb-4f2">
                                                                                 <font key="font" metaFont="systemLight" size="12"/>
                                                                                 <string key="title">This will determine how long after its start time, a test will mark itself as completed in the sidebar's Exams list. Completed tests can be seen by selecting the 'Show Completed' toggle.</string>
@@ -1469,7 +1710,7 @@ Never: Delete confirmation will never be requested.</string>
                                                                             </textFieldCell>
                                                                         </textField>
                                                                         <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="miX-Wk-i6V">
-                                                                            <rect key="frame" x="10" y="-2" width="461" height="5"/>
+                                                                            <rect key="frame" x="10" y="-2" width="446" height="5"/>
                                                                         </box>
                                                                         <button translatesAutoresizingMaskIntoConstraints="NO" id="Rhk-7U-Ybs">
                                                                             <rect key="frame" x="248" y="57.5" width="22" height="18"/>
@@ -1664,11 +1905,11 @@ Never: Delete confirmation will never be requested.</string>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </clipView>
                     <scroller key="horizontalScroller" verticalHuggingPriority="750" horizontal="YES" id="UR7-49-88P">
-                        <rect key="frame" x="0.0" y="1994" width="503" height="16"/>
+                        <rect key="frame" x="0.0" y="2476" width="488" height="15"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
-                    <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="kDu-us-4Nc">
-                        <rect key="frame" x="487" y="0.0" width="16" height="2010"/>
+                    <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="kDu-us-4Nc">
+                        <rect key="frame" x="488" y="0.0" width="15" height="2476"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
                 </scrollView>

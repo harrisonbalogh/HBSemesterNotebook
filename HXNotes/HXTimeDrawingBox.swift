@@ -13,6 +13,7 @@ class HXTimeDrawingBox: NSView {
     private var drawsTimeOfDay = true {
         didSet {
             self.needsDisplay = true
+            self.display()
         }
     }
     

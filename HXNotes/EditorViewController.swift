@@ -137,8 +137,6 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
         self.view.wantsLayer = true
         
         configureCollectionView()
-        
-        loadPreferences()
     }
     
     override func viewDidAppear() {
@@ -429,7 +427,7 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
         // If this is the last CVI, then add bottom buffer space as specified in preferences...
         if Int(indexPath[0].toIntMax()) == (collectionView.numberOfSections - 1) {
             // Last object...
-            hBuffer = (collectionClipView.enclosingScrollView!.frame.height - 30) * (CGFloat(bottomBufferSpace) / 100)
+            hBuffer = (collectionClipView.enclosingScrollView!.frame.height - 30) * (CGFloat(AppPreference.bottomBufferSpace) / 100)
         }
         
         return NSSize(width: collectionView.bounds.width, height: h + hBuffer)
@@ -456,32 +454,7 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
         layoutManager.glyphRange(for: txtContainer)
         return layoutManager.usedRect(for: txtContainer).size.height + 18
     }
-    
-    // MARK: - Preferences
-    var autoScroll = true
-    var autoScrollPosition = 50
-    var bottomBufferSpace = 30
-    
-    func loadPreferences() {
-        if let autoScrollPref = CFPreferencesCopyAppValue(NSString(string: "autoScroll"), kCFPreferencesCurrentApplication) as? String {
-            if autoScrollPref == "true" {
-                autoScroll = true
-            } else if autoScrollPref == "false" {
-                autoScroll = false
-            }
-        }
-        if let autoScrollPercent = CFPreferencesCopyAppValue(NSString(string: "autoScrollPositionPercent"), kCFPreferencesCurrentApplication) as? String {
-            if let percent = Int(autoScrollPercent) {
-                autoScrollPosition = 100 - percent
-            }
-        }
-        if let bottomBufferPercent = CFPreferencesCopyAppValue(NSString(string: "bottomBufferSpace"), kCFPreferencesCurrentApplication) as? String {
-            if let percent = Int(bottomBufferPercent) {
-                bottomBufferSpace = percent
-            }
-        }
-    }
-    
+
     // MARK: - ––– Find Replace Print Export –––
     
     /// Reveal or hide the top bar container.

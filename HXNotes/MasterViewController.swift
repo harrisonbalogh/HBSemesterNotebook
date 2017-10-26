@@ -28,54 +28,35 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
         
         var semesterToUse: Semester!
         var courseToUse: Course?
-        
-        // Get the current real time semester
-        let calendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
-        // Get calendar date to deduce semester
-        let yearComponent = calendar.component(.year, from: Date())
-        
-        // This should be adjustable in the settings, assumes Jul-Dec is Fall. Jan-Jun is Spring.
-        var semesterTitle = "spring"
-        if calendar.component(.month, from: Date()) >= 7 {
-            semesterTitle = "fall"
-        }
+
         // Set the current semester displayed in the SidebarVC - might want to remeber last selected semester
-        self.semesterToday = Semester.produceSemester(titled: semesterTitle, in: yearComponent)
+        self.semesterToday = Semester.produceSemester(during: Date(), createIfNecessary: true)!
         
         let queueGroup = DispatchGroup()
         queueGroup.enter()
         DispatchQueue.global().async {
             
-            self.loadPreferences()
-            
             Alert.masterViewController = self
             
             AppDelegate.scheduleAssistant = ScheduleAssistant(masterController: self)
             
-            // Check if there was a previously opened semester when last quit the app
-            if let prevOpenCourse = CFPreferencesCopyAppValue(NSString(string: "previouslyOpenedCourse"), kCFPreferencesCurrentApplication) as? String {
-                if prevOpenCourse != "nil" {
-                    let parseSem = prevOpenCourse.substring(to: (prevOpenCourse.range(of: ":")?.lowerBound)!)
-                    let remain = prevOpenCourse.substring(from: (prevOpenCourse.range(of: ":")?.upperBound)!)
-                    let parseYr = remain.substring(to: (remain.range(of: ":")?.lowerBound)!)
-                    let parseCourse = remain.substring(from: (remain.range(of: ":")?.upperBound)!)
-                    
-                    let semester = Semester.produceSemester(titled: parseSem.lowercased(), in: Int(parseYr)!)
-                    semesterToUse = semester
-                    
-                    // Check if there was a course selected when last quit
-                    if parseCourse != "nil" {
-                        if let course = semester.retrieveCourse(named: parseCourse) {
-                            courseToUse = course
-                        }
+            let during = self.semesterToday.duringCourse()
+            
+            // 'launchWithHappeningCourse' preference overrides the preferences to recall last semester/course open when quit
+            if AppPreference.launchWithHappeningCourse && during != nil {
+                semesterToUse = self.semesterToday
+                courseToUse = during!.course!
+            } else {
+                if AppPreference.openLastSemester {
+                    semesterToUse = AppPreference.previouslyOpenedSemester
+                    if semesterToUse == nil {
+                        semesterToUse = self.semesterToday
+                    } else if AppPreference.rememberLastCourse, let course = AppPreference.previouslyOpenedCourse{
+                        courseToUse = course
                     }
                 } else {
-                    // Use today's date if there was not a previously selected course
                     semesterToUse = self.semesterToday
                 }
-            } else {
-                // Use today's date if there was not a previously selected course
-                semesterToUse = self.semesterToday
             }
             queueGroup.leave()
         }
@@ -107,19 +88,13 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
     
     override func viewWillDisappear() {
         super.viewWillDisappear()
-        
-        var course = ""
-        if self.selectedCourse == nil {
-            course = "nil"
-        } else {
-            course = self.selectedCourse.title!
-        }
-        
-        let key = semesterButton.title.uppercased() + ":" + yearLabel.stringValue + ":" + course
-        
-        CFPreferencesSetAppValue(NSString(string: "previouslyOpenedCourse"),NSString(string: key), kCFPreferencesCurrentApplication)
+
+        AppPreference.previouslyOpenedCourse = selectedCourse
+        AppPreference.previouslyOpenedSemester = selectedSemester
         
         CFPreferencesAppSynchronize(kCFPreferencesCurrentApplication)
+        
+//        Semester.cleanEmptySemesters()
     }
     
     override func viewDidLayout() {
@@ -135,28 +110,6 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
     var prefNavLeadingAnchor: NSLayoutConstraint!
     var pref: PreferencesViewController!
     var prefTrailingAnchor: NSLayoutConstraint!
-    
-    var assumeRecentLecture = true
-    var singleSelectPref = true
-    
-    func loadPreferences() {
-        
-        if let singleSelect = CFPreferencesCopyAppValue(NSString(string: "assumeSingleSelection"), kCFPreferencesCurrentApplication) as? String {
-            if singleSelect == "true" {
-                singleSelectPref = true
-            } else if singleSelect == "false" {
-                singleSelectPref = false
-            }
-        }
-        
-        if let assumeRecent = CFPreferencesCopyAppValue(NSString(string: "assumeRecentLecture"), kCFPreferencesCurrentApplication) as? String {
-            if assumeRecent == "true" {
-                assumeRecentLecture = true
-            } else {
-                assumeRecentLecture = false
-            }
-        }
-    }
     
     /// Creates a new PreferencesVC and PreferencesNavVC and adds their views to MasterVC as well as animates
     /// the addition and hiding of appropriate views.
@@ -200,7 +153,6 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
         if prefNav == nil {
             displayPreferences()
         } else {
-            loadPreferences()
             // Should only do the following if user updated the time slot settings.
             self.schedulingUpdatedTimeSlot()
             NSAnimationContext.beginGrouping()
@@ -219,6 +171,7 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
                     self.pref = nil
                     self.prefTrailingAnchor = nil
                 }
+                self.reloadScheduler(with: self.selectedCourse)
             }
             prefNavLeadingAnchor.animator().constant = -splitView_sidebar.frame.width
             prefTrailingAnchor.animator().constant = splitView_content.frame.width
@@ -240,14 +193,6 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
             if selectedCourse != nil {
                 selectedCourse = nil
             }
-        }
-    }
-    
-    @IBAction func action_showCurrentTime(_ sender: NSButton) {
-        if sender.state == NSOnState {
-            drawTimeBox.notifyDrawsTimeOfDay(true)
-        } else {
-            drawTimeBox.notifyDrawsTimeOfDay(false)
         }
     }
     
@@ -419,6 +364,7 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
                 
             }
         }
+        drawTimeBox.notifyDrawsTimeOfDay(AppPreference.showCurrentTime)
         scheduleBox.needsDisplay = true
     }
     
@@ -508,8 +454,13 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
     
     var scrollToSemesterVCIfValidAlreadyRan = false
     func scrollToSemesterVCIfValid() {
+        
         // Jump to semester view if schedule is valid.
-        if selectedSemester != nil && selectedSemester.valid && !scrollToSemesterVCIfValidAlreadyRan {
+        if selectedSemester == nil {
+            return
+        }
+        selectedSemester.validateSchedule()
+        if selectedSemester.valid && !scrollToSemesterVCIfValidAlreadyRan {
             scrollToSemesterVCIfValidAlreadyRan = true
             sidebarPageController.schedulerVC.isPastSemester = selectedSemester.isEarlier(than: self.semesterToday)
             sidebarPageController.schedulerVC.loadCourses(from: selectedSemester)
@@ -519,7 +470,7 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
             
             if selectedCourse != nil {
                 sidebarPageController.selectedIndex = sidebarPageController.SBCourseIndex
-                if assumeRecentLecture {
+                if AppPreference.assumeRecentLecture {
                     isEditing(lecture: (selectedCourse.lectures!.lastObject as! Lecture))
                 }
                 reloadScheduler(with: selectedCourse)
@@ -532,11 +483,16 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
     /// The current semester displayed in the sidebar. Setting this value will update visuals.
     var selectedSemester: Semester! {
         didSet {
-            print("selectedSemester set")
             self.isScheduling = true
             guard let sidebar = sidebarPageController else { return }
             sidebar.selectedIndex = 0
             sidebarSchedulingNeedsPopulating(sidebar.schedulerVC)
+            
+            print("Semester selected \(selectedSemester.title!), \(selectedSemester.year)")
+            print("  Earliest start date for this semester is \(selectedSemester.earliestStart)")
+            print("  Latest start date for this semester is \(selectedSemester.latestStart)")
+            print("    Earliest end date for this semester is \(selectedSemester.earliestEnd)")
+            print("    Latest end date for this semester is \(selectedSemester.latestEnd)")
         }
     }
     /// The semester currently happening in real time. Initialized at app launch.
@@ -544,7 +500,7 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
     
     /// Updates MasterVC's selectedSemester as well as various visuals.
     private func setDate(semester: Semester) {
-        lastYearUsed = Int(semester.year)
+        lastYearUsed = semester.year
         yearLabel.stringValue = "\(lastYearUsed)"
         self.selectedSemester = semester
         
@@ -556,25 +512,20 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
         sender.isEnabled = false
         
         semButtonAnimBotConstraint.constant = -30
-        if self.semesterButton.title == "Spring" {
-            self.semesterButtonAnimated.title = "Fall"
-        } else {
-            self.semesterButtonAnimated.title = "Spring"
-            self.yearLabelAnimated.stringValue = "\(Int(self.yearLabel.stringValue)! + 1)"
-            yrButtonAnimBotConstraint.constant = -30
-        }
+        yrButtonAnimBotConstraint.constant = -30
+        
+        let nextSemester = selectedSemester.proceeding()
+        semesterButtonAnimated.title = nextSemester.title!.capitalized
+        yearLabelAnimated.stringValue = "\(nextSemester.year)"
         
         NSAnimationContext.beginGrouping()
         NSAnimationContext.current().duration = 0.2
         NSAnimationContext.current().completionHandler = {
-            if self.semesterButton.title == "Spring" {
-                self.semesterButton.title = "Fall"
-            } else {
-                self.semesterButton.title = "Spring"
-                self.yearLabel.stringValue = "\(Int(self.yearLabel.stringValue)! + 1)"
-                self.yrButtonBotConstraint.constant = 0
-            }
-            self.selectedSemester = Semester.produceSemester(titled: self.semesterButton.title, in: Int(self.yearLabel.stringValue)!)
+            self.semesterButton.title = nextSemester.title!.capitalized
+            self.yearLabel.stringValue = "\(nextSemester.year)"
+            self.yrButtonBotConstraint.constant = 0
+            
+            self.selectedSemester = nextSemester
             self.semesterLabel.stringValue = self.semesterButton.title + " " + self.yearLabel.stringValue
             self.semButtonBotConstraint.constant = 0
             self.semesterLabel.animator().alphaValue = 1
@@ -584,7 +535,7 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
         scheduleBox.animator().alphaValue = 0
         semesterLabel.animator().alphaValue = 0
         self.semButtonBotConstraint.animator().constant = -semesterButton.frame.height
-        if self.semesterButton.title == "Fall" {
+        if self.semesterButton.title.lowercased() == "fall" {
             self.yrButtonBotConstraint.animator().constant = semesterButton.frame.height
         }
         NSAnimationContext.endGrouping()
@@ -594,24 +545,19 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
 
         semButtonAnimBotConstraint.constant = 30
         yrButtonAnimBotConstraint.constant = 30
-        if self.semesterButton.title == "Fall" {
-            self.semesterButtonAnimated.title = "Spring"
-        } else {
-            self.semesterButtonAnimated.title = "Fall"
-            self.yearLabelAnimated.stringValue = "\(Int(self.yearLabel.stringValue)! - 1)"
-        }
         
+        let prevSemester = selectedSemester.preceeding()
+        semesterButtonAnimated.title = prevSemester.title!.capitalized
+        yearLabelAnimated.stringValue = "\(prevSemester.year)"
+ 
         NSAnimationContext.beginGrouping()
         NSAnimationContext.current().duration = 0.2
         NSAnimationContext.current().completionHandler = {
-            if self.semesterButton.title == "Fall" {
-                self.semesterButton.title = "Spring"
-            } else {
-                self.semesterButton.title = "Fall"
-                self.yearLabel.stringValue = "\(Int(self.yearLabel.stringValue)! - 1)"
-                self.yrButtonBotConstraint.constant = 0
-            }
-            self.selectedSemester = Semester.produceSemester(titled: self.semesterButton.title, in: Int(self.yearLabel.stringValue)!)
+            self.semesterButton.title = prevSemester.title!.capitalized
+            self.yearLabel.stringValue = "\(prevSemester.year)"
+            self.yrButtonBotConstraint.constant = 0
+            
+            self.selectedSemester = prevSemester
             self.semesterLabel.stringValue = self.semesterButton.title + " " + self.yearLabel.stringValue
             self.semButtonBotConstraint.constant = 0
             self.semesterLabel.animator().alphaValue = 1
@@ -621,14 +567,14 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
         scheduleBox.animator().alphaValue = 0
         semesterLabel.animator().alphaValue = 0
         self.semButtonBotConstraint.animator().constant = semesterButton.frame.height
-        if self.semesterButton.title == "Spring" {
+        if self.semesterButton.title.lowercased() == "spring" {
             self.yrButtonBotConstraint.animator().constant = -semesterButton.frame.height
         }
         NSAnimationContext.endGrouping()
     }
     
     @IBAction func action_semesterButton(_ sender: NSButton) {
-        if semesterButton.title == "Fall" {
+        if semesterButton.title.lowercased() == "fall" {
             action_decrementTime(sender)
         } else {
             action_incrementTime(sender)
@@ -640,13 +586,11 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
     }
     
     // MARK: ––– Window Magnet Functionality –––
-    
+
     /// Performed as Window is being resized.
     func checkMagnetRegion() {
         
-        // THIS SHOULDN'T HAPPEN IF PREFERENCES IS SHOWING
-        
-        if lectureEditorVC == nil || !self.view.window!.inLiveResize {
+        if lectureEditorVC == nil || !self.view.window!.inLiveResize || pref != nil || !AppPreference.magnetizedEditor {
             return
         }
         
@@ -670,6 +614,15 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
     // MARK: ––– Notifiers –––
     
     ///
+    func notifySave() {
+        if lectureEditorVC != nil && lectureEditorVC.selectedLecture != nil {
+            lectureEditorVC.selectedLecture.content =
+                NSAttributedString(attributedString: lectureEditorVC.textViewContent.attributedString())
+        }
+        appDelegate.saveAction(self) // Will check if there are changes
+    }
+    
+    ///
     func notifyExport() {
 //        if editorViewController != nil {
 //            editorViewController.notifyExport()
@@ -685,6 +638,8 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
 //        }
         if lectureEditorVC == nil {
             splitView_content.print(self)            
+        } else {
+            lectureEditorVC.textViewContent.print(self)
         }
     }
     ///
@@ -797,49 +752,36 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
             sidebarPageController.courseVC.addButton.isEnabled = false
         }
         
-        let calendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
-        // Get calendar date to deduce semester
-        let yearComponent = calendar.component(.year, from: Date())
-        
-        // This should be adjustable in the settings, assumes Jul-Dec is Fall. Jan-Jun is Spring.
-        var semesterTitle = "spring"
-        if calendar.component(.month, from: Date()) >= 7 {
-            semesterTitle = "fall"
-        }
-        
-        // See if the current semester exists in the persistant store
-        if let currentSemester = Semester.retrieveSemester(titled: semesterTitle, in: yearComponent) {
-            if let timeSlotHappening = currentSemester.duringCourse() {
-                if timeSlotHappening.course!.theoreticalLectureCount() != timeSlotHappening.course!.lectures!.count || timeSlotHappening.course!.theoreticalLectureCount() == 0 {
-                    if selectedSemester != currentSemester {
-                        selectedSemester = currentSemester
-                    }
-                    if selectedCourse != timeSlotHappening.course! {
-                        selectedCourse = timeSlotHappening.course!
-                    } else {
-                        selectedCourse.fillAbsentLectures()
-                    }
-                    
-                    courseWasSelected(selectedCourse)
-                    
-                    Alert.flushAlerts(for: selectedCourse)
-                    
-                    // Create new lecture
-                    timeSlotHappening.course!.createLecture(during: timeSlotHappening.course!.duringTimeSlot()!, on: nil, in: nil, at: nil)
-                    
-                    // Displays lecture in the lectureStackView
-                    sidebarPageController.courseVC.loadLectures(from: selectedCourse)
-                } else {
-                    print("No lectures to add? Theoretical count: \(timeSlotHappening.course!.theoreticalLectureCount())")
+        if let timeSlotHappening = semesterToday.duringCourse() {
+            if timeSlotHappening.course!.theoreticalLectureCount() != timeSlotHappening.course!.lectures!.count || timeSlotHappening.course!.theoreticalLectureCount() == 0 {
+                if selectedSemester != semesterToday {
+                    selectedSemester = semesterToday
                 }
-            } else {
-                // User probably waited too long to accept lecture, so display error
-                let hour = NSCalendar.current.component(.hour, from: NSDate() as Date)
-                let minute = NSCalendar.current.component(.minute, from: NSDate() as Date)
-                let _ = Alert(hour: hour, minute: minute, course: nil, content: "Can't add a new lecture when a course isn't happening.", question: nil, deny: "Close", action: nil, target: nil, type: .custom)
-                if selectedCourse != nil {
+                if selectedCourse != timeSlotHappening.course! {
+                    selectedCourse = timeSlotHappening.course!
+                } else {
                     selectedCourse.fillAbsentLectures()
                 }
+                
+                courseWasSelected(selectedCourse)
+                
+                Alert.flushAlerts(for: selectedCourse)
+                
+                // Create new lecture
+                timeSlotHappening.course!.createLecture(during: timeSlotHappening.course!.duringTimeSlot()!, on: nil, in: nil, at: nil)
+                
+                // Displays lecture in the lectureStackView
+                sidebarPageController.courseVC.loadLectures(from: selectedCourse)
+            } else {
+                print("No lectures to add? Theoretical count: \(timeSlotHappening.course!.theoreticalLectureCount())")
+            }
+        } else {
+            // User probably waited too long to accept lecture, so display error
+            let hour = NSCalendar.current.component(.hour, from: NSDate() as Date)
+            let minute = NSCalendar.current.component(.minute, from: NSDate() as Date)
+            let _ = Alert(hour: hour, minute: minute, course: nil, content: "Can't add a new lecture when a course isn't happening.", question: nil, deny: "Close", action: nil, target: nil, type: .custom)
+            if selectedCourse != nil {
+                selectedCourse.fillAbsentLectures()
             }
         }
     }
@@ -854,7 +796,7 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
             } else {
                 sidebarPageController.selectedIndex = sidebarPageController.SBCourseIndex
             }
-            if assumeRecentLecture {
+            if AppPreference.assumeRecentLecture {
                 isEditing(lecture: (selectedCourse.lectures!.lastObject as! Lecture))
             }
             reloadScheduler(with: selectedCourse)
@@ -902,7 +844,9 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
             isSidebarOnly = wasSidebarOnly
             wasSidebarOnly = false
         }
+        
     }
+    
     
     func isEditing(workBox: CourseWorkBox?) {
         if workBox == nil {
@@ -966,7 +910,7 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
     
     func schedulingDidFinish() {
         scheduleBox.isHighlighting = true
-        if singleSelectPref && selectedSemester.courses!.count == 1 {
+        if AppPreference.assumeSingleSelection && selectedSemester.courses!.count == 1 {
             selectedCourse = selectedSemester.courses!.firstObject as! Course
             sidebarPageController.selectedIndex = sidebarPageController.SBCourseIndex
         } else {
@@ -1059,6 +1003,10 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
         reloadScheduler(with: nil)
     }
     
+    func schedulingReloadScheduler() {
+        reloadScheduler(with: nil)
+    }
+    
     func schedulingUpdatedWork() {
         if selectedCourse == nil || sidebarPageController.selectedIndex != sidebarPageController.SBCourseIndex{
             return
@@ -1073,6 +1021,15 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
         }
         sidebarPageController.courseVC.loadTests(from: selectedCourse, showingCompleted:
             sidebarPageController.courseVC.toggleCompletedTests.state == NSOnState)
+    }
+    
+    func schedulingUpdateStartDate(with start: Date) {
+        selectedSemester.start = start
+    }
+    
+    func schedulingUpdateEndDate(with end: Date) {
+        selectedSemester.end = end
+        
     }
     
     // MARK: - Sidebar Delegation

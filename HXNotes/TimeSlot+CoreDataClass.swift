@@ -24,12 +24,7 @@ public class TimeSlot: NSManagedObject {
         }
         
         // Load preference value
-        var bufferTime = 5
-        if let bufferTimePref = CFPreferencesCopyAppValue(NSString(string: "bufferTimeBetweenCoursesMinutes"), kCFPreferencesCurrentApplication) as? String {
-            if let time = Int(bufferTimePref) {
-                bufferTime = max(time, 5)
-            }
-        }
+        let bufferTime = AppPreference.bufferTimeBetweenCoursesMinutes
         
         let dayA = self.weekday
         let startA = self.startMinute

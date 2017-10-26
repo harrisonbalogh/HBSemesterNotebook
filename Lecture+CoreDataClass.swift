@@ -17,7 +17,7 @@ public class Lecture: NSManagedObject {
     /// from target lecture's TimeSlot and owning Course's Semester's attributes.
     func date() -> Date {
         var dateComponents = DateComponents()
-        dateComponents.year = Int(self.course!.semester!.year)
+        dateComponents.year = Calendar.current.component(.year, from: course!.semester!.start!)
         dateComponents.month = Int(self.month)
         dateComponents.day = Int(self.day)
         dateComponents.weekday = Int(self.timeSlot!.weekday)
