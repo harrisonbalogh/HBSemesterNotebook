@@ -10,6 +10,8 @@ import Cocoa
 
 class LectureEditorViewController: NSViewController, NSTextFinderClient {
     
+    @IBOutlet weak var topBarHeightConstraint: NSLayoutConstraint!
+    
     let sharedFontManager = NSFontManager.shared()
     let appDelegate = NSApplication.shared().delegate as! AppDelegate
     
@@ -39,7 +41,6 @@ class LectureEditorViewController: NSViewController, NSTextFinderClient {
     @IBOutlet weak var scrollViewContent: NSScrollView!
     @IBOutlet weak var clipViewContent: NSClipView!
     @IBOutlet var textViewContent: HXTextView!
-    @IBOutlet weak var textViewWidthConstraint: NSLayoutConstraint!
     
     @IBOutlet weak var backdropBox: NSBox!
     @IBOutlet weak var overlayTopConstraint: NSLayoutConstraint!
@@ -64,14 +65,17 @@ class LectureEditorViewController: NSViewController, NSTextFinderClient {
         let screenSize = screenDescrip?[NSDeviceSize] as! NSSize
         let physicalSize = CGDisplayScreenSize(screenDescrip?["NSScreenNumber"] as! CGDirectDisplayID)
         let scaleFactor = (mainScreen?.backingScaleFactor)!
+        print("Screen size: \(screenSize)")
+        print("Physical size: \(physicalSize)")
         print("Scale factor: \(scaleFactor)")
-        let w = ((screenSize.width / physicalSize.width) * 25.4)// * scaleFactor // not supposed to use this. See docs
-        let h = ((screenSize.height / physicalSize.height) * 25.4)// * scaleFactor // not supposed to use this. See docs
-        print("DPI: \(Int(w)) x \(Int(h)) so an 8.5x11 paper would have \(Int(w*8.5)) x \(Int(h*11)) pixels")
+        let DPMM = NSSize(width: screenSize.width / physicalSize.width, height: screenSize.height / physicalSize.height)
+        let DPI = NSSize(width: DPMM.width * 25.4, height: DPMM.height * 25.4)
+        print("DPI: \(DPI)")
+        print("    Convert: \(self.view.convert(DPI, to: self.view))")
         
-
-        textViewContent.textContainerInset = NSSize(width: w, height:h)
-        textViewWidthConstraint.constant = w*8.5
+        textViewContent.textContainerInset = DPI
+        textViewContent.minSize = NSSize(width: DPI.width * 8.5, height: textViewContent.minSize.height)
+        textViewContent.maxSize = NSSize(width: DPI.width * 8.5, height: textViewContent.maxSize.height)
         
         styleLabelFont.alphaValue = 0
         styleButtonFont.alphaValue = 0

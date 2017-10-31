@@ -557,10 +557,10 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="View" id="HyV-fh-RgO">
                                     <items>
-                                        <menuItem title="Show Toolbar" keyEquivalent="t" id="snW-S8-Cw5">
+                                        <menuItem title="Hide Sidebar" keyEquivalent="t" id="snW-S8-Cw5" userLabel="Show Sidebar">
                                             <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                             <connections>
-                                                <action selector="toggleToolbarShown:" target="Ady-hI-5gd" id="BXY-wc-z0C"/>
+                                                <action selector="showSidebar:" target="Voe-Tx-rLC" id="R9o-A0-tYm"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="hB3-LF-h0Y"/>
@@ -616,7 +616,11 @@
                         <outlet property="delegate" destination="Voe-Tx-rLC" id="PrD-fu-P6m"/>
                     </connections>
                 </application>
-                <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="HXNotes" customModuleProvider="target"/>
+                <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="HXNotes" customModuleProvider="target">
+                    <connections>
+                        <outlet property="sidebarMenuItem" destination="snW-S8-Cw5" id="Np4-VJ-kVz"/>
+                    </connections>
+                </customObject>
                 <customObject id="b2w-RD-Zvt" customClass="NSFontManager"/>
                 <customObject id="Ady-hI-5gd" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -929,22 +933,6 @@
                                                 <view key="contentView" id="IaD-fY-HLg">
                                                     <rect key="frame" x="0.0" y="0.0" width="516.5" height="345"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                    <subviews>
-                                                        <button hidden="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QJT-gY-jc9">
-                                                            <rect key="frame" x="32" y="304" width="18" height="18"/>
-                                                            <constraints>
-                                                                <constraint firstAttribute="height" constant="18" id="DGf-06-So0"/>
-                                                                <constraint firstAttribute="width" constant="18" id="nsP-xD-6ls"/>
-                                                            </constraints>
-                                                            <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="icon_drawer" imagePosition="only" alignment="center" enabled="NO" imageScaling="proportionallyUpOrDown" inset="2" id="YPh-Ge-WvV">
-                                                                <behavior key="behavior" lightByContents="YES"/>
-                                                                <font key="font" metaFont="system"/>
-                                                            </buttonCell>
-                                                            <connections>
-                                                                <action selector="action_revealSidebar:" target="yZA-sL-yMj" id="fOt-qs-JQD"/>
-                                                            </connections>
-                                                        </button>
-                                                    </subviews>
                                                 </view>
                                                 <color key="fillColor" red="0.98376324760152944" green="0.98376324760152944" blue="0.98376324760152944" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             </box>
@@ -1370,11 +1358,9 @@
                                             <constraint firstItem="cjo-qy-R5X" firstAttribute="leading" secondItem="Do8-xp-hVb" secondAttribute="leading" constant="32" id="8QL-tZ-Vj7"/>
                                             <constraint firstAttribute="trailing" secondItem="cjo-qy-R5X" secondAttribute="trailing" constant="32" id="CIF-hk-cll"/>
                                             <constraint firstItem="BWH-B4-ibo" firstAttribute="top" secondItem="Do8-xp-hVb" secondAttribute="top" constant="12" id="Lh8-8o-Y0r"/>
-                                            <constraint firstItem="QJT-gY-jc9" firstAttribute="leading" secondItem="WCb-I1-0OW" secondAttribute="leading" id="N2g-ng-Dir"/>
                                             <constraint firstItem="BWH-B4-ibo" firstAttribute="trailing" secondItem="cjo-qy-R5X" secondAttribute="trailing" id="S2L-kX-4Sp"/>
                                             <constraint firstAttribute="bottom" secondItem="cjo-qy-R5X" secondAttribute="bottom" constant="26" id="hvB-kw-mc0"/>
                                             <constraint firstItem="cjo-qy-R5X" firstAttribute="top" secondItem="Do8-xp-hVb" secondAttribute="top" constant="50" id="iLg-9a-Xmg"/>
-                                            <constraint firstItem="QJT-gY-jc9" firstAttribute="centerY" secondItem="BWH-B4-ibo" secondAttribute="centerY" id="nkM-8Q-Tl4"/>
                                             <constraint firstAttribute="trailing" secondItem="ggC-aW-ppQ" secondAttribute="trailing" id="xFk-Xp-2mX"/>
                                         </constraints>
                                     </customView>
@@ -1396,8 +1382,8 @@
                         <constraints>
                             <constraint firstItem="Rno-LO-yQP" firstAttribute="leading" secondItem="O1N-hA-ZzR" secondAttribute="leading" id="4Db-Dj-MEE"/>
                             <constraint firstAttribute="bottom" secondItem="Rno-LO-yQP" secondAttribute="bottom" id="AKm-3L-TdU"/>
-                            <constraint firstAttribute="trailing" secondItem="Rno-LO-yQP" secondAttribute="trailing" id="K94-pt-IKd"/>
                             <constraint firstItem="Rno-LO-yQP" firstAttribute="top" secondItem="O1N-hA-ZzR" secondAttribute="top" id="jdL-OZ-FHK"/>
+                            <constraint firstAttribute="trailing" secondItem="Rno-LO-yQP" secondAttribute="trailing" id="yBi-mu-YnD"/>
                         </constraints>
                     </view>
                     <connections>
@@ -1413,11 +1399,10 @@
                         <outlet property="semesterButtonAnimated" destination="1ak-oi-wV3" id="Lhf-Hv-PZ4"/>
                         <outlet property="semesterLabel" destination="BWH-B4-ibo" id="t2i-BX-azb"/>
                         <outlet property="sidebarOnlyButton" destination="Cch-XT-8O6" id="bw9-dJ-IVb"/>
-                        <outlet property="sidebarRevealButton" destination="QJT-gY-jc9" id="5DC-mD-3Ps"/>
                         <outlet property="splitView" destination="Rno-LO-yQP" id="rCm-qF-WRH"/>
                         <outlet property="splitViewMaxWidth" destination="aEc-yV-HnF" id="Jl7-Mz-Fvb"/>
                         <outlet property="splitViewMinWidth" destination="yxk-DM-jqd" id="AY7-DR-6FR"/>
-                        <outlet property="splitViewTrailing" destination="K94-pt-IKd" id="fQM-Ee-73L"/>
+                        <outlet property="splitViewTrailing" destination="yBi-mu-YnD" id="YcV-1B-fWD"/>
                         <outlet property="splitView_content" destination="Do8-xp-hVb" id="dUb-cw-nwf"/>
                         <outlet property="splitView_sidebar" destination="BBr-tT-C3k" id="2C5-ob-zIx"/>
                         <outlet property="timeLabelStack" destination="1Hf-ij-b7B" id="JXA-U5-vWp"/>
@@ -1436,7 +1421,6 @@
     <resources>
         <image name="button_down" width="34.5" height="14.5"/>
         <image name="button_up" width="34.5" height="14.5"/>
-        <image name="icon_drawer" width="50" height="50"/>
         <image name="icon_resize" width="16" height="16"/>
         <image name="image_gradientUp" width="8" height="8"/>
     </resources>

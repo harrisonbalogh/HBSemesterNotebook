@@ -135,7 +135,6 @@ public class Semester: NSManagedObject {
     /// course not found.
     public func retrieveCourse(named: String) -> Course! {
         for case let course as Course in self.courses! {
-            print("course.title: \(course.title!)")
             if course.title!.lowercased() == named.lowercased() {
                 return course
             }

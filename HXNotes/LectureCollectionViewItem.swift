@@ -23,8 +23,6 @@ class LectureCollectionViewItem: NSCollectionViewItem {
             } else if lecture.content != nil {
                 print("  MY NEW VALUE IS \(lecture.content!.string)")
             }
-            
-            
         }
     }
     

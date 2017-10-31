@@ -28,17 +28,18 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
         
         var semesterToUse: Semester!
         var courseToUse: Course?
+        var lectureToUse: Lecture?
 
         // Set the current semester displayed in the SidebarVC - might want to remeber last selected semester
         self.semesterToday = Semester.produceSemester(during: Date(), createIfNecessary: true)!
         
+        Alert.masterViewController = self
+        
+        AppDelegate.scheduleAssistant = ScheduleAssistant(masterController: self)
+        
         let queueGroup = DispatchGroup()
         queueGroup.enter()
         DispatchQueue.global().async {
-            
-            Alert.masterViewController = self
-            
-            AppDelegate.scheduleAssistant = ScheduleAssistant(masterController: self)
             
             let during = self.semesterToday.duringCourse()
             
@@ -53,6 +54,9 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
                         semesterToUse = self.semesterToday
                     } else if AppPreference.rememberLastCourse, let course = AppPreference.previouslyOpenedCourse{
                         courseToUse = course
+                        if AppPreference.rememberLastLecture, let lecture = AppPreference.previouslyOpenedLecture {
+                            lectureToUse = lecture
+                        }
                     }
                 } else {
                     semesterToUse = self.semesterToday
@@ -65,6 +69,9 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
             self.setDate(semester: semesterToUse)
             self.selectedCourse = courseToUse
             self.scrollToSemesterVCIfValid()
+            if lectureToUse != nil {
+                self.displayLectureEditor(for: lectureToUse!)
+            }
         })
     }
     override func viewDidAppear() {
@@ -82,8 +89,6 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
         
         scheduleBox.selectionDelegate = self
         
-        // Listen for window resizes
-        NotificationCenter.default.addObserver(self, selector: #selector(checkMagnetRegion), name: .NSWindowDidResize, object: self.view.window!)
     }
     
     override func viewWillDisappear() {
@@ -91,6 +96,11 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
 
         AppPreference.previouslyOpenedCourse = selectedCourse
         AppPreference.previouslyOpenedSemester = selectedSemester
+        if lectureEditorVC != nil {
+            AppPreference.previouslyOpenedLecture = lectureEditorVC.selectedLecture
+        } else {
+            AppPreference.previouslyOpenedLecture = nil
+        }
         
         CFPreferencesAppSynchronize(kCFPreferencesCurrentApplication)
         
@@ -412,16 +422,6 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
         NSAnimationContext.endGrouping()
     }
     
-//    private func pushScheduler(semester: Semester) {
-//        print("push")
-//        schedulerViewController = SchedulerViewController(nibName: "HXScheduler", bundle: nil)!
-//        self.addChildViewController(schedulerViewController)
-//        splitView_content.addSubview(schedulerViewController.view)
-//        schedulerViewController.view.frame = splitView_content.bounds
-//        schedulerViewController.view.autoresizingMask = [.viewWidthSizable, .viewHeightSizable]
-//        schedulerViewController.initialize(with: semester)
-//    }
-    
     // MARK: ––– Sidebar Visuals –––
     
     @IBOutlet weak var editBox: NSBox!
@@ -430,16 +430,16 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
     
     func collapseTitlebar() {
         editBoxTopConstraint.constant = 0
+        if lectureEditorVC != nil {
+            if lectureEditorVC.selectedLecture != nil {
+                lectureEditorVC.topBarHeightConstraint.constant = 0
+            }
+        }
     }
     func revealTitlebar() {
         editBoxTopConstraint.constant = DEFAULT_TOP_CONSTRAINT
+        lectureEditorVC.topBarHeightConstraint.constant = DEFAULT_TOP_CONSTRAINT + 1
     }
-    
-    @IBOutlet weak var sidebarRevealButton: NSButton!
-    @IBAction func action_revealSidebar(_ sender: Any) {
-        
-    }
-    
     
     // MARK: ––– Semester Selection –––
     
@@ -487,12 +487,6 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
             guard let sidebar = sidebarPageController else { return }
             sidebar.selectedIndex = 0
             sidebarSchedulingNeedsPopulating(sidebar.schedulerVC)
-            
-            print("Semester selected \(selectedSemester.title!), \(selectedSemester.year)")
-            print("  Earliest start date for this semester is \(selectedSemester.earliestStart)")
-            print("  Latest start date for this semester is \(selectedSemester.latestStart)")
-            print("    Earliest end date for this semester is \(selectedSemester.earliestEnd)")
-            print("    Latest end date for this semester is \(selectedSemester.latestEnd)")
         }
     }
     /// The semester currently happening in real time. Initialized at app launch.
@@ -585,32 +579,6 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
 //        updateDate()
     }
     
-    // MARK: ––– Window Magnet Functionality –––
-
-    /// Performed as Window is being resized.
-    func checkMagnetRegion() {
-        
-        if lectureEditorVC == nil || !self.view.window!.inLiveResize || pref != nil || !AppPreference.magnetizedEditor {
-            return
-        }
-        
-        let sidebarWidth = sidebarPageController.view.frame.width
-        let windowWidth = self.view.window!.frame.width
-        let mouseX = self.view.window!.mouseLocationOutsideOfEventStream.x
-        
-        let MAX_LECTURE_EDITOR_WIDTH: CGFloat = 800
-        let MAGNET_REGION: CGFloat = 30
-        
-        if windowWidth >= (MAX_LECTURE_EDITOR_WIDTH + sidebarWidth) {
-            
-            if mouseX >= MAX_LECTURE_EDITOR_WIDTH + sidebarWidth + MAGNET_REGION {
-                self.view.window!.setContentSize(NSSize(width: mouseX, height: self.view.frame.height))
-            } else {
-                self.view.window!.setContentSize(NSSize(width: MAX_LECTURE_EDITOR_WIDTH + sidebarWidth, height: self.view.frame.height))
-            }
-        }
-    }
-    
     // MARK: ––– Notifiers –––
     
     ///
@@ -668,9 +636,6 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
         didSet {
             if selectedCourse != nil {
                 selectedCourse.fillAbsentLectures()
-                print("selectedCourse: \(selectedCourse.title!)")
-            } else {
-                print("selectedCourse: nil")
             }
         }
     }
@@ -680,21 +645,53 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
     @IBOutlet weak var splitViewMinWidth: NSLayoutConstraint!
     @IBOutlet weak var splitViewMaxWidth: NSLayoutConstraint!
     @IBOutlet weak var splitViewTrailing: NSLayoutConstraint!
+    var viewMinWidthConstraint: NSLayoutConstraint!
+    var viewMaxWidthConstraint: NSLayoutConstraint!
     var isSidebarOnly = false {
         didSet {
             if isSidebarOnly == oldValue {
                 return
             }
             if isSidebarOnly {
-                splitViewMinWidth.constant = 150
-                splitViewTrailing.constant = -(splitView_content.frame.width)
+
+                viewMinWidthConstraint = self.view.widthAnchor.constraint(greaterThanOrEqualToConstant: 150)
+                viewMinWidthConstraint.isActive = true
+                
+                splitViewMaxWidth.constant = splitView.frame.width
+                splitViewMinWidth.constant = splitView.frame.width
+                splitViewTrailing.isActive = false
                 view.window?.setContentSize(NSSize(width: splitView_sidebar.frame.width, height: view.frame.height))
-                //            splitViewMaxWidth.constant = 350
+
+                viewMaxWidthConstraint = self.view.widthAnchor.constraint(lessThanOrEqualToConstant: 350)
+                viewMaxWidthConstraint.isActive = true
             } else {
-                splitViewMinWidth.constant = 600
-                view.window?.setContentSize(NSSize(width: splitView_sidebar.frame.width + splitView_content.frame.width, height: view.frame.height))
-                splitViewTrailing.constant = 0
+                viewMinWidthConstraint.isActive = false
+                viewMaxWidthConstraint.isActive = false
                 splitViewMaxWidth.constant = 10000
+                
+                let mainScreen = NSScreen.main()
+                let screenDescrip = mainScreen?.deviceDescription
+                let screenSize = screenDescrip?[NSDeviceSize] as! NSSize
+                
+                // Limits width reset to be within screen bounds
+                var adjustedWidth = splitView_sidebar.frame.width + splitView_content.frame.width + 2
+                var extra = adjustedWidth + self.view.window!.frame.origin.x - screenSize.width
+                adjustedWidth -= max(0, extra)
+                
+                if adjustedWidth < 600 {
+                    adjustedWidth = 600
+                    extra = adjustedWidth + self.view.window!.frame.origin.x - screenSize.width
+                    if extra > 0 {
+                        view.window?.setFrameOrigin(NSPoint(x: (view.window?.frame.origin.x)! - extra, y: (view.window?.frame.origin.y)!))
+                    }
+
+                }
+
+                view.window?.setContentSize(NSSize(width: adjustedWidth, height: view.frame.height))
+                
+                splitViewMinWidth.constant = 600
+                splitViewTrailing = splitView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor)
+                splitViewTrailing.isActive = true
             }
         }
     }
@@ -720,7 +717,16 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
         return true
     }
     func splitViewDidResizeSubviews(_ notification: Notification) {
-        print("That worked?")
+        sidebarCollapsed = splitView.isSubviewCollapsed(splitView_sidebar)
+    }
+    var sidebarCollapsed = false {
+        didSet { 
+            if sidebarCollapsed {
+                appDelegate.sidebarMenuItem.title = "Show Sidebar"
+            } else {
+                appDelegate.sidebarMenuItem.title = "Hide Sidebar"
+            }
+        }
     }
     
     func splitView(_ splitView: NSSplitView, shouldAdjustSizeOfSubview view: NSView) -> Bool {

@@ -96,15 +96,11 @@ class SemesterPageViewController: NSViewController, NSSplitViewDelegate {
     override func viewDidAppear() {
         super.viewDidAppear()
         
-        print("SemesterVC - viewDidAppear")
-        
         sidebarDelegate?.sidebarSemesterNeedsPopulating(self)
     }
     
     override func viewWillDisappear() {
         super.viewWillDisappear()
-        
-        print("SemesterVC - viewWillDisappear")
     }
     
     // MARK: - Populating Courses

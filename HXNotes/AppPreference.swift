@@ -301,6 +301,62 @@ class AppPreference {
     }
     
     // MARK: -
+    public static var previouslyOpenedSemester: Semester? {
+        set {
+            if newValue == nil {
+                CFPreferencesSetAppValue("previouslyOpenedSemester" as CFString,
+                                         "nil" as CFString, kCFPreferencesCurrentApplication)
+            } else {
+                CFPreferencesSetAppValue("previouslyOpenedSemester" as CFString,
+                                         "\(newValue!.title!):\(newValue!.year)" as CFString, kCFPreferencesCurrentApplication)
+            }
+        }
+        get {
+            CFPreferencesAppSynchronize(kCFPreferencesCurrentApplication)
+            if let pref = CFPreferencesCopyAppValue("previouslyOpenedSemester" as CFString, kCFPreferencesCurrentApplication) as? String {
+                if pref == "nil" {
+                    return nil
+                }
+                if let index = pref.range(of: ":") {
+                    let title = pref.substring(to: index.lowerBound)
+                    let year = pref.substring(from: index.upperBound)
+                    
+                    return Semester.produceSemester(titled: title, in: Int(year)!)
+                }
+                return nil
+                
+            } else {
+                return Semester.produceSemester(during: Date(), createIfNecessary: true)!
+            }
+        }
+    }
+    
+    // MARK: -
+    private static var cached_openLastSemester: Bool!
+    public static var openLastSemester: Bool {
+        set {
+            if cached_openLastSemester != nil && cached_openLastSemester == newValue { return }
+            
+            cached_openLastSemester = newValue
+            CFPreferencesSetAppValue("openLastSemester" as CFString,
+                                     newValue as CFBoolean, kCFPreferencesCurrentApplication)
+        }
+        get {
+            if cached_openLastSemester != nil {
+                return cached_openLastSemester!
+            }
+            CFPreferencesAppSynchronize(kCFPreferencesCurrentApplication)
+            if let pref = CFPreferencesCopyAppValue("openLastSemester" as CFString, kCFPreferencesCurrentApplication) as? Bool {
+                cached_openLastSemester = pref
+            } else {
+                // Setup default
+                self.openLastSemester = true
+            }
+            return cached_openLastSemester
+        }
+    }
+    
+    // MARK: -
     public static var previouslyOpenedCourse: Course? {
         set {
             if newValue == nil {
@@ -352,60 +408,60 @@ class AppPreference {
     }
     
     // MARK: -
-    public static var previouslyOpenedSemester: Semester? {
+    public static var previouslyOpenedLecture: Lecture? {
         set {
             if newValue == nil {
-                CFPreferencesSetAppValue("previouslyOpenedSemester" as CFString,
-                                         "nil" as CFString, kCFPreferencesCurrentApplication)
+                CFPreferencesSetAppValue("previouslyOpenedLecture" as CFString,
+                                         nil, kCFPreferencesCurrentApplication)
             } else {
-                CFPreferencesSetAppValue("previouslyOpenedSemester" as CFString,
-                                         "\(newValue!.title!):\(newValue!.year)" as CFString, kCFPreferencesCurrentApplication)
+                CFPreferencesSetAppValue("previouslyOpenedLecture" as CFString,
+                                         "\(newValue!.number)" as CFString, kCFPreferencesCurrentApplication)
+                previouslyOpenedCourse = newValue!.course!
             }
-            
         }
         get {
             CFPreferencesAppSynchronize(kCFPreferencesCurrentApplication)
-            if let pref = CFPreferencesCopyAppValue("previouslyOpenedSemester" as CFString, kCFPreferencesCurrentApplication) as? String {
+            if let pref = CFPreferencesCopyAppValue("previouslyOpenedLecture" as CFString, kCFPreferencesCurrentApplication) as? String {
                 if pref == "nil" {
                     return nil
                 }
-                if let index = pref.range(of: ":") {
-                    let title = pref.substring(to: index.lowerBound)
-                    let year = pref.substring(from: index.upperBound)
-                    print(" Parsing : \(title) - \(year)")
-                    
-                    return Semester.produceSemester(titled: title, in: Int(year)!)
+                if previouslyOpenedCourse != nil {
+                    if let lecNumber = Int(pref) {
+                        return previouslyOpenedCourse!.retrieveLecture(numbered: lecNumber)
+                    } else {
+                        return nil
+                    }
+                } else {
+                    return nil
                 }
-                return nil
-                
             } else {
-                return Semester.produceSemester(during: Date(), createIfNecessary: true)!
+                return nil
             }
         }
     }
     
     // MARK: -
-    private static var cached_openLastSemester: Bool!
-    public static var openLastSemester: Bool {
+    private static var cached_rememberLastLecture: Bool!
+    public static var rememberLastLecture: Bool {
         set {
-            if cached_openLastSemester != nil && cached_openLastSemester == newValue { return }
+            if cached_rememberLastLecture != nil && cached_rememberLastLecture == newValue { return }
             
-            cached_openLastSemester = newValue
-            CFPreferencesSetAppValue("openLastSemester" as CFString,
+            cached_rememberLastLecture = newValue
+            CFPreferencesSetAppValue("rememberLastLecture" as CFString,
                                      newValue as CFBoolean, kCFPreferencesCurrentApplication)
         }
         get {
-            if cached_openLastSemester != nil {
-                return cached_openLastSemester!
+            if cached_rememberLastLecture != nil {
+                return cached_rememberLastLecture!
             }
             CFPreferencesAppSynchronize(kCFPreferencesCurrentApplication)
-            if let pref = CFPreferencesCopyAppValue("openLastSemester" as CFString, kCFPreferencesCurrentApplication) as? Bool {
-                cached_openLastSemester = pref
+            if let pref = CFPreferencesCopyAppValue("rememberLastLecture" as CFString, kCFPreferencesCurrentApplication) as? Bool {
+                cached_rememberLastLecture = pref
             } else {
                 // Setup default
-                self.openLastSemester = true
+                self.rememberLastLecture = true
             }
-            return cached_openLastSemester
+            return cached_rememberLastLecture
         }
     }
     
@@ -540,7 +596,6 @@ class AppPreference {
     private static var cached_defaultFallDateRange: ClosedRange<Date>!
     public static var defaultFallDateRange: ClosedRange<Date> {
         set {
-            print("Storing new value to defaultFallDateRange: \(newValue.lowerBound) to \(newValue.upperBound)")
             if cached_defaultFallDateRange != nil && cached_defaultFallDateRange == newValue { return }
             
             cached_defaultFallDateRange = newValue
@@ -551,7 +606,6 @@ class AppPreference {
         }
         get {
             if cached_defaultFallDateRange != nil {
-                print("defaultFallDateRange Value was cached.")
                 return cached_defaultFallDateRange!
             }
             CFPreferencesAppSynchronize(kCFPreferencesCurrentApplication)
@@ -679,31 +733,6 @@ class AppPreference {
                 self.showCurrentTime = true
             }
             return cached_showCurrentTime
-        }
-    }
-    
-    // MARK: -
-    private static var cached_magnetizedEditor: Bool!
-    public static var magnetizedEditor: Bool {
-        set {
-            if cached_magnetizedEditor != nil && cached_magnetizedEditor == newValue { return }
-            
-            cached_magnetizedEditor = newValue
-            CFPreferencesSetAppValue("magnetizedEditor" as CFString,
-                                     newValue as CFBoolean, kCFPreferencesCurrentApplication)
-        }
-        get {
-            if cached_magnetizedEditor != nil {
-                return cached_magnetizedEditor!
-            }
-            CFPreferencesAppSynchronize(kCFPreferencesCurrentApplication)
-            if let pref = CFPreferencesCopyAppValue("magnetizedEditor" as CFString, kCFPreferencesCurrentApplication) as? Bool {
-                cached_magnetizedEditor = pref
-            } else {
-                // Setup default
-                self.magnetizedEditor = true
-            }
-            return cached_magnetizedEditor
         }
     }
 }

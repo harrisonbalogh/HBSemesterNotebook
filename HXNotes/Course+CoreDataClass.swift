@@ -137,6 +137,16 @@ public class Course: NSManagedObject {
         // no lecture
         return nil
     }
+    /// Return the lecture with the given number, or nil if it doesn't exist.
+    func retrieveLecture(numbered: Int) -> Lecture? {
+        
+        // This func assumes course timeslots are sorted.
+        if self.needsSort {
+            self.sortTimeSlots()
+        }
+        
+        return lectures!.object(at: (numbered-1)) as? Lecture
+    }
     
     /// Retrieves the course with unique name for this semester. Return nil if
     /// course not found. Will not return work that has been marked as completed.

@@ -26,6 +26,7 @@ class PreferencesViewController: NSViewController {
     @IBOutlet weak var checkBoxBackgroundRun: NSButton!
     @IBOutlet weak var checkBoxRememberLastSemester: NSButton!
     @IBOutlet weak var checkBoxRememberLastCourse: NSButton!
+    @IBOutlet weak var checkBoxRememberLastLecture: NSButton!
     @IBOutlet weak var checkBoxLaunchCurrentlyHappening: NSButton!
     
     @IBAction func action_launchWithSystem(_ sender: NSButton) {
@@ -50,10 +51,29 @@ class PreferencesViewController: NSViewController {
             checkBoxRememberLastCourse.isEnabled = true
             if AppPreference.rememberLastCourse {
                 checkBoxRememberLastCourse.state = NSOnState
+                checkBoxRememberLastLecture.isEnabled = true
+                if AppPreference.rememberLastLecture {
+                    checkBoxRememberLastLecture.state = NSOnState
+                }
+            } else {
+                checkBoxRememberLastLecture.isEnabled = false
             }
         } else {
             checkBoxRememberLastCourse.isEnabled = false
             checkBoxRememberLastCourse.state = NSOffState
+            checkBoxRememberLastLecture.isEnabled = false
+            checkBoxRememberLastLecture.state = NSOffState
+        }
+    }
+    @IBAction func action_rememberLastCourse(_ sender: NSButton) {
+        if sender.state == NSOnState {
+            checkBoxRememberLastLecture.isEnabled = true
+            if AppPreference.rememberLastLecture {
+                checkBoxRememberLastLecture.state = NSOnState
+            }
+        } else {
+            checkBoxRememberLastLecture.isEnabled = false
+            checkBoxRememberLastLecture.state = NSOffState
         }
     }
     
@@ -65,7 +85,6 @@ class PreferencesViewController: NSViewController {
     @IBOutlet weak var labelAutoScrollPercent: NSTextField!
     @IBOutlet weak var sliderBottomBufferSpace: NSSlider!
     @IBOutlet weak var labelBottomBufferSpace: NSTextField!
-    @IBOutlet weak var checkBoxMagnetizedEffect: NSButton!
     
     @IBAction func action_toggleAutoScroll(_ sender: NSButton) {
         if sender.state == NSOnState {
@@ -219,10 +238,10 @@ class PreferencesViewController: NSViewController {
         if let bufferTime = Int(textFieldTimeslotBufferTime.stringValue) {
             AppPreference.bufferTimeBetweenCoursesMinutes = bufferTime
         }
-        AppPreference.magnetizedEditor = checkBoxMagnetizedEffect.state == NSOnState
         AppPreference.showCurrentTime = checkBoxCurrentTimeScheduler.state == NSOnState
         AppPreference.openLastSemester = checkBoxRememberLastSemester.state == NSOnState
         AppPreference.rememberLastCourse = checkBoxRememberLastCourse.state == NSOnState
+        AppPreference.rememberLastLecture = checkBoxRememberLastLecture.state == NSOnState
         AppPreference.assumeSingleSelection = (checkBoxSingleCourseSelect.state == NSOnState)
         if toggleAssumeComplete.state == NSOnState {
             if let days = Int(textFieldAssumeCompleteDays.stringValue),
@@ -271,11 +290,6 @@ class PreferencesViewController: NSViewController {
         } else {
             checkBoxAutoScroll.state = NSOffState
         }
-        if AppPreference.magnetizedEditor {
-            checkBoxMagnetizedEffect.state = NSOnState
-        } else {
-            checkBoxMagnetizedEffect.state = NSOffState
-        }
         if AppPreference.launchWithHappeningCourse {
             checkBoxLaunchCurrentlyHappening.state = NSOnState
         } else {
@@ -285,14 +299,24 @@ class PreferencesViewController: NSViewController {
             checkBoxRememberLastSemester.state = NSOnState
             checkBoxRememberLastCourse.isEnabled = true
             if AppPreference.rememberLastCourse {
+                checkBoxRememberLastLecture.isEnabled = true
                 checkBoxRememberLastCourse.state = NSOnState
+                if AppPreference.rememberLastLecture {
+                    checkBoxRememberLastLecture.state = NSOnState
+                } else {
+                    checkBoxRememberLastLecture.state = NSOffState
+                }
             } else {
                 checkBoxRememberLastCourse.state = NSOffState
+                checkBoxRememberLastLecture.state = NSOffState
+                checkBoxRememberLastLecture.isEnabled = false
             }
         } else {
             checkBoxRememberLastSemester.state = NSOffState
             checkBoxRememberLastCourse.isEnabled = false
             checkBoxRememberLastCourse.state = NSOffState
+            checkBoxRememberLastLecture.isEnabled = false
+            checkBoxRememberLastLecture.state = NSOffState
         }
         if AppPreference.showCurrentTime {
             checkBoxCurrentTimeScheduler.state = NSOnState

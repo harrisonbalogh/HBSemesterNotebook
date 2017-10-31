@@ -267,5 +267,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             content.notifyPrint()
         }
     }
+    ///
+    @IBOutlet weak var sidebarMenuItem: NSMenuItem!
+    @IBAction func showSidebar(_ sender: NSMenuItem) {
+        if let content = NSApp.keyWindow?.contentViewController as? MasterViewController {
+            if content.sidebarCollapsed {
+                content.splitView.setPosition(151, ofDividerAt: 0)
+            } else {
+                content.splitView.setPosition(0, ofDividerAt: 0)
+            }
+        }
+    }
 }
 

@@ -33,12 +33,12 @@ class CourseDocsBox: NSBox {
         let url = URL(fileURLWithPath: path.absoluteString)
         labelFileName.stringValue = url.lastPathComponent.removingPercentEncoding!
         do {
-            let attrs = try FileManager.default.attributesOfItem(atPath: path.relativeString) as NSDictionary
+            let attrs = try FileManager.default.attributesOfItem(atPath: path.relativePath) as NSDictionary
             let creationDate = attrs.fileCreationDate()!
             let cal = Calendar.current
             labelDate.stringValue = "\(cal.component(.month, from: creationDate))/\(cal.component(.day, from: creationDate))/\(cal.component(.year, from: creationDate))"
         } catch {
-            Swift.print("Nope!")
+            Swift.print("CourseDocsBox failed: \(path.relativePath)")
         }
     }
     

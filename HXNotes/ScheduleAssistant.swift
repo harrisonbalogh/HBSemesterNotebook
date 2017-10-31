@@ -23,7 +23,7 @@ class ScheduleAssistant: NSObject {
         masterVC = masterController
         
         // Start minute checks
-        let minuteComponent = Calendar.current.component(.minute, from: Date())
+        let minuteComponent = Calendar.current.component(.second, from: Date())
         self.perform(#selector(self.notifyMinute), with: nil, afterDelay: Double(60 - minuteComponent))
     }
     
@@ -32,19 +32,20 @@ class ScheduleAssistant: NSObject {
     /// Check for upcoming courses - should be adjustable in settings. This is used to
     /// provide an alert that a course will be starting in x minutes.
     func checkFuture() {
-
-        // Continue only if we can get the current semester and if a course will happen in future
-        guard
-            let currentSemester = Semester.produceSemester(during: Date(), createIfNecessary: false),
-            let futureTimeSlot = currentSemester.futureTimeSlot()
-            else { return }
         
-        let hour = NSCalendar.current.component(.hour, from: Date())
+        // Alerts only occur at 5 minute markers: 5,10,15,20,etc
         let minute = NSCalendar.current.component(.minute, from: Date())
-        
         if minute % 5 == 0 {
             
-            let timeTill = Int(futureTimeSlot.startMinute % 60) - minute
+            // Continue only if we can get the current semester and if a course will happen in future
+            guard
+                let currentSemester = Semester.produceSemester(during: Date(), createIfNecessary: false),
+                let futureTimeSlot = currentSemester.futureTimeSlot()
+                else { return }
+            
+            let hour = NSCalendar.current.component(.hour, from: Date())
+            
+            let timeTill = futureTimeSlot.startMinute - (hour*60 + minute)
             
             let _ = Alert(hour: hour, minute: minute, course: futureTimeSlot.course!, content: "lecture \(futureTimeSlot.course!.theoreticalLectureCount())is starting in \(timeTill) minutes.", question: nil, deny: "Close", action: nil, target: nil, type: .future)
         }
@@ -151,7 +152,7 @@ class ScheduleAssistant: NSObject {
         self.perform(#selector(self.notifyMinute), with: nil, afterDelay: TimeInterval(remainingMinute))
         // Place below anything to happen on the minute marker...
         
-//        checkFuture()
+        checkFuture()
         checkHappening()
 //        checkMissed()
         
