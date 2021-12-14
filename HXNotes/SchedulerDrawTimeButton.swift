@@ -13,7 +13,7 @@ class SchedulerDrawTimeButton: NSButton {
     override func draw(_ dirtyRect: NSRect) {
         super.draw(dirtyRect)
 
-        if !NSGraphicsContext.current()!.isDrawingToScreen {
+        if !NSGraphicsContext.current!.isDrawingToScreen {
             let bezPath = NSBezierPath(rect: NSRect(x: 0, y: 0, width: self.frame.width, height: self.frame.height))
             NSColor.white.setFill()
             bezPath.fill()

@@ -33,7 +33,7 @@ class PreferencesViewController: NSViewController {
         
     }
     @IBAction func action_menuBar(_ sender: NSButton) {
-        if sender.state == NSOnState {
+        if sender.state == NSControl.StateValue.on {
             if let appDel = NSApp.delegate as? AppDelegate {
                 appDel.createMenuBarIcon()
             }
@@ -47,33 +47,33 @@ class PreferencesViewController: NSViewController {
         
     }
     @IBAction func action_rememberLastSemester(_ sender: NSButton) {
-        if sender.state == NSOnState {
+        if sender.state == NSControl.StateValue.on {
             checkBoxRememberLastCourse.isEnabled = true
             if AppPreference.rememberLastCourse {
-                checkBoxRememberLastCourse.state = NSOnState
+                checkBoxRememberLastCourse.state = NSControl.StateValue.on
                 checkBoxRememberLastLecture.isEnabled = true
                 if AppPreference.rememberLastLecture {
-                    checkBoxRememberLastLecture.state = NSOnState
+                    checkBoxRememberLastLecture.state = NSControl.StateValue.on
                 }
             } else {
                 checkBoxRememberLastLecture.isEnabled = false
             }
         } else {
             checkBoxRememberLastCourse.isEnabled = false
-            checkBoxRememberLastCourse.state = NSOffState
+            checkBoxRememberLastCourse.state = NSControl.StateValue.off
             checkBoxRememberLastLecture.isEnabled = false
-            checkBoxRememberLastLecture.state = NSOffState
+            checkBoxRememberLastLecture.state = NSControl.StateValue.off
         }
     }
     @IBAction func action_rememberLastCourse(_ sender: NSButton) {
-        if sender.state == NSOnState {
+        if sender.state == NSControl.StateValue.on {
             checkBoxRememberLastLecture.isEnabled = true
             if AppPreference.rememberLastLecture {
-                checkBoxRememberLastLecture.state = NSOnState
+                checkBoxRememberLastLecture.state = NSControl.StateValue.on
             }
         } else {
             checkBoxRememberLastLecture.isEnabled = false
-            checkBoxRememberLastLecture.state = NSOffState
+            checkBoxRememberLastLecture.state = NSControl.StateValue.off
         }
     }
     
@@ -87,7 +87,7 @@ class PreferencesViewController: NSViewController {
     @IBOutlet weak var labelBottomBufferSpace: NSTextField!
     
     @IBAction func action_toggleAutoScroll(_ sender: NSButton) {
-        if sender.state == NSOnState {
+        if sender.state == NSControl.StateValue.on {
             sliderAutoScrollPercent.isEnabled = true
             labelAutoScrollPercent.alphaValue = 1
         } else {
@@ -170,7 +170,7 @@ class PreferencesViewController: NSViewController {
     @IBOutlet weak var toggleAssumeComplete: NSButton!
     
     @IBAction func action_AssumeTaken(_ sender: NSButton) {
-        if sender.state == NSOnState {
+        if sender.state == NSControl.StateValue.on {
             textFieldAssumeTakenDays.isEnabled = true
             textFieldAssumeTakenHours.isEnabled = true
             textFieldAssumeTakenMinutes.isEnabled = true
@@ -181,7 +181,7 @@ class PreferencesViewController: NSViewController {
         }
     }
     @IBAction func action_AssumeComplete(_ sender: NSButton) {
-        if sender.state == NSOnState {
+        if sender.state == NSControl.StateValue.on {
             textFieldAssumeCompleteDays.isEnabled = true
             textFieldAssumeCompleteHours.isEnabled = true
             textFieldAssumeCompleteMinutes.isEnabled = true
@@ -212,23 +212,23 @@ class PreferencesViewController: NSViewController {
         }
         
         // Save preferences
-        AppPreference.autoScroll = (checkBoxAutoScroll.state == NSOnState)
+        AppPreference.autoScroll = (checkBoxAutoScroll.state == NSControl.StateValue.on)
         AppPreference.autoScrollPositionPercent = Int(sliderAutoScrollPercent.doubleValue)
         AppPreference.bottomBufferSpace = Int(sliderBottomBufferSpace.doubleValue)
-        AppPreference.launchWithSystem = (checkBoxLaunchWithSystem.state == NSOnState)
-        AppPreference.launchWithHappeningCourse = (checkBoxLaunchCurrentlyHappening.state == NSOnState)
-        AppPreference.showInMenuBar = (checkBoxMenuBar.state == NSOnState)
-        AppPreference.runAfterClose = (checkBoxBackgroundRun.state == NSOnState)
+        AppPreference.launchWithSystem = (checkBoxLaunchWithSystem.state == NSControl.StateValue.on)
+        AppPreference.launchWithHappeningCourse = (checkBoxLaunchCurrentlyHappening.state == NSControl.StateValue.on)
+        AppPreference.showInMenuBar = (checkBoxMenuBar.state == NSControl.StateValue.on)
+        AppPreference.runAfterClose = (checkBoxBackgroundRun.state == NSControl.StateValue.on)
         if let alertTime = Int(textFieldLectureAlertTime.stringValue) {
             AppPreference.futureAlertTimeMinutes = alertTime
         }
-        if radioButtonAlways.state == NSOnState {
+        if radioButtonAlways.state == NSControl.StateValue.on {
             AppPreference.courseDeletionConfirmation = .ALWAYS
-        } else if radioButtonNoLectures.state == NSOnState {
+        } else if radioButtonNoLectures.state == NSControl.StateValue.on {
             AppPreference.courseDeletionConfirmation = .NO_LECTURES
-        } else if radioButtonNoTimeslots.state == NSOnState {
+        } else if radioButtonNoTimeslots.state == NSControl.StateValue.on {
             AppPreference.courseDeletionConfirmation = .NO_TIMESLOTS
-        } else if radioButtonNever.state == NSOnState {
+        } else if radioButtonNever.state == NSControl.StateValue.on {
             AppPreference.courseDeletionConfirmation = .NEVER
         }
         
@@ -238,12 +238,12 @@ class PreferencesViewController: NSViewController {
         if let bufferTime = Int(textFieldTimeslotBufferTime.stringValue) {
             AppPreference.bufferTimeBetweenCoursesMinutes = bufferTime
         }
-        AppPreference.showCurrentTime = checkBoxCurrentTimeScheduler.state == NSOnState
-        AppPreference.openLastSemester = checkBoxRememberLastSemester.state == NSOnState
-        AppPreference.rememberLastCourse = checkBoxRememberLastCourse.state == NSOnState
-        AppPreference.rememberLastLecture = checkBoxRememberLastLecture.state == NSOnState
-        AppPreference.assumeSingleSelection = (checkBoxSingleCourseSelect.state == NSOnState)
-        if toggleAssumeComplete.state == NSOnState {
+        AppPreference.showCurrentTime = checkBoxCurrentTimeScheduler.state == NSControl.StateValue.on
+        AppPreference.openLastSemester = checkBoxRememberLastSemester.state == NSControl.StateValue.on
+        AppPreference.rememberLastCourse = checkBoxRememberLastCourse.state == NSControl.StateValue.on
+        AppPreference.rememberLastLecture = checkBoxRememberLastLecture.state == NSControl.StateValue.on
+        AppPreference.assumeSingleSelection = (checkBoxSingleCourseSelect.state == NSControl.StateValue.on)
+        if toggleAssumeComplete.state == NSControl.StateValue.on {
             if let days = Int(textFieldAssumeCompleteDays.stringValue),
                 let hours = Int(textFieldAssumeCompleteHours.stringValue),
                 let mins = Int(textFieldAssumeCompleteMinutes.stringValue) {
@@ -252,7 +252,7 @@ class PreferencesViewController: NSViewController {
         } else {
             AppPreference.assumePassedCompletion = "nil"
         }
-        if toggleAssumeTaken.state == NSOnState {
+        if toggleAssumeTaken.state == NSControl.StateValue.on {
             if let days = Int(textFieldAssumeTakenDays.stringValue),
                 let hours = Int(textFieldAssumeTakenHours.stringValue),
                 let mins = Int(textFieldAssumeTakenMinutes.stringValue) {
@@ -261,7 +261,7 @@ class PreferencesViewController: NSViewController {
         } else {
             AppPreference.assumePassedTaken = "nil"
         }
-        AppPreference.assumeRecentLecture = (checkBoxRecentLecture.state == NSOnState)
+        AppPreference.assumeRecentLecture = (checkBoxRecentLecture.state == NSControl.StateValue.on)
 
         CFPreferencesAppSynchronize(kCFPreferencesCurrentApplication)
     }
@@ -271,57 +271,57 @@ class PreferencesViewController: NSViewController {
         
         // Load preferences
         if AppPreference.launchWithSystem {
-            checkBoxLaunchWithSystem.state = NSOnState
+            checkBoxLaunchWithSystem.state = NSControl.StateValue.on
         } else {
-            checkBoxLaunchWithSystem.state = NSOffState
+            checkBoxLaunchWithSystem.state = NSControl.StateValue.off
         }
         if AppPreference.showInMenuBar {
-            checkBoxMenuBar.state = NSOnState
+            checkBoxMenuBar.state = NSControl.StateValue.on
         } else {
-            checkBoxMenuBar.state = NSOffState
+            checkBoxMenuBar.state = NSControl.StateValue.off
         }
         if AppPreference.runAfterClose {
-            checkBoxBackgroundRun.state = NSOnState
+            checkBoxBackgroundRun.state = NSControl.StateValue.on
         } else {
-            checkBoxBackgroundRun.state = NSOffState
+            checkBoxBackgroundRun.state = NSControl.StateValue.off
         }
         if AppPreference.autoScroll {
-            checkBoxAutoScroll.state = NSOnState
+            checkBoxAutoScroll.state = NSControl.StateValue.on
         } else {
-            checkBoxAutoScroll.state = NSOffState
+            checkBoxAutoScroll.state = NSControl.StateValue.off
         }
         if AppPreference.launchWithHappeningCourse {
-            checkBoxLaunchCurrentlyHappening.state = NSOnState
+            checkBoxLaunchCurrentlyHappening.state = NSControl.StateValue.on
         } else {
-            checkBoxLaunchCurrentlyHappening.state = NSOffState
+            checkBoxLaunchCurrentlyHappening.state = NSControl.StateValue.off
         }
         if AppPreference.openLastSemester {
-            checkBoxRememberLastSemester.state = NSOnState
+            checkBoxRememberLastSemester.state = NSControl.StateValue.on
             checkBoxRememberLastCourse.isEnabled = true
             if AppPreference.rememberLastCourse {
                 checkBoxRememberLastLecture.isEnabled = true
-                checkBoxRememberLastCourse.state = NSOnState
+                checkBoxRememberLastCourse.state = NSControl.StateValue.on
                 if AppPreference.rememberLastLecture {
-                    checkBoxRememberLastLecture.state = NSOnState
+                    checkBoxRememberLastLecture.state = NSControl.StateValue.on
                 } else {
-                    checkBoxRememberLastLecture.state = NSOffState
+                    checkBoxRememberLastLecture.state = NSControl.StateValue.off
                 }
             } else {
-                checkBoxRememberLastCourse.state = NSOffState
-                checkBoxRememberLastLecture.state = NSOffState
+                checkBoxRememberLastCourse.state = NSControl.StateValue.off
+                checkBoxRememberLastLecture.state = NSControl.StateValue.off
                 checkBoxRememberLastLecture.isEnabled = false
             }
         } else {
-            checkBoxRememberLastSemester.state = NSOffState
+            checkBoxRememberLastSemester.state = NSControl.StateValue.off
             checkBoxRememberLastCourse.isEnabled = false
-            checkBoxRememberLastCourse.state = NSOffState
+            checkBoxRememberLastCourse.state = NSControl.StateValue.off
             checkBoxRememberLastLecture.isEnabled = false
-            checkBoxRememberLastLecture.state = NSOffState
+            checkBoxRememberLastLecture.state = NSControl.StateValue.off
         }
         if AppPreference.showCurrentTime {
-            checkBoxCurrentTimeScheduler.state = NSOnState
+            checkBoxCurrentTimeScheduler.state = NSControl.StateValue.on
         } else {
-            checkBoxCurrentTimeScheduler.state = NSOffState
+            checkBoxCurrentTimeScheduler.state = NSControl.StateValue.off
         }
         sliderAutoScrollPercent.isEnabled = AppPreference.autoScroll
         sliderAutoScrollPercent.doubleValue = Double(AppPreference.autoScrollPositionPercent)
@@ -329,25 +329,25 @@ class PreferencesViewController: NSViewController {
         sliderBottomBufferSpace.doubleValue = Double(AppPreference.bottomBufferSpace)
         labelBottomBufferSpace.stringValue = "\(Int(clipView.enclosingScrollView!.frame.height * CGFloat(AppPreference.bottomBufferSpace) / 100))px"
         textFieldLectureAlertTime.stringValue = "\(AppPreference.futureAlertTimeMinutes)"
-        radioButtonAlways.state = NSOffState
-        radioButtonNoTimeslots.state = NSOffState
-        radioButtonNoLectures.state = NSOffState
-        radioButtonNever.state = NSOffState
+        radioButtonAlways.state = NSControl.StateValue.off
+        radioButtonNoTimeslots.state = NSControl.StateValue.off
+        radioButtonNoLectures.state = NSControl.StateValue.off
+        radioButtonNever.state = NSControl.StateValue.off
         switch AppPreference.courseDeletionConfirmation {
-            case .ALWAYS: radioButtonAlways.state = NSOnState
-            case .NO_LECTURES: radioButtonNoLectures.state = NSOnState
-            case .NO_TIMESLOTS: radioButtonNoTimeslots.state = NSOnState
-            case .NEVER: radioButtonNever.state = NSOnState
+            case .ALWAYS: radioButtonAlways.state = NSControl.StateValue.on
+            case .NO_LECTURES: radioButtonNoLectures.state = NSControl.StateValue.on
+            case .NO_TIMESLOTS: radioButtonNoTimeslots.state = NSControl.StateValue.on
+            case .NEVER: radioButtonNever.state = NSControl.StateValue.on
         }
         textFieldDefaultTimeslotTime.stringValue = "\(AppPreference.defaultCourseTimeSpanMinutes)"
         textFieldTimeslotBufferTime.stringValue = "\(AppPreference.bufferTimeBetweenCoursesMinutes)"
         if AppPreference.assumeSingleSelection {
-            checkBoxSingleCourseSelect.state = NSOnState
+            checkBoxSingleCourseSelect.state = NSControl.StateValue.on
         } else {
-            checkBoxSingleCourseSelect.state = NSOffState
+            checkBoxSingleCourseSelect.state = NSControl.StateValue.off
         }
         if AppPreference.assumePassedCompletion == "nil" {
-            toggleAssumeComplete.state = NSOffState
+            toggleAssumeComplete.state = NSControl.StateValue.off
             textFieldAssumeCompleteDays.isEnabled = false
             textFieldAssumeCompleteHours.isEnabled = false
             textFieldAssumeCompleteMinutes.isEnabled = false
@@ -362,7 +362,7 @@ class PreferencesViewController: NSViewController {
             textFieldAssumeCompleteMinutes.stringValue = parseMins
         }
         if AppPreference.assumePassedTaken == "nil" {
-            toggleAssumeComplete.state = NSOffState
+            toggleAssumeComplete.state = NSControl.StateValue.off
             textFieldAssumeCompleteDays.isEnabled = false
             textFieldAssumeCompleteHours.isEnabled = false
             textFieldAssumeCompleteMinutes.isEnabled = false
@@ -377,9 +377,9 @@ class PreferencesViewController: NSViewController {
             textFieldAssumeTakenMinutes.stringValue = parseMins
         }
         if AppPreference.assumeRecentLecture {
-            checkBoxRecentLecture.state = NSOnState
+            checkBoxRecentLecture.state = NSControl.StateValue.on
         } else {
-            checkBoxRecentLecture.state = NSOffState
+            checkBoxRecentLecture.state = NSControl.StateValue.off
         }
     }
 }

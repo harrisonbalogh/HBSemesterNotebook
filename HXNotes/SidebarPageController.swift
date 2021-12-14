@@ -79,10 +79,10 @@ class SidebarPageController: NSPageController, NSPageControllerDelegate {
     
     // MARK: - Page Controller Delegate methods
     
-    func pageController(_ pageController: NSPageController, identifierFor object: Any) -> String {
-        return String(describing: object)
+    func pageController(_ pageController: NSPageController, identifierFor object: Any) -> NSPageController.ObjectIdentifier {
+        return NSPageController.ObjectIdentifier(rawValue: String(describing: object))
     }
-    func pageController(_ pageController: NSPageController, viewControllerForIdentifier identifier: String) -> NSViewController {
+    func pageController(_ pageController: NSPageController, viewControllerForIdentifier identifier: NSPageController.ObjectIdentifier) -> NSViewController {
         switch identifier {
         case "schedulerPage":
             return schedulerVC

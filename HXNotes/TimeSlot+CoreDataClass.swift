@@ -26,17 +26,17 @@ public class TimeSlot: NSManagedObject {
         // Load preference value
         let bufferTime = AppPreference.bufferTimeBetweenCoursesMinutes
         
-        let dayA = self.weekday
-        let startA = self.startMinute
-        let stopA = self.stopMinute
+        let dayA = Int(self.weekday)
+        let startA = Int(self.startMinute)
+        let stopA = Int(self.stopMinute)
         
-        let dayB = timeB.weekday
-        let startB = timeB.startMinute
-        let stopB = timeB.stopMinute
+        let dayB = Int(timeB.weekday)
+        let startB = Int(timeB.startMinute)
+        let stopB = Int(timeB.stopMinute)
         
         if dayA == dayB &&
             ((startA <= startB - bufferTime && startB - bufferTime < stopA) ||
-            (startA < stopB + bufferTime && stopB + bufferTime < stopB) ||
+            (startA < stopB.advanced(by: bufferTime) && stopB + bufferTime < stopB) ||
             (startB <= startA && startA <= stopB) ||
             (startB <= stopA && stopA <= stopB)) {
             // The above checks for any kind of overlap including buffer time

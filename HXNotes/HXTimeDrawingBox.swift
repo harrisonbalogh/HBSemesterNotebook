@@ -52,7 +52,7 @@ class HXTimeDrawingBox: NSView {
         let minutesShown = CGFloat(latestTime - earliestTime + 1)
 
         // Draw the current time visual. Note return calls. This line is not drawn for PDF or printer operations.
-        if drawsTimeOfDay && NSGraphicsContext.current()!.isDrawingToScreen {
+        if drawsTimeOfDay && NSGraphicsContext.current!.isDrawingToScreen {
             
             let date = Date()
             let cal = Calendar.current
@@ -74,7 +74,7 @@ class HXTimeDrawingBox: NSView {
             
             let lineY = self.bounds.height - self.bounds.height * CGFloat(timeOfDay - earliestTime)/(minutesShown)
             
-            let startString = NSAttributedString(string: HXTimeFormatter.formatTime(Int16(timeOfDay)), attributes: [NSForegroundColorAttributeName: NSColor.black])
+            let startString = NSAttributedString(string: HXTimeFormatter.formatTime(Int16(timeOfDay)), attributes: [NSAttributedStringKey.foregroundColor: NSColor.black])
             
             var bezPath = NSBezierPath(rect: NSRect(x: lineX, y: lineY, width: lineWidth, height: 1))
             NSColor(calibratedRed: 0, green: 0, blue: 0, alpha: 0.75).setFill()

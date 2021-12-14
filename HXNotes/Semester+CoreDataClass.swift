@@ -147,15 +147,35 @@ public class Semester: NSManagedObject {
     static func produceSemester(during date: Date, createIfNecessary: Bool) -> Semester? {
         // Fetch semesters in persistent store. Return if found else create new if specified.
         let semesterFetch = NSFetchRequest<Semester>(entityName: "Semester")
-        let appDelegate = NSApplication.shared().delegate as! AppDelegate
+        let appDelegate = NSApplication.shared.delegate as! AppDelegate
         do {
             let semesters = try appDelegate.managedObjectContext.fetch(semesterFetch) as [Semester]
-            if let foundSemester = semesters.filter({
+            let foundSemesters = semesters.filter({
                 $0.start!.compare(date) == .orderedAscending && $0.end!.compare(date) == .orderedDescending
-            }).first {
+            });
+            if foundSemesters.count != 0 {
+                // The following corrects for when duplicate semesters are found,
+                // it will choose the semester that has the most course data and
+                // delete the empty semester. This glitch most likely occurs when
+                // setting custom semester start dates. If there is a gap in time,
+                // it will create a default semester on top of the custom date semester.
+                var returnSemester: Semester!
+                for foundSemester in foundSemesters {
+                    if returnSemester == nil {
+                        returnSemester = foundSemester
+                    } else if (foundSemester.courses!.count > returnSemester.courses!.count){
+                        // Remove empty duplicate semesters
+                        if (returnSemester.courses!.count == 0) {
+                            let appDelegate = NSApplication.shared.delegate as! AppDelegate
+                            appDelegate.managedObjectContext.delete(returnSemester)
+                        }
+                        returnSemester = foundSemester
+                    }
+                }
                 // This semester already present in store so return it
-                return foundSemester
-            } else if createIfNecessary {
+                return returnSemester!
+            }
+            if createIfNecessary {
                 // Create semester since it wasn't found
                 let newSemester = NSEntityDescription.insertNewObject(forEntityName: "Semester", into: appDelegate.managedObjectContext) as! Semester
                 
@@ -172,7 +192,7 @@ public class Semester: NSManagedObject {
     static func produceSemester(titled: String, in year: Int) -> Semester? {
         // Fetch semesters in persistent store. Return if found else create new if specified.
         let semesterFetch = NSFetchRequest<Semester>(entityName: "Semester")
-        let appDelegate = NSApplication.shared().delegate as! AppDelegate
+        let appDelegate = NSApplication.shared.delegate as! AppDelegate
         do {
             let semesters = try appDelegate.managedObjectContext.fetch(semesterFetch) as [Semester]
             if let foundSemester = semesters.filter({ $0.year == year && $0.title! == titled }).first {
@@ -236,7 +256,7 @@ public class Semester: NSManagedObject {
             }
             for case let time as TimeSlot in course.timeSlots! {
                 
-                if weekday == time.weekday && minuteOfDay >= time.startMinute - alertTimespan && minuteOfDay < time.startMinute {
+                if weekday == time.weekday && minuteOfDay >= Int(time.startMinute) - alertTimespan && minuteOfDay < time.startMinute {
                     // Course approaching within timespan. Check if its earlier than previous find
                     if soonest == nil || time.startMinute < soonest.startMinute {
                         soonest = time
@@ -386,7 +406,7 @@ public class Semester: NSManagedObject {
     public static func cleanEmptySemesters() {
         // Fetch semesters in persistent store. Return if found else create new.
         let semesterFetch = NSFetchRequest<Semester>(entityName: "Semester")
-        let appDelegate = NSApplication.shared().delegate as! AppDelegate
+        let appDelegate = NSApplication.shared.delegate as! AppDelegate
         do {
             let semesters = try appDelegate.managedObjectContext.fetch(semesterFetch) as [Semester]
             for sem in semesters {

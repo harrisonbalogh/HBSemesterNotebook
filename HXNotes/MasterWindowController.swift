@@ -18,7 +18,7 @@ class MasterWindowController: NSWindowController, NSWindowDelegate {
         // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
         self.window!.titleVisibility = .hidden
         self.window!.titlebarAppearsTransparent = true
-        self.window!.styleMask.insert(.fullSizeContentView)
+        self.window!.styleMask.insert(NSWindow.StyleMask.fullSizeContentView)
         self.window!.contentView?.wantsLayer = true
         
         if let mVC = self.contentViewController as? MasterViewController {

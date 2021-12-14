@@ -30,7 +30,7 @@ class SchedulerTimeSlotBox: NSView {
     /// Return a new instance of a HXLectureLedger based on the nib template.
     static func instance(with timeSlot: TimeSlot) -> SchedulerTimeSlotBox! {
         var theObjects: NSArray = []
-        Bundle.main.loadNibNamed("SchedulerTimeSlotBox", owner: nil, topLevelObjects: &theObjects)
+        Bundle.main.loadNibNamed(NSNib.Name(rawValue: "SchedulerTimeSlotBox"), owner: nil, topLevelObjects: &theObjects)
         // Get NSView from top level objects returned from nib load
         if let newBox = theObjects.filter({$0 is SchedulerTimeSlotBox}).first as? SchedulerTimeSlotBox {
             newBox.initialize(with: timeSlot)
@@ -76,14 +76,14 @@ class SchedulerTimeSlotBox: NSView {
             // Shift pickerStop if pickerStart is being set to a time later than pickerStop
             // add timeslot's previous length to pickerStop and timeSlot.stop
             var dateComp = Calendar.current.dateComponents([.year, .month, .day], from: pickerStart.dateValue)
-            dateComp.hour = Int((newStart + (timeSlot.stopMinute - timeSlot.startMinute)) / 60)
-            dateComp.minute = Int((newStart + (timeSlot.stopMinute - timeSlot.startMinute)) % 60)
+            dateComp.hour = Int((newStart + (Int(timeSlot.stopMinute) - Int(timeSlot.startMinute))) / 60)
+            dateComp.minute = Int((newStart + (Int(timeSlot.stopMinute) - Int(timeSlot.startMinute))) % 60)
             pickerStop.dateValue = cal.date(from: dateComp)!
             timeSlot.stopMinute = Int16(newStart + Int(timeSlot.stopMinute - timeSlot.startMinute))
         }
         
         timeSlot.startMinute = Int16(newStart)
-        Swift.print("schedulingDelegate: \(schedulingDelegate)")
+        Swift.print("schedulingDelegate: \(String(describing: schedulingDelegate))")
         schedulingDelegate?.schedulingUpdatedTimeSlot()
     }
     
@@ -95,10 +95,10 @@ class SchedulerTimeSlotBox: NSView {
             // Shift pickerStart if pickerStop is being set to a time earlier than pickerStart
             // decrease timeslot's previous length to pickerStart and start
             var dateComp = Calendar.current.dateComponents([.year, .month, .day], from: pickerStart.dateValue)
-            dateComp.hour = Int((newStop - (timeSlot.stopMinute - timeSlot.startMinute)) / 60)
-            dateComp.minute = Int((newStop - (timeSlot.stopMinute - timeSlot.startMinute)) % 60)
+            dateComp.hour = Int((newStop - (Int(timeSlot.stopMinute) - Int(timeSlot.startMinute))) / 60)
+            dateComp.minute = Int((newStop - (Int(timeSlot.stopMinute) - Int(timeSlot.startMinute))) % 60)
             pickerStart.dateValue = cal.date(from: dateComp)!
-            timeSlot.startMinute = Int16(newStop - (timeSlot.stopMinute - timeSlot.startMinute))
+            timeSlot.startMinute = Int16(Int16(newStop) - (timeSlot.stopMinute - timeSlot.startMinute))
         }
         
         timeSlot.stopMinute = Int16(newStop)

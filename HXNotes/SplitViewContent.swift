@@ -10,7 +10,7 @@ import Cocoa
 
 class SplitViewContent: NSView {
     
-    override func print(_ sender: Any?) {
+    override func printView(_ sender: Any?) {
         let printInfo = NSPrintInfo()
         printInfo.bottomMargin = 0
         printInfo.topMargin = 0

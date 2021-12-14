@@ -13,7 +13,7 @@ class MenuBarLectureItem: NSView {
     /// Return a new instance of a HXCourseBox based on the nib template.
     static func instance(with timeSlot: TimeSlot) -> MenuBarLectureItem! {
         var theObjects: NSArray = []
-        Bundle.main.loadNibNamed("MenuBarLectureItem", owner: nil, topLevelObjects: &theObjects)
+        Bundle.main.loadNibNamed(NSNib.Name(rawValue: "MenuBarLectureItem"), owner: nil, topLevelObjects: &theObjects)
         // Get NSView from top level objects returned from nib load
         if let newBox = theObjects.filter({$0 is MenuBarLectureItem}).first as? MenuBarLectureItem {
             newBox.initialize(with: timeSlot)

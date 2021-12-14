@@ -45,12 +45,12 @@ class HXExportViewController: NSViewController {
         
         // Listen to textField changing to update confirm button
         NotificationCenter.default.addObserver(self, selector: #selector(HXExportViewController.textField_textChange),
-                                               name: .NSControlTextDidChange, object: textField_name)
+                                               name: NSControl.textDidChangeNotification, object: textField_name)
         
         selectionDelegate?.isExporting(with: self)
     }
     /// Check if the text in the name field is appropriate for saving a file.
-    func textField_textChange() {
+    @objc func textField_textChange() {
         let input = textField_name.stringValue.trimmingCharacters(in: .whitespaces)
         if input.contains("/") || input.contains(".") || input == "" || input.contains(":") {
             button_confirm.isEnabled = false
@@ -109,7 +109,7 @@ class HXExportViewController: NSViewController {
         openPanel.prompt = "Select"
         
         openPanel.beginSheetModal(for: NSApp.keyWindow!, completionHandler: {result in
-            if result == NSFileHandlingPanelOKButton {
+            if result.rawValue == NSFileHandlingPanelOKButton {
                 self.label_path.stringValue = openPanel.url!.absoluteString
                 HXExportViewController.lastDestinationUsed = openPanel.url!.path
             }

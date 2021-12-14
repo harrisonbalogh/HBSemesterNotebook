@@ -33,7 +33,7 @@ class SchedulerPageViewController: NSViewController {
     @IBOutlet weak var addCourseButton: NSButton!
     @IBOutlet weak var doneSchedulingButton: NSButton!
     
-    let appDelegate = NSApplication.shared().delegate as! AppDelegate
+    let appDelegate = NSApplication.shared.delegate as! AppDelegate
     
     override func viewDidAppear() {
         super.viewDidAppear()
@@ -148,7 +148,7 @@ class SchedulerPageViewController: NSViewController {
     // MARK: - Course & TimeSlot Model
     
     @IBAction func action_finishScheduling(_ sender: NSButton) {
-        NSColorPanel.shared().orderOut(self)
+        NSColorPanel.shared.orderOut(self)
         schedulingDelegate?.schedulingDidFinish()
     }
     

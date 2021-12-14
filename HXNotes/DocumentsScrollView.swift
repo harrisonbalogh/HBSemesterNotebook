@@ -20,7 +20,7 @@ class DocumentsScrollView: NSScrollView {
     
     override func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
         
-        if let files = sender.draggingPasteboard().propertyList(forType: NSFilenamesPboardType) as? [String] {
+        if let files = sender.draggingPasteboard().propertyList(forType: [.fileU]) as? [String] {
             
             for file in files {
                 documentDropDelegate?.dropDocument(at: file)
@@ -31,7 +31,7 @@ class DocumentsScrollView: NSScrollView {
     }
     
     override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
-        NSCursor.dragCopy().set()
+        NSCursor.dragCopy.set()
         return NSDragOperation.copy
     }
     

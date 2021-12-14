@@ -15,7 +15,7 @@ class SemesterCourseBox: NSView {
     /// Return a new instance of a HXLectureLedger based on the nib template.
     static func instance(with course: Course) -> SemesterCourseBox! {
         var theObjects: NSArray = []
-        Bundle.main.loadNibNamed("SemesterCourseBox", owner: nil, topLevelObjects: &theObjects)
+        Bundle.main.loadNibNamed(NSNib.Name(rawValue: "SemesterCourseBox"), owner: nil, topLevelObjects: &theObjects)
         // Get NSView from top level objects returned from nib load
         if let newBox = theObjects.filter({$0 is SemesterCourseBox}).first as? SemesterCourseBox {
             newBox.initialize(with: course)
@@ -64,12 +64,12 @@ class SemesterCourseBox: NSView {
         
         self.trackingAreas.forEach({self.removeTrackingArea($0)})
         
-        let trackingArea = NSTrackingArea(rect: self.bounds, options: [.activeInKeyWindow, .cursorUpdate, .mouseEnteredAndExited], owner: self, userInfo: nil)
+        let trackingArea = NSTrackingArea(rect: self.bounds, options: [NSTrackingArea.Options.activeInKeyWindow, NSTrackingArea.Options.cursorUpdate, NSTrackingArea.Options.mouseEnteredAndExited], owner: self, userInfo: nil)
         addTrackingArea(trackingArea)
     }
     
     override func cursorUpdate(with event: NSEvent) {
-        NSCursor.pointingHand().set()
+        NSCursor.pointingHand.set()
     }
 
     override func mouseEntered(with event: NSEvent) {

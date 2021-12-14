@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11762" systemVersion="16G29" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="15705" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11762"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="15705"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
-        <capability name="stacking Non-gravity area distributions on NSStackView" minToolsVersion="7.0" minSystemVersion="10.11"/>
-        <capability name="system font weights other than Regular or Bold" minToolsVersion="7.0"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="WorkAdderLectureController" customModule="HXNotes" customModuleProvider="target">
@@ -25,38 +23,38 @@
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customView id="E3W-do-F0M">
-            <rect key="frame" x="0.0" y="0.0" width="149" height="339"/>
+            <rect key="frame" x="0.0" y="0.0" width="149" height="338"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <button focusRingType="none" translatesAutoresizingMaskIntoConstraints="NO" id="bwQ-nv-M4E">
-                    <rect key="frame" x="129" y="317" width="18" height="18"/>
+                    <rect key="frame" x="129" y="316" width="18" height="18"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="18" id="boD-lT-X1c"/>
                         <constraint firstAttribute="width" constant="18" id="f1s-Kg-sJx"/>
                     </constraints>
                     <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSStatusNone" imagePosition="only" alignment="center" focusRingType="none" imageScaling="proportionallyUpOrDown" inset="2" id="1Ve-Ry-SGQ">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" metaFont="system"/>
+                        <font key="font" metaFont="label" size="13"/>
                     </buttonCell>
                     <connections>
                         <action selector="action_close:" target="-2" id="a1V-hP-UJB"/>
                     </connections>
                 </button>
                 <button focusRingType="none" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="OGY-Nn-8WA">
-                    <rect key="frame" x="40" y="316" width="69" height="19"/>
+                    <rect key="frame" x="40" y="315" width="69" height="19"/>
                     <buttonCell key="cell" type="roundRect" title="Complete" bezelStyle="roundedRect" alignment="left" borderStyle="border" focusRingType="none" imageScaling="proportionallyDown" inset="2" id="Mof-sL-Qen">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" metaFont="cellTitle"/>
+                        <font key="font" metaFont="label" size="12"/>
                     </buttonCell>
                     <connections>
-                        <action selector="action_complete:" target="-2" id="quv-cT-xrG"/>
+                        <action selector="myCompleteButton:" target="-2" id="2PB-fm-yzc"/>
                     </connections>
                 </button>
                 <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="yxJ-mX-TeK">
-                    <rect key="frame" x="0.0" y="312" width="149" height="5"/>
+                    <rect key="frame" x="0.0" y="311" width="149" height="5"/>
                 </box>
-                <textField horizontalHuggingPriority="100" verticalHuggingPriority="750" horizontalCompressionResistancePriority="200" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Uw7-gi-9Xv">
-                    <rect key="frame" x="3" y="294" width="143" height="18"/>
+                <textField horizontalHuggingPriority="100" verticalHuggingPriority="750" horizontalCompressionResistancePriority="200" translatesAutoresizingMaskIntoConstraints="NO" id="Uw7-gi-9Xv">
+                    <rect key="frame" x="3" y="294" width="143" height="17"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" placeholderString="Undated Work 1" usesSingleLineMode="YES" id="xgK-Re-dEl">
                         <font key="font" metaFont="systemSemibold" size="14"/>
                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -72,16 +70,18 @@
                         <rect key="frame" x="1" y="1" width="137" height="76"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textView drawsBackground="NO" importsGraphics="NO" allowsUndo="YES" allowsNonContiguousLayout="YES" smartInsertDelete="YES" id="aic-uq-Ai2">
+                            <textView drawsBackground="NO" importsGraphics="NO" verticallyResizable="YES" allowsUndo="YES" allowsNonContiguousLayout="YES" smartInsertDelete="YES" id="aic-uq-Ai2">
                                 <rect key="frame" x="0.0" y="0.0" width="139" height="76"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 <size key="minSize" width="137" height="76"/>
                                 <size key="maxSize" width="463" height="10000000"/>
                                 <attributedString key="textStorage">
                                     <fragment content="No Description">
                                         <attributes>
-                                            <font key="NSFont" metaFont="smallSystem"/>
+                                            <color key="NSColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                            <font key="NSFont" metaFont="message" size="11"/>
                                             <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
                                         </attributes>
                                     </fragment>
@@ -94,11 +94,11 @@
                     <constraints>
                         <constraint firstAttribute="height" constant="78" id="x5u-6F-psP"/>
                     </constraints>
-                    <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="yEU-td-ySU">
+                    <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="yEU-td-ySU">
                         <rect key="frame" x="-100" y="-100" width="87" height="18"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
-                    <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="Hdt-Lr-shz">
+                    <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="Hdt-Lr-shz">
                         <rect key="frame" x="122" y="1" width="16" height="76"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
@@ -106,30 +106,30 @@
                 <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="sFs-Xb-gQk">
                     <rect key="frame" x="0.0" y="209" width="149" height="5"/>
                 </box>
-                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5o9-H1-wCJ">
-                    <rect key="frame" x="57" y="195" width="35" height="18"/>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="5o9-H1-wCJ">
+                    <rect key="frame" x="57" y="196" width="35" height="17"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Due" id="jY4-gM-lOK">
                         <font key="font" metaFont="systemMedium" size="14"/>
                         <color key="textColor" name="keyboardFocusIndicatorColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f2Y-e7-kRK">
-                    <rect key="frame" x="42" y="181" width="65" height="17"/>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="f2Y-e7-kRK">
+                    <rect key="frame" x="42" y="183" width="65" height="16"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="In Lecture" id="fMc-jw-Ih1">
-                        <font key="font" metaFont="system"/>
+                        <font key="font" metaFont="label" size="13"/>
                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
                 <scrollView borderType="none" horizontalLineScroll="0.0" horizontalPageScroll="0.0" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="WE6-h6-amO">
-                    <rect key="frame" x="0.0" y="43" width="149" height="136"/>
+                    <rect key="frame" x="0.0" y="43" width="149" height="138"/>
                     <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="fh2-cc-t7f" customClass="HXFlippedClipView" customModule="HXNotes" customModuleProvider="target">
-                        <rect key="frame" x="0.0" y="0.0" width="149" height="136"/>
+                        <rect key="frame" x="0.0" y="0.0" width="149" height="138"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QXZ-EG-Ov8">
-                                <rect key="frame" x="0.0" y="101" width="149" height="0.0"/>
+                                <rect key="frame" x="0.0" y="103" width="149" height="0.0"/>
                             </stackView>
                         </subviews>
                         <constraints>
@@ -139,12 +139,12 @@
                         </constraints>
                         <color key="backgroundColor" red="0.87370345744680855" green="0.87370345744680855" blue="0.87370345744680855" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </clipView>
-                    <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="iAb-wv-dbe">
+                    <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="iAb-wv-dbe">
                         <rect key="frame" x="-100" y="-100" width="149" height="16"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
-                    <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="snp-9b-PiB">
-                        <rect key="frame" x="133" y="0.0" width="16" height="136"/>
+                    <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="snp-9b-PiB">
+                        <rect key="frame" x="133" y="0.0" width="16" height="138"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
                 </scrollView>
@@ -152,30 +152,29 @@
                     <rect key="frame" x="10" y="22" width="129" height="19"/>
                     <buttonCell key="cell" type="roundRect" title="Custom Due Date" bezelStyle="roundedRect" image="NSGoRightTemplate" imagePosition="right" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Hy7-S6-zs8">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" metaFont="cellTitle"/>
+                        <font key="font" metaFont="label" size="12"/>
                     </buttonCell>
                     <connections>
                         <action selector="customDueButton:" target="-2" id="BRk-XD-Jtl"/>
                     </connections>
                 </button>
                 <button horizontalHuggingPriority="100" verticalHuggingPriority="750" horizontalCompressionResistancePriority="100" translatesAutoresizingMaskIntoConstraints="NO" id="hq9-ft-3sB">
-                    <rect key="frame" x="154" y="24" width="58" height="19"/>
+                    <rect key="frame" x="154" y="25" width="55" height="19"/>
                     <buttonCell key="cell" type="roundRect" title="Lecture" bezelStyle="roundedRect" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="JfW-4h-Cq9">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" metaFont="cellTitle"/>
+                        <font key="font" metaFont="label" size="12"/>
                     </buttonCell>
                     <connections>
                         <action selector="lectureDueButton:" target="-2" id="5iz-GT-LOr"/>
                     </connections>
                 </button>
                 <datePicker verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="hX5-wS-Iij">
-                    <rect key="frame" x="154" y="48" width="139" height="148"/>
+                    <rect key="frame" x="154" y="49" width="139" height="148"/>
                     <datePickerCell key="cell" borderStyle="bezel" alignment="left" datePickerStyle="clockAndCalendar" id="Rqr-9f-NeB">
-                        <font key="font" metaFont="system"/>
-                        <calendarDate key="date" timeIntervalSinceReferenceDate="-595929600" calendarFormat="%Y-%m-%d %H:%M:%S %z">
-                            <!--1982-02-12 08:00:00 -0800-->
-                            <timeZone key="timeZone" name="US/Pacific"/>
-                        </calendarDate>
+                        <font key="font" metaFont="label" size="13"/>
+                        <date key="date" timeIntervalSinceReferenceDate="-595929600">
+                            <!--1982-02-12 16:00:00 +0000-->
+                        </date>
                         <color key="backgroundColor" red="0.95179521280000001" green="0.95179521280000001" blue="0.95179521280000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                     </datePickerCell>
@@ -184,7 +183,7 @@
                     </connections>
                 </datePicker>
                 <datePicker verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="jRf-HE-teE">
-                    <rect key="frame" x="214" y="23" width="82" height="27"/>
+                    <rect key="frame" x="211" y="23" width="85" height="28"/>
                     <datePickerCell key="cell" borderStyle="bezel" alignment="left" id="TDG-Ia-KSx">
                         <font key="font" metaFont="systemLight" size="13"/>
                         <date key="date" timeIntervalSinceReferenceDate="-595918800">

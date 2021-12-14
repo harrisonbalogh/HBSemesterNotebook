@@ -89,10 +89,10 @@
                     </connections>
                 </textField>
                 <stackView identifier="timeSlot_stack_view" distribution="fill" orientation="vertical" alignment="leading" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" verticalCompressionResistancePriority="755" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sBO-X8-qgT" userLabel="TimeSlot Stack View">
-                    <rect key="frame" x="0.0" y="10" width="163" height="24"/>
+                    <rect key="frame" x="0.0" y="6" width="163" height="28"/>
                 </stackView>
                 <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="d7u-lk-pEv">
-                    <rect key="frame" x="0.0" y="2" width="163" height="5"/>
+                    <rect key="frame" x="0.0" y="-2" width="163" height="5"/>
                 </box>
                 <button translatesAutoresizingMaskIntoConstraints="NO" id="TRE-LY-BgM">
                     <rect key="frame" x="143" y="43" width="16" height="16"/>
@@ -132,7 +132,7 @@
                 <constraint firstItem="IHO-HY-3P8" firstAttribute="centerX" secondItem="kva-mM-31N" secondAttribute="centerX" id="fu7-LB-Pbi"/>
                 <constraint firstItem="5hD-gu-q6T" firstAttribute="trailing" secondItem="Jp0-dJ-TQl" secondAttribute="trailing" id="gsW-Lo-rsk"/>
                 <constraint firstItem="IHO-HY-3P8" firstAttribute="width" secondItem="kva-mM-31N" secondAttribute="width" id="hRl-Gp-cDr"/>
-                <constraint firstAttribute="bottom" secondItem="sBO-X8-qgT" secondAttribute="bottom" constant="10" id="hcT-qC-86H"/>
+                <constraint firstAttribute="bottom" secondItem="sBO-X8-qgT" secondAttribute="bottom" constant="6" id="hcT-qC-86H"/>
                 <constraint firstAttribute="trailing" secondItem="oN0-bY-8cE" secondAttribute="trailing" constant="3" id="iUh-Zm-ing"/>
                 <constraint firstItem="QRl-9y-vvw" firstAttribute="top" secondItem="YLs-Mt-6bQ" secondAttribute="top" id="jp9-D1-BNT"/>
                 <constraint firstItem="sBO-X8-qgT" firstAttribute="leading" secondItem="nuu-sF-rr8" secondAttribute="leading" id="mq3-Jq-xyI"/>
@@ -141,7 +141,7 @@
                 <constraint firstItem="Jp0-dJ-TQl" firstAttribute="leading" secondItem="nuu-sF-rr8" secondAttribute="leading" constant="5" id="snw-dO-xN1"/>
                 <constraint firstAttribute="trailing" secondItem="d7u-lk-pEv" secondAttribute="trailing" id="ttd-vD-Pyr"/>
                 <constraint firstItem="QRl-9y-vvw" firstAttribute="bottom" secondItem="5hD-gu-q6T" secondAttribute="bottom" id="xYn-6b-eNg"/>
-                <constraint firstAttribute="bottom" secondItem="d7u-lk-pEv" secondAttribute="bottom" constant="4" id="yww-yt-KwR"/>
+                <constraint firstAttribute="bottom" secondItem="d7u-lk-pEv" secondAttribute="bottom" id="yww-yt-KwR"/>
             </constraints>
             <connections>
                 <outlet property="boxDrag" destination="kva-mM-31N" id="3hC-Fj-Oep"/>

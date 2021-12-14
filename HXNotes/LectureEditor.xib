@@ -34,7 +34,7 @@
                 <outlet property="styleRadioLeft" destination="Rj6-lt-4bI" id="gcj-pQ-OYP"/>
                 <outlet property="styleRadioRight" destination="s3E-eU-cTU" id="kvD-27-EMU"/>
                 <outlet property="textViewContent" destination="ZWb-n8-JZv" id="aeV-ML-BlY"/>
-                <outlet property="topBarHeightConstraint" destination="b18-zp-ddA" id="yOH-WG-Dke"/>
+                <outlet property="topBarTopConstraint" destination="Fil-jd-z52" id="DA6-f9-WaL"/>
                 <outlet property="view" destination="5LG-bC-K3H" id="lXV-dj-mrm"/>
             </connections>
         </customObject>

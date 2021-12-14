@@ -45,11 +45,11 @@ class LectureCollectionViewItem: NSCollectionViewItem {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        findViewController = HXFindViewController(nibName: "HXFindView", bundle: nil)
+        findViewController = HXFindViewController(nibName: NSNib.Name(rawValue: "HXFindView"), bundle: nil)
         self.addChildViewController(findViewController)
-        exportViewController = HXExportViewController(nibName: "HXExportView", bundle: nil)
+        exportViewController = HXExportViewController(nibName: NSNib.Name(rawValue: "HXExportView"), bundle: nil)
         self.addChildViewController(exportViewController)
-        replaceViewController = HXFindReplaceViewController(nibName: "HXFindReplaceView", bundle: nil)
+        replaceViewController = HXFindReplaceViewController(nibName: NSNib.Name(rawValue: "HXFindReplaceView"), bundle: nil)
         self.addChildViewController(replaceViewController)
         
         view.wantsLayer = true
@@ -141,7 +141,7 @@ class LectureCollectionViewItem: NSCollectionViewItem {
         let layoutManager = NSLayoutManager()
         layoutManager.addTextContainer(txtContainer)
         txtStorage.addLayoutManager(layoutManager)
-        txtStorage.addAttributes([NSFontAttributeName: textView_lecture.font!], range: NSRange(location: 0, length: txtStorage.length))
+        txtStorage.addAttributes([NSAttributedStringKey.font: textView_lecture.font!], range: NSRange(location: 0, length: txtStorage.length))
         txtContainer.lineFragmentPadding = 0
         layoutManager.glyphRange(for: txtContainer)
         return layoutManager.usedRect(for: txtContainer).size.height
@@ -205,7 +205,7 @@ class LectureCollectionViewItem: NSCollectionViewItem {
             
             // Animate revealing corner images
             NSAnimationContext.beginGrouping()
-            NSAnimationContext.current().duration = 1
+            NSAnimationContext.current.duration = 1
             image_corner1.animator().alphaValue = 1
             image_corner2.animator().alphaValue = 1
             image_corner3.animator().alphaValue = 1
@@ -216,7 +216,7 @@ class LectureCollectionViewItem: NSCollectionViewItem {
             
             // Animate hiding corner images
             NSAnimationContext.beginGrouping()
-            NSAnimationContext.current().duration = 1
+            NSAnimationContext.current.duration = 1
             image_corner1.animator().alphaValue = 0
             image_corner2.animator().alphaValue = 0
             image_corner3.animator().alphaValue = 0
@@ -247,7 +247,7 @@ class LectureCollectionViewItem: NSCollectionViewItem {
         
         let fullRange = NSRange(location: 0, length: attribString.length)
         do {
-            let data = try attribString.fileWrapper(from: fullRange, documentAttributes: [NSDocumentTypeDocumentAttribute: NSRTFDTextDocumentType])
+            let data = try attribString.fileWrapper(from: fullRange, documentAttributes: [NSAttributedString.DocumentAttributeKey.documentType: NSAttributedString.DocumentType.rtfd])
             try data.write(to: url, options: .atomic, originalContentsURL: nil) // this for rtfd
         } catch {
             print("Something went wrong.")
@@ -261,8 +261,8 @@ class LectureCollectionViewItem: NSCollectionViewItem {
     var isFinding = false {
         didSet {
             NSAnimationContext.beginGrouping()
-            NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
-            NSAnimationContext.current().duration = 0.25
+            NSAnimationContext.current.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
+            NSAnimationContext.current.duration = 0.25
             if isFinding && (isExporting || isReplacing) {
                 if isExporting {
                     isExporting = false
@@ -276,7 +276,7 @@ class LectureCollectionViewItem: NSCollectionViewItem {
                 findViewController.view.topAnchor.constraint(equalTo: box_dropdown.topAnchor).isActive = true
                 findViewController.view.bottomAnchor.constraint(equalTo: box_dropdown.bottomAnchor).isActive = true
                 
-                NSAnimationContext.current().completionHandler = {
+                NSAnimationContext.current.completionHandler = {
                     NSApp.keyWindow?.makeFirstResponder(self.findViewController.textField_find)
                 }
                 dropdownTopConstraint.animator().constant = box_dropdown.frame.height
@@ -286,7 +286,7 @@ class LectureCollectionViewItem: NSCollectionViewItem {
                 if NSApp.keyWindow?.firstResponder == findViewController.textField_find {
                     NSApp.keyWindow?.makeFirstResponder(self)
                 }
-                NSAnimationContext.current().completionHandler = {
+                NSAnimationContext.current.completionHandler = {
                     self.findViewController.view.removeFromSuperview()
                     if self.isExporting {
                         self.isExporting = true
@@ -302,8 +302,8 @@ class LectureCollectionViewItem: NSCollectionViewItem {
     var isReplacing = false {
         didSet {
             NSAnimationContext.beginGrouping()
-            NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
-            NSAnimationContext.current().duration = 0.25
+            NSAnimationContext.current.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
+            NSAnimationContext.current.duration = 0.25
             if isReplacing && (isExporting || isFinding) {
                 if isExporting {
                     isExporting = false
@@ -317,7 +317,7 @@ class LectureCollectionViewItem: NSCollectionViewItem {
                 replaceViewController.view.topAnchor.constraint(equalTo: box_dropdown.topAnchor).isActive = true
                 replaceViewController.view.bottomAnchor.constraint(equalTo: box_dropdown.bottomAnchor).isActive = true
                 
-                NSAnimationContext.current().completionHandler = {
+                NSAnimationContext.current.completionHandler = {
                     NSApp.keyWindow?.makeFirstResponder(self.replaceViewController.textField_find)
                 }
                 dropdownTopConstraint.animator().constant = box_dropdown.frame.height
@@ -327,7 +327,7 @@ class LectureCollectionViewItem: NSCollectionViewItem {
                 if NSApp.keyWindow?.firstResponder == findViewController.textField_find {
                     NSApp.keyWindow?.makeFirstResponder(self)
                 }
-                NSAnimationContext.current().completionHandler = {
+                NSAnimationContext.current.completionHandler = {
                     self.replaceViewController.view.removeFromSuperview()
                     if self.isExporting {
                         self.isExporting = true
@@ -343,8 +343,8 @@ class LectureCollectionViewItem: NSCollectionViewItem {
     var isExporting = false {
         didSet {
             NSAnimationContext.beginGrouping()
-            NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
-            NSAnimationContext.current().duration = 0.25
+            NSAnimationContext.current.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
+            NSAnimationContext.current.duration = 0.25
             if isExporting && isFinding {
                 isFinding = false
             } else if isExporting {
@@ -361,7 +361,7 @@ class LectureCollectionViewItem: NSCollectionViewItem {
                 if NSApp.keyWindow?.firstResponder == exportViewController.textField_name {
                     NSApp.keyWindow?.makeFirstResponder(self)
                 }
-                NSAnimationContext.current().completionHandler = {
+                NSAnimationContext.current.completionHandler = {
                     self.exportViewController.view.removeFromSuperview()
                     if self.isFinding {
                         self.isFinding = true

@@ -50,7 +50,7 @@ class HXScheduleBox: NSBox {
             
             let start = Int(timeSlot.startMinute)
             let stop = Int(timeSlot.stopMinute)
-            let day = timeSlot.weekday - (!showSunday).hashValue
+            let day = Int(timeSlot.weekday) - (!showSunday).hashValue
             
             let w = self.bounds.width/days
             let x = CGFloat(day - 1) * w
@@ -75,12 +75,12 @@ class HXScheduleBox: NSBox {
                 NSColor(calibratedWhite: 0.85, alpha: 1).setFill()
             }
             
-            var startString = NSAttributedString(string: HXTimeFormatter.formatTime(Int16(start)), attributes: [NSForegroundColorAttributeName: textColor])
+            var startString = NSAttributedString(string: HXTimeFormatter.formatTime(Int16(start)), attributes: [NSAttributedStringKey.foregroundColor: textColor])
             
-            var stopString = NSAttributedString(string: HXTimeFormatter.formatTime(Int16(stop)), attributes: [NSForegroundColorAttributeName: textColor])
+            var stopString = NSAttributedString(string: HXTimeFormatter.formatTime(Int16(stop)), attributes: [NSAttributedStringKey.foregroundColor: textColor])
             
             var highlightAttribs = [String: Any]()
-            highlightAttribs = [NSForegroundColorAttributeName: NSColor.black]
+            highlightAttribs = [NSAttributedStringKey.foregroundColor: NSColor.black]
             var stringInTitle = timeSlot.course!.title!
             if lastEnteredTimeSlot != nil {
                 if timeSlot == lastEnteredTimeSlot {
@@ -125,7 +125,7 @@ class HXScheduleBox: NSBox {
         self.trackingAreas.forEach({self.removeTrackingArea($0)})
         
         if isHighlighting {
-            let trackingArea = NSTrackingArea(rect: frame, options: [.activeInKeyWindow, .mouseMoved, .mouseEnteredAndExited], owner: self, userInfo: nil)
+            let trackingArea = NSTrackingArea(rect: frame, options: [NSTrackingArea.Options.activeInKeyWindow, NSTrackingArea.Options.mouseMoved, NSTrackingArea.Options.mouseEnteredAndExited], owner: self, userInfo: nil)
             addTrackingArea(trackingArea)
         }
     }
@@ -156,21 +156,21 @@ class HXScheduleBox: NSBox {
             let rect = NSRect(x: x, y: y, width: w, height: h)
             
             if rect.contains(loc) {
-                NSCursor.pointingHand().set()
+                NSCursor.pointingHand.set()
                 lastEnteredTimeSlot = timeSlot
                 break
             }
             ind += 1
         }
         if lastEnteredTimeSlot == nil {
-            NSCursor.arrow().set()
+            NSCursor.arrow.set()
         }
         self.needsDisplay = true
     }
     
     override func mouseExited(with event: NSEvent) {
         lastEnteredTimeSlot = nil
-        NSCursor.arrow().set()
+        NSCursor.arrow.set()
         self.needsDisplay = true
     }
     

@@ -11,19 +11,40 @@ import Cocoa
 class HXFindViewController: NSViewController, NSTextFinderClient {
     
     @IBOutlet var textFinder: NSTextFinder!
-    override func performTextFinderAction(_ sender: Any?) {
-        print("Listening")
-    }
     
+    override func performTextFinderAction(_ sender: Any?) {
+        print("HXFindVC")
+    }
     var string: String {
         get {
-            print("Got it")
-            if let parent = self.parent as? LectureEditorViewController {
-                return parent.textViewContent.string!
+            print("Retrieving string for findVC")
+            if let parent = parent as? LectureEditorViewController {
+                print("    ...giving string")
+                return parent.textViewContent.attributedString().string
             }
             return ""
         }
     }
+    var firstSelectedRange: NSRange {
+        get {
+            if let parent = parent as? LectureEditorViewController {
+                print("    ...giving firstSelectedRange")
+                return parent.textViewContent.selectedRange()
+            }
+            return NSMakeRange(0, 0)
+        }
+    }
+    private var selectedRanges: [NSValue] {
+        get {
+            if let parent = parent as? LectureEditorViewController {
+                print("    ...giving selectedRanges")
+                return parent.textViewContent.selectedRanges
+            }
+            return [NSValue()]
+        }
+    }
+    
+    // MARK: - OLD
     
     var selectionDelegate: SelectionDelegate?
     
@@ -51,7 +72,7 @@ class HXFindViewController: NSViewController, NSTextFinderClient {
             }
             // If owned by a LectureVC
             if let parent = self.parent as? LectureEditorViewController {
-                var searchThroughText = parent.textViewContent.string!
+                var searchThroughText = parent.textViewContent.string
                 foundIndices = [Int]()
                 findIndex = -1
                 var loc = searchThroughText.lowercased().range(of: findString)
@@ -60,7 +81,7 @@ class HXFindViewController: NSViewController, NSTextFinderClient {
                     indexFound += searchThroughText.distance(from: searchThroughText.startIndex, to: loc!.lowerBound)
                     foundIndices.append(indexFound)
                     searchThroughText = searchThroughText.substring(from: loc!.upperBound)
-                    indexFound += findString.characters.count
+                    indexFound += findString.count
                     loc = searchThroughText.lowercased().range(of: findString)
                 }
                 label_result.stringValue = "\(foundIndices.count) Found"
@@ -97,8 +118,6 @@ class HXFindViewController: NSViewController, NSTextFinderClient {
     override func viewDidAppear() {
         super.viewDidAppear()
         
-        textFinder.client = self
-        
         // If owned by a LectureVC
         if self.parent is LectureEditorViewController {
             
@@ -118,19 +137,20 @@ class HXFindViewController: NSViewController, NSTextFinderClient {
         
         // Listen to textField changing to know when to reset counter
         NotificationCenter.default.addObserver(self, selector: #selector(HXFindViewController.textField_textChange),
-                                               name: .NSControlTextDidChange, object: textField_find)
+                                               name: NSControl.textDidChangeNotification, object: textField_find)
         
         selectionDelegate?.isFinding(with: self)
     }
     /// Should reset all variables when changing text
-    func textField_textChange() {
+    @objc func textField_textChange() {
         foundIndices = [Int]()
         totalFound = 0
         findString = ""
     }
     @IBAction func action_close(_ sender: NSButton) {
         
-        if let action = NSTextFinderAction(rawValue: sender.tag) {
+        if let action = NSTextFinder.Action(rawValue: sender.tag) {
+            print("Do this action(close): \(action)")
             textFinder.performAction(action)
         }
         return
@@ -142,7 +162,8 @@ class HXFindViewController: NSViewController, NSTextFinderClient {
         }
     }
     @IBAction func action_right(_ sender: NSButton) {
-        if let action = NSTextFinderAction(rawValue: sender.tag) {
+        if let action = NSTextFinder.Action(rawValue: sender.tag) {
+            print("Do this action(right): \(action)")
             textFinder.performAction(action)
         }
         return
@@ -201,7 +222,8 @@ class HXFindViewController: NSViewController, NSTextFinderClient {
         }
     }
     @IBAction func action_left(_ sender: NSButton) {
-        if let action = NSTextFinderAction(rawValue: sender.tag) {
+        if let action = NSTextFinder.Action(rawValue: sender.tag) {
+            print("Do this action(left): \(action)")
             textFinder.performAction(action)
         }
         return
@@ -215,7 +237,7 @@ class HXFindViewController: NSViewController, NSTextFinderClient {
                 } else {
                     findIndex -= 1
                 }
-                let range = NSMakeRange(foundIndices[findIndex], findString.characters.count)
+                let range = NSMakeRange(foundIndices[findIndex], findString.count)
                 goToAndHighlight(for: parent, at: range)
             }
         } else if totalFound != 0 {
@@ -271,9 +293,11 @@ class HXFindViewController: NSViewController, NSTextFinderClient {
     }
     @IBAction func action_textField(_ sender: NSTextField) {
         
-        if let action = NSTextFinderAction(rawValue: sender.tag) {
+        if let action = NSTextFinder.Action(rawValue: sender.tag) {
+            print("Do this action(text): \(action)")
             textFinder.performAction(action)
         }
+        
         return
         
         if foundIndices.count != 0 || totalFound != 0 {
@@ -292,7 +316,7 @@ class HXFindViewController: NSViewController, NSTextFinderClient {
         let layoutManager = NSLayoutManager()
         layoutManager.addTextContainer(txtContainer)
         txtStorage.addLayoutManager(layoutManager)
-        txtStorage.addAttributes([NSFontAttributeName: sender.textViewContent.font!], range: NSRange(location: 0, length: txtStorage.length))
+        txtStorage.addAttributes([NSAttributedStringKey.font: sender.textViewContent.font!], range: NSRange(location: 0, length: txtStorage.length))
         txtContainer.lineFragmentPadding = 0
         layoutManager.glyphRange(for: txtContainer)
         return layoutManager.usedRect(for: txtContainer).size.height

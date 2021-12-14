@@ -15,6 +15,14 @@
             <rect key="frame" x="0.0" y="0.0" width="183" height="90"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
+                <box hidden="YES" boxType="custom" borderWidth="0.0" cornerRadius="4" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="lQE-35-1tM">
+                    <rect key="frame" x="0.0" y="0.0" width="183" height="90"/>
+                    <view key="contentView" id="wuF-ig-bmy">
+                        <rect key="frame" x="0.0" y="0.0" width="183" height="90"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    </view>
+                    <color key="fillColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                </box>
                 <textField identifier="course_days_label" horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="100" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tfp-0r-xPB">
                     <rect key="frame" x="3" y="10" width="161" height="17"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="M, T" id="Pb7-sp-CBL">
@@ -81,7 +89,9 @@
                 <constraint firstItem="DHm-LB-cDL" firstAttribute="leading" secondItem="Q4Q-Df-lLR" secondAttribute="leading" constant="5" id="JbL-nf-h5Q"/>
                 <constraint firstItem="93d-PN-u6V" firstAttribute="centerY" secondItem="Mac-hs-o8A" secondAttribute="centerY" id="P2T-mr-3Rz"/>
                 <constraint firstItem="uja-YA-hEK" firstAttribute="top" secondItem="yOm-HC-Nqr" secondAttribute="bottom" id="RbL-IV-Up9"/>
+                <constraint firstAttribute="trailing" secondItem="lQE-35-1tM" secondAttribute="trailing" id="Rnb-mm-0Kk"/>
                 <constraint firstItem="yOm-HC-Nqr" firstAttribute="leading" secondItem="DHm-LB-cDL" secondAttribute="leading" id="Tnt-D3-jMF"/>
+                <constraint firstItem="lQE-35-1tM" firstAttribute="top" secondItem="Q4Q-Df-lLR" secondAttribute="top" id="Ull-yK-ttz"/>
                 <constraint firstAttribute="bottom" secondItem="tfp-0r-xPB" secondAttribute="bottom" constant="10" id="Wof-tf-ooH"/>
                 <constraint firstItem="yOm-HC-Nqr" firstAttribute="top" secondItem="DHm-LB-cDL" secondAttribute="bottom" id="XAe-Z1-FxE"/>
                 <constraint firstItem="tfp-0r-xPB" firstAttribute="top" secondItem="uja-YA-hEK" secondAttribute="bottom" id="Y0T-tN-00F"/>
@@ -93,6 +103,8 @@
                 <constraint firstItem="DHm-LB-cDL" firstAttribute="top" secondItem="Q4Q-Df-lLR" secondAttribute="top" constant="10" id="ipy-o9-fkz"/>
                 <constraint firstItem="93d-PN-u6V" firstAttribute="height" secondItem="TI1-oq-zdJ" secondAttribute="height" id="m9I-6A-zbT"/>
                 <constraint firstItem="tfp-0r-xPB" firstAttribute="leading" secondItem="uja-YA-hEK" secondAttribute="leading" id="mAb-Aq-9Yl"/>
+                <constraint firstItem="lQE-35-1tM" firstAttribute="leading" secondItem="Q4Q-Df-lLR" secondAttribute="leading" id="nyq-xa-2fa"/>
+                <constraint firstAttribute="bottom" secondItem="lQE-35-1tM" secondAttribute="bottom" id="qsA-Iw-Qf1"/>
                 <constraint firstAttribute="trailing" secondItem="vqi-f4-g4E" secondAttribute="trailing" id="rJo-NU-ZuG"/>
                 <constraint firstItem="uja-YA-hEK" firstAttribute="leading" secondItem="yOm-HC-Nqr" secondAttribute="leading" id="xDZ-kB-yar"/>
                 <constraint firstItem="uja-YA-hEK" firstAttribute="trailing" secondItem="yOm-HC-Nqr" secondAttribute="trailing" id="yVn-X4-0sW"/>
@@ -108,7 +120,7 @@
                 <outlet property="labelTitle" destination="DHm-LB-cDL" id="hLI-2W-fqp"/>
                 <outlet property="selectImage" destination="93d-PN-u6V" id="NoC-dp-7LC"/>
             </connections>
-            <point key="canvasLocation" x="84" y="60"/>
+            <point key="canvasLocation" x="83.5" y="60"/>
         </customView>
     </objects>
     <resources>

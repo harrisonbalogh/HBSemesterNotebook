@@ -14,7 +14,7 @@ class SemesterPageViewController: NSViewController, NSSplitViewDelegate {
     var schedulingDelegate: SchedulingDelegate?
     var sidebarDelegate: SidebarDelegate?
     
-    let appDelegate = NSApplication.shared().delegate as! AppDelegate
+    let appDelegate = NSApplication.shared.delegate as! AppDelegate
 
     @IBOutlet weak var splitView: NSSplitView!
     func optimizeSplitViewSpace() {

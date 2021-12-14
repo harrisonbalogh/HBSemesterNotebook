@@ -254,7 +254,7 @@ class AppPreference {
     private static var cached_defaultCourseTimeSpanMinutes: Int!
     public static var defaultCourseTimeSpanMinutes: Int {
         set {
-            if cached_defaultCourseTimeSpanMinutes != nil && cached_defaultCourseTimeSpanMinutes != nil && cached_defaultCourseTimeSpanMinutes == newValue { return }
+            if cached_defaultCourseTimeSpanMinutes != nil && cached_defaultCourseTimeSpanMinutes == newValue { return }
             
             cached_defaultCourseTimeSpanMinutes = newValue
             CFPreferencesSetAppValue("defaultCourseTimeSpanMinutes" as CFString,

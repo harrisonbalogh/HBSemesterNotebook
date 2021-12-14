@@ -19,7 +19,7 @@ class CoursePageViewController: NSViewController, NSSplitViewDelegate {
         }
     }
     
-    let appDelegate = NSApplication.shared().delegate as! AppDelegate
+    let appDelegate = NSApplication.shared.delegate as! AppDelegate
     
     @IBOutlet weak var courseLabel: NSTextField!
     @IBOutlet weak var colorBox: NSBox!
@@ -117,14 +117,14 @@ class CoursePageViewController: NSViewController, NSSplitViewDelegate {
     override func viewDidAppear() {
         super.viewDidAppear()
         
-        toggleCompletedWork.state = NSOffState
-        toggleCompletedTests.state = NSOffState
+        toggleCompletedWork.state = NSControl.StateValue.off
+        toggleCompletedTests.state = NSControl.StateValue.off
         
         print("CourseVC - viewDidAppear")
         
         sidebarDelegate?.sidebarCourseNeedsPopulating(self)
         
-        docsScrollView.register(forDraggedTypes: [NSFilenamesPboardType, NSFilenamesPboardType])
+        docsScrollView.registerForDraggedTypes([NSFilenamesPboardType, NSFilenamesPboardType])
         docsScrollView.documentDropDelegate = self.documentDropDelegate
     }
     
@@ -182,10 +182,16 @@ class CoursePageViewController: NSViewController, NSSplitViewDelegate {
             weekCount = 1
         }
         
-        // Add all lectures and weekboxes
-        for case let lecture as Lecture in course.lectures! {
-            push(lecture: lecture )
+        // Add all lectures and weekboxes - do this on another thread as we may be
+        // instantiating many Lecture boxes.
+        DispatchQueue.main.async {
+            for case let lecture as Lecture in course.lectures! {
+                self.push(lecture: lecture )
+            }
         }
+//        for case let lecture as Lecture in course.lectures! {
+//            push(lecture: lecture )
+//        }
         
         noLectureCheck(for: course)
     }
@@ -512,10 +518,10 @@ class CoursePageViewController: NSViewController, NSSplitViewDelegate {
             }
         }
         workDetailsPopover = NSPopover()
-        let workAVC = WorkAdderLectureController(nibName: "WorkAdderLectureController", bundle: nil)
-        workAVC?.schedulingDelegate = self.schedulingDelegate
-        workAVC?.selectionDelegate = self.selectionDelegate
-        workAVC?.workBox = workBox
+        let workAVC = WorkAdderLectureController(nibName: NSNib.Name(rawValue: "WorkAdderLectureController"), bundle: nil)
+        workAVC.schedulingDelegate = self.schedulingDelegate
+        workAVC.selectionDelegate = self.selectionDelegate
+        workAVC.workBox = workBox
         workDetailsPopover.contentViewController = workAVC
         workDetailsPopover.show(relativeTo: workBox.buttonDetails.bounds, of: workBox.buttonDetails, preferredEdge: NSRectEdge.maxX)
     }
@@ -541,10 +547,10 @@ class CoursePageViewController: NSViewController, NSSplitViewDelegate {
             }
         }
         testDetailsPopover = NSPopover()
-        let testAVC = TestAdderViewController(nibName: "TestAdderViewController", bundle: nil)
-        testAVC?.schedulingDelegate = self.schedulingDelegate
-        testAVC?.selectionDelegate = self.selectionDelegate
-        testAVC?.testBox = testBox
+        let testAVC = TestAdderViewController(nibName: NSNib.Name(rawValue: "TestAdderViewController"), bundle: nil)
+        testAVC.schedulingDelegate = self.schedulingDelegate
+        testAVC.selectionDelegate = self.selectionDelegate
+        testAVC.testBox = testBox
         testDetailsPopover.contentViewController = testAVC
         testDetailsPopover.show(relativeTo: testBox.buttonDetails.bounds, of: testBox.buttonDetails, preferredEdge: NSRectEdge.maxX)
     }

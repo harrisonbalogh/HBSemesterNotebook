@@ -49,7 +49,7 @@
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                     <connections>
-                        <action selector="action_textField:" target="-2" id="Rbc-cO-0RM"/>
+                        <action selector="action_textField:" target="-2" id="7FN-wG-u34"/>
                     </connections>
                 </textField>
                 <box identifier="line2" verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="TRz-66-pes">
@@ -93,7 +93,7 @@
                         <font key="font" metaFont="system"/>
                     </buttonCell>
                     <connections>
-                        <action selector="action_right:" target="-2" id="QzM-bV-Ecf"/>
+                        <action selector="action_left:" target="-2" id="n9R-fW-gfY"/>
                     </connections>
                 </button>
                 <button tag="2" translatesAutoresizingMaskIntoConstraints="NO" id="hnq-MQ-xGe">
@@ -107,7 +107,7 @@
                         <font key="font" metaFont="system"/>
                     </buttonCell>
                     <connections>
-                        <action selector="action_right:" target="-2" id="X6O-OS-a0d"/>
+                        <action selector="action_right:" target="-2" id="0r9-24-OWU"/>
                     </connections>
                 </button>
                 <button tag="11" translatesAutoresizingMaskIntoConstraints="NO" id="QUw-RE-9TQ">
@@ -121,7 +121,7 @@
                         <font key="font" metaFont="system"/>
                     </buttonCell>
                     <connections>
-                        <action selector="action_close:" target="-2" id="OD5-hl-XTZ"/>
+                        <action selector="performTextFinderAction:" target="-1" id="DkT-Dq-nMX"/>
                     </connections>
                 </button>
                 <button verticalHuggingPriority="749" translatesAutoresizingMaskIntoConstraints="NO" id="wS4-p5-Yb7" userLabel="Select Lecture Button">

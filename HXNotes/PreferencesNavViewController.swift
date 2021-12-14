@@ -37,7 +37,7 @@ class PreferencesNavViewController: NSViewController {
         preferencesVC.clipView.enclosingScrollView!.flashScrollers()
         
         NSAnimationContext.beginGrouping()
-        NSAnimationContext.current().duration = 0.5
+        NSAnimationContext.current.duration = 0.5
         preferencesVC.clipView.animator().setBoundsOrigin(NSPoint(x: 0, y: y))
         NSAnimationContext.endGrouping()
     }
@@ -47,7 +47,7 @@ class PreferencesNavViewController: NSViewController {
         preferencesVC.clipView.enclosingScrollView!.flashScrollers()
         
         NSAnimationContext.beginGrouping()
-        NSAnimationContext.current().duration = 0.5
+        NSAnimationContext.current.duration = 0.5
         preferencesVC.clipView.animator().setBoundsOrigin(NSPoint(x: 0, y: y))
         NSAnimationContext.endGrouping()
     }
@@ -57,7 +57,7 @@ class PreferencesNavViewController: NSViewController {
         preferencesVC.clipView.enclosingScrollView!.flashScrollers()
         
         NSAnimationContext.beginGrouping()
-        NSAnimationContext.current().duration = 0.5
+        NSAnimationContext.current.duration = 0.5
         preferencesVC.clipView.animator().setBoundsOrigin(NSPoint(x: 0, y: y))
         NSAnimationContext.endGrouping()
     }
@@ -67,7 +67,7 @@ class PreferencesNavViewController: NSViewController {
         preferencesVC.clipView.enclosingScrollView!.flashScrollers()
         
         NSAnimationContext.beginGrouping()
-        NSAnimationContext.current().duration = 0.5
+        NSAnimationContext.current.duration = 0.5
         preferencesVC.clipView.animator().setBoundsOrigin(NSPoint(x: 0, y: y))
         NSAnimationContext.endGrouping()
     }
@@ -77,7 +77,7 @@ class PreferencesNavViewController: NSViewController {
         preferencesVC.clipView.enclosingScrollView!.flashScrollers()
         
         NSAnimationContext.beginGrouping()
-        NSAnimationContext.current().duration = 0.5
+        NSAnimationContext.current.duration = 0.5
         preferencesVC.clipView.animator().setBoundsOrigin(NSPoint(x: 0, y: y))
         NSAnimationContext.endGrouping()
     }

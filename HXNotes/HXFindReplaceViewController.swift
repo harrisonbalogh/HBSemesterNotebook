@@ -41,9 +41,9 @@ class HXFindReplaceViewController: NSViewController {
         
         // Listen to textField changing to know when to reset counter
         NotificationCenter.default.addObserver(self, selector: #selector(HXFindViewController.textField_textChange),
-                                               name: .NSControlTextDidChange, object: textField_find)
+                                               name: NSControl.textDidChangeNotification, object: textField_find)
         NotificationCenter.default.addObserver(self, selector: #selector(HXFindViewController.textField_textChange),
-                                               name: .NSControlTextDidChange, object: textField_replace)
+                                               name: NSControl.textDidChangeNotification, object: textField_replace)
         
         selectionDelegate?.isReplacing(with: self)
     }

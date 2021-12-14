@@ -43,7 +43,7 @@ class Alert {
             switch location {
             case .dropdown:
                 // Controller
-                let newController = HXAlertDropdown(nibName: "HXAlertDropdown", bundle: nil)!
+                let newController = HXAlertDropdown(nibName: NSNib.Name(rawValue: "HXAlertDropdown"), bundle: nil)
                 alertControllers.append(newController)
                 masterViewController.addChildViewController(newController)
                 masterViewController.view.addSubview(newController.view)
@@ -82,14 +82,14 @@ class Alert {
                 
                 // Starting animation
                 NSAnimationContext.beginGrouping()
-                NSAnimationContext.current().duration = 0.2
+                NSAnimationContext.current.duration = 0.2
                 newController.topConstraint.animator().constant = 0
                 NSAnimationContext.endGrouping()
             case .overlay:
-                let newController = HXAlertOverlay(nibName: "HXAlertOverlay", bundle: nil)!
+                let newController = HXAlertOverlay(nibName: NSNib.Name(rawValue: "HXAlertOverlay"), bundle: nil)
                 masterViewController.addChildViewController(newController)
             case .sidebar:
-                let newController = HXAlertSidebar(nibName: "HXAlertSidebar", bundle: nil)!
+                let newController = HXAlertSidebar(nibName: NSNib.Name(rawValue: "HXAlertSidebar"), bundle: nil)
                 masterViewController.addChildViewController(newController)
             }
         }
@@ -200,8 +200,8 @@ class Alert {
             controller.button_accept.isEnabled = false
             
             NSAnimationContext.beginGrouping()
-            NSAnimationContext.current().duration = 0.2
-            NSAnimationContext.current().completionHandler = {
+            NSAnimationContext.current.duration = 0.2
+            NSAnimationContext.current.completionHandler = {
                 Alert.alertShowing = false
                 Alert.dequeue()
             }

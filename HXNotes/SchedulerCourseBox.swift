@@ -15,7 +15,7 @@ class SchedulerCourseBox: NSView {
     /// Return a new instance of a HXLectureLedger based on the nib template.
     static func instance(with course: Course, schedulingDelegate: SchedulingDelegate) -> SchedulerCourseBox! {
         var theObjects: NSArray = []
-        Bundle.main.loadNibNamed("SchedulerCourseBox", owner: nil, topLevelObjects: &theObjects)
+        Bundle.main.loadNibNamed(NSNib.Name(rawValue: "SchedulerCourseBox"), owner: nil, topLevelObjects: &theObjects)
         // Get NSView from top level objects returned from nib load
         if let newBox = theObjects.filter({$0 is SchedulerCourseBox}).first as? SchedulerCourseBox {
             newBox.initialize(with: course, schedulingDelegate: schedulingDelegate)
@@ -107,7 +107,7 @@ class SchedulerCourseBox: NSView {
         schedulingDelegate?.schedulingUpdatedTimeSlot()
     }
     
-    func confirmRemoveCourse() {
+    @objc func confirmRemoveCourse() {
         schedulingDelegate?.schedulingRemove(course: course)
     }
     
@@ -142,9 +142,9 @@ class SchedulerCourseBox: NSView {
     @IBAction func action_colorWheel(_ sender: NSButton) {
         sender.window!.makeFirstResponder(sender)
         NSApp.orderFrontColorPanel(self)
-        NSColorPanel.shared().setTarget(self)
-        NSColorPanel.shared().showsAlpha = false
-        NSColorPanel.shared().color = self.boxDrag.fillColor
+        NSColorPanel.shared.setTarget(self)
+        NSColorPanel.shared.showsAlpha = false
+        NSColorPanel.shared.color = self.boxDrag.fillColor
     }
     override func changeColor(_ sender: Any?) {
         if let sender = sender as? NSColorPanel  {

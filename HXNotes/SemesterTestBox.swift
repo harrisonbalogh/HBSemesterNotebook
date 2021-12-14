@@ -15,7 +15,7 @@ class SemesterTestBox: NSView {
     /// Return a new instance of a HXCourseBox based on the nib template.
     static func instance(with test: Test) -> SemesterTestBox! {
         var theObjects: NSArray = []
-        Bundle.main.loadNibNamed("SemesterTestBox", owner: nil, topLevelObjects: &theObjects)
+        Bundle.main.loadNibNamed(NSNib.Name(rawValue: "SemesterTestBox"), owner: nil, topLevelObjects: &theObjects)
         // Get NSView from top level objects returned from nib load
         if let newBox = theObjects.filter({$0 is SemesterTestBox}).first as? SemesterTestBox {
             newBox.initialize(with: test)
@@ -59,12 +59,12 @@ class SemesterTestBox: NSView {
         
         self.trackingAreas.forEach({self.removeTrackingArea($0)})
         
-        let trackingArea = NSTrackingArea(rect: self.bounds, options: [.activeInKeyWindow, .cursorUpdate, .mouseEnteredAndExited], owner: self, userInfo: nil)
+        let trackingArea = NSTrackingArea(rect: self.bounds, options: [NSTrackingArea.Options.activeInKeyWindow, NSTrackingArea.Options.cursorUpdate, NSTrackingArea.Options.mouseEnteredAndExited], owner: self, userInfo: nil)
         addTrackingArea(trackingArea)
     }
     
     override func cursorUpdate(with event: NSEvent) {
-        NSCursor.pointingHand().set()
+        NSCursor.pointingHand.set()
     }
     
     override func mouseEntered(with event: NSEvent) {

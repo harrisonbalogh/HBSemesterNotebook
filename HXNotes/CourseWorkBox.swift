@@ -15,7 +15,7 @@ class CourseWorkBox: NSView {
     /// Return a new instance of a HXCourseBox based on the nib template.
     static func instance(with work: Work) -> CourseWorkBox! {
         var theObjects: NSArray = []
-        Bundle.main.loadNibNamed("CourseWorkBox", owner: nil, topLevelObjects: &theObjects)
+        Bundle.main.loadNibNamed(NSNib.Name(rawValue: "CourseWorkBox"), owner: nil, topLevelObjects: &theObjects)
         // Get NSView from top level objects returned from nib load
         if let newBox = theObjects.filter({$0 is CourseWorkBox}).first as? CourseWorkBox {
             newBox.initialize(with: work)

@@ -91,7 +91,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if shouldFail || (failError != nil) {
             // Report any error we got.
             if let error = failError {
-                NSApplication.shared().presentError(error)
+                NSApplication.shared.presentError(error)
                 fatalError("Unresolved error: \(error), \(error.userInfo)")
             }
             fatalError("Unsresolved error: \(failureReason)")
@@ -119,7 +119,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 try managedObjectContext.save()
             } catch {
                 let nserror = error as NSError
-                NSApplication.shared().presentError(nserror)
+                NSApplication.shared.presentError(nserror)
             }
         }
     }
@@ -129,7 +129,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         return managedObjectContext.undoManager
     }
 
-    func applicationShouldTerminate(_ sender: NSApplication) -> NSApplicationTerminateReply {
+    func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
         // Save changes in the application's managed object context before the application terminates.
         
         if !managedObjectContext.commitEditing() {
@@ -162,7 +162,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             alert.addButton(withTitle: cancelButton)
             
             let answer = alert.runModal()
-            if answer == NSAlertSecondButtonReturn {
+            if answer == NSApplication.ModalResponse.alertSecondButtonReturn {
                 return .terminateCancel
             }
         }
@@ -189,16 +189,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     func createMenuBarIcon() {
         if statusItem == nil {
-            statusItem = NSStatusBar.system().statusItem(withLength: NSSquareStatusItemLength)
+            statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
             // Menu Bar Icon
             if let button = statusItem.button {
                 button.image = #imageLiteral(resourceName: "menu_icon@")
                 button.target = self
                 button.action = #selector(self.toggleMenuBarPopover(sender:))
             }
-            menuBarPopover.contentViewController = MenuBarPopoverViewController(nibName: "MenuBarPopover", bundle: nil)
+            menuBarPopover.contentViewController = MenuBarPopoverViewController(nibName: NSNib.Name(rawValue: "MenuBarPopover"), bundle: nil)
             
-            eventMonitor = EventMonitor(mask: [NSEventMask.leftMouseDown, NSEventMask.rightMouseDown], handler: {event in
+            eventMonitor = EventMonitor(mask: [NSEvent.EventTypeMask.leftMouseDown, NSEvent.EventTypeMask.rightMouseDown], handler: {event in
                 if self.menuBarPopover.isShown {
                     self.closeMenuBarPopover(sender: event)
                 }
@@ -208,7 +208,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     func removeMenuBarIcon() {
         if statusItem != nil {
-            NSStatusBar.system().removeStatusItem(statusItem)
+            NSStatusBar.system.removeStatusItem(statusItem)
             statusItem = nil
             eventMonitor?.stop()
             eventMonitor = nil
@@ -226,7 +226,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         menuBarPopover.performClose(sender)
     }
     
-    func toggleMenuBarPopover(sender: AnyObject?) {
+    @objc func toggleMenuBarPopover(sender: AnyObject?) {
         if menuBarPopover.isShown {
             closeMenuBarPopover(sender: sender)
         } else {

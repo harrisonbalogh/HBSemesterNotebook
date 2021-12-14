@@ -19,7 +19,7 @@ public class Course: NSManagedObject {
     /// on a Course that is already sorted.
     var needsSort = true
     
-    let appDelegate = NSApplication.shared().delegate as! AppDelegate
+    let appDelegate = NSApplication.shared.delegate as! AppDelegate
     // MARK: - Creating/Retrieving/Producing Objects
     
     /// Returns a newly created TimeSlot object model for this course. Will fail and return nil
@@ -48,7 +48,7 @@ public class Course: NSManagedObject {
     /// the day and month that this lecture occurred on.
     @discardableResult func createLecture(during timeSlot: TimeSlot, on day: Int?, in month: Int?, at index: Int?) -> Lecture {
         
-        let appDelegate = NSApplication.shared().delegate as! AppDelegate
+        let appDelegate = NSApplication.shared.delegate as! AppDelegate
         
         let newLecture = NSEntityDescription.insertNewObject(forEntityName: "Lecture", into: appDelegate.managedObjectContext) as! Lecture
         
@@ -86,7 +86,7 @@ public class Course: NSManagedObject {
     /// Returns a newly created Work object model for this course.
     func createWork() -> Work {
         
-        let appDelegate = NSApplication.shared().delegate as! AppDelegate
+        let appDelegate = NSApplication.shared.delegate as! AppDelegate
         
         let newWork = NSEntityDescription.insertNewObject(forEntityName: "Work", into: appDelegate.managedObjectContext) as! Work
         
@@ -102,7 +102,7 @@ public class Course: NSManagedObject {
     /// Returns a newly created Test object model for this course.
     func createTest() -> Test {
         
-        let appDelegate = NSApplication.shared().delegate as! AppDelegate
+        let appDelegate = NSApplication.shared.delegate as! AppDelegate
         
         let newTest = NSEntityDescription.insertNewObject(forEntityName: "Test", into: appDelegate.managedObjectContext) as! Test
         
@@ -183,7 +183,7 @@ public class Course: NSManagedObject {
             return nil
         }
         
-        // This func assumes course timeslots are sorted.
+        // This func requires course timeslots to be sorted.
         if self.needsSort {
             self.sortTimeSlots()
         }
@@ -198,8 +198,11 @@ public class Course: NSManagedObject {
             let timeStart = time.startMinute
             let timeStop = time.stopMinute
             
+//            print("timeDay: \(timeDay), weekday: \(weekday), minuteOfDay: \(minuteOfDay), timeStart: \(timeStart), timeStop: \(timeStop)")
+            
             if weekday == timeDay && timeStart - 5 < minuteOfDay && minuteOfDay < timeStop {
                 // during class period
+//                print("During lecture!")
                 return time
             } else if weekday < timeDay || (weekday == timeDay && minuteOfDay < timeStart - 5){
                 // Timeslots are sorted, so we don't need to continue searching past today's date

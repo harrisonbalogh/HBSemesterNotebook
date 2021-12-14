@@ -13,7 +13,7 @@ class CourseDocsBox: NSBox {
     /// Return a new instance of a HXLectureLedger based on the nib template.
     static func instance(with path: URL) -> CourseDocsBox! {
         var theObjects: NSArray = []
-        Bundle.main.loadNibNamed("CourseDocsBox", owner: nil, topLevelObjects: &theObjects)
+        Bundle.main.loadNibNamed(NSNib.Name(rawValue: "CourseDocsBox"), owner: nil, topLevelObjects: &theObjects)
         // Get NSView from top level objects returned from nib load
         if let newBox = theObjects.filter({$0 is CourseDocsBox}).first as? CourseDocsBox {
             newBox.initialize(with: path)
@@ -43,6 +43,6 @@ class CourseDocsBox: NSBox {
     }
     
     @IBAction func action_select(_ sender: NSButton) {
-        NSWorkspace.shared().open(pointingFile.deletingLastPathComponent())
+        NSWorkspace.shared.open(pointingFile.deletingLastPathComponent())
     }
 }

@@ -18,7 +18,7 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
     
     // Children controllers
     var sidebarPageController: SidebarPageController!
-    let appDelegate = NSApplication.shared().delegate as! AppDelegate
+    let appDelegate = NSApplication.shared.delegate as! AppDelegate
     
     // Mark: Initialize the viewController ..................................................................
     override func viewDidLoad() {
@@ -127,7 +127,7 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
         // Prevent more than one preferences view from being created.
         if prefNav == nil {
             
-            pref = PreferencesViewController(nibName: "PreferencesView", bundle: nil)!
+            pref = PreferencesViewController(nibName: NSNib.Name(rawValue: "PreferencesView"), bundle: nil)
             self.addChildViewController(pref)
             self.view.addSubview(pref.view)
             pref.masterVC = self
@@ -138,7 +138,7 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
             prefTrailingAnchor = pref.view.trailingAnchor.constraint(equalTo: splitView_content.trailingAnchor, constant: splitView_content.frame.width)
             prefTrailingAnchor.isActive = true
             
-            prefNav = PreferencesNavViewController(nibName: "PreferencesNavView", bundle: nil)!
+            prefNav = PreferencesNavViewController(nibName: NSNib.Name(rawValue: "PreferencesNavView"), bundle: nil)
             self.addChildViewController(prefNav)
             splitView_sidebar.addSubview(prefNav.view)
             prefNav.view.frame = splitView_sidebar.frame
@@ -151,7 +151,7 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
             
             // Animate the box to reveal it since its initially off-screen (and fade stuff behind it)
             NSAnimationContext.beginGrouping()
-            NSAnimationContext.current().duration = 0.25
+            NSAnimationContext.current.duration = 0.25
             prefNavLeadingAnchor.animator().constant = 0
             prefTrailingAnchor.animator().constant = 0
             NSAnimationContext.endGrouping()
@@ -166,8 +166,8 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
             // Should only do the following if user updated the time slot settings.
             self.schedulingUpdatedTimeSlot()
             NSAnimationContext.beginGrouping()
-            NSAnimationContext.current().duration = 0.25
-            NSAnimationContext.current().completionHandler = {
+            NSAnimationContext.current.duration = 0.25
+            NSAnimationContext.current.completionHandler = {
                 if self.prefNav != nil {
                     self.prefNav.view.removeFromSuperview()
                     self.prefNav.removeFromParentViewController()
@@ -234,7 +234,7 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
             sundayLabel.textColor = NSColor.gray
             dayLabelStack.insertArrangedSubview(sundayLabel, at: 0)
             let newLine = NSBox()
-            newLine.boxType = NSBoxType.separator
+            newLine.boxType = NSBox.BoxType.separator
             newLine.frame = NSMakeRect(0, 0, 0, 100)
             verticalLineStack.addArrangedSubview(newLine)
         }
@@ -253,7 +253,7 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
             saturdayLabel.textColor = NSColor.gray
             dayLabelStack.addArrangedSubview(saturdayLabel)
             let newLine = NSBox()
-            newLine.boxType = NSBoxType.separator
+            newLine.boxType = NSBox.BoxType.separator
             newLine.frame = NSMakeRect(0, 0, 0, 100)
             verticalLineStack.addArrangedSubview(newLine)
         }
@@ -278,13 +278,13 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
             while prefixedTimeLabels.count != defaultHour - Int(earliestTime/60) {
                 
                 let newLine = NSBox()
-                newLine.boxType = NSBoxType.separator
+                newLine.boxType = NSBox.BoxType.separator
                 newLine.frame = NSMakeRect(0, 0, 100, 0)
                 horizontalLineStack.addArrangedSubview(newLine)
                 
                 let newLabel = NSTextField(labelWithString: "\(HXTimeFormatter.formatHour(defaultHour - prefixedTimeLabels.count - 1)):00")
                 newLabel.textColor = NSColor.lightGray
-                newLabel.setContentHuggingPriority(NSLayoutPriority(100), for: .vertical)
+                newLabel.setContentHuggingPriority(NSLayoutConstraint.Priority(100), for: .vertical)
                 timeLabelStack.insertArrangedSubview(newLabel, at: 0)
                 prefixedTimeLabels.append(newLabel)
             }
@@ -308,13 +308,13 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
             while suffixedTimeLabels.count != Int(latestTime/60) - defaultHour {
                 
                 let newLine = NSBox()
-                newLine.boxType = NSBoxType.separator
+                newLine.boxType = NSBox.BoxType.separator
                 newLine.frame = NSMakeRect(0, 0, 100, 0)
                 horizontalLineStack.addArrangedSubview(newLine)
                 
                 let newLabel = NSTextField(labelWithString: "\(HXTimeFormatter.formatHour(1 + defaultHour + suffixedTimeLabels.count)):00")
                 newLabel.textColor = NSColor.lightGray
-                newLabel.setContentHuggingPriority(NSLayoutPriority(100), for: .vertical)
+                newLabel.setContentHuggingPriority(NSLayoutConstraint.Priority(100), for: .vertical)
                 timeLabelStack.addArrangedSubview(newLabel)
                 suffixedTimeLabels.append(newLabel)
             }
@@ -392,11 +392,11 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
             return
         }
         
-        lectureEditorVC = LectureEditorViewController(nibName: "LectureEditor", bundle: nil)!
+        lectureEditorVC = LectureEditorViewController(nibName: NSNib.Name(rawValue: "LectureEditor"), bundle: nil)
         self.addChildViewController(lectureEditorVC)
         splitView_content.addSubview(lectureEditorVC.view)
         lectureEditorVC.view.frame = splitView_content.bounds
-        lectureEditorVC.view.autoresizingMask = [.viewWidthSizable, .viewHeightSizable]
+        lectureEditorVC.view.autoresizingMask = [NSView.AutoresizingMask.width, NSView.AutoresizingMask.height]
         lectureEditorVC.selectionDelegate = self
         lectureEditorVC.notifySelected(lecture: lecture)
         
@@ -410,8 +410,8 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
         lectureEditorRunningDisplay = true
         
         NSAnimationContext.beginGrouping()
-        NSAnimationContext.current().duration = 0.25
-        NSAnimationContext.current().completionHandler = {
+        NSAnimationContext.current.duration = 0.25
+        NSAnimationContext.current.completionHandler = {
             self.lectureEditorVC.view.removeFromSuperview()
             self.lectureEditorVC.removeFromParentViewController()
             self.lectureEditorVC = nil
@@ -432,13 +432,15 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
         editBoxTopConstraint.constant = 0
         if lectureEditorVC != nil {
             if lectureEditorVC.selectedLecture != nil {
-                lectureEditorVC.topBarHeightConstraint.constant = 0
+                lectureEditorVC.topBarTopConstraint.constant = -(DEFAULT_TOP_CONSTRAINT)
             }
         }
     }
     func revealTitlebar() {
         editBoxTopConstraint.constant = DEFAULT_TOP_CONSTRAINT
-        lectureEditorVC.topBarHeightConstraint.constant = DEFAULT_TOP_CONSTRAINT + 1
+        if lectureEditorVC != nil {
+            lectureEditorVC.topBarTopConstraint.constant = 0
+        }
     }
     
     // MARK: ––– Semester Selection –––
@@ -513,8 +515,8 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
         yearLabelAnimated.stringValue = "\(nextSemester.year)"
         
         NSAnimationContext.beginGrouping()
-        NSAnimationContext.current().duration = 0.2
-        NSAnimationContext.current().completionHandler = {
+        NSAnimationContext.current.duration = 0.2
+        NSAnimationContext.current.completionHandler = {
             self.semesterButton.title = nextSemester.title!.capitalized
             self.yearLabel.stringValue = "\(nextSemester.year)"
             self.yrButtonBotConstraint.constant = 0
@@ -545,8 +547,8 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
         yearLabelAnimated.stringValue = "\(prevSemester.year)"
  
         NSAnimationContext.beginGrouping()
-        NSAnimationContext.current().duration = 0.2
-        NSAnimationContext.current().completionHandler = {
+        NSAnimationContext.current.duration = 0.2
+        NSAnimationContext.current.completionHandler = {
             self.semesterButton.title = prevSemester.title!.capitalized
             self.yearLabel.stringValue = "\(prevSemester.year)"
             self.yrButtonBotConstraint.constant = 0
@@ -605,9 +607,9 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
 //            editorViewController.notifyPrint()
 //        }
         if lectureEditorVC == nil {
-            splitView_content.print(self)            
+            splitView_content.printView(self)            
         } else {
-            lectureEditorVC.textViewContent.print(self)
+            lectureEditorVC.textViewContent.printView(self)
         }
     }
     ///
@@ -669,9 +671,9 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
                 viewMaxWidthConstraint.isActive = false
                 splitViewMaxWidth.constant = 10000
                 
-                let mainScreen = NSScreen.main()
+                let mainScreen = NSScreen.main
                 let screenDescrip = mainScreen?.deviceDescription
-                let screenSize = screenDescrip?[NSDeviceSize] as! NSSize
+                let screenSize = screenDescrip?[NSDeviceDescriptionKey.size] as! NSSize
                 
                 // Limits width reset to be within screen bounds
                 var adjustedWidth = splitView_sidebar.frame.width + splitView_content.frame.width + 2
@@ -697,7 +699,7 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
     }
     
     @IBAction func action_sidebarOnly(_ sender: NSButton) {
-        if sender.state == NSOnState {
+        if sender.state == NSControl.StateValue.on {
             isSidebarOnly = true
         } else {
             isSidebarOnly = false
@@ -1018,7 +1020,7 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
             return
         }
         sidebarPageController.courseVC.loadWork(from: selectedCourse, showingCompleted:
-            sidebarPageController.courseVC.toggleCompletedWork.state == NSOnState)
+            sidebarPageController.courseVC.toggleCompletedWork.state == NSControl.StateValue.on)
     }
     
     func schedulingUpdateTest() {
@@ -1026,7 +1028,7 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
             return
         }
         sidebarPageController.courseVC.loadTests(from: selectedCourse, showingCompleted:
-            sidebarPageController.courseVC.toggleCompletedTests.state == NSOnState)
+            sidebarPageController.courseVC.toggleCompletedTests.state == NSControl.StateValue.on)
     }
     
     func schedulingUpdateStartDate(with start: Date) {
@@ -1056,13 +1058,12 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
 
         perform(#selector(populateSemesterAfterClearingOldInformation), with: nil, afterDelay: 0)
     }
-    func populateSemesterAfterClearingOldInformation() {
+    @objc func populateSemesterAfterClearingOldInformation() {
         let semesterPVC = sidebarPageController.semesterVC!
         
         semesterPVC.loadCourses(from: selectedSemester)
         semesterPVC.loadWork(from: selectedSemester)
         semesterPVC.loadTests(from: selectedSemester)
-        
         
         semesterPVC.optimizeSplitViewSpace()
         
@@ -1085,7 +1086,7 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
         
         perform(#selector(populateCourseAfterClearingOldInformation), with: nil, afterDelay: 0.1)
     }
-    func populateCourseAfterClearingOldInformation() {
+    @objc func populateCourseAfterClearingOldInformation() {
         let coursePVC = sidebarPageController.courseVC!
         
         coursePVC.loadLectures(from: self.selectedCourse)
@@ -1118,7 +1119,7 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
             return
         }
         coursePVC.loadWork(from: selectedCourse, showingCompleted:
-            sidebarPageController.courseVC.toggleCompletedWork.state == NSOnState)
+            sidebarPageController.courseVC.toggleCompletedWork.state == NSControl.StateValue.on)
     }
     
     func sidebarCoursePopulateCompletedTests(_ coursePVC: CoursePageViewController) {
@@ -1126,7 +1127,7 @@ class MasterViewController: NSViewController, NSSplitViewDelegate, SelectionDele
             return
         }
         coursePVC.loadTests(from: selectedCourse, showingCompleted:
-            sidebarPageController.courseVC.toggleCompletedTests.state == NSOnState)
+            sidebarPageController.courseVC.toggleCompletedTests.state == NSControl.StateValue.on)
     }
     
     // MARK: - Document Drop Delegation

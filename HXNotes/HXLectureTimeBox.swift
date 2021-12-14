@@ -13,7 +13,7 @@ class HXLectureTimeBox: NSView {
     /// Return a new instance of a HXCourseEditBox based on the nib template.
     static func instance(from timeSlot: TimeSlot, with owner: Any) -> HXLectureTimeBox! {
         var theObjects: NSArray = []
-        Bundle.main.loadNibNamed("HXLectureTimeBox", owner: nil, topLevelObjects: &theObjects)
+        Bundle.main.loadNibNamed(NSNib.Name(rawValue: "HXLectureTimeBox"), owner: nil, topLevelObjects: &theObjects)
         // Get NSView from top level objects returned from nib load
         if let newBox = theObjects.filter({$0 is HXLectureTimeBox}).first as? HXLectureTimeBox {
             newBox.initialize(from: timeSlot, with: owner)

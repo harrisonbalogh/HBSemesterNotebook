@@ -20,8 +20,8 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
     @IBOutlet weak var dropdownTopConstraint: NSLayoutConstraint!
     
     // MARK: Object models
-    let appDelegate = NSApplication.shared().delegate as! AppDelegate
-    let sharedFontManager = NSFontManager.shared()
+    let appDelegate = NSApplication.shared.delegate as! AppDelegate
+    let sharedFontManager = NSFontManager.shared
 
     weak var selectedCourse: Course! {
         didSet {
@@ -40,10 +40,10 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
                 if selectedCourse.lectures!.count != 0 {
                     // Animate showing the lectures
                     NSAnimationContext.beginGrouping()
-                    NSAnimationContext.current().duration = 0.25
+                    NSAnimationContext.current.duration = 0.25
                     collectionView.animator().alphaValue = 1
-                    NSAnimationContext.current().duration = 0.4
-                    NSAnimationContext.current().completionHandler = {
+                    NSAnimationContext.current.duration = 0.4
+                    NSAnimationContext.current.completionHandler = {
                         self.labelNoCourse.isHidden = true
                         self.subLabelNoCourse.isHidden = true
                     }
@@ -100,14 +100,14 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
                 subLabelNoCourse.stringValue = "Courses are selectable to the left."
                 // Animate hiding the lecture
                 NSAnimationContext.beginGrouping()
-                NSAnimationContext.current().completionHandler = {
+                NSAnimationContext.current.completionHandler = {
                     if self.selectedCourse == nil {
                         self.collectionView.reloadData()
                     }
                 }
-                NSAnimationContext.current().duration = 0.25
+                NSAnimationContext.current.duration = 0.25
                 collectionView.animator().alphaValue = 0
-                NSAnimationContext.current().duration = 0.4
+                NSAnimationContext.current.duration = 0.4
                 labelNoCourse.animator().alphaValue = 1
                 subLabelNoCourse.animator().alphaValue = 1
                 NSAnimationContext.endGrouping()
@@ -127,11 +127,11 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
         
         collectionView.alphaValue = 0
         
-        findViewController = HXFindViewController(nibName: "HXFindView", bundle: nil)
+        findViewController = HXFindViewController(nibName: NSNib.Name(rawValue: "HXFindView"), bundle: nil)
         self.addChildViewController(findViewController)
-        exportViewController = HXExportViewController(nibName: "HXExportView", bundle: nil)
+        exportViewController = HXExportViewController(nibName: NSNib.Name(rawValue: "HXExportView"), bundle: nil)
         self.addChildViewController(exportViewController)
-        replaceViewController = HXFindReplaceViewController(nibName: "HXFindReplaceView", bundle: nil)
+        replaceViewController = HXFindReplaceViewController(nibName: NSNib.Name(rawValue: "HXFindReplaceView"), bundle: nil)
         self.addChildViewController(replaceViewController)
         
         self.view.wantsLayer = true
@@ -146,7 +146,7 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
     }
     
     /// Received from Notification Center on a managed object context change.
-    func notifyContextObjectsUpdate(notification: NSNotification) {
+    @objc func notifyContextObjectsUpdate(notification: NSNotification) {
         guard let userInfo = notification.userInfo else { return }
 
         if let inserts = userInfo[NSInsertedObjectsKey] as? Set<NSManagedObject>, inserts.count > 0 {
@@ -292,7 +292,7 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
         
         let flowLayout = NSCollectionViewFlowLayout()
         flowLayout.itemSize = NSSize(width: 50, height: 50)
-        flowLayout.sectionInset = EdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        flowLayout.sectionInset = NSEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         flowLayout.minimumInteritemSpacing = 0
         flowLayout.minimumLineSpacing = 0
         flowLayout.sectionHeadersPinToVisibleBounds = true
@@ -328,7 +328,7 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
     func collectionView(_ itemForRepresentedObjectAtcollectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
         
         // Create LectureCollectionViewItem
-        let item = collectionView.makeItem(withIdentifier: "LectureCollectionViewItem", for: indexPath) as! LectureCollectionViewItem
+        let item = collectionView.makeItem(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "LectureCollectionViewItem"), for: indexPath) as! LectureCollectionViewItem
         
         if item.lecture == nil {
             print("   Lecture field is nil. Cool")
@@ -337,7 +337,7 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
         }
         
         // Initialize the LectureCollectionViewItem
-        let lecture = selectedCourse.lectures!.object(at: Int(indexPath[0].toIntMax())) as! Lecture
+        let lecture = selectedCourse.lectures!.object(at: Int(Int64(indexPath[0]))) as! Lecture
         print("    Printing all lecture content...")
         for case let lecture2 as Lecture in selectedCourse.lectures! {
             if lecture2.content == nil {
@@ -354,21 +354,21 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
         item.owner = self
 //        item.textView_lecture.parentController = item
         
-        NotificationCenter.default.removeObserver(item, name: .NSTextDidChange, object: item.textView_lecture)
+        NotificationCenter.default.removeObserver(item, name: NSText.didChangeNotification, object: item.textView_lecture)
         NotificationCenter.default.addObserver(item, selector: #selector(LectureCollectionViewItem.notifyTextChange),
-                                               name: .NSTextDidChange, object: item.textView_lecture)
+                                               name: NSText.didChangeNotification, object: item.textView_lecture)
         
         print("          -> lecture.content!.string: \(lecture.content!.string)")
         return item
     }
     
-    func collectionView(_ collectionView: NSCollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> NSView {
+    func collectionView(_ collectionView: NSCollectionView, viewForSupplementaryElementOfKind kind: NSCollectionView.SupplementaryElementKind, at indexPath: IndexPath) -> NSView {
         
         // Create LectureHeaderView
-        let header = collectionView.makeSupplementaryView(ofKind: NSCollectionElementKindSectionHeader, withIdentifier: "LectureHeaderView", for: indexPath) as! LectureHeaderView
+        let header = collectionView.makeSupplementaryView(ofKind: NSCollectionView.SupplementaryElementKind.sectionHeader, withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "LectureHeaderView"), for: indexPath) as! LectureHeaderView
         
         // Initialize the LectureHeaderView
-        let lecture = selectedCourse.lectures!.array[Int(indexPath[0].toIntMax())] as! Lecture
+        let lecture = selectedCourse.lectures!.array[Int(Int64(indexPath[0]))] as! Lecture
         header.label_lectureTitle.stringValue = "Lecture \(lecture.number)"
         let timeMonth = lecture.month
         let timeDay = lecture.day
@@ -394,38 +394,38 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
         header.button_style_color.alphaValue = 0
         header.box_style_color.alphaValue = 0
         header.label_style_font.alphaValue = 0
-        NotificationCenter.default.removeObserver(header, name: .NSControlTextDidEndEditing, object: header.label_customTitle)
-        NotificationCenter.default.removeObserver(header, name: .NSControlTextDidChange, object: header.label_customTitle)
+        NotificationCenter.default.removeObserver(header, name: NSControl.textDidEndEditingNotification, object: header.label_customTitle)
+        NotificationCenter.default.removeObserver(header, name: NSControl.textDidChangeNotification, object: header.label_customTitle)
         NotificationCenter.default.addObserver(header, selector: #selector(LectureHeaderView.notifyCustomTitleEndEditing),
-                                               name: .NSControlTextDidEndEditing, object: header.label_customTitle)
+                                               name: NSControl.textDidEndEditingNotification, object: header.label_customTitle)
         NotificationCenter.default.addObserver(header, selector: #selector(LectureHeaderView.notifyCustomTitleChange),
-                                               name: .NSControlTextDidChange, object: header.label_customTitle)
+                                               name: NSControl.textDidChangeNotification, object: header.label_customTitle)
         header.owner = self
         
         if let cvi = collectionView.item(at: indexPath) as? LectureCollectionViewItem {
             cvi.header = header
             header.collectionViewItem = cvi
             
-            NotificationCenter.default.removeObserver(header, name: .NSTextViewDidChangeSelection, object: cvi.textView_lecture)
-            NotificationCenter.default.removeObserver(header, name: .NSTextViewDidChangeTypingAttributes, object: cvi.textView_lecture)
+            NotificationCenter.default.removeObserver(header, name: NSTextView.didChangeSelectionNotification, object: cvi.textView_lecture)
+            NotificationCenter.default.removeObserver(header, name: NSTextView.didChangeTypingAttributesNotification, object: cvi.textView_lecture)
             NotificationCenter.default.addObserver(header, selector: #selector(LectureHeaderView.selectionChange),
-                                                   name: .NSTextViewDidChangeSelection, object: cvi.textView_lecture)
+                                                   name: NSTextView.didChangeSelectionNotification, object: cvi.textView_lecture)
             NotificationCenter.default.addObserver(header, selector: #selector(LectureHeaderView.traitChange),
-                                                   name: .NSTextViewDidChangeTypingAttributes, object: cvi.textView_lecture)
+                                                   name: NSTextView.didChangeTypingAttributesNotification, object: cvi.textView_lecture)
         }
         return header
     }
     
     func collectionView(_ collectionView: NSCollectionView, layout collectionViewLayout: NSCollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> NSSize {
         
-        guard let lecture = selectedCourse.lectures!.object(at: Int(indexPath[0].toIntMax())) as? Lecture
+        guard let lecture = selectedCourse.lectures!.object(at: Int(Int64(indexPath[0]))) as? Lecture
             else { return NSSize(width: collectionView.bounds.width, height: 40) }
         
         let h = calculateCollectionViewItemHeight(from: lecture)
         
         var hBuffer: CGFloat = 0
         // If this is the last CVI, then add bottom buffer space as specified in preferences...
-        if Int(indexPath[0].toIntMax()) == (collectionView.numberOfSections - 1) {
+        if Int(Int64(indexPath[0])) == (collectionView.numberOfSections - 1) {
             // Last object...
             hBuffer = (collectionClipView.enclosingScrollView!.frame.height - 30) * (CGFloat(AppPreference.bottomBufferSpace) / 100)
         }
@@ -460,10 +460,10 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
     /// Reveal or hide the top bar container.
     func topBarShown(_ visible: Bool) {
         NSAnimationContext.beginGrouping()
-        NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
-        NSAnimationContext.current().duration = 0.25
+        NSAnimationContext.current.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
+        NSAnimationContext.current.duration = 0.25
         if visible {
-            NSAnimationContext.current().completionHandler = {
+            NSAnimationContext.current.completionHandler = {
                 // If showing top bar and isFind or isReplace, then set firstResponders
                 if self.isReplacing {
                     NSApp.keyWindow?.makeFirstResponder(self.replaceViewController.textField_find)
@@ -473,7 +473,7 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
             }
             dropdownTopConstraint.animator().constant = 0
         } else {
-            NSAnimationContext.current().completionHandler = {
+            NSAnimationContext.current.completionHandler = {
                 // Make sure all the VC's views are removed from their supers.
                 if self.exportViewController.view.superview != nil && !self.isExporting {
                     self.exportViewController.view.removeFromSuperview()
@@ -529,7 +529,7 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
         
         let fullRange = NSRange(location: 0, length: attribString.length)
         do {
-            let data = try attribString.fileWrapper(from: fullRange, documentAttributes: [NSDocumentTypeDocumentAttribute: NSRTFDTextDocumentType])
+            let data = try attribString.fileWrapper(from: fullRange, documentAttributes: [NSAttributedString.DocumentAttributeKey.documentType: NSAttributedString.DocumentType.rtfd])
             try data.write(to: url, options: .atomic, originalContentsURL: nil) // this for rtfd
         } catch {
             print("Something went wrong.")
@@ -617,7 +617,7 @@ class EditorViewController: NSViewController, NSCollectionViewDataSource, NSColl
                 
                 // Scroll to top
                 NSAnimationContext.beginGrouping()
-                NSAnimationContext.current().duration = 0.5
+                NSAnimationContext.current.duration = 0.5
 //                lectureClipper.animator().setBoundsOrigin(NSPoint(x: 0, y: 0))
                 NSAnimationContext.endGrouping()
                 

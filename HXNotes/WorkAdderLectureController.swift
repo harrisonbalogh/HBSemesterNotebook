@@ -76,7 +76,7 @@ class WorkAdderLectureController: NSViewController {
         descriptionTextView.string = workBox.work!.content!
         
         NotificationCenter.default.addObserver(self, selector: #selector(action_descriptionUpdate),
-                                               name: .NSTextDidChange, object: descriptionTextView)
+                                               name: NSText.didChangeNotification, object: descriptionTextView)
     }
     @IBOutlet weak var completeButton: NSButton!
     @IBAction func action_complete(_ sender: NSButton) {
@@ -133,14 +133,14 @@ class WorkAdderLectureController: NSViewController {
     @IBOutlet weak var buttonCustomDue: NSButton!
     @IBAction func customDueButton(_ sender: NSButton) {
         NSAnimationContext.beginGrouping()
-        NSAnimationContext.current().duration = 0.2
+        NSAnimationContext.current.duration = 0.2
         trailingStackConstraint.animator().constant = self.view.bounds.width
         NSAnimationContext.endGrouping()
     }
     @IBOutlet weak var buttonLectureDue: NSButton!
     @IBAction func lectureDueButton(_ sender: NSButton) {
         NSAnimationContext.beginGrouping()
-        NSAnimationContext.current().duration = 0.2
+        NSAnimationContext.current.duration = 0.2
         trailingStackConstraint.animator().constant = 0
         NSAnimationContext.endGrouping()
     }
@@ -195,7 +195,7 @@ class WorkAdderLectureController: NSViewController {
     }
     
     @IBOutlet var descriptionTextView: NSTextView!
-    func action_descriptionUpdate() {
+    @objc func action_descriptionUpdate() {
         workBox.work!.content = descriptionTextView.string
     }
     

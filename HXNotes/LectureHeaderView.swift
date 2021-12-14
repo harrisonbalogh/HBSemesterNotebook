@@ -29,7 +29,7 @@ import Cocoa
 
         // Drawing code here.
         NSColor(calibratedWhite: 1, alpha: 0.9).set()
-        NSRectFillUsingOperation(dirtyRect, .sourceOver)
+        dirtyRect.fill(using: .sourceOver)
     }
     
     // MARK: - ––– Notifiers –––
@@ -65,7 +65,7 @@ import Cocoa
         if focus {
             // Animate revealing the styling buttons
             NSAnimationContext.beginGrouping()
-            NSAnimationContext.current().duration = 1
+            NSAnimationContext.current.duration = 1
             button_style_underline.animator().alphaValue = 1
             button_style_italicize.animator().alphaValue = 1
             button_style_bold.animator().alphaValue = 1
@@ -83,7 +83,7 @@ import Cocoa
 
             // Animate hiding the styling buttons
             NSAnimationContext.beginGrouping()
-            NSAnimationContext.current().duration = 0.25
+            NSAnimationContext.current.duration = 0.25
             button_style_underline.animator().alphaValue = 0
             button_style_italicize.animator().alphaValue = 0
             button_style_bold.animator().alphaValue = 0
@@ -115,7 +115,7 @@ import Cocoa
     @IBOutlet weak var button_style_center: NSButton!
     @IBOutlet weak var button_style_right: NSButton!
     
-    let sharedFontManager = NSFontManager.shared()
+    let sharedFontManager = NSFontManager.shared
     
     ///
     @IBAction func action_styleUnderline(_ sender: NSButton) {
@@ -166,16 +166,16 @@ import Cocoa
             positionOfSelection = collectionViewItem.textView_lecture.attributedString().length - 1
         }
 
-        if collectionViewItem.textView_lecture.attributedString().attribute(NSUnderlineStyleAttributeName, at: positionOfSelection, effectiveRange: nil) != nil {
-            button_style_underline.state = NSOnState
+        if collectionViewItem.textView_lecture.attributedString().attribute(NSAttributedStringKey.underlineStyle, at: positionOfSelection, effectiveRange: nil) != nil {
+            button_style_underline.state = NSControl.StateValue.on
         } else {
-            button_style_underline.state = NSOffState
+            button_style_underline.state = NSControl.StateValue.off
         }
         
-        if let color = collectionViewItem.textView_lecture.attributedString().attribute(NSForegroundColorAttributeName, at: positionOfSelection, effectiveRange: nil) as? NSColor {
+        if let color = collectionViewItem.textView_lecture.attributedString().attribute(NSAttributedStringKey.foregroundColor, at: positionOfSelection, effectiveRange: nil) as? NSColor {
             box_style_color.fillColor = color
         } else if positionOfSelection != 0 {
-            if let color = collectionViewItem.textView_lecture.attributedString().attribute(NSForegroundColorAttributeName, at: positionOfSelection - 1, effectiveRange: nil) as? NSColor {
+            if let color = collectionViewItem.textView_lecture.attributedString().attribute(NSAttributedStringKey.foregroundColor, at: positionOfSelection - 1, effectiveRange: nil) as? NSColor {
                 box_style_color.fillColor = color
             } else {
                 box_style_color.fillColor = NSColor.black
@@ -184,7 +184,7 @@ import Cocoa
             box_style_color.fillColor = NSColor.black
         }
         
-        if let font = collectionViewItem.textView_lecture.attributedString().attribute(NSFontAttributeName, at: positionOfSelection, effectiveRange: nil) as? NSFont {
+        if let font = collectionViewItem.textView_lecture.attributedString().attribute(NSAttributedStringKey.font, at: positionOfSelection, effectiveRange: nil) as? NSFont {
             if let name = font.familyName {
                 label_style_font.stringValue = name
             } else {
@@ -192,40 +192,40 @@ import Cocoa
             }
         }
         
-        if let parStyle = collectionViewItem.textView_lecture.attributedString().attribute("NSParagraphStyle", at: positionOfSelection, effectiveRange: nil) as? NSParagraphStyle {
+        if let parStyle = collectionViewItem.textView_lecture.attributedString().attribute(NSAttributedStringKey(rawValue: "NSParagraphStyle"), at: positionOfSelection, effectiveRange: nil) as? NSParagraphStyle {
             
-            button_style_left.state = NSOffState
-            button_style_center.state = NSOffState
-            button_style_right.state = NSOffState
+            button_style_left.state = NSControl.StateValue.off
+            button_style_center.state = NSControl.StateValue.off
+            button_style_right.state = NSControl.StateValue.off
             
             if parStyle.alignment.rawValue == 0 {
-                button_style_left.state = NSOnState
-                button_style_center.state = NSOffState
-                button_style_right.state = NSOffState
+                button_style_left.state = NSControl.StateValue.on
+                button_style_center.state = NSControl.StateValue.off
+                button_style_right.state = NSControl.StateValue.off
             } else if parStyle.alignment.rawValue == 1 {
-                button_style_right.state = NSOnState
-                button_style_left.state = NSOffState
-                button_style_center.state = NSOffState
+                button_style_right.state = NSControl.StateValue.on
+                button_style_left.state = NSControl.StateValue.off
+                button_style_center.state = NSControl.StateValue.off
             } else if parStyle.alignment.rawValue == 2 {
-                button_style_center.state = NSOnState
-                button_style_left.state = NSOffState
-                button_style_right.state = NSOffState
+                button_style_center.state = NSControl.StateValue.on
+                button_style_left.state = NSControl.StateValue.off
+                button_style_right.state = NSControl.StateValue.off
             }
         }
         
         if traits.contains(.boldFontMask) {
-            button_style_bold.state = NSOnState
+            button_style_bold.state = NSControl.StateValue.on
             button_style_bold.tag = Int(NSFontTraitMask.unboldFontMask.rawValue)
         } else {
-            button_style_bold.state = NSOffState
+            button_style_bold.state = NSControl.StateValue.off
             button_style_bold.tag = Int(NSFontTraitMask.boldFontMask.rawValue)
         }
         
         if traits.contains(.italicFontMask) {
-            button_style_italicize.state = NSOnState
+            button_style_italicize.state = NSControl.StateValue.on
             button_style_italicize.tag = Int(NSFontTraitMask.unitalicFontMask.rawValue)
         } else {
-            button_style_italicize.state = NSOffState
+            button_style_italicize.state = NSControl.StateValue.off
             button_style_italicize.tag = Int(NSFontTraitMask.italicFontMask.rawValue)
         }
     }

@@ -45,9 +45,9 @@ class ScheduleAssistant: NSObject {
             
             let hour = NSCalendar.current.component(.hour, from: Date())
             
-            let timeTill = futureTimeSlot.startMinute - (hour*60 + minute)
+            let timeTill = Int(futureTimeSlot.startMinute) - (hour*60 + minute)
             
-            let _ = Alert(hour: hour, minute: minute, course: futureTimeSlot.course!, content: "lecture \(futureTimeSlot.course!.theoreticalLectureCount())is starting in \(timeTill) minutes.", question: nil, deny: "Close", action: nil, target: nil, type: .future)
+            let _ = Alert(hour: hour, minute: minute, course: futureTimeSlot.course!, content: "lecture \(futureTimeSlot.course!.theoreticalLectureCount()) is starting in \(timeTill) minutes.", question: nil, deny: "Close", action: nil, target: nil, type: .future)
         }
     }
     
@@ -146,7 +146,7 @@ class ScheduleAssistant: NSObject {
     // MARK: ––– Timers –––
     
     /// Do not call this method. A perform() is called and reset on this notifyMinute selector.
-    func notifyMinute() {
+    @objc func notifyMinute() {
         // regress to recalculating the minute
         let remainingMinute = 60 - Calendar.current.component(.second, from: Date())
         self.perform(#selector(self.notifyMinute), with: nil, afterDelay: TimeInterval(remainingMinute))

@@ -8,12 +8,12 @@
 
 import Cocoa
 
-class LectureEditorViewController: NSViewController, NSTextFinderClient {
+class LectureEditorViewController: NSViewController {
     
-    @IBOutlet weak var topBarHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var topBarTopConstraint: NSLayoutConstraint!
     
-    let sharedFontManager = NSFontManager.shared()
-    let appDelegate = NSApplication.shared().delegate as! AppDelegate
+    let sharedFontManager = NSFontManager.shared
+    let appDelegate = NSApplication.shared.delegate as! AppDelegate
     
     var selectionDelegate: SelectionDelegate?
     
@@ -52,17 +52,19 @@ class LectureEditorViewController: NSViewController, NSTextFinderClient {
         guard let parent = self.parent as? MasterViewController else { return }
         
         textViewContent.parentController = self
+        textViewContent.textFinder = NSTextFinder()
         
-        findViewController = HXFindViewController(nibName: "HXFindView", bundle: nil)
+        findViewController = HXFindViewController(nibName: NSNib.Name(rawValue: "HXFindView"), bundle: nil)
         self.addChildViewController(findViewController)
-        replaceViewController = HXFindReplaceViewController(nibName: "HXFindReplaceView", bundle: nil)
+        textViewContent.textFinder.client = findViewController
+        replaceViewController = HXFindReplaceViewController(nibName: NSNib.Name(rawValue: "HXFindReplaceView"), bundle: nil)
         self.addChildViewController(replaceViewController)
-        exportViewController = HXExportViewController(nibName: "HXExportView", bundle: nil)
+        exportViewController = HXExportViewController(nibName: NSNib.Name(rawValue: "HXExportView"), bundle: nil)
         self.addChildViewController(exportViewController)
         
-        let mainScreen = NSScreen.main()
+        let mainScreen = NSScreen.main
         let screenDescrip = mainScreen?.deviceDescription
-        let screenSize = screenDescrip?[NSDeviceSize] as! NSSize
+        let screenSize = screenDescrip?[NSDeviceDescriptionKey.size] as! NSSize
         let physicalSize = CGDisplayScreenSize(screenDescrip?["NSScreenNumber"] as! CGDirectDisplayID)
         let scaleFactor = (mainScreen?.backingScaleFactor)!
         print("Screen size: \(screenSize)")
@@ -116,16 +118,18 @@ class LectureEditorViewController: NSViewController, NSTextFinderClient {
         super.viewDidAppear()
         
         NotificationCenter.default.addObserver(self, selector: #selector(action_customTitleUpdate),
-                                               name: .NSControlTextDidEndEditing, object: labelCustomTitle)
+                                               name: NSControl.textDidEndEditingNotification, object: labelCustomTitle)
         NotificationCenter.default.addObserver(self, selector: #selector(action_customTitleUpdate),
-                                               name: .NSControlTextDidChange, object: labelCustomTitle)
+                                               name: NSControl.textDidChangeNotification, object: labelCustomTitle)
         
         NotificationCenter.default.addObserver(self, selector: #selector(action_insertionUpdate),
-                                               name: .NSTextViewDidChangeSelection, object: textViewContent)
+                                               name: NSTextView.didChangeSelectionNotification, object: textViewContent)
         NotificationCenter.default.addObserver(self, selector: #selector(action_insertionUpdate),
-                                               name: .NSTextViewDidChangeTypingAttributes, object: textViewContent)
-//        NotificationCenter.default.addObserver(self, selector: #selector(action_textViewBounds),
-//                                               name: .NSViewBoundsDidChange, object: clipViewContent)
+                                               name: NSTextView.didChangeTypingAttributesNotification, object: textViewContent)
+        
+        if NSApp.keyWindow!.styleMask.contains(NSWindow.StyleMask.fullScreen) {
+            topBarTopConstraint.constant = -22
+        }
         
         findViewController.selectionDelegate = self.selectionDelegate
         replaceViewController.selectionDelegate = self.selectionDelegate
@@ -166,8 +170,8 @@ class LectureEditorViewController: NSViewController, NSTextFinderClient {
                 oldValue.title = labelCustomTitle.stringValue.trimmingCharacters(in: .whitespaces)
                 
                 NSAnimationContext.beginGrouping()
-                NSAnimationContext.current().duration = 0.2
-                NSAnimationContext.current().completionHandler = {
+                NSAnimationContext.current.duration = 0.2
+                NSAnimationContext.current.completionHandler = {
                     
                     self.overlayTopConstraint.constant = signModifier * -self.view.frame.height
                     
@@ -194,7 +198,7 @@ class LectureEditorViewController: NSViewController, NSTextFinderClient {
                 textViewContent.textStorage?.setAttributedString(selectedLecture.content!)
                 
                 NSAnimationContext.beginGrouping()
-                NSAnimationContext.current().duration = 0.4
+                NSAnimationContext.current.duration = 0.4
                 self.overlayTopConstraint.animator().constant = 0
                 backdropBox.animator().alphaValue = 1
                 NSAnimationContext.endGrouping()
@@ -219,7 +223,7 @@ class LectureEditorViewController: NSViewController, NSTextFinderClient {
     
     // MARK: - Update Model
     
-    func action_customTitleUpdate() {
+    @objc func action_customTitleUpdate() {
         
         // Check if it has content
         if labelCustomTitle.stringValue == "" {
@@ -239,7 +243,7 @@ class LectureEditorViewController: NSViewController, NSTextFinderClient {
     
     // MARK: - Updating styling bar
     
-    func action_insertionUpdate() {
+    @objc func action_insertionUpdate() {
         
         if sharedFontManager.selectedFont == nil || textViewContent.attributedString().length == 0 {
             return
@@ -255,30 +259,30 @@ class LectureEditorViewController: NSViewController, NSTextFinderClient {
         print("          - \(textViewContent.attributedString().attributes(at: positionOfSelection, effectiveRange: nil))")
         
         // Underlines
-        if textViewContent.attributedString().attribute(NSUnderlineStyleAttributeName, at: positionOfSelection, effectiveRange: nil) != nil {
-            styleButtonUnderline.state = NSOnState
+        if textViewContent.attributedString().attribute(NSAttributedStringKey.underlineStyle, at: positionOfSelection, effectiveRange: nil) != nil {
+            styleButtonUnderline.state = NSControl.StateValue.on
         } else {
-            styleButtonUnderline.state = NSOffState
+            styleButtonUnderline.state = NSControl.StateValue.off
         }
         
         // Superscript and subscript
-        styleButtonSuper.state = NSOffState
-        styleButtonSub.state = NSOffState
-        if let superAttr = textViewContent.attributedString().attribute(NSSuperscriptAttributeName, at: positionOfSelection, effectiveRange: nil) as? Int {
+        styleButtonSuper.state = NSControl.StateValue.off
+        styleButtonSub.state = NSControl.StateValue.off
+        if let superAttr = textViewContent.attributedString().attribute(NSAttributedStringKey.superscript, at: positionOfSelection, effectiveRange: nil) as? Int {
             if superAttr == 1 {
                 // super
-                styleButtonSuper.state = NSOnState
+                styleButtonSuper.state = NSControl.StateValue.on
             } else if superAttr == -1 {
                 // sub
-                styleButtonSub.state = NSOnState
+                styleButtonSub.state = NSControl.StateValue.on
             }
         }
         
         // Text color
-        if let color = textViewContent.attributedString().attribute(NSForegroundColorAttributeName, at: positionOfSelection, effectiveRange: nil) as? NSColor {
+        if let color = textViewContent.attributedString().attribute(NSAttributedStringKey.foregroundColor, at: positionOfSelection, effectiveRange: nil) as? NSColor {
                 styleBoxColor.fillColor = color
         } else if positionOfSelection != 0 {
-            if let color = textViewContent.attributedString().attribute(NSForegroundColorAttributeName, at: positionOfSelection - 1, effectiveRange: nil) as? NSColor {
+            if let color = textViewContent.attributedString().attribute(NSAttributedStringKey.foregroundColor, at: positionOfSelection - 1, effectiveRange: nil) as? NSColor {
                 styleBoxColor.fillColor = color
             } else {
                 styleBoxColor.fillColor = NSColor.black
@@ -288,7 +292,7 @@ class LectureEditorViewController: NSViewController, NSTextFinderClient {
         }
         
         // Font family name
-        if let font = textViewContent.attributedString().attribute(NSFontAttributeName, at: positionOfSelection, effectiveRange: nil) as? NSFont {
+        if let font = textViewContent.attributedString().attribute(NSAttributedStringKey.font, at: positionOfSelection, effectiveRange: nil) as? NSFont {
             if let name = font.familyName {
                 styleLabelFont.stringValue = name
             } else {
@@ -325,39 +329,39 @@ class LectureEditorViewController: NSViewController, NSTextFinderClient {
         }
         
         // Alignment
-        if let parStyle = textViewContent.attributedString().attribute("NSParagraphStyle", at: positionOfSelection, effectiveRange: nil) as? NSParagraphStyle {
+        if let parStyle = textViewContent.attributedString().attribute(NSAttributedStringKey(rawValue: "NSParagraphStyle"), at: positionOfSelection, effectiveRange: nil) as? NSParagraphStyle {
             
-            styleRadioLeft.state = NSOffState
-            styleRadioCenter.state = NSOffState
-            styleRadioRight.state = NSOffState
-            styleRadioJustify.state = NSOffState
+            styleRadioLeft.state = NSControl.StateValue.off
+            styleRadioCenter.state = NSControl.StateValue.off
+            styleRadioRight.state = NSControl.StateValue.off
+            styleRadioJustify.state = NSControl.StateValue.off
             
             if parStyle.alignment.rawValue == 0 {
-                styleRadioLeft.state = NSOnState
+                styleRadioLeft.state = NSControl.StateValue.on
             } else if parStyle.alignment.rawValue == 1 {
-                styleRadioRight.state = NSOnState
+                styleRadioRight.state = NSControl.StateValue.on
             } else if parStyle.alignment.rawValue == 2 {
-                styleRadioCenter.state = NSOnState
+                styleRadioCenter.state = NSControl.StateValue.on
             } else if parStyle.alignment.rawValue == 3 {
-                styleRadioJustify.state = NSOnState
+                styleRadioJustify.state = NSControl.StateValue.on
             }
         }
         
         // Bold
         if traits.contains(.boldFontMask) {
-            styleButtonBold.state = NSOnState
+            styleButtonBold.state = NSControl.StateValue.on
             styleButtonBold.tag = Int(NSFontTraitMask.unboldFontMask.rawValue)
         } else {
-            styleButtonBold.state = NSOffState
+            styleButtonBold.state = NSControl.StateValue.off
             styleButtonBold.tag = Int(NSFontTraitMask.boldFontMask.rawValue)
         }
         
         // Italic
         if traits.contains(.italicFontMask) {
-            styleButtonItalic.state = NSOnState
+            styleButtonItalic.state = NSControl.StateValue.on
             styleButtonItalic.tag = Int(NSFontTraitMask.unitalicFontMask.rawValue)
         } else {
-            styleButtonItalic.state = NSOffState
+            styleButtonItalic.state = NSControl.StateValue.off
             styleButtonItalic.tag = Int(NSFontTraitMask.italicFontMask.rawValue)
         }
     }
@@ -392,10 +396,10 @@ class LectureEditorViewController: NSViewController, NSTextFinderClient {
     /// Reveal or hide the top bar container.
     func topBarShown(_ visible: Bool) {
         NSAnimationContext.beginGrouping()
-        NSAnimationContext.current().timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
-        NSAnimationContext.current().duration = 0.25
+        NSAnimationContext.current.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
+        NSAnimationContext.current.duration = 0.25
         if visible {
-            NSAnimationContext.current().completionHandler = {
+            NSAnimationContext.current.completionHandler = {
                 // If showing top bar and isFind or isReplace, then set firstResponders
                 if self.isReplacing {
                     NSApp.keyWindow?.makeFirstResponder(self.replaceViewController.textField_find)
@@ -405,7 +409,7 @@ class LectureEditorViewController: NSViewController, NSTextFinderClient {
             }
             dropdownTopConstraint.animator().constant = 0
         } else {
-            NSAnimationContext.current().completionHandler = {
+            NSAnimationContext.current.completionHandler = {
                 // Make sure all the VC's views are removed from their supers.
                 if self.exportViewController.view.superview != nil && !self.isExporting {
                     self.exportViewController.view.removeFromSuperview()
@@ -461,7 +465,7 @@ class LectureEditorViewController: NSViewController, NSTextFinderClient {
         
         let fullRange = NSRange(location: 0, length: attribString.length)
         do {
-            let data = try attribString.fileWrapper(from: fullRange, documentAttributes: [NSDocumentTypeDocumentAttribute: NSRTFDTextDocumentType])
+            let data = try attribString.fileWrapper(from: fullRange, documentAttributes: [NSAttributedString.DocumentAttributeKey.documentType: NSAttributedString.DocumentType.rtfd])
             try data.write(to: url, options: .atomic, originalContentsURL: nil) // this for rtfd
         } catch {
             print("Something went wrong.")
@@ -474,6 +478,7 @@ class LectureEditorViewController: NSViewController, NSTextFinderClient {
         }
     }
     
+    // NSTextFinder Functionality and Container
     var isFinding = false {
         didSet {
             if isFinding && (isExporting || isPrinting || isReplacing) {
@@ -490,7 +495,6 @@ class LectureEditorViewController: NSViewController, NSTextFinderClient {
                 findViewController.view.trailingAnchor.constraint(equalTo: dropdownView.trailingAnchor).isActive = true
                 findViewController.view.topAnchor.constraint(equalTo: dropdownView.topAnchor).isActive = true
                 findViewController.view.bottomAnchor.constraint(equalTo: dropdownView.bottomAnchor).isActive = true
-//                findViewController.textFinder.client = textViewContent as! NSTextFinderClient?
                 
                 topBarShown(true)
             } else {
@@ -500,10 +504,6 @@ class LectureEditorViewController: NSViewController, NSTextFinderClient {
                 topBarShown(false)
             }
         }
-    }
-    override func performTextFinderAction(_ sender: Any?) {
-        isFinding = !isFinding
-        findViewController.performTextFinderAction(sender)
     }
     
     var isReplacing = false {
@@ -552,7 +552,7 @@ class LectureEditorViewController: NSViewController, NSTextFinderClient {
                 
                 // Scroll to top
                 NSAnimationContext.beginGrouping()
-                NSAnimationContext.current().duration = 0.5
+                NSAnimationContext.current.duration = 0.5
                 //                lectureClipper.animator().setBoundsOrigin(NSPoint(x: 0, y: 0))
                 NSAnimationContext.endGrouping()
                 
@@ -594,7 +594,7 @@ class LectureEditorViewController: NSViewController, NSTextFinderClient {
             customTitleTrailingConstraint.isActive = true
             
             NSAnimationContext.beginGrouping()
-            NSAnimationContext.current().duration = 0.3
+            NSAnimationContext.current.duration = 0.3
             styleLabelFont.animator().alphaValue = 1
             styleButtonFont.animator().alphaValue = 1
             styleBoxColor.animator().alphaValue = 1
@@ -613,8 +613,8 @@ class LectureEditorViewController: NSViewController, NSTextFinderClient {
         } else {
             
             NSAnimationContext.beginGrouping()
-            NSAnimationContext.current().duration = 0.3
-            NSAnimationContext.current().completionHandler = {
+            NSAnimationContext.current.duration = 0.3
+            NSAnimationContext.current.completionHandler = {
                 self.customTitleTrailingConstraint.isActive = false
                 self.customTitleTrailingConstraint = self.labelCustomTitle.trailingAnchor.constraint(equalTo: self.labelDate.leadingAnchor)
                 self.customTitleTrailingConstraint.isActive = true

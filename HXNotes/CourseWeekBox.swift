@@ -13,7 +13,7 @@ class CourseWeekBox: NSBox {
     /// Return a new instance of a HXWeekBox based on the nib template.
     static func instance(with number: Int) -> CourseWeekBox! {
         var theObjects: NSArray = []
-        Bundle.main.loadNibNamed("CourseWeekBox", owner: nil, topLevelObjects: &theObjects)
+        Bundle.main.loadNibNamed(NSNib.Name(rawValue: "CourseWeekBox"), owner: nil, topLevelObjects: &theObjects)
         // Get NSView from top level objects returned from nib load
         if let newBox = theObjects.filter({$0 is CourseWeekBox}).first as? CourseWeekBox {
             newBox.initialize(with: number)
@@ -25,7 +25,6 @@ class CourseWeekBox: NSBox {
     @IBOutlet weak var labelTitle: NSTextField!
     
     func initialize(with number: Int) {
-        
         labelTitle.stringValue = "Week \(number)"
     }
     
